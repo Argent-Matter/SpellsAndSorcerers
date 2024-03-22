@@ -1,0 +1,100 @@
+{
+  "variants": {
+    "color=white,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=orange,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=magenta,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=light_blue,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=yellow,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=lime,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=pink,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=gray,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=light_gray,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=cyan,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=purple,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=blue,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=brown,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=green,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=red,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=black,triggered=false": {
+      "model": "geckolib3:block/box"
+    },
+    "color=white,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=orange,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=magenta,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=light_blue,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=yellow,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=lime,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=pink,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=gray,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=light_gray,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=cyan,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=purple,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=blue,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=brown,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=green,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=red,triggered=true": {
+      "model": "geckolib3:block/box"
+    },
+    "color=black,triggered=true": {
+      "model": "geckolib3:block/box"
+    }
+  }
+}

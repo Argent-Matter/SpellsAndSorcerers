@@ -1,0 +1,43 @@
+{
+  "itemGroup.sas": "Spellcasters & Sorcerers",
+  "container.sas.wand_table": "Wand Table",
+
+  "block.sas.wand_table": "Wand Table",
+  "block.sas.summon_sign": "Summoning Circle",
+  "block.sas.palantir": "Palantír",
+
+  "item.sas.soul_bottle": "Bottle o' Souls",
+  "item.sas.cthulhu_eye": "Eye of Cthulhu",
+  "item.sas.handle": "Handle",
+  "item.sas.wand": "%s Wand",
+  "item.sas.wand_core": "%s Core",
+  "item.sas.wizard_spawn_egg": "Wizard Spawn Egg",
+  "item.sas.boss_wizard_spawn_egg": "Necromantic Sorcerer Spawn Egg",
+
+  "item.sas.soulsteel_ingot": "Soulsteel Ingot",
+  "item.sas.soulsteel_nugget": "Soulsteel Nugget",
+  "block.sas.soulsteel_block": "Block of Soulsteel",
+  "item.sas.soulsteel_helmet": "Soulsteel Helmet",
+  "item.sas.soulsteel_chestplate": "Soulsteel Chestplate",
+  "item.sas.soulsteel_leggings": "Soulsteel Leggings",
+  "item.sas.soulsteel_boots": "Soulsteel Boots",
+  "item.sas.soulsteel_sword": "Soulsteel Sword",
+  "item.sas.soulsteel_shovel": "Soulsteel Shovel",
+  "item.sas.soulsteel_pickaxe": "Soulsteel Pickaxe",
+  "item.sas.soulsteel_axe": "Soulsteel Axe",
+  "item.sas.soulsteel_hoe": "Soulsteel Hoe",
+
+  "ability.sas.basic": "Dummy",
+  "ability.sas.explode": "Explosion",
+  "ability.sas.small_fireball": "Small Fireball",
+  "ability.sas.large_fireball": "Fireball",
+  "ability.sas.damage": "Ray",
+  "ability.sas.heal": "Healing",
+  "ability.sas.sight": "Sight",
+  "ability.sas.transmutation": "Transmutation",
+
+  "entity.sas.boss_wizard": "Necromantic Sorcerer",
+  "entity.sas.wizard": "Wizard",
+
+  "effect.sas.mana": "Mana Boost"
+}

@@ -1,0 +1,7 @@
+{
+  "loader": "sas:wand",
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "sas:item/wand/small_fireball"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "screret.sas.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "sas.refmap.json",
+  "mixins": [
+    "PotionBrewingAccessor"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

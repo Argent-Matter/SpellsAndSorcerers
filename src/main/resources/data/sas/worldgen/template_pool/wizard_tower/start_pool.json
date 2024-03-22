@@ -1,0 +1,15 @@
+{
+  "name": "sas:wizard_tower/start_pool",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "sas:wizard_tower",
+        "processors": "sas:block_mossify_20",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

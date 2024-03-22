@@ -1,0 +1,91 @@
+{
+	"meta": {
+		"format_version": "4.0",
+		"model_format": "java_block",
+		"box_uv": false
+	},
+	"name": "wand_table",
+	"parent": "",
+	"ambientocclusion": false,
+	"front_gui_light": false,
+	"visible_box": [1, 1, 0],
+	"variable_placeholders": "",
+	"variable_placeholder_buttons": [],
+	"resolution": {
+		"width": 16,
+		"height": 16
+	},
+	"elements": [
+		{
+			"name": "cube",
+			"rescale": false,
+			"locked": false,
+			"from": [0, 0, 0],
+			"to": [16, 12, 16],
+			"autouv": 0,
+			"color": 1,
+			"origin": [0, 0, 0],
+			"faces": {
+				"north": {
+					"uv": [0, 4, 16, 16],
+					"texture": 0
+				},
+				"east": {
+					"uv": [0, 4, 16, 16],
+					"texture": 0
+				},
+				"south": {
+					"uv": [0, 4, 16, 16],
+					"texture": 0
+				},
+				"west": {
+					"uv": [0, 4, 16, 16],
+					"texture": 0
+				},
+				"up": {
+					"uv": [0, 0, 16, 16],
+					"texture": 1
+				},
+				"down": {
+					"uv": [0, 0, 16, 16]
+				}
+			},
+			"type": "cube",
+			"uuid": "e60c96fc-b18c-9692-b6b1-598553d731c2"
+		}
+	],
+	"outliner": ["e60c96fc-b18c-9692-b6b1-598553d731c2"],
+	"textures": [
+		{
+			"path": "C:\\Users\\OMISTAJA\\Desktop\\mc modit\\SpellsAndSorcerers\\src\\main\\resources\\assets\\sas\\textures\\block\\wand_table_side.png",
+			"name": "wand_table_side.png",
+			"folder": "block",
+			"namespace": "sas",
+			"id": "0",
+			"particle": true,
+			"render_mode": "default",
+			"visible": true,
+			"mode": "bitmap",
+			"saved": true,
+			"uuid": "37d05140-754b-2329-8081-0babbf0ad554",
+			"relative_path": "../../../textures/block/wand_table_side.png",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAZlJREFUOE/NkT0sQ1EUx89tS6Voi4b0SyzatEgw6UQnsREGWyeTSdhMBrPJZCKR+EzFIiYxtQYqEW00kYi2ilT1S9OWvivnyHt5Lz6WLs7S+/7n//+de08Z1Fisxjz8AwDnnB8IF/SSiX0fjM4M/Pmq47UQ+CfXyTOuGgTmr57zq/IdCSfVCNTbbkCn0oOjQQmKlkJQFHJQiTvBq3aRv0/b9R2wGmuBOU8Q+nXDiptcFk9hJTAEs/ZXJQB2erl3bJrMS0GNFFqeupYgGF7c66FeU5se5rvTXzc+2gKWLp5xoe6BBNW7RQJUhCfwWXfpG8MOjxs02qrCgz32WDjkYgoNH2W1BHnL5CERiYHVZYdGY/OPy1UA0IEhQ4eOzAiLBsLgHnEqwDhI7BMAQzhB3kANK/ucBYvDRmAsORw1dhvf5CjiNBTKuQwZtXojnUslBoZ2A2k4JH0fg9ZOuwRk4fAqRzMWBvAsvhfNqUSediDvi2daIt5ALsg3heFkMgVmswlM1l+WuL2xwNGAhf8xVuElR78Ylpfok+ufzVHDoC6lQwkAAAAASUVORK5CYII="
+		},
+		{
+			"path": "C:\\Users\\OMISTAJA\\Desktop\\mc modit\\SpellsAndSorcerers\\src\\main\\resources\\assets\\sas\\textures\\block\\wand_table_top.png",
+			"name": "wand_table_top.png",
+			"folder": "block",
+			"namespace": "sas",
+			"id": "1",
+			"particle": false,
+			"render_mode": "default",
+			"visible": true,
+			"mode": "bitmap",
+			"saved": true,
+			"uuid": "a4e5d2a4-79e8-8a2d-566f-ccaf946abb35",
+			"relative_path": "../../../textures/block/wand_table_top.png",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAANNJREFUOE9j/P////8N/84xgEDg2ngG91RDMBsX2Dn7PMP64IVg6QAmIwbG9X/P/r/88wFYYP/f6wwCcs8Z1DiwG3Lrx3mGD48kGRyZNcHqddkVqGAAwyqd/46eEWAT0W1/9ecJWFyMRQbuI5grwC7evoKB0Z0/9j8XEx9YAczpII2f/75DCQZeZiG4QSBDQODbv08QAwy47OGKsWmGSSIbAhK78O0gpgF3f17CGwvK7HpweQwD8NmOzRXUNwBkC0VeABlAViBSFI0UJ6SBzwuUZmcApbHJI8oLXc8AAAAASUVORK5CYII="
+		}
+	],
+	"display": {}
+}

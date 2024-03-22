@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "sas:wizard_tower",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 673324461,
+    "spacing": 20,
+    "separation": 6,
+    "type": "minecraft:random_spread"
+  }
+}

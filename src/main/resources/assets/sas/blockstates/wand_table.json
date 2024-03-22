@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "sas:block/wand_table"
+    }
+  }
+}

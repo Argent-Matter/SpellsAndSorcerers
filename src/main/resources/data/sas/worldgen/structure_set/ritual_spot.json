@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "sas:ritual_spot",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 243987645,
+    "spacing": 20,
+    "separation": 6,
+    "type": "minecraft:random_spread"
+  }
+}

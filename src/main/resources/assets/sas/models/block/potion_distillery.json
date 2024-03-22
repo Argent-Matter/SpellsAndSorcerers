@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "sas:block/potion_distillery_front",
+    "side": "sas:block/potion_distillery_side",
+    "top": "sas:block/potion_distillery_top",
+    "bottom": "sas:block/potion_distillery_bottom"
+  }
+}
