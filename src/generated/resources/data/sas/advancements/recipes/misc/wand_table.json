@@ -1,0 +1,60 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_endstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:end_stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sas:wand_table"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wand": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sas:wand"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_wand_core": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sas:wand_core"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_endstone",
+      "has_wand_core",
+      "has_wand"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sas:wand_table"
+    ]
+  }
+}

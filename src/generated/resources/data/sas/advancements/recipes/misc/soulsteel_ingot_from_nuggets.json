@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_forge:nuggets/soulsteel": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:nuggets/soulsteel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sas:soulsteel_ingot_from_nuggets"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_forge:nuggets/soulsteel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sas:soulsteel_ingot_from_nuggets"
+    ]
+  }
+}

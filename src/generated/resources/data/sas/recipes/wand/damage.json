@@ -1,0 +1,56 @@
+{
+  "type": "sas:shaped_wand",
+  "group": "wands",
+  "key": {
+    "B": {
+      "item": "sas:soul_bottle"
+    },
+    "C": {
+      "type": "neoforge:nbt",
+      "item": "sas:wand_core",
+      "strict": true,
+      "tag": "{ability:\"sas:damage\"}"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "item": "sas:handle"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "LSL"
+  ],
+  "result": {
+    "item": "sas:wand",
+    "main_ability": {
+      "ability": {
+        "type": "sas:shoot_ray",
+        "apply_enchants": true,
+        "color": -11220017,
+        "cooldown_duration": 0,
+        "damage_per_hit": 0.0,
+        "particle": {
+          "type": "minecraft:soul_fire_flame"
+        },
+        "use_duration": 0
+      },
+      "children": [
+        {
+          "ability": {
+            "type": "sas:damage",
+            "apply_enchants": true,
+            "color": 1422643199,
+            "cooldown_duration": 10,
+            "damage_per_hit": 3.0,
+            "particle": {
+              "type": "minecraft:soul_fire_flame"
+            },
+            "use_duration": 0
+          }
+        }
+      ]
+    }
+  }
+}

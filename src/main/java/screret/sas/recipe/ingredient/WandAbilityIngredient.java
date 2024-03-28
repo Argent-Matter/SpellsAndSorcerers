@@ -18,15 +18,16 @@ import screret.sas.item.ModItems;
 import screret.sas.item.item.WandCoreItem;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class WandAbilityIngredient extends Ingredient {
     public static final Codec<WandAbilityIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             WandAbilityInstance.CODEC.fieldOf("main_ability").forGetter(val -> val.ability),
-            WandAbilityInstance.CODEC.optionalFieldOf("crouch_ability", null).forGetter(val -> val.crouchAbility),
+            WandAbilityInstance.CODEC.optionalFieldOf("crouch_ability").forGetter(val -> Optional.ofNullable(val.crouchAbility)),
             BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(val -> val.item),
             Codec.BOOL.optionalFieldOf("powered_up", false).forGetter(val -> val.isPoweredUp)
-    ).apply(instance, WandAbilityIngredient::new));
+    ).apply(instance, (main, crouchOptional, item, poweredUp) -> new WandAbilityIngredient(main, crouchOptional.orElse(null), item, poweredUp)));
 
     private final WandAbilityInstance ability;
     @Nullable
@@ -60,7 +61,7 @@ public class WandAbilityIngredient extends Ingredient {
         if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
             var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
             return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
-        } else if (stack.getTag().contains(WandAbility.ABILITIES_KEY)) {
+        } else if (stack.getTag().contains("wand_ability")) {
             // For datagen as capabilities are not loaded for some reason.
             var cap = CapabilityWandAbility.wandAbility(stack);
             return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());

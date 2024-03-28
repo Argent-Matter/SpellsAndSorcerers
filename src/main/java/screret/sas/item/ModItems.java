@@ -24,7 +24,7 @@ public class ModItems {
     //BLOCK ITEMS
     public static final DeferredItem<BlockItem> WAND_TABLE = ITEMS.register("wand_table", blockItem(ModBlocks.WAND_TABLE));
     public static final DeferredItem<BlockItem> SUMMON_SIGN = ITEMS.register("summon_sign", blockItem(ModBlocks.SUMMON_SIGN));
-    public static final DeferredItem<PalantirItem> PALANTIR = ITEMS.register("palantir", PalantirItem::new);
+    public static final DeferredItem<BlockItem> PALANTIR = ITEMS.register("palantir", () -> new BlockItem(ModBlocks.PALANTIR.get(), new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON)));
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.register("soulsteel_block", blockItem(ModBlocks.SOULSTEEL_BLOCK));
     public static final DeferredItem<BlockItem> GLINT_ORE = ITEMS.register("glint_ore", blockItem(ModBlocks.GLINT_ORE));
     public static final DeferredItem<BlockItem> POTION_DISTILLERY = ITEMS.register("potion_distillery", blockItem(ModBlocks.POTION_DISTILLERY));

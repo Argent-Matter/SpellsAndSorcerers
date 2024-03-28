@@ -29,6 +29,7 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import screret.sas.Util;
@@ -192,16 +193,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                new AnimationController<>(this, 10, state -> state.setAndContinue(this.isAttacking() ? DefaultAnimations.ATTACK_CAST : DefaultAnimations.IDLE))
-                        /*.setParticleKeyframeHandler(state -> {
-                            var handWorldPos = state.getKeyframeData().script()("rightArm").get().getWorldPosition();
-                            this.level.addParticle(Util.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
-                                    handWorldPos.x,
-                                    handWorldPos.y,
-                                    handWorldPos.z,
-                                    (animatable.getRandom().nextDouble() - 0.5D), -animatable.getRandom().nextDouble(),
-                                    (animatable.getRandom().nextDouble() - 0.5D));
-                        })*/,
+                new AnimationController<>(this, 10, state -> state.setAndContinue(this.isAttacking() ? DefaultAnimations.ATTACK_CAST : DefaultAnimations.IDLE)),
                 DefaultAnimations.genericWalkController(this),
                 DefaultAnimations.genericIdleController(this)
         );

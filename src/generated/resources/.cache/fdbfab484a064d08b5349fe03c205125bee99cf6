@@ -1,0 +1,5 @@
+// 1.20.4	2024-03-28T13:58:38.9239218	Tags for minecraft:block mod id sas
+23aec45c507500c97e45b55c106c982172596d23 data/forge/tags/blocks/needs_netherite_tool.json
+23aec45c507500c97e45b55c106c982172596d23 data/forge/tags/blocks/ores/glint.json
+285e0257e2bc9d7707baec95ddd4312f80a30d10 data/forge/tags/blocks/storage_blocks/soulsteel.json
+23aec45c507500c97e45b55c106c982172596d23 data/minecraft/tags/blocks/mineable/pickaxe.json

@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_eye": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sas:cthulhu_eye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_glass": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:glass/tinted"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sas:palantir"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_eye",
+      "has_glass"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sas:palantir"
+    ]
+  }
+}

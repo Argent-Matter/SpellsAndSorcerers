@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:polished_blackstone_bricks"
+    },
+    "E": {
+      "item": "sas:cthulhu_eye"
+    },
+    "G": {
+      "tag": "forge:glass/tinted"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "GEG",
+    "BBB"
+  ],
+  "result": {
+    "item": "sas:palantir"
+  }
+}

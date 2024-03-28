@@ -44,6 +44,7 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
@@ -56,6 +57,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     public static final WandAbilityInstance DUMMY_SPELL = new WandAbilityInstance(ModWandAbilities.DUMMY.get());
 
 
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected int spellCastingTickCount;
     private WandAbilityInstance currentSpell = DUMMY_SPELL;
     private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.PROGRESS);
@@ -297,7 +299,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return null;
+        return this.cache;
     }
 
     @Override

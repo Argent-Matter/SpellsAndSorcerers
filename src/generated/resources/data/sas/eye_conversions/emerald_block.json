@@ -1,0 +1,6 @@
+{
+  "ingredient": {
+    "tag": "forge:storage_blocks/diamond"
+  },
+  "result": "minecraft:emerald_block"
+}

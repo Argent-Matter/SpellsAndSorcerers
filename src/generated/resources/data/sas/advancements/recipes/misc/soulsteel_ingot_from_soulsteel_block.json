@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_forge:storage_blocks/soulsteel": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:storage_blocks/soulsteel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "sas:soulsteel_ingot_from_soulsteel_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_forge:storage_blocks/soulsteel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "sas:soulsteel_ingot_from_soulsteel_block"
+    ]
+  }
+}

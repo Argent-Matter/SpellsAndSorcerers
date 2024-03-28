@@ -1,0 +1,56 @@
+{
+  "type": "sas:shaped_wand",
+  "group": "wands",
+  "key": {
+    "B": {
+      "item": "sas:cloud_bottle"
+    },
+    "C": {
+      "type": "neoforge:nbt",
+      "item": "sas:wand_core",
+      "strict": true,
+      "tag": "{ability:\"sas:lightning\"}"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "item": "sas:handle"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "LSL"
+  ],
+  "result": {
+    "item": "sas:wand",
+    "main_ability": {
+      "ability": {
+        "type": "sas:shoot_lightning",
+        "apply_enchants": true,
+        "color": -5592406,
+        "cooldown_duration": 25,
+        "damage_per_hit": 0.0,
+        "particle": {
+          "type": "minecraft:electric_spark"
+        },
+        "use_duration": 0
+      },
+      "children": [
+        {
+          "ability": {
+            "type": "sas:lightning",
+            "apply_enchants": true,
+            "color": -5592406,
+            "cooldown_duration": 25,
+            "damage_per_hit": 2.0,
+            "particle": {
+              "type": "minecraft:electric_spark"
+            },
+            "use_duration": 0
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "type": "sas:shaped_wand",
+  "group": "wands",
+  "key": {
+    "B": {
+      "item": "minecraft:fire_charge"
+    },
+    "C": {
+      "type": "neoforge:nbt",
+      "item": "sas:wand_core",
+      "strict": true,
+      "tag": "{ability:\"sas:large_fireball\"}"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "item": "sas:handle"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "LSL"
+  ],
+  "result": {
+    "item": "sas:wand",
+    "main_ability": {
+      "ability": {
+        "type": "sas:large_fireball",
+        "apply_enchants": true,
+        "color": -40448,
+        "cooldown_duration": 20,
+        "damage_per_hit": 0.5,
+        "distance": 512,
+        "explosion_power": 1,
+        "particle": {
+          "type": "minecraft:dust",
+          "color": [
+            1.0,
+            0.38431373,
+            0.0
+          ],
+          "scale": 2.0
+        },
+        "use_duration": 0
+      }
+    }
+  }
+}

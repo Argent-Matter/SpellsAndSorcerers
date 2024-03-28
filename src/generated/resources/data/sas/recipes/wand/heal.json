@@ -1,0 +1,72 @@
+{
+  "type": "sas:shaped_wand",
+  "group": "wands",
+  "key": {
+    "B": {
+      "type": "neoforge:nbt",
+      "item": "minecraft:potion",
+      "strict": true,
+      "tag": "{Potion:\"minecraft:strong_healing\"}"
+    },
+    "C": {
+      "type": "neoforge:nbt",
+      "item": "sas:wand_core",
+      "strict": true,
+      "tag": "{ability:\"sas:heal\"}"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "item": "sas:handle"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "LSL"
+  ],
+  "result": {
+    "crouch_ability": {
+      "ability": {
+        "type": "sas:heal_self",
+        "apply_enchants": true,
+        "color": -16732627,
+        "cooldown_duration": 10,
+        "damage_per_hit": 0.25,
+        "particle": {
+          "type": "minecraft:happy_villager"
+        },
+        "use_duration": 10
+      }
+    },
+    "item": "sas:wand",
+    "main_ability": {
+      "ability": {
+        "type": "sas:shoot_hold_down",
+        "apply_enchants": true,
+        "color": -16732627,
+        "cooldown_duration": 20,
+        "damage_per_hit": 0.0,
+        "particle": {
+          "type": "minecraft:happy_villager"
+        },
+        "use_duration": 20
+      },
+      "children": [
+        {
+          "ability": {
+            "type": "sas:heal",
+            "apply_enchants": true,
+            "color": -16732627,
+            "cooldown_duration": 40,
+            "damage_per_hit": 0.25,
+            "particle": {
+              "type": "minecraft:happy_villager"
+            },
+            "use_duration": 20
+          }
+        }
+      ]
+    }
+  }
+}

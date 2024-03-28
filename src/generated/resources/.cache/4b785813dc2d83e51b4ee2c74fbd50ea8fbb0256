@@ -1,0 +1,8 @@
+// 1.20.4	2024-03-28T13:58:38.9269227	Tags for minecraft:item mod id sas
+edb0efb4be030132acbcad907c2a6d2e82673a99 data/forge/tags/items/gems/glint.json
+7f7d5f6cc9b5cfb39d240fc901c4ae2d2037ec14 data/forge/tags/items/glass_bottles.json
+a6fb2cc841f0c553fe59c97dfead4f1f1fc6b798 data/forge/tags/items/ingots/soulsteel.json
+81bac3084780b5096f2230efa9079709f3d1d3ee data/forge/tags/items/nuggets/soulsteel.json
+23aec45c507500c97e45b55c106c982172596d23 data/forge/tags/items/ores/glint.json
+285e0257e2bc9d7707baec95ddd4312f80a30d10 data/forge/tags/items/storage_blocks/soulsteel.json
+da4a3e408b163eb9d8ebe13892630f3bb83783e0 data/sas/tags/items/boss_summon_items.json

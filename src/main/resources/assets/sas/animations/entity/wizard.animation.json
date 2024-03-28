@@ -1,0 +1,61 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"misc.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"leftArm": {
+					"rotation": {
+						"vector": ["Math.cos(query.anim_time * 180) * 5", 0, -2.5]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": ["Math.cos(query.anim_time * 180) * -5", 0, 2.5]
+					}
+				}
+			}
+		},
+		"attack.cast": {
+			"loop": true,
+			"animation_length": 1,
+			"override_previous_animation": true,
+			"bones": {
+				"rightArm": {
+					"rotation": {
+						"vector": ["-90 + math.sin(query.anim_time * 360) * 45  ", 20, 0]
+					}
+				}
+			}
+		},
+		"move.walk": {
+			"loop": true,
+			"animation_length": 1,
+			"override_previous_animation": true,
+			"bones": {
+				"leftFoot": {
+					"rotation": {
+						"vector": ["Math.cos(query.anim_time * 720 * query.ground_speed) * 20", 0, 0]
+					}
+				},
+				"rightFoot": {
+					"rotation": {
+						"vector": ["Math.cos(query.anim_time * 720 * query.ground_speed) * -20", 0, 0]
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"vector": ["Math.cos(query.anim_time * 720 * query.ground_speed) * -10", 0, 0]
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"vector": ["Math.cos(query.anim_time * 720 * query.ground_speed) * 10", 0, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

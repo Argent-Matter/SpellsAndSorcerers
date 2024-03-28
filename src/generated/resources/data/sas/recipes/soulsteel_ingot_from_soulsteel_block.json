@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "soulsteel_ingot",
+  "ingredients": [
+    {
+      "tag": "forge:storage_blocks/soulsteel"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "sas:soulsteel_ingot"
+  }
+}

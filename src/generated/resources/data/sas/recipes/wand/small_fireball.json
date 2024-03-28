@@ -1,0 +1,48 @@
+{
+  "type": "sas:shaped_wand",
+  "group": "wands",
+  "key": {
+    "B": {
+      "item": "minecraft:firework_star"
+    },
+    "C": {
+      "type": "neoforge:nbt",
+      "item": "sas:wand_core",
+      "strict": true,
+      "tag": "{ability:\"sas:small_fireball\"}"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "item": "sas:handle"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "LSL"
+  ],
+  "result": {
+    "item": "sas:wand",
+    "main_ability": {
+      "ability": {
+        "type": "sas:small_fireball",
+        "apply_enchants": true,
+        "color": -23296,
+        "cooldown_duration": 10,
+        "damage_per_hit": 0.0,
+        "distance": 512,
+        "particle": {
+          "type": "minecraft:dust",
+          "color": [
+            1.0,
+            0.64705884,
+            0.0
+          ],
+          "scale": 2.0
+        },
+        "use_duration": 0
+      }
+    }
+  }
+}

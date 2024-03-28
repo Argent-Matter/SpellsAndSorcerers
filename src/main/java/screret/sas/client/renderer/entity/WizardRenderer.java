@@ -28,15 +28,15 @@ public class WizardRenderer extends GeoEntityRenderer<WizardEntity> {
         if (model.getBone("rightArm").isPresent() && Util.getMainAbilityFromStack(animatable.getMainHandItem()).isPresent()) {
             var handWorldPos = model.getBone("rightArm").get().getWorldPosition();
             if (animatable.isCastingSpell()) {
-                animatable.getCommandSenderWorld().addParticle(Util.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
+                animatable.level().addParticle(Util.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
                         handWorldPos.x,
                         handWorldPos.y,
                         handWorldPos.z,
-                        (animatable.getRandom().nextDouble() - 0.5D), -animatable.getRandom().nextDouble(),
+                        (animatable.getRandom().nextDouble() - 0.5D),
+                        -animatable.getRandom().nextDouble(),
                         (animatable.getRandom().nextDouble() - 0.5D));
             }
         }
-        super.postRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
-                packedOverlay, red, green, blue, alpha);
+        super.postRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

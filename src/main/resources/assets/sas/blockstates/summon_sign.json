@@ -1,100 +1,100 @@
 {
   "variants": {
     "color=white,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=orange,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=magenta,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=light_blue,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=yellow,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=lime,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=pink,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=gray,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=light_gray,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=cyan,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=purple,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=blue,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=brown,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=green,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=red,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=black,triggered=false": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=white,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=orange,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=magenta,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=light_blue,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=yellow,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=lime,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=pink,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=gray,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=light_gray,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=cyan,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=purple,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=blue,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=brown,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=green,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=red,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     },
     "color=black,triggered=true": {
-      "model": "geckolib3:block/box"
+      "model": "sas:block/summon_sign"
     }
   }
 }

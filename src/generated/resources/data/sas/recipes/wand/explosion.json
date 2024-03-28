@@ -1,0 +1,68 @@
+{
+  "type": "sas:shaped_wand",
+  "group": "wands",
+  "key": {
+    "B": {
+      "item": "minecraft:tnt"
+    },
+    "C": {
+      "type": "neoforge:nbt",
+      "item": "sas:wand_core",
+      "strict": true,
+      "tag": "{ability:\"sas:explode\"}"
+    },
+    "L": {
+      "tag": "forge:leather"
+    },
+    "S": {
+      "item": "sas:handle"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "LSL"
+  ],
+  "result": {
+    "item": "sas:wand",
+    "main_ability": {
+      "ability": {
+        "type": "sas:shoot_angry_ray",
+        "apply_enchants": true,
+        "color": -5636096,
+        "cooldown_duration": 200,
+        "damage_per_hit": 0.0,
+        "particle": {
+          "type": "minecraft:dust",
+          "color": [
+            0.6666667,
+            0.0,
+            0.0
+          ],
+          "scale": 2.0
+        },
+        "use_duration": 100
+      },
+      "children": [
+        {
+          "ability": {
+            "type": "sas:explode",
+            "apply_enchants": true,
+            "color": 11141120,
+            "cooldown_duration": 60,
+            "damage_per_hit": 1.0,
+            "particle": {
+              "type": "minecraft:dust",
+              "color": [
+                0.6666667,
+                0.0,
+                0.0
+              ],
+              "scale": 2.0
+            },
+            "use_duration": 100
+          }
+        }
+      ]
+    }
+  }
+}

@@ -22,8 +22,12 @@ import screret.sas.blockentity.ModBlockEntities;
 import screret.sas.entity.ModEntities;
 import screret.sas.entity.entity.BossWizardEntity;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +37,9 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
     private static final int REQUIRED_ITEMS_COUNT = 4;
     private static final int TICKS_TO_SPAWN = 100;
     public static final VoxelShape INSIDE = Block.box(-1D, 0.0D, -1D, 17.0D, 16.0D, 17.0D);
+    public static final RawAnimation SUMMON = RawAnimation.begin().thenLoop("summon_sign.summon");
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private int ticksToSpawn = -1;
     private boolean hasSpawned = false;
@@ -63,13 +70,13 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-
+            new AnimationController<>(this, 10, state -> state.setAndContinue(this.ticksToSpawn > 0 ? SUMMON : DefaultAnimations.IDLE))
         );
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return null;
+        return this.cache;
     }
 
     private static class RequiredCounter {
