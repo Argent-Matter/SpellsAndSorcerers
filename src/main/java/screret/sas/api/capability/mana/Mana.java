@@ -3,26 +3,26 @@ package screret.sas.api.capability.mana;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 
-public class CapabilityMana implements ICapabilityMana {
+public class Mana implements IMana {
 
     protected int mana;
     protected int capacity;
     protected int maxReceive;
     protected int maxExtract;
 
-    public CapabilityMana(int capacity) {
+    public Mana(int capacity) {
         this(capacity, capacity, capacity, 0);
     }
 
-    public CapabilityMana(int capacity, int maxTransfer) {
+    public Mana(int capacity, int maxTransfer) {
         this(capacity, maxTransfer, maxTransfer, 0);
     }
 
-    public CapabilityMana(int capacity, int maxReceive, int maxExtract) {
+    public Mana(int capacity, int maxReceive, int maxExtract) {
         this(capacity, maxReceive, maxExtract, 0);
     }
 
-    public CapabilityMana(int capacity, int maxReceive, int maxExtract, int mana) {
+    public Mana(int capacity, int maxReceive, int maxExtract, int mana) {
         this.capacity = capacity;
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
@@ -45,13 +45,18 @@ public class CapabilityMana implements ICapabilityMana {
         if (!canExtract())
             return 0;
 
-        int energyExtracted = Math.min(mana, Math.min(this.maxExtract, maxExtract));
+        int manaExtracted = Math.min(mana, Math.min(this.maxExtract, maxExtract));
         if (!simulate)
-            mana -= energyExtracted;
-        return energyExtracted;
+            mana -= manaExtracted;
+        return manaExtracted;
     }
 
-    public void setMaxManaStored(int max){
+    @Override
+    public int getMaxManaStored() {
+        return capacity;
+    }
+
+    public void setMaxManaStored(int max) {
         this.capacity = max;
     }
 
@@ -60,9 +65,8 @@ public class CapabilityMana implements ICapabilityMana {
         return mana;
     }
 
-    @Override
-    public int getMaxManaStored() {
-        return capacity;
+    public void setManaStored(int mana) {
+        this.mana = mana;
     }
 
     @Override

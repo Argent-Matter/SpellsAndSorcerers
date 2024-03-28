@@ -3,24 +3,22 @@ package screret.sas.api.wand.ability;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import screret.sas.api.capability.ability.WandAbilityProvider;
-import screret.sas.enchantment.ModEnchantments;
+import screret.sas.api.capability.ability.ICapabilityWandAbility;
 
 public class WandAbility implements IWandAbility {
-    public static final String BASIC_ABILITY_KEY = "basic_ability", CROUCH_ABILITY_KEY = "crouch_ability", POWERED_UP_KEY = "is_powered_up";
+    public static final  String ABILITIES_KEY = "wand_abilities", MAIN_ABILITY_KEY = "main_ability", CROUCH_ABILITY_KEY = "crouch_ability", POWERED_UP_KEY = "is_powered_up";
     public static final Codec<WandAbility> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.POSITIVE_INT.fieldOf("use_duration").forGetter(self -> self.useDuration),
-            ExtraCodecs.POSITIVE_INT.fieldOf("cooldown_duration").forGetter(self -> self.cooldownDuration),
-            ExtraCodecs.POSITIVE_FLOAT.fieldOf("damage_per_hit").forGetter(self -> self.damagePerHit),
+            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("use_duration").forGetter(self -> self.useDuration),
+            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("cooldown_duration").forGetter(self -> self.cooldownDuration),
+            Codec.FLOAT.fieldOf("damage_per_hit").forGetter(self -> self.damagePerHit),
             Codec.BOOL.fieldOf("apply_enchants").forGetter(self -> self.applyEnchants),
             ParticleTypes.CODEC.fieldOf("particle").forGetter(self -> self.particle),
             Codec.INT.fieldOf("color").forGetter(self -> self.color)
@@ -43,7 +41,7 @@ public class WandAbility implements IWandAbility {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.Vec3Wrapped currentPosition, int timeCharged) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
         return InteractionResultHolder.fail(stack);
     }
 
@@ -57,7 +55,7 @@ public class WandAbility implements IWandAbility {
         return false;
     }
 
-    public boolean isChargeable(){
+    public boolean isChargeable() {
         return false;
     }
 
@@ -72,12 +70,12 @@ public class WandAbility implements IWandAbility {
     }
 
     @Override
-    public float getDamagePerHit(ItemStack stack){
-        return applyEnchants ? damagePerHit + (damagePerHit / 5) * stack.getEnchantmentLevel(ModEnchantments.POWER.get()) : damagePerHit;
+    public float getDamagePerHit(ItemStack stack) {
+        return applyEnchants ? damagePerHit + (damagePerHit / 5) * stack.getEnchantmentLevel(Enchantments.POWER_ARROWS) : damagePerHit;
     }
 
-    public boolean getPoweredUpMultiplier(ItemStack stack){
-        return stack.getCapability(WandAbilityProvider.WAND_ABILITY) != null && stack.getCapability(WandAbilityProvider.WAND_ABILITY).getPoweredUp();
+    public boolean getPoweredUpMultiplier(ItemStack stack) {
+        return stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null && stack.getCapability(ICapabilityWandAbility.WAND_ABILITY).getPoweredUp();
     }
 
     @Override
@@ -95,7 +93,7 @@ public class WandAbility implements IWandAbility {
         return getKey().toString();
     }
 
-    public ParticleOptions getParticle(){
+    public ParticleOptions getParticle() {
         return particle;
     }
 

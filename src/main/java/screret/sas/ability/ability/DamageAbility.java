@@ -17,13 +17,12 @@ public class DamageAbility extends SubAbility {
 
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged) {
-        hitEnt.hurt(DamageSource.indirectMagic(user, user), getDamagePerHit(usedItem));
+        hitEnt.hurt(user.damageSources().indirectMagic(user, user), getDamagePerHit(usedItem));
         return true;
     }
 
     @Override
-    public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged)
-    {
+    public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged) {
         return false;
     }
 }

@@ -1,18 +1,13 @@
 package screret.sas.ability.ability;
 
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import screret.sas.Util;
 import screret.sas.api.wand.ability.WandAbility;
 import screret.sas.api.wand.ability.WandAbilityInstance;
@@ -30,7 +25,7 @@ public class ShootAbility extends WandAbility {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.Vec3Wrapped currentPosition, int timeCharged) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
         if (!level.isClientSide) {
             var distanceSqr = distance * distance;
             var hitResult = Util.getHitResult(level, user, (entity) -> entity != user, distanceSqr);

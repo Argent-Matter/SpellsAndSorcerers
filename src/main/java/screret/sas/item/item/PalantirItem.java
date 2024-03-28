@@ -8,6 +8,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import screret.sas.SpellsAndSorcerers;
 import screret.sas.block.ModBlocks;
 import screret.sas.client.renderer.item.PalantirItemRenderer;
+import screret.sas.creativetab.ModCreativeTabs;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -17,12 +18,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class PalantirItem extends BlockItem implements GeoItem {
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-
     public PalantirItem() {
-        super(ModBlocks.PALANTIR.get(), new Properties().fireResistant().rarity(Rarity.UNCOMMON).tab(SpellsAndSorcerers.SAS_TAB));
+        super(ModBlocks.PALANTIR.get(), new Properties().fireResistant().rarity(Rarity.UNCOMMON));
     }
 
     @Override

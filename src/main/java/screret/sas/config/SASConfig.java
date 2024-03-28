@@ -10,7 +10,7 @@ public class SASConfig {
         public static ModConfigSpec.IntValue manaBarX;
         public static ModConfigSpec.IntValue manaBarY;
 
-        private static void setupConfig(ModConfigSpec.Builder builder){
+        private static void setupConfig(ModConfigSpec.Builder builder) {
             builder.comment("Spells & Sorcerers Client Configuration")
                     .push("client");
 
@@ -43,7 +43,7 @@ public class SASConfig {
 
         public static ModConfigSpec.BooleanValue dropWandCores;
 
-        private static void setupConfig(ModConfigSpec.Builder builder){
+        private static void setupConfig(ModConfigSpec.Builder builder) {
             builder.comment("Spells & Sorcerers Server Configuration")
                     .push("server");
 

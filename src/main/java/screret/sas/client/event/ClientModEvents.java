@@ -50,8 +50,8 @@ public class ClientModEvents {
         event.registerEntityRenderer(ModEntities.WIZARD.get(), WizardRenderer::new);
         event.registerEntityRenderer(ModEntities.BOSS_WIZARD.get(), BossWizardRenderer::new);
 
-        event.registerBlockEntityRenderer(ModBlockEntities.SUMMON_SIGN_BE.get(), context -> new SummonSignBERenderer());
-        event.registerBlockEntityRenderer(ModBlockEntities.PALANTIR_BE.get(), context -> new PalantirBERenderer());
+        event.registerBlockEntityRenderer(ModBlockEntities.SUMMON_SIGN.get(), context -> new SummonSignBERenderer());
+        event.registerBlockEntityRenderer(ModBlockEntities.PALANTIR.get(), context -> new PalantirBERenderer());
     }
 
     @SubscribeEvent

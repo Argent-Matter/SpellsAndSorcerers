@@ -6,7 +6,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 public class EyeParticle extends SimpleAnimatedParticle {
     protected EyeParticle(ClientLevel pLevel, double pX, double pY, double pZ, SpriteSet pSprites) {
-        super(pLevel, pX, pY, pZ, pSprites,0);
+        super(pLevel, pX, pY, pZ, pSprites, 0);
         this.quadSize = 0.75F;
         this.lifetime = 20;
         this.hasPhysics = false;

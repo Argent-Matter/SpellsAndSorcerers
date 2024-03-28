@@ -1,31 +1,30 @@
 package screret.sas.recipe.recipe;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 
 public class PotionDistillingRecipe implements Recipe<Container> {
     public static String TYPE_ID_NAME = "potion_distilling";
 
-    protected final ResourceLocation id;
     protected final String group;
     protected final Ingredient ingredient;
     protected final ItemStack result;
     protected final float experience;
     protected final int processingTime;
 
-    public PotionDistillingRecipe(ResourceLocation pId, String pGroup, Ingredient pIngredient, ItemStack pResult, float pExperience, int pCookingTime) {
-        this.id = pId;
+    public PotionDistillingRecipe(String pGroup, Ingredient pIngredient, ItemStack pResult, float pExperience, int pCookingTime) {
         this.group = pGroup;
         this.ingredient = pIngredient;
         this.result = pResult;
@@ -40,10 +39,8 @@ public class PotionDistillingRecipe implements Recipe<Container> {
         return this.ingredient.test(pInv.getItem(0));
     }
 
-    /**
-     * Returns an Item that is the result of this recipe
-     */
-    public ItemStack assemble(Container pInv) {
+    @Override
+    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
         return this.result.copy();
     }
 
@@ -52,6 +49,11 @@ public class PotionDistillingRecipe implements Recipe<Container> {
      */
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
         return true;
+    }
+
+    @Override
+    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+        return this.result.copy();
     }
 
     public NonNullList<Ingredient> getIngredients() {
@@ -68,14 +70,6 @@ public class PotionDistillingRecipe implements Recipe<Container> {
     }
 
     /**
-     * Get the result of this recipe, usually for display purposes (e.g. recipe book). If your recipe has more than one
-     * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
-     */
-    public ItemStack getResultItem() {
-        return this.result;
-    }
-
-    /**
      * Recipes with equal group are combined into one button in the recipe book
      */
     public String getGroup() {
@@ -89,52 +83,37 @@ public class PotionDistillingRecipe implements Recipe<Container> {
         return this.processingTime;
     }
 
-    public ResourceLocation getId() {
-        return this.id;
-    }
-
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.POTION_DISTILLING_SERIALIZER.get();
+        return ModRecipeTypes.POTION_DISTILLING_SERIALIZER.get();
     }
 
     public RecipeType<?> getType() {
-        return ModRecipes.POTION_DISTILLING_RECIPE.get();
+        return ModRecipeTypes.POTION_DISTILLING_RECIPE.get();
     }
 
     public static class Serializer implements RecipeSerializer<PotionDistillingRecipe> {
-        private final int defaultCookingTime;
-        public Serializer() {
-            this.defaultCookingTime = 400;
+        private static final int PROCESSING_TIME = 400;
+        public static final Codec<PotionDistillingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(val -> val.group),
+                Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(val -> val.ingredient),
+                ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(val -> val.result),
+                Codec.FLOAT.fieldOf("experience").orElse(0.0F).forGetter(val -> val.experience),
+                Codec.INT.fieldOf("processing_time").orElse(PROCESSING_TIME).forGetter(val -> val.processingTime)
+        ).apply(instance, PotionDistillingRecipe::new));
+
+        @Override
+        public Codec<PotionDistillingRecipe> codec() {
+            return CODEC;
         }
 
-        public PotionDistillingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
-            String s = GsonHelper.getAsString(pJson, "group", "");
-            JsonElement jsonelement = GsonHelper.isArrayNode(pJson, "ingredient") ? GsonHelper.getAsJsonArray(pJson, "ingredient") : GsonHelper.getAsJsonObject(pJson, "ingredient");
-            Ingredient ingredient = Ingredient.fromJson(jsonelement);
-            //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
-            if (!pJson.has("result")) throw new JsonSyntaxException("Missing result, expected to find a string or object");
-            ItemStack result;
-            if (pJson.get("result").isJsonObject()) result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pJson, "result"));
-            else {
-                String resultName = GsonHelper.getAsString(pJson, "result");
-                ResourceLocation resultId = new ResourceLocation(resultName);
-                result = new ItemStack(Registry.ITEM.getOptional(resultId).orElseThrow(() -> {
-                    return new IllegalStateException("Item: " + resultName + " does not exist");
-                }));
-            }
-            float experience = GsonHelper.getAsFloat(pJson, "experience", 0.0F);
-            int cookingTime = GsonHelper.getAsInt(pJson, "time", this.defaultCookingTime);
-            return new PotionDistillingRecipe(pRecipeId, s, ingredient, result, experience, cookingTime);
-        }
-
-        public PotionDistillingRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            String s = pBuffer.readUtf();
+        public PotionDistillingRecipe fromNetwork(FriendlyByteBuf pBuffer) {
+            String group = pBuffer.readUtf();
             Ingredient ingredient = Ingredient.fromNetwork(pBuffer);
-            ItemStack itemstack = pBuffer.readItem();
-            float f = pBuffer.readFloat();
-            int i = pBuffer.readVarInt();
-            return new PotionDistillingRecipe(pRecipeId, s, ingredient, itemstack, f, i);
+            ItemStack result = pBuffer.readItem();
+            float experience = pBuffer.readFloat();
+            int processing_time = pBuffer.readVarInt();
+            return new PotionDistillingRecipe(group, ingredient, result, experience, processing_time);
         }
 
         public void toNetwork(FriendlyByteBuf pBuffer, PotionDistillingRecipe pRecipe) {

@@ -11,11 +11,11 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
-import screret.sas.blockentity.blockentity.PotionDistilleryBE;
+import screret.sas.blockentity.blockentity.PotionDistilleryBlockEntity;
 import screret.sas.container.ModContainers;
 import screret.sas.container.slot.DistilleryFuelSlot;
 import screret.sas.container.slot.DistilleryResultSlot;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 
 public class PotionDistilleryMenu extends AbstractContainerMenu {
     private static final int RESULT_SLOT_START = 2, RESULT_SLOT_END = 4;
@@ -23,7 +23,8 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
     public static final int PROGRESS_BAR_Y_SIZE = 24, FUEL_PROGRESS_BAR_X_SIZE = 18;
 
     private final Player player;
-    @Nullable private final PotionDistilleryBE blockEntity;
+    @Nullable
+    private final PotionDistilleryBlockEntity blockEntity;
     private final ItemStackHandler items;
     private final ContainerData data;
     private final Level level;
@@ -32,17 +33,17 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
         this(pContainerId, pPlayerInventory, null);
     }
 
-    public PotionDistilleryMenu(int pContainerId, Inventory pPlayerInventory, PotionDistilleryBE blockEntity) {
+    public PotionDistilleryMenu(int pContainerId, Inventory pPlayerInventory, PotionDistilleryBlockEntity blockEntity) {
         super(ModContainers.POTION_DISTILLERY.get(), pContainerId);
         this.player = pPlayerInventory.player;
         this.blockEntity = blockEntity;
 
-        if(this.blockEntity != null){
+        if (this.blockEntity != null) {
             checkContainerSize(this.blockEntity.getInventoryWrapper(), 5);
             checkContainerDataCount(blockEntity.getDataAccess(), 4);
             this.items = this.blockEntity.getInventory();
             this.data = blockEntity.getDataAccess();
-            this.level = pPlayerInventory.player.level;
+            this.level = pPlayerInventory.player.level();
             this.addSlot(new DistilleryFuelSlot(this, this.items, 0, 17, 17));
             this.addSlot(new SlotItemHandler(items, 1, 79, 17));
 
@@ -50,13 +51,13 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
             this.addSlot(new DistilleryResultSlot(pPlayerInventory.player, this.items, 3, 79, 58));
             this.addSlot(new DistilleryResultSlot(pPlayerInventory.player, this.items, 4, 102, 51));
 
-            for(int i = 0; i < 3; ++i) {
-                for(int j = 0; j < 9; ++j) {
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 9; ++j) {
                     this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
                 }
             }
 
-            for(int k = 0; k < 9; ++k) {
+            for (int k = 0; k < 9; ++k) {
                 this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
             }
 
@@ -76,7 +77,7 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
             ItemStack item = slot.getItem();
             copy = item.copy();
             if (pIndex >= RESULT_SLOT_START && pIndex <= RESULT_SLOT_END) {
-                for (int index = RESULT_SLOT_START; index <= RESULT_SLOT_END; ++index){
+                for (int index = RESULT_SLOT_START; index <= RESULT_SLOT_END; ++index) {
                     if (!this.moveItemStackTo(item, index, USE_ROW_SLOT_END, true)) {
                         return ItemStack.EMPTY;
                     }
@@ -120,35 +121,35 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
     }
 
     protected boolean canSmelt(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor(ModRecipes.POTION_DISTILLING_RECIPE.get(), new SimpleContainer(pStack), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.POTION_DISTILLING_RECIPE.get(), new SimpleContainer(pStack), this.level).isPresent();
     }
 
     public boolean isFuel(ItemStack pStack) {
-        return CommonHooks.getBurnTime(pStack, ModRecipes.POTION_DISTILLING_RECIPE.get()) > 0;
+        return CommonHooks.getBurnTime(pStack, ModRecipeTypes.POTION_DISTILLING_RECIPE.get()) > 0;
     }
 
     public boolean isLit() {
-        return this.data.get(PotionDistilleryBE.DATA_LIT_TIME) > 0;
+        return this.data.get(PotionDistilleryBlockEntity.DATA_LIT_TIME) > 0;
     }
 
     public int getBurnProgress() {
-        int progress = this.data.get(PotionDistilleryBE.DATA_PROGRESS);
-        int total = this.data.get(PotionDistilleryBE.DATA_TOTAL_TIME);
+        int progress = this.data.get(PotionDistilleryBlockEntity.DATA_PROGRESS);
+        int total = this.data.get(PotionDistilleryBlockEntity.DATA_TOTAL_TIME);
         return total != 0 && progress != 0 ? progress * PROGRESS_BAR_Y_SIZE / total : 0;
     }
 
     public int getLitProgress() {
-        int litDuration = this.data.get(PotionDistilleryBE.DATA_LIT_DURATION);
+        int litDuration = this.data.get(PotionDistilleryBlockEntity.DATA_LIT_DURATION);
         if (litDuration == 0) {
-            litDuration = PotionDistilleryBE.DEFAULT_PROCESS_TIME;
+            litDuration = PotionDistilleryBlockEntity.DEFAULT_PROCESS_TIME;
         }
 
-        return this.data.get(PotionDistilleryBE.DATA_LIT_TIME) * FUEL_PROGRESS_BAR_X_SIZE / litDuration;
+        return this.data.get(PotionDistilleryBlockEntity.DATA_LIT_TIME) * FUEL_PROGRESS_BAR_X_SIZE / litDuration;
     }
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        if(blockEntity == null) {
+        if (blockEntity == null) {
             return false;
         }
         BlockPos pos = blockEntity.getBlockPos();

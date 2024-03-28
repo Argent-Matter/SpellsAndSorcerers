@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 public class WandItemClientExtensions implements IClientItemExtensions {
 
     public static final HumanoidModel.ArmPose POSE_USE_WAND = HumanoidModel.ArmPose.create("wand", true, (model, entity, arm) -> {
-        if(entity.isUsingItem()){
+        if (entity.isUsingItem()) {
             switch (arm) {
                 case RIGHT -> {
                     model.rightArm.yRot = -0.2F + model.head.yRot;

@@ -5,11 +5,8 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import screret.sas.api.wand.ability.WandAbility;
 import screret.sas.api.wand.ability.WandAbilityInstance;
-
-import java.util.EnumSet;
 
 public class HealSelfAbility extends WandAbility {
     public HealSelfAbility() {
@@ -17,7 +14,7 @@ public class HealSelfAbility extends WandAbility {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.Vec3Wrapped currentPosition, int timeCharged) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
         user.heal(getDamagePerHit(stack));
         return InteractionResultHolder.pass(stack);
     }

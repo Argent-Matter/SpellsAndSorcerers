@@ -19,8 +19,8 @@ public class ModCreativeTabs {
             .title(Component.translatable("itemGroup." + SpellsAndSorcerers.MODID))
             .icon(() -> ModItems.WAND.get().getDefaultInstance())
             .displayItems((pParameters, output) -> {
-                output.acceptAll(Util.customWands.values());
-                output.acceptAll(Util.customWandCores.values());
+                output.acceptAll(Util.CUSTOM_WANDS.values());
+                output.acceptAll(Util.CUSTOM_WAND_CORES.values());
                 for (DeferredHolder<Item, ? extends Item> item : ModItems.ITEMS.getEntries()) {
                     output.accept(item.get());
                 }

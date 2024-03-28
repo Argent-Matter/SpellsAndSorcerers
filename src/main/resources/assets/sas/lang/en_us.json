@@ -1,5 +1,7 @@
 {
   "itemGroup.sas": "Spellcasters & Sorcerers",
+  "group.sas.wands": "Wands",
+  "group.sas.wand_cores": "Wand Cores",
   "container.sas.wand_table": "Wand Table",
 
   "block.sas.wand_table": "Wand Table",

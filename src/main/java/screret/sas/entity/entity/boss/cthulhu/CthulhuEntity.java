@@ -12,7 +12,7 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.Level;
-import screret.sas.api.capability.cthulhu.CthulhuFightProvider;
+import screret.sas.api.capability.cthulhu.CthulhuFightSavedData;
 import screret.sas.entity.entity.BossWizardEntity;
 import screret.sas.entity.entity.boss.cthulhu.part.CthulhuPart;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -59,7 +59,7 @@ public class CthulhuEntity extends Mob implements Enemy, GeoEntity {
         this.setHealth(this.getMaxHealth());
         this.noCulling = true;
         if (pLevel instanceof ServerLevel serverLevel) {
-            this.cthulhuFight = serverLevel.getCapability(CthulhuFightProvider.CTHULHU_FIGHT).resolve().get().getCurrentFight();
+            this.cthulhuFight = CthulhuFightSavedData.getOrCreate(serverLevel).getCurrentFight();
         } else {
             this.cthulhuFight = null;
         }
@@ -86,7 +86,7 @@ public class CthulhuEntity extends Mob implements Enemy, GeoEntity {
         this.entityData.set(INVULNERABLE_TICKS, pInvulnerableTicks);
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 

@@ -6,10 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -18,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import screret.sas.SpellsAndSorcerers;
 import screret.sas.Util;
-import screret.sas.api.capability.ability.WandAbilityProvider;
+import screret.sas.api.capability.ability.ICapabilityWandAbility;
 import screret.sas.api.wand.ability.WandAbilityInstance;
 
 import javax.annotation.Nonnull;
@@ -29,18 +26,20 @@ import java.util.function.Function;
 public class WandAbilityOverrideHandler extends ItemOverrides {
 
     protected final WandModel model;
-    protected final ModelBakery bakery;
+    protected final ModelBaker baker;
     protected final IGeometryBakingContext owner;
     protected final Function<Material, TextureAtlasSprite> spriteGetter;
     protected final ModelState modelTransform;
     protected final ResourceLocation modelLocation;
-    private final Cache<ResourceLocation, BakedModel> bakedModelCache = CacheBuilder.newBuilder().maximumSize(1000).build();
+    private final Cache<ResourceLocation, BakedModel> bakedModelCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .softValues()
+            .build();
 
-    public WandAbilityOverrideHandler(WandModel model, IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
-        super();
+    public WandAbilityOverrideHandler(WandModel model, IGeometryBakingContext owner, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
         this.model = model;
         this.owner = owner;
-        this.bakery = bakery;
+        this.baker = baker;
         this.spriteGetter = spriteGetter;
         this.modelLocation = modelLocation;
         this.modelTransform = modelTransform;
@@ -62,16 +61,18 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
     }
 
     protected BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity, ResourceLocation key) {
-        return this.model.bake(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(new ResourceLocation(key.getNamespace(), "item/wand/" + key.getPath())), this.owner, this.bakery, this.spriteGetter, this.modelTransform, this, this.modelLocation);
+        return this.model.bake(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(new ResourceLocation(key.getNamespace(), "item/wand/" + key.getPath())), this.owner, this.baker, this.spriteGetter, this.modelTransform, this, this.modelLocation);
     }
 
     ResourceLocation getCacheKey(ItemStack stack) {
-        return stack.getCapability(WandAbilityProvider.WAND_ABILITY).map(cap -> {
-            WandAbilityInstance current = cap.getAbility();
+        ICapabilityWandAbility ability = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+        if (ability != null) {
+            WandAbilityInstance current = ability.getMainAbility();
             while (current.getChildren() != null && current.getChildren().size() > 0) {
-                current = cap.getAbility().getChildren().get(0);
+                current = ability.getMainAbility().getChildren().get(0);
             }
             return current.getId();
-        }).orElse(Util.id("dummy"));
+        }
+        return Util.id("dummy");
     }
 }

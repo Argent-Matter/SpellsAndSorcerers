@@ -31,8 +31,7 @@ public class HealAbility extends SubAbility {
     }
 
     @Override
-    public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged)
-    {
+    public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged) {
         return false;
     }
 

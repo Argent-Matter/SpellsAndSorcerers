@@ -4,7 +4,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import screret.sas.blockentity.blockentity.PotionDistilleryBE;
 import screret.sas.container.container.PotionDistilleryMenu;
 
 public class DistilleryFuelSlot extends SlotItemHandler {

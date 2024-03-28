@@ -10,5 +10,6 @@ public class WandAbilityRegistry {
 
     public static Registry<WandAbility> WAND_ABILITIES_BUILTIN = WAND_ABILITIES.makeRegistry((builder) -> builder.defaultKey(Util.id("dummy")));
 
-    public static void init() {}
+    public static void init() {
+    }
 }

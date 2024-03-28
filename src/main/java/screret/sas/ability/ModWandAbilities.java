@@ -27,6 +27,7 @@ public class ModWandAbilities {
     public static final Supplier<WandAbility> SMALL_FIREBALL = WAND_ABILITIES.register("small_fireball", SmallFireballAbility::new);
     public static final Supplier<WandAbility> LARGE_FIREBALL = WAND_ABILITIES.register("large_fireball", LargeFireballAbility::new);
 
-    public static void init() {}
+    public static void init() {
+    }
 
 }

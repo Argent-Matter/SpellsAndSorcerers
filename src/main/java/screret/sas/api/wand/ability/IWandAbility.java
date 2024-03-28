@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 public interface IWandAbility {
 
-    InteractionResultHolder<ItemStack> execute(Level level, LivingEntity player, ItemStack stack, WandAbilityInstance.Vec3Wrapped currentPosition, int timeCharged);
+    InteractionResultHolder<ItemStack> execute(Level level, LivingEntity player, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged);
 
     int getUseDuration();
 

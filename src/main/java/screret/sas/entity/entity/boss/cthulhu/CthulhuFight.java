@@ -7,12 +7,15 @@ import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.EndFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.*;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -38,10 +41,12 @@ import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.end.DragonRespawnAnimation;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.EndPodiumFeature;
 import net.minecraft.world.level.levelgen.feature.SpikeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -62,7 +67,7 @@ public class CthulhuFight {
     private static final int GATEWAY_DISTANCE = 96;
     public static final int DRAGON_SPAWN_Y = 128;
     private static final Predicate<Entity> VALID_PLAYER = EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.withinDistance(0.0D, 128.0D, 0.0D, 192.0D));
-    private final ServerBossEvent dragonEvent = (ServerBossEvent)(new ServerBossEvent(Component.translatable("entity.sas.cthulhu"), BossEvent.BossBarColor.PINK, BossEvent.BossBarOverlay.PROGRESS)).setPlayBossMusic(true).setCreateWorldFog(true);
+    private final ServerBossEvent dragonEvent = (ServerBossEvent) (new ServerBossEvent(Component.translatable("entity.sas.cthulhu"), BossEvent.BossBarColor.PINK, BossEvent.BossBarOverlay.PROGRESS)).setPlayBossMusic(true).setCreateWorldFog(true);
     private final ServerLevel level;
     private final ObjectArrayList<Integer> gateways = new ObjectArrayList<>();
     private final BlockPattern exitPortalPattern;
@@ -107,7 +112,7 @@ public class CthulhuFight {
         if (pTag.contains("Gateways", 9)) {
             ListTag listtag = pTag.getList("Gateways", 3);
 
-            for(int i = 0; i < listtag.size(); ++i) {
+            for (int i = 0; i < listtag.size(); ++i) {
                 this.gateways.add(listtag.getInt(i));
             }
         } else {
@@ -159,28 +164,27 @@ public class CthulhuFight {
                 .where('#', BlockInWorld.hasState(BlockPredicate.forBlock(Blocks.BEDROCK))).build();
     }
 
-    public CompoundTag saveData() {
-        CompoundTag compoundtag = new CompoundTag();
-        compoundtag.putBoolean("NeedsStateScanning", this.needsStateScanning);
+    public CompoundTag saveData(CompoundTag tag) {
+        tag.putBoolean("NeedsStateScanning", this.needsStateScanning);
         if (this.dragonUUID != null) {
-            compoundtag.putUUID("Dragon", this.dragonUUID);
+            tag.putUUID("Dragon", this.dragonUUID);
         }
 
-        compoundtag.putBoolean("DragonKilled", this.dragonKilled);
-        compoundtag.putBoolean("PreviouslyKilled", this.previouslyKilled);
-        compoundtag.putBoolean("LegacyScanPerformed", !this.needsStateScanning); // Forge: fix MC-105080
+        tag.putBoolean("DragonKilled", this.dragonKilled);
+        tag.putBoolean("PreviouslyKilled", this.previouslyKilled);
+        tag.putBoolean("LegacyScanPerformed", !this.needsStateScanning); // Forge: fix MC-105080
         if (this.portalLocation != null) {
-            compoundtag.put("ExitPortalLocation", NbtUtils.writeBlockPos(this.portalLocation));
+            tag.put("ExitPortalLocation", NbtUtils.writeBlockPos(this.portalLocation));
         }
 
         ListTag listtag = new ListTag();
 
-        for(int i : this.gateways) {
+        for (int i : this.gateways) {
             listtag.add(IntTag.valueOf(i));
         }
 
-        compoundtag.put("Gateways", listtag);
-        return compoundtag;
+        tag.put("Gateways", listtag);
+        return tag;
     }
 
     public void tick() {
@@ -235,7 +239,7 @@ public class CthulhuFight {
         } else {
             EnderDragon enderdragon = list.get(0);
             this.dragonUUID = enderdragon.getUUID();
-            LOGGER.info("Found that there's a dragon still alive ({})", (Object)enderdragon);
+            LOGGER.info("Found that there's a dragon still alive ({})", (Object) enderdragon);
             this.dragonKilled = false;
             if (!flag) {
                 LOGGER.info("But we didn't have a portal, let's remove it.");
@@ -263,11 +267,11 @@ public class CthulhuFight {
     }
 
     private boolean hasActiveExitPortal() {
-        for(int i = -8; i <= 8; ++i) {
-            for(int j = -8; j <= 8; ++j) {
+        for (int i = -8; i <= 8; ++i) {
+            for (int j = -8; j <= 8; ++j) {
                 LevelChunk levelchunk = this.level.getChunk(i, j);
 
-                for(BlockEntity blockentity : levelchunk.getBlockEntities().values()) {
+                for (BlockEntity blockentity : levelchunk.getBlockEntities().values()) {
                     if (blockentity instanceof TheEndPortalBlockEntity) {
                         return true;
                     }
@@ -280,11 +284,11 @@ public class CthulhuFight {
 
     @Nullable
     private BlockPattern.BlockPatternMatch findExitPortal() {
-        for(int i = -8; i <= 8; ++i) {
-            for(int j = -8; j <= 8; ++j) {
+        for (int i = -8; i <= 8; ++i) {
+            for (int j = -8; j <= 8; ++j) {
                 LevelChunk levelchunk = this.level.getChunk(i, j);
 
-                for(BlockEntity blockentity : levelchunk.getBlockEntities().values()) {
+                for (BlockEntity blockentity : levelchunk.getBlockEntities().values()) {
                     if (blockentity instanceof TheEndPortalBlockEntity) {
                         BlockPattern.BlockPatternMatch blockpattern$blockpatternmatch = this.exitPortalPattern.find(this.level, blockentity.getBlockPos());
                         if (blockpattern$blockpatternmatch != null) {
@@ -302,7 +306,7 @@ public class CthulhuFight {
 
         int k = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, EndPodiumFeature.END_PODIUM_LOCATION).getY();
 
-        for(int l = k; l >= this.level.getMinBuildHeight(); --l) {
+        for (int l = k; l >= this.level.getMinBuildHeight(); --l) {
             BlockPattern.BlockPatternMatch blockpattern$blockpatternmatch1 = this.exitPortalPattern.find(this.level, new BlockPos(EndPodiumFeature.END_PODIUM_LOCATION.getX(), l, EndPodiumFeature.END_PODIUM_LOCATION.getZ()));
             if (blockpattern$blockpatternmatch1 != null) {
                 if (this.portalLocation == null) {
@@ -317,15 +321,15 @@ public class CthulhuFight {
     }
 
     private boolean isArenaLoaded() {
-        for(int i = -8; i <= 8; ++i) {
-            for(int j = 8; j <= 8; ++j) {
+        for (int i = -8; i <= 8; ++i) {
+            for (int j = 8; j <= 8; ++j) {
                 ChunkAccess chunkaccess = this.level.getChunk(i, j, ChunkStatus.FULL, false);
                 if (!(chunkaccess instanceof LevelChunk)) {
                     return false;
                 }
 
-                ChunkHolder.FullChunkStatus chunkholder$fullchunkstatus = ((LevelChunk)chunkaccess).getFullStatus();
-                if (!chunkholder$fullchunkstatus.isOrAfter(ChunkHolder.FullChunkStatus.TICKING)) {
+                FullChunkStatus chunkholder$fullchunkstatus = ((LevelChunk) chunkaccess).getFullStatus();
+                if (!chunkholder$fullchunkstatus.isOrAfter(FullChunkStatus.ENTITY_TICKING)) {
                     return false;
                 }
             }
@@ -337,7 +341,7 @@ public class CthulhuFight {
     private void updatePlayers() {
         Set<ServerPlayer> set = Sets.newHashSet();
 
-        for(ServerPlayer serverplayer : this.level.getPlayers(VALID_PLAYER)) {
+        for (ServerPlayer serverplayer : this.level.getPlayers(VALID_PLAYER)) {
             this.dragonEvent.addPlayer(serverplayer);
             set.add(serverplayer);
         }
@@ -345,7 +349,7 @@ public class CthulhuFight {
         Set<ServerPlayer> set1 = Sets.newHashSet(this.dragonEvent.getPlayers());
         set1.removeAll(set);
 
-        for(ServerPlayer serverplayer1 : set1) {
+        for (ServerPlayer serverplayer1 : set1) {
             this.dragonEvent.removePlayer(serverplayer1);
         }
 
@@ -355,11 +359,11 @@ public class CthulhuFight {
         this.ticksSinceCrystalsScanned = 0;
         this.crystalsAlive = 0;
 
-        for(SpikeFeature.EndSpike spikefeature$endspike : SpikeFeature.getSpikesForLevel(this.level)) {
+        for (SpikeFeature.EndSpike spikefeature$endspike : SpikeFeature.getSpikesForLevel(this.level)) {
             this.crystalsAlive += this.level.getEntitiesOfClass(EndCrystal.class, spikefeature$endspike.getTopBoundingBox()).size();
         }
 
-        LOGGER.debug("Found {} end crystals still alive", (int)this.crystalsAlive);
+        LOGGER.debug("Found {} end crystals still alive", (int) this.crystalsAlive);
     }
 
     public void setDragonKilled(EnderDragon pDragon) {
@@ -381,21 +385,22 @@ public class CthulhuFight {
     private void spawnNewGateway() {
         if (!this.gateways.isEmpty()) {
             int i = this.gateways.remove(this.gateways.size() - 1);
-            int j = Mth.floor(GATEWAY_DISTANCE * Math.cos(2.0D * (-Math.PI + 0.15707963267948966D * (double)i)));
-            int k = Mth.floor(GATEWAY_DISTANCE * Math.sin(2.0D * (-Math.PI + 0.1570796326794896E6D * (double)i)));
+            int j = Mth.floor(GATEWAY_DISTANCE * Math.cos(2.0D * (-Math.PI + 0.15707963267948966D * (double) i)));
+            int k = Mth.floor(GATEWAY_DISTANCE * Math.sin(2.0D * (-Math.PI + 0.1570796326794896E6D * (double) i)));
             this.spawnNewGateway(new BlockPos(j, 75, k));
         }
     }
 
     private void spawnNewGateway(BlockPos pPos) {
         this.level.levelEvent(3000, pPos, 0);
-        EndFeatures.END_GATEWAY_DELAYED.value().place(this.level, this.level.getChunkSource().getGenerator(), RandomSource.create(), pPos);
+        ConfiguredFeature<?, ?> gateway = ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE).get(EndFeatures.END_GATEWAY_DELAYED);
+        gateway.place(this.level, this.level.getChunkSource().getGenerator(), RandomSource.create(), pPos);
     }
 
     private void spawnExitPortal(boolean pActive) {
         EndPodiumFeature endpodiumfeature = new EndPodiumFeature(pActive);
         if (this.portalLocation == null) {
-            for(this.portalLocation = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EndPodiumFeature.END_PODIUM_LOCATION).below(); this.level.getBlockState(this.portalLocation).is(Blocks.BEDROCK) && this.portalLocation.getY() > this.level.getSeaLevel(); this.portalLocation = this.portalLocation.below()) {
+            for (this.portalLocation = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EndPodiumFeature.END_PODIUM_LOCATION).below(); this.level.getBlockState(this.portalLocation).is(Blocks.BEDROCK) && this.portalLocation.getY() > this.level.getSeaLevel(); this.portalLocation = this.portalLocation.below()) {
             }
         }
 
@@ -431,15 +436,15 @@ public class CthulhuFight {
         this.updateCrystalCount();
         Entity entity = this.level.getEntity(this.dragonUUID);
         if (entity instanceof EnderDragon) {
-            ((EnderDragon)entity).onCrystalDestroyed(pCrystal, pCrystal.blockPosition(), pDmgSrc);
+            ((EnderDragon) entity).onCrystalDestroyed(pCrystal, pCrystal.blockPosition(), pDmgSrc);
         }
     }
 
     public void resetSpikeCrystals() {
-        for(SpikeFeature.EndSpike spikefeature$endspike : SpikeFeature.getSpikesForLevel(this.level)) {
-            for(EndCrystal endcrystal : this.level.getEntitiesOfClass(EndCrystal.class, spikefeature$endspike.getTopBoundingBox())) {
+        for (SpikeFeature.EndSpike spikefeature$endspike : SpikeFeature.getSpikesForLevel(this.level)) {
+            for (EndCrystal endcrystal : this.level.getEntitiesOfClass(EndCrystal.class, spikefeature$endspike.getTopBoundingBox())) {
                 endcrystal.setInvulnerable(false);
-                endcrystal.setBeamTarget((BlockPos)null);
+                endcrystal.setBeamTarget((BlockPos) null);
             }
         }
     }

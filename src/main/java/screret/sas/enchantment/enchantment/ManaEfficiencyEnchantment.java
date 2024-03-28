@@ -2,6 +2,8 @@ package screret.sas.enchantment.enchantment;
 
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.QuickChargeEnchantment;
 import screret.sas.enchantment.ModEnchantments;
 
 public class ManaEfficiencyEnchantment extends Enchantment {
@@ -33,7 +35,7 @@ public class ManaEfficiencyEnchantment extends Enchantment {
 
     @Override
     public boolean checkCompatibility(Enchantment enchantment) {
-        return !(enchantment instanceof QuickChargeEnchantment) && super.checkCompatibility(enchantment);
+        return enchantment != Enchantments.QUICK_CHARGE && super.checkCompatibility(enchantment);
     }
 }
 

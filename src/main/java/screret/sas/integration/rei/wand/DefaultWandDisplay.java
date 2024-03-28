@@ -1,8 +1,10 @@
 package screret.sas.integration.rei.wand;
 
+import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import screret.sas.recipe.recipe.WandRecipe;
 
@@ -12,10 +14,10 @@ import java.util.Optional;
 
 public class DefaultWandDisplay extends DefaultCraftingDisplay<WandRecipe> {
 
-    public DefaultWandDisplay(WandRecipe recipe) {
+    public DefaultWandDisplay(RecipeHolder<WandRecipe> recipe) {
         super(
-                EntryIngredients.ofIngredients(recipe.getIngredients()),
-                Collections.singletonList(EntryIngredients.of(recipe.getResultItem())),
+                EntryIngredients.ofIngredients(recipe.value().getIngredients()),
+                Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess()))),
                 Optional.of(recipe)
         );
     }

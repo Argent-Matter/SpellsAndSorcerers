@@ -16,11 +16,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -37,7 +36,7 @@ public class WandTableBlock extends Block {
 
 
     public WandTableBlock() {
-        super(Properties.of(Material.STONE, MaterialColor.SAND).strength(3.0F, 36.0F).lightLevel((function) -> 7));
+        super(Properties.ofLegacyCopy(Blocks.STONE).mapColor(MapColor.SAND).strength(3.0F, 36.0F).lightLevel((function) -> 7));
     }
 
     @Override
@@ -67,7 +66,7 @@ public class WandTableBlock extends Block {
 
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        pLevel.sendParticles(ModParticles.EYE.get(), pPos.getX() + 0.5F, pPos.getY() + 1F, pPos.getZ() + 0.5F, 1,0, 0, 0, 0);
+        pLevel.sendParticles(ModParticles.EYE.get(), pPos.getX() + 0.5F, pPos.getY() + 1F, pPos.getZ() + 0.5F, 1, 0, 0, 0, 0);
         pLevel.scheduleTick(pPos, this, 20, TickPriority.NORMAL);
     }
 

@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -19,36 +18,30 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import org.jetbrains.annotations.NotNull;
 import screret.sas.block.ModBlocks;
 import screret.sas.block.block.PotionDistilleryBlock;
 import screret.sas.blockentity.ModBlockEntities;
-import screret.sas.container.ModContainers;
 import screret.sas.container.container.PotionDistilleryMenu;
 import screret.sas.item.handler.WrappedHandler;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.recipe.PotionDistillingRecipe;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
+public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProvider {
     public static final int DEFAULT_PROCESS_TIME = 400;
     public static final int DATA_LIT_TIME = 0, DATA_LIT_DURATION = 1, DATA_PROGRESS = 2, DATA_TOTAL_TIME = 3;
     private static final int SLOT_EXTRACT_MIN = 2, SLOT_EXTRACT_MAX = 4, SLOT_FUEL = 0, SLOT_INPUT = 1;
@@ -65,13 +58,13 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         public int get(int p_58431_) {
             switch (p_58431_) {
                 case 0:
-                    return PotionDistilleryBE.this.litTime;
+                    return PotionDistilleryBlockEntity.this.litTime;
                 case 1:
-                    return PotionDistilleryBE.this.litDuration;
+                    return PotionDistilleryBlockEntity.this.litDuration;
                 case 2:
-                    return PotionDistilleryBE.this.cookingProgress;
+                    return PotionDistilleryBlockEntity.this.cookingProgress;
                 case 3:
-                    return PotionDistilleryBE.this.cookingTotalTime;
+                    return PotionDistilleryBlockEntity.this.cookingTotalTime;
                 default:
                     return 0;
             }
@@ -80,16 +73,16 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         public void set(int p_58433_, int p_58434_) {
             switch (p_58433_) {
                 case 0:
-                    PotionDistilleryBE.this.litTime = p_58434_;
+                    PotionDistilleryBlockEntity.this.litTime = p_58434_;
                     break;
                 case 1:
-                    PotionDistilleryBE.this.litDuration = p_58434_;
+                    PotionDistilleryBlockEntity.this.litDuration = p_58434_;
                     break;
                 case 2:
-                    PotionDistilleryBE.this.cookingProgress = p_58434_;
+                    PotionDistilleryBlockEntity.this.cookingProgress = p_58434_;
                     break;
                 case 3:
-                    PotionDistilleryBE.this.cookingTotalTime = p_58434_;
+                    PotionDistilleryBlockEntity.this.cookingTotalTime = p_58434_;
             }
 
         }
@@ -100,8 +93,8 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
     };
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
 
-    public PotionDistilleryBE(BlockPos pPos, BlockState pBlockState) {
-        super(ModBlockEntities.POTION_DISTILLERY_BE.get(), pPos, pBlockState);
+    public PotionDistilleryBlockEntity(BlockPos pPos, BlockState pBlockState) {
+        super(ModBlockEntities.POTION_DISTILLERY.get(), pPos, pBlockState);
     }
 
     private boolean isLit() {
@@ -124,7 +117,7 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         this.litDuration = this.getBurnDuration(this.items.getStackInSlot(1));
         CompoundTag compoundtag = pTag.getCompound("RecipesUsed");
 
-        for(String recipe : compoundtag.getAllKeys()) {
+        for (String recipe : compoundtag.getAllKeys()) {
             this.recipesUsed.put(new ResourceLocation(recipe), compoundtag.getInt(recipe));
         }
 
@@ -150,7 +143,7 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         pTag.put("RecipesUsed", compoundtag);
     }
 
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, PotionDistilleryBE pBlockEntity) {
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, PotionDistilleryBlockEntity pBlockEntity) {
         boolean isLit = pBlockEntity.isLit();
         boolean flag1 = false;
         if (pBlockEntity.isLit()) {
@@ -161,12 +154,12 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         boolean hasItem = !pBlockEntity.items.getStackInSlot(SLOT_INPUT).isEmpty();
         boolean hasFuel = !fuel.isEmpty();
         if (pBlockEntity.isLit() || hasItem && hasFuel) {
-            Recipe<?> recipe;
+            RecipeHolder<PotionDistillingRecipe> holder = null;
             if (hasFuel) {
-                recipe =  pLevel.getRecipeManager().getRecipeFor(ModRecipes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).orElse(null);
-            } else {
-                recipe = null;
+                holder = pLevel.getRecipeManager().getRecipeFor(ModRecipeTypes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).orElse(null);
             }
+            if (holder == null) return;
+            PotionDistillingRecipe recipe = holder.value();
 
             int i = pBlockEntity.items.getSlotLimit(SLOT_INPUT);
             if (!pBlockEntity.isLit() && pBlockEntity.canBurn(recipe, pBlockEntity.items, i)) {
@@ -176,8 +169,7 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
                     flag1 = true;
                     if (fuel.hasCraftingRemainingItem())
                         pBlockEntity.items.setStackInSlot(SLOT_INPUT, fuel.getCraftingRemainingItem());
-                    else
-                    if (hasFuel) {
+                    else {
                         fuel.shrink(1);
                         if (fuel.isEmpty()) {
                             pBlockEntity.items.setStackInSlot(SLOT_INPUT, fuel.getCraftingRemainingItem());
@@ -192,7 +184,7 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
                     pBlockEntity.cookingProgress = 0;
                     pBlockEntity.cookingTotalTime = getTotalCookTime(pLevel, pBlockEntity);
                     if (pBlockEntity.burn(recipe, pBlockEntity.items, i)) {
-                        pBlockEntity.setRecipeUsed(recipe);
+                        pBlockEntity.setRecipeUsed(holder);
                     }
 
                     flag1 = true;
@@ -216,16 +208,16 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
 
     }
 
-    private boolean canBurn(@Nullable Recipe<?> pRecipe, IItemHandler pStacks, int pStackSize) {
+    private boolean canBurn(@Nullable PotionDistillingRecipe pRecipe, IItemHandler pStacks, int pStackSize) {
         if (!pStacks.getStackInSlot(0).isEmpty() && pRecipe != null) {
-            ItemStack itemstack = ((Recipe<Container>)pRecipe).assemble(this.itemsWrapped);
+            ItemStack itemstack = pRecipe.assemble(this.itemsWrapped, this.level.registryAccess());
             if (itemstack.isEmpty()) {
                 return false;
             } else {
                 ItemStack result = pStacks.getStackInSlot(SLOT_EXTRACT_MIN);
                 if (result.isEmpty()) {
                     return true;
-                } else if (!result.sameItem(itemstack)) {
+                } else if (result.getItem() != itemstack.getItem()) {
                     return false;
                 } else if (result.getCount() + itemstack.getCount() <= pStackSize && result.getCount() + itemstack.getCount() <= result.getMaxStackSize()) { // Forge fix: make furnace respect stack sizes in furnace recipes
                     return true;
@@ -238,10 +230,10 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         }
     }
 
-    private boolean burn(@Nullable Recipe<?> pRecipe, IItemHandlerModifiable pStacks, int pStackSize) {
+    private boolean burn(@Nullable PotionDistillingRecipe pRecipe, IItemHandlerModifiable pStacks, int pStackSize) {
         if (pRecipe != null && this.canBurn(pRecipe, pStacks, pStackSize)) {
             ItemStack fuel = pStacks.getStackInSlot(SLOT_FUEL);
-            ItemStack ingredient = ((Recipe<Container>) pRecipe).assemble(this.itemsWrapped);
+            ItemStack ingredient = pRecipe.assemble(this.itemsWrapped, this.level.registryAccess());
             ItemStack result = pStacks.getStackInSlot(SLOT_EXTRACT_MIN);
             if (result.isEmpty()) {
                 pStacks.setStackInSlot(2, ingredient.copy());
@@ -256,37 +248,37 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         }
     }
 
-    private static int getTotalCookTime(Level pLevel, PotionDistilleryBE pBlockEntity) {
-        return pLevel.getRecipeManager().getRecipeFor(ModRecipes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).map(PotionDistillingRecipe::getProcessingTime).orElse(DEFAULT_PROCESS_TIME);
+    private static int getTotalCookTime(Level pLevel, PotionDistilleryBlockEntity pBlockEntity) {
+        return pLevel.getRecipeManager().getRecipeFor(ModRecipeTypes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).map(RecipeHolder::value).map(PotionDistillingRecipe::getProcessingTime).orElse(DEFAULT_PROCESS_TIME);
     }
 
     public static boolean isFuel(ItemStack pStack) {
-        return CommonHooks.getBurnTime(pStack, ModRecipes.POTION_DISTILLING_RECIPE.get()) > 0;
+        return CommonHooks.getBurnTime(pStack, ModRecipeTypes.POTION_DISTILLING_RECIPE.get()) > 0;
     }
 
     protected int getBurnDuration(ItemStack pFuel) {
         if (pFuel.isEmpty()) {
             return 0;
         } else {
-            return CommonHooks.getBurnTime(pFuel, ModRecipes.POTION_DISTILLING_RECIPE.get());
+            return CommonHooks.getBurnTime(pFuel, ModRecipeTypes.POTION_DISTILLING_RECIPE.get());
         }
     }
 
-    public void setRecipeUsed(@Nullable Recipe<?> pRecipe) {
+    public void setRecipeUsed(@Nullable RecipeHolder<PotionDistillingRecipe> pRecipe) {
         if (pRecipe != null) {
-            ResourceLocation resourcelocation = pRecipe.getId();
+            ResourceLocation resourcelocation = pRecipe.id();
             this.recipesUsed.addTo(resourcelocation, 1);
         }
 
     }
 
-    public List<Recipe<?>> getRecipesToAwardAndPopExperience(ServerLevel pLevel, Vec3 pPopVec) {
-        List<Recipe<?>> usedRecipes = Lists.newArrayList();
+    public List<RecipeHolder<?>> getRecipesToAwardAndPopExperience(ServerLevel pLevel, Vec3 pPopVec) {
+        List<RecipeHolder<?>> usedRecipes = Lists.newArrayList();
 
-        for(Object2IntMap.Entry<ResourceLocation> entry : this.recipesUsed.object2IntEntrySet()) {
+        for (Object2IntMap.Entry<ResourceLocation> entry : this.recipesUsed.object2IntEntrySet()) {
             pLevel.getRecipeManager().byKey(entry.getKey()).ifPresent((recipe) -> {
                 usedRecipes.add(recipe);
-                createExperience(pLevel, pPopVec, entry.getIntValue(), ((PotionDistillingRecipe)recipe).getExperience());
+                createExperience(pLevel, pPopVec, entry.getIntValue(), ((PotionDistillingRecipe) recipe.value()).getExperience());
             });
         }
 
@@ -303,56 +295,46 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         ExperienceOrb.award(pLevel, pPopVec, amount);
     }
 
-    public ItemStackHandler getInventory(){
+    public ItemStackHandler getInventory() {
         return this.items;
     }
 
-    public RecipeWrapper getInventoryWrapper(){
+    public RecipeWrapper getInventoryWrapper() {
         return this.itemsWrapped;
     }
 
-    public ContainerData getDataAccess(){
+    public ContainerData getDataAccess() {
         return this.dataAccess;
     }
 
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-    private final Map<Direction, LazyOptional<WrappedHandler>> directionWrappedHandlerMap =
-            Map.of(Direction.DOWN, LazyOptional.of(() -> new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false)),
-                    Direction.NORTH, LazyOptional.of(() -> new WrappedHandler(items, (index) -> index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack))),
-                    Direction.SOUTH, LazyOptional.of(() -> new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false)),
-                    Direction.EAST, LazyOptional.of(() -> new WrappedHandler(items, (i) -> i == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack))),
-                    Direction.WEST, LazyOptional.of(() -> new WrappedHandler(items, (index) -> index == SLOT_FUEL || index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_FUEL, stack) || items.isItemValid(SLOT_INPUT, stack))));
+    private final Map<Direction, WrappedHandler> directionWrappedHandlerMap = Map.of(
+                    Direction.DOWN, new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false),
+                    Direction.NORTH, new WrappedHandler(items, (index) -> index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack)),
+                    Direction.SOUTH, new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false),
+                    Direction.EAST, new WrappedHandler(items, (i) -> i == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack)),
+                    Direction.WEST, new WrappedHandler(items, (index) -> index == SLOT_FUEL || index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_FUEL, stack) || items.isItemValid(SLOT_INPUT, stack))
+            );
 
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == Capabilities.ITEM_HANDLER) {
-            if (side == null) {
-                return lazyItemHandler.cast();
+    public IItemHandler getItemHandler(Direction side) {
+        if (directionWrappedHandlerMap.containsKey(side)) {
+            Direction localDir = this.getBlockState().getValue(PotionDistilleryBlock.FACING);
+
+            if (side == Direction.UP || side == Direction.DOWN) {
+                return directionWrappedHandlerMap.get(side);
             }
 
-            if (directionWrappedHandlerMap.containsKey(side)) {
-                Direction localDir = this.getBlockState().getValue(PotionDistilleryBlock.FACING);
-
-                if (side == Direction.UP || side == Direction.DOWN) {
-                    return directionWrappedHandlerMap.get(side).cast();
-                }
-
-                return switch (localDir) {
-                    default -> directionWrappedHandlerMap.get(side.getOpposite()).cast();
-                    case EAST -> directionWrappedHandlerMap.get(side.getClockWise()).cast();
-                    case SOUTH -> directionWrappedHandlerMap.get(side).cast();
-                    case WEST -> directionWrappedHandlerMap.get(side.getCounterClockWise()).cast();
-                };
-            }
+            return switch (localDir) {
+                default ->
+                        directionWrappedHandlerMap.get(side.getOpposite());
+                case EAST ->
+                        directionWrappedHandlerMap.get(side.getClockWise());
+                case SOUTH ->
+                        directionWrappedHandlerMap.get(side);
+                case WEST ->
+                        directionWrappedHandlerMap.get(side.getCounterClockWise());
+            };
         }
-
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
+        return null;
     }
 
     @Override

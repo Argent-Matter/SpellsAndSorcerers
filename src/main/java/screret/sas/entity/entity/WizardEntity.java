@@ -27,7 +27,6 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -40,9 +39,8 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.ClientUtils;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
 import java.util.List;
 
 public class WizardEntity extends SpellcasterIllager implements RangedAttackMob, GeoEntity {
@@ -56,7 +54,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         super(type, pLevel);
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 
@@ -100,11 +98,9 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
-        if(possibleWands == null){
-            if(Util.customWands.isEmpty()){
-                Util.addItems();
-            }
-            possibleWands = Util.customWands.values().stream().toList();
+        if (possibleWands == null) {
+            Util.generateWandItems();
+            possibleWands = Util.CUSTOM_WANDS.values().stream().toList();
         }
         this.setItemSlot(EquipmentSlot.MAINHAND, possibleWands.get(pRandom.nextInt(possibleWands.size() - 1)));
     }
@@ -114,7 +110,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         super.addAdditionalSaveData(pCompound);
         ListTag listtag = new ListTag();
 
-        for(int i = 0; i < this.inventory.getSlots(); ++i) {
+        for (int i = 0; i < this.inventory.getSlots(); ++i) {
             ItemStack itemstack = this.inventory.getStackInSlot(i);
             if (!itemstack.isEmpty()) {
                 listtag.add(itemstack.save(new CompoundTag()));
@@ -128,7 +124,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         super.readAdditionalSaveData(pCompound);
         ListTag listtag = pCompound.getList("Inventory", 10);
 
-        for(int i = 0; i < listtag.size(); ++i) {
+        for (int i = 0; i < listtag.size(); ++i) {
             ItemStack itemstack = ItemStack.of(listtag.getCompound(i));
             if (!itemstack.isEmpty()) {
                 this.inventory.insertItem(i, itemstack, true);
@@ -159,12 +155,12 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
-        if(SASConfig.Server.dropWandCores.get()){
+        if (SASConfig.Server.dropWandCores.get()) {
             var toDrop = Util.getMainAbilityFromStack(this.getMainHandItem()).get();
             while (toDrop.getChildren() != null && toDrop.getChildren().size() > 0) {
                 toDrop = toDrop.getChildren().get(0);
             }
-            ItemEntity itementity = this.spawnAtLocation(Util.customWandCores.get(toDrop.getId()).copy());
+            ItemEntity itementity = this.spawnAtLocation(Util.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
             if (itementity != null) {
                 itementity.setExtendedLifetime();
             }
@@ -218,8 +214,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
 
     @Override
     public void performRangedAttack(LivingEntity pTarget, float pVelocity) {
-        if(Util.getMainAbilityFromStack(this.getMainHandItem()).isPresent()){
-            Util.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.Vec3Wrapped(this.getEyePosition()), 50);
+        if (Util.getMainAbilityFromStack(this.getMainHandItem()).isPresent()) {
+            Util.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
         }
     }
 
@@ -230,7 +226,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
             var target = WizardEntity.this.getTarget();
             double distanceSqr = WizardEntity.this.distanceToSqr(target);
 
-            float maxDistance = (float)Math.sqrt(distanceSqr) / WizardEntity.this.attackRadiusSqr;
+            float maxDistance = (float) Math.sqrt(distanceSqr) / WizardEntity.this.attackRadiusSqr;
             float distanceFactor = Mth.clamp(maxDistance, 0.1F, 1.0F);
             WizardEntity.this.performRangedAttack(target, distanceFactor);
         }

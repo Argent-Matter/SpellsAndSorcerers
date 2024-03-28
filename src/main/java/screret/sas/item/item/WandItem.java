@@ -9,10 +9,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import screret.sas.Util;
+import screret.sas.ability.ModWandAbilities;
 import screret.sas.api.capability.ability.ICapabilityWandAbility;
-import screret.sas.api.capability.ability.WandAbilityProvider;
 import screret.sas.api.wand.ability.WandAbilityInstance;
 import screret.sas.attachmenttypes.ModAttachmentTypes;
 import screret.sas.client.model.item.WandItemClientExtensions;
@@ -31,13 +34,18 @@ public class WandItem extends Item {
     }
 
     @Override
+    public ItemStack getDefaultInstance() {
+        return Util.createWand(ModWandAbilities.DUMMY.get(), null);
+    }
+
+    @Override
     public Component getName(ItemStack stack) {
         String name = "item.sas.basic";
-        if (stack.getCapability(WandAbilityProvider.WAND_ABILITY) != null) {
-            var cap = stack.getCapability(WandAbilityProvider.WAND_ABILITY);
-            var current = cap.getAbility();
+        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+            var current = cap.getMainAbility();
             while (current.getChildren() != null && current.getChildren().size() > 0) {
-                current = cap.getAbility().getChildren().get(0);
+                current = cap.getMainAbility().getChildren().get(0);
             }
             name = current.getId().toLanguageKey("ability");
         }
@@ -45,11 +53,16 @@ public class WandItem extends Item {
     }
 
     @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) || enchantment == Enchantments.QUICK_CHARGE || enchantment == Enchantments.POWER_ARROWS;
+    }
+
+    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         InteractionResultHolder<ItemStack> reference = InteractionResultHolder.fail(itemstack);
-        if (itemstack.getCapability(WandAbilityProvider.WAND_ABILITY) != null) {
-            var cap = itemstack.getCapability(WandAbilityProvider.WAND_ABILITY);
+        if (itemstack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = itemstack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
             if (player.isCrouching() && cap.getCrouchAbility() != null) {
                 var crouchAbility = cap.getCrouchAbility();
                 if ((crouchAbility.isChargeable() || crouchAbility.isHoldable()) && !player.isUsingItem()) {
@@ -59,7 +72,7 @@ public class WandItem extends Item {
                     reference = execute(level, player, itemstack, 0, cap);
                 }
             } else {
-                var ability = cap.getAbility();
+                var ability = cap.getMainAbility();
                 if ((ability.isChargeable() || ability.isHoldable()) && !player.isUsingItem()) {
                     player.startUsingItem(hand);
                     reference = InteractionResultHolder.consume(itemstack);
@@ -79,14 +92,14 @@ public class WandItem extends Item {
                 return returnValue;
 
             if (user.isCrouching() && cap.getCrouchAbility() != null) {
-                returnValue = cap.getCrouchAbility().execute(level, user, stack, new WandAbilityInstance.Vec3Wrapped(user.getEyePosition()), timeCharged);
+                returnValue = cap.getCrouchAbility().execute(level, user, stack, new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
                 if (user instanceof Player player) {
                     player.getCooldowns().addCooldown(currentItem, cap.getCrouchAbility().getAbility().getCooldownDuration());
                 }
             } else {
-                returnValue = cap.getAbility().execute(level, user, stack, new WandAbilityInstance.Vec3Wrapped(user.getEyePosition()), timeCharged);
+                returnValue = cap.getMainAbility().execute(level, user, stack, new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
                 if (user instanceof Player player) {
-                    player.getCooldowns().addCooldown(currentItem, cap.getAbility().getAbility().getCooldownDuration());
+                    player.getCooldowns().addCooldown(currentItem, cap.getMainAbility().getAbility().getCooldownDuration());
                 }
             }
         }
@@ -110,9 +123,9 @@ public class WandItem extends Item {
     @Override
     public void onUseTick(Level level, LivingEntity user, ItemStack stack, int usageTicks) {
         if (!level.isClientSide) {
-            if (stack.getCapability(WandAbilityProvider.WAND_ABILITY) != null) {
-                var cap = stack.getCapability(WandAbilityProvider.WAND_ABILITY);
-                if (cap.getAbility().isHoldable() || (cap.getCrouchAbility() != null && cap.getCrouchAbility().isHoldable()))
+            if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
+                var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+                if (cap.getMainAbility().isHoldable() || (cap.getCrouchAbility() != null && cap.getCrouchAbility().isHoldable()))
                     this.execute(level, user, stack, usageTicks, cap);
             }
         }
@@ -120,11 +133,11 @@ public class WandItem extends Item {
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
-        if (stack.getCapability(WandAbilityProvider.WAND_ABILITY) != null) {
-            var cap = stack.getCapability(WandAbilityProvider.WAND_ABILITY);
-            var useDuration = cap.getAbility().getUseDuration();
+        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+            var useDuration = cap.getMainAbility().getUseDuration();
             if (useDuration > 0) {
-                if (cap.getAbility().isChargeable() || (cap.getCrouchAbility() != null && cap.getCrouchAbility().isChargeable()))
+                if (cap.getMainAbility().isChargeable() || (cap.getCrouchAbility() != null && cap.getCrouchAbility().isChargeable()))
                     this.execute(level, entity, stack, useDuration - timeLeft, cap);
             }
         }
@@ -141,8 +154,8 @@ public class WandItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (stack.getCapability(WandAbilityProvider.WAND_ABILITY) != null) {
-            return stack.getCapability(WandAbilityProvider.WAND_ABILITY).getAbility().getUseDuration();
+        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
+            return stack.getCapability(ICapabilityWandAbility.WAND_ABILITY).getMainAbility().getUseDuration();
         }
         return 0;
     }

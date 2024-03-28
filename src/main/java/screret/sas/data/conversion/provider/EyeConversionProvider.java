@@ -47,13 +47,13 @@ public class EyeConversionProvider implements DataProvider {
     }
 
 
-    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, TagKey<Block> items){
+    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, TagKey<Block> items) {
         EyeConversionBuilder.conversion(result)
                 .requires(items)
                 .save(finished, Util.id(BuiltInRegistries.BLOCK.getKey(result).getPath()));
     }
 
-    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, Block item){
+    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, Block item) {
         EyeConversionBuilder.conversion(result)
                 .requires(item)
                 .save(finished, Util.id(BuiltInRegistries.BLOCK.getKey(result).getPath()));
@@ -74,7 +74,7 @@ public class EyeConversionProvider implements DataProvider {
         return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
     }
 
-        @Override
+    @Override
     public String getName() {
         return "Eye Conversions";
     }

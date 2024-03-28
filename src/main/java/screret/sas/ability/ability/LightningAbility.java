@@ -19,24 +19,24 @@ public class LightningAbility extends SubAbility {
 
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged) {
-        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(hitEnt.level);
+        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(hitEnt.level());
         lightning.moveTo(hitEnt.getX(), hitEnt.getY(), hitEnt.getZ());
         lightning.setVisualOnly(false);
         lightning.setCause(user instanceof ServerPlayer player ? player : null);
         lightning.setDamage(this.getDamagePerHit(usedItem));
-        hitEnt.level.addFreshEntity(lightning);
+        hitEnt.level().addFreshEntity(lightning);
 
         return true;
     }
 
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged) {
-        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(user.level);
+        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(user.level());
         lightning.moveTo(hitPoint.x, hitPoint.y, hitPoint.z);
         lightning.setVisualOnly(false);
         lightning.setCause(user instanceof ServerPlayer player ? player : null);
         lightning.setDamage(this.getDamagePerHit(usedItem));
-        user.level.addFreshEntity(lightning);
+        user.level().addFreshEntity(lightning);
         return true;
     }
 }

@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 public class EyeConversionBuilder {
     private final Block result;
     private BlockIngredient ingredient = BlockIngredient.EMPTY;
+
     public EyeConversionBuilder(Block pResult) {
         this.result = pResult;
     }
@@ -51,7 +52,7 @@ public class EyeConversionBuilder {
         return this.result;
     }
 
-    public void save(Consumer<Result> pFinishedRecipeConsumer){
+    public void save(Consumer<Result> pFinishedRecipeConsumer) {
         this.save(pFinishedRecipeConsumer, BuiltInRegistries.BLOCK.getKey(this.result));
     }
 
@@ -65,8 +66,8 @@ public class EyeConversionBuilder {
      */
     private void ensureValid(ResourceLocation pId) {
 
-        for (var block : ingredient.getBlocks()){
-            if(!BuiltInRegistries.BLOCK.containsValue(block.getBlock())){
+        for (var block : ingredient.getBlocks()) {
+            if (!BuiltInRegistries.BLOCK.containsValue(block.getBlock())) {
                 throw new IllegalArgumentException("Block " + block + " is not registered!");
             }
         }

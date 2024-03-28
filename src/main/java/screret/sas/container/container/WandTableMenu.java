@@ -8,13 +8,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import screret.sas.block.ModBlocks;
 import screret.sas.container.ModContainers;
 import screret.sas.container.stackhandler.CraftOutputItemHandler;
 import screret.sas.container.stackhandler.CraftResultStackHandler;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.recipe.WandRecipe;
 
 import java.util.Optional;
@@ -24,9 +25,9 @@ public class WandTableMenu extends AbstractContainerMenu {
     private static final int CRAFT_SLOT_START = 1, CRAFT_SLOT_END = 7, INV_SLOT_START = 7, INV_SLOT_END = 34, USE_ROW_SLOT_START = 34, USE_ROW_SLOT_END = 43;
     private static final int INPUT_X_SIZE = 3, INPUT_Y_SIZE = 2;
 
-    private final CraftingContainer inputSlots = new CraftingContainer(this, 3,2){
+    private final CraftingContainer inputSlots = new TransientCraftingContainer(this, 3, 2) {
         @Override
-        public void setChanged(){
+        public void setChanged() {
             super.setChanged();
             WandTableMenu.this.slotsChanged(this);
         }
@@ -47,19 +48,19 @@ public class WandTableMenu extends AbstractContainerMenu {
         this.player = pPlayerInventory.player;
         this.addSlot(new CraftOutputItemHandler(pPlayerInventory.player, this.inputSlots, this.resultSlot, 0, 124, 35));
 
-        for(int y = 0; y < INPUT_Y_SIZE; ++y) {
-            for(int x = 0; x < INPUT_X_SIZE; ++x) {
+        for (int y = 0; y < INPUT_Y_SIZE; ++y) {
+            for (int x = 0; x < INPUT_X_SIZE; ++x) {
                 this.addSlot(new Slot(this.inputSlots, x + y * INPUT_X_SIZE, 30 + x * 18, 26 + y * 18));
             }
         }
 
-        for(int k = 0; k < 3; ++k) {
-            for(int i1 = 0; i1 < 9; ++i1) {
+        for (int k = 0; k < 3; ++k) {
+            for (int i1 = 0; i1 < 9; ++i1) {
                 this.addSlot(new Slot(pPlayerInventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
             }
         }
 
-        for(int l = 0; l < 9; ++l) {
+        for (int l = 0; l < 9; ++l) {
             this.addSlot(new Slot(pPlayerInventory, l, 8 + l * 18, 142));
         }
 
@@ -67,13 +68,13 @@ public class WandTableMenu extends AbstractContainerMenu {
 
     protected static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, CraftResultStackHandler pResult) {
         if (!pLevel.isClientSide) {
-            ServerPlayer serverplayer = (ServerPlayer)pPlayer;
+            ServerPlayer serverplayer = (ServerPlayer) pPlayer;
             ItemStack result = ItemStack.EMPTY;
-            Optional<WandRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(ModRecipes.WAND_RECIPE.get(), pContainer, pLevel);
+            Optional<RecipeHolder<WandRecipe>> optional = pLevel.getServer().getRecipeManager().getRecipeFor(ModRecipeTypes.WAND_RECIPE.get(), pContainer, pLevel);
             if (optional.isPresent()) {
-                WandRecipe recipe = optional.get();
+                RecipeHolder<WandRecipe> recipe = optional.get();
                 if (pResult.setRecipeUsed(pLevel, serverplayer, recipe)) {
-                    result = recipe.assemble(pContainer);
+                    result = recipe.value().assemble(pContainer, pLevel.registryAccess());
                 }
             }
 
@@ -92,7 +93,7 @@ public class WandTableMenu extends AbstractContainerMenu {
 
 
     public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        return pRecipe.matches(this.inputSlots, this.player.level);
+        return pRecipe.matches(this.inputSlots, this.player.level());
     }
 
     @Override
@@ -156,7 +157,7 @@ public class WandTableMenu extends AbstractContainerMenu {
     }
 
     public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
-        if(pSlot instanceof SlotItemHandler slot){
+        if (pSlot instanceof SlotItemHandler slot) {
             return slot.getItemHandler() != this.resultSlot && super.canTakeItemForPickAll(pStack, pSlot);
         }
         return super.canTakeItemForPickAll(pStack, pSlot);

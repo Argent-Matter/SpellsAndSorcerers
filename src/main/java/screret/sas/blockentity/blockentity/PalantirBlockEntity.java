@@ -2,12 +2,9 @@ package screret.sas.blockentity.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.EnchantmentTableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import screret.sas.blockentity.ModBlockEntities;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -16,15 +13,15 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class PalantirBE extends BlockEntity implements GeoBlockEntity {
+public class PalantirBlockEntity extends BlockEntity implements GeoBlockEntity {
     private static final float MAX_LOOK_X_INCREASE = 3f, MAX_LOOK_Y_INCREASE = 3f;
 
     public float xRot, yRot;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public PalantirBE(BlockPos pPos, BlockState pBlockState) {
-        super(ModBlockEntities.PALANTIR_BE.get(), pPos, pBlockState);
+    public PalantirBlockEntity(BlockPos pPos, BlockState pBlockState) {
+        super(ModBlockEntities.PALANTIR.get(), pPos, pBlockState);
     }
 
     @Override
@@ -39,12 +36,12 @@ public class PalantirBE extends BlockEntity implements GeoBlockEntity {
         return cache;
     }
 
-    public static void eyeAnimationTick(Level pLevel, BlockPos pPos, BlockState pState, PalantirBE pBlockEntity) {
-        Player player = pLevel.getNearestPlayer((double)pPos.getX() + 0.5D, (double)pPos.getY() + 0.5D, (double)pPos.getZ() + 0.3125D, 3.0D, false);
+    public static void eyeAnimationTick(Level pLevel, BlockPos pPos, BlockState pState, PalantirBlockEntity pBlockEntity) {
+        Player player = pLevel.getNearestPlayer((double) pPos.getX() + 0.5D, (double) pPos.getY() + 0.5D, (double) pPos.getZ() + 0.3125D, 3.0D, false);
         if (player != null) {
-            double x = player.getX() - ((double)pPos.getX() + 0.5D);
-            double y = player.getZ() - ((double)pPos.getZ() + 0.5D);
-            double z = player.getEyeY() - ((double)pPos.getY() + 0.3125D);
+            double x = player.getX() - ((double) pPos.getX() + 0.5D);
+            double y = player.getZ() - ((double) pPos.getZ() + 0.5D);
+            double z = player.getEyeY() - ((double) pPos.getY() + 0.3125D);
 
 
             double distanceXY = Math.sqrt(x * x + y * y);

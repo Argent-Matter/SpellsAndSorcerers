@@ -31,7 +31,7 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
     private final MobEffectInstance fullSetEffect;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public ModArmorItem(ArmorMaterial material, MobEffectInstance fullSetEffect, EquipmentSlot slot, Properties builder) {
+    public ModArmorItem(ArmorMaterial material, MobEffectInstance fullSetEffect, ArmorItem.Type slot, Properties builder) {
         super(material, slot, builder);
         this.fullSetEffect = fullSetEffect;
     }
@@ -57,9 +57,9 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
 
     @Override
     public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if(!world.isClientSide()) {
-            if(SASConfig.Server.armorGiveEffects.get()){
-                if(hasFullSuitOfArmorOn(player)) {
+        if (!world.isClientSide()) {
+            if (SASConfig.Server.armorGiveEffects.get()) {
+                if (hasFullSuitOfArmorOn(player)) {
                     evaluateArmorEffects(player);
                 }
             }
@@ -79,7 +79,7 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
     }
 
     private void evaluateArmorEffects(Player player) {
-        if(hasCorrectArmorOn(this.material, player)) {
+        if (hasCorrectArmorOn(this.material, player)) {
             addStatusEffectForMaterial(player, this.material, this.fullSetEffect);
         }
     }
@@ -87,7 +87,7 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
     private void addStatusEffectForMaterial(Player player, ArmorMaterial mapArmorMaterial, MobEffectInstance mapStatusEffect) {
         boolean hasPlayerEffect = player.hasEffect(mapStatusEffect.getEffect());
 
-        if(hasCorrectArmorOn(mapArmorMaterial, player) && !hasPlayerEffect) {
+        if (hasCorrectArmorOn(mapArmorMaterial, player) && !hasPlayerEffect) {
             player.addEffect(new MobEffectInstance(mapStatusEffect.getEffect(),
                     mapStatusEffect.getDuration(), mapStatusEffect.getAmplifier()));
         }
@@ -104,10 +104,10 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
     }
 
     private boolean hasCorrectArmorOn(ArmorMaterial material, Player player) {
-        ArmorItem boots = (ArmorItem)player.getInventory().getArmor(0).getItem();
-        ArmorItem leggings = (ArmorItem)player.getInventory().getArmor(1).getItem();
-        ArmorItem breastplate = (ArmorItem)player.getInventory().getArmor(2).getItem();
-        ArmorItem helmet = (ArmorItem)player.getInventory().getArmor(3).getItem();
+        ArmorItem boots = (ArmorItem) player.getInventory().getArmor(0).getItem();
+        ArmorItem leggings = (ArmorItem) player.getInventory().getArmor(1).getItem();
+        ArmorItem breastplate = (ArmorItem) player.getInventory().getArmor(2).getItem();
+        ArmorItem helmet = (ArmorItem) player.getInventory().getArmor(3).getItem();
 
         return helmet.getMaterial() == material && breastplate.getMaterial() == material &&
                 leggings.getMaterial() == material && boots.getMaterial() == material;

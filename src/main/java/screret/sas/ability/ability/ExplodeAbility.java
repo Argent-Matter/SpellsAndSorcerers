@@ -8,6 +8,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+
 import java.util.EnumSet;
 
 public class ExplodeAbility extends SubAbility {
@@ -28,14 +29,14 @@ public class ExplodeAbility extends SubAbility {
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged) {
         var explosionPower = getDamagePerHit(usedItem) * timeCharged / 8;
-        user.level.explode(user, hitEnt.getX(), hitEnt.getY(), hitEnt.getZ(), explosionPower, Level.ExplosionInteraction.MOB);
+        user.level().explode(user, hitEnt.getX(), hitEnt.getY(), hitEnt.getZ(), explosionPower, Level.ExplosionInteraction.MOB);
         return true;
     }
 
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged) {
         var explosionPower = getDamagePerHit(usedItem) * timeCharged / 8;
-        user.level.explode(user, hitPoint.x, hitPoint.y, hitPoint.z, explosionPower, Level.ExplosionInteraction.MOB);
+        user.level().explode(user, hitPoint.x, hitPoint.y, hitPoint.z, explosionPower, Level.ExplosionInteraction.MOB);
         return true;
     }
 }

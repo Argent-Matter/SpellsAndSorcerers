@@ -22,12 +22,11 @@ public class ModTags {
         public static final TagKey<Item> BOSS_SUMMON_ITEMS = tag("boss_summon_items");
 
 
-        private static TagKey<Item> tag(String name)
-        {
+        private static TagKey<Item> tag(String name) {
             return ItemTags.create(Util.id(name));
         }
-        private static TagKey<Item> forgeTag(String name)
-        {
+
+        private static TagKey<Item> forgeTag(String name) {
             return ItemTags.create(new ResourceLocation("forge", name));
         }
     }
@@ -37,12 +36,11 @@ public class ModTags {
         public static final TagKey<Block> SOULSTEEL_BLOCKS = forgeTag("storage_blocks/soulsteel");
 
 
-        private static TagKey<Block> tag(String name)
-        {
+        private static TagKey<Block> tag(String name) {
             return BlockTags.create(Util.id(name));
         }
-        private static TagKey<Block> forgeTag(String name)
-        {
+
+        private static TagKey<Block> forgeTag(String name) {
             return BlockTags.create(new ResourceLocation("forge", name));
         }
     }
@@ -52,10 +50,10 @@ public class ModTags {
         public static final TagKey<Biome> HAS_WIZARD_TOWER = tag("has_structure/wizard_tower");
 
 
-        private static TagKey<Biome> tag(String name)
-        {
+        private static TagKey<Biome> tag(String name) {
             return create(Util.id(name));
         }
+
         private static TagKey<Biome> create(ResourceLocation pName) {
             return TagKey.create(Registries.BIOME, pName);
         }

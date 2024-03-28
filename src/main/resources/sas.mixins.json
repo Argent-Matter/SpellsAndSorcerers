@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "sas.refmap.json",
   "mixins": [
-    "PotionBrewingAccessor"
+    "MobEffectAccessor",
   ],
   "client": [
   ],

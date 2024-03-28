@@ -25,9 +25,9 @@ public class WizardRenderer extends GeoEntityRenderer<WizardEntity> {
     @Override
     public void postRender(PoseStack poseStack, WizardEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
                            int packedOverlay, float red, float green, float blue, float alpha) {
-        if(model.getBone("rightArm").isPresent() && Util.getMainAbilityFromStack(animatable.getMainHandItem()).isPresent()){
+        if (model.getBone("rightArm").isPresent() && Util.getMainAbilityFromStack(animatable.getMainHandItem()).isPresent()) {
             var handWorldPos = model.getBone("rightArm").get().getWorldPosition();
-            if(animatable.isCastingSpell()){
+            if (animatable.isCastingSpell()) {
                 animatable.getCommandSenderWorld().addParticle(Util.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
                         handWorldPos.x,
                         handWorldPos.y,

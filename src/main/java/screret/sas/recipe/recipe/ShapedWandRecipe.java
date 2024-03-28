@@ -1,22 +1,19 @@
 package screret.sas.recipe.recipe;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import screret.sas.Util;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.ingredient.WandAbilityIngredient;
 
 public class ShapedWandRecipe implements WandRecipe {
@@ -24,56 +21,19 @@ public class ShapedWandRecipe implements WandRecipe {
     public static final String TYPE_ID_NAME = "shaped_wand";
     public static final int MAX_SIZE_X = 3, MAX_SIZE_Y = 2;
 
-    private final ResourceLocation id;
     final String group;
+    final ShapedRecipePattern pattern;
     final WandAbilityIngredient result;
-    final NonNullList<Ingredient> ingredients;
 
-    public ShapedWandRecipe(ResourceLocation id, String group, NonNullList<Ingredient> ingredients, WandAbilityIngredient result) {
-        this.id = id;
+    public ShapedWandRecipe(String group, ShapedRecipePattern pattern, WandAbilityIngredient result) {
         this.group = group;
         this.result = result;
-        this.ingredients = ingredients;
+        this.pattern = pattern;
     }
 
     @Override
     public boolean matches(CraftingContainer pInv, Level pLevel) {
-        for(int i = 0; i <= pInv.getWidth() - MAX_SIZE_X; ++i) {
-            for(int j = 0; j <= pInv.getHeight() - MAX_SIZE_Y; ++j) {
-                if (this.matches(pInv, i, j, true)) {
-                    return true;
-                }
-
-                if (this.matches(pInv, i, j, false)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean matches(CraftingContainer pCraftingInventory, int pWidth, int pHeight, boolean pMirrored) {
-        for(int i = 0; i < pCraftingInventory.getWidth(); ++i) {
-            for(int j = 0; j < pCraftingInventory.getHeight(); ++j) {
-                int k = i - pWidth;
-                int l = j - pHeight;
-                Ingredient ingredient = Ingredient.EMPTY;
-                if (k >= 0 && l >= 0 && k < MAX_SIZE_X && l < MAX_SIZE_Y) {
-                    if (pMirrored) {
-                        ingredient = this.ingredients.get(MAX_SIZE_X - k - 1 + l * MAX_SIZE_X);
-                    } else {
-                        ingredient = this.ingredients.get(k + l * MAX_SIZE_X);
-                    }
-                }
-
-                if (!ingredient.test(pCraftingInventory.getItem(i + j * pCraftingInventory.getWidth()))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return pattern.matches(pInv);
     }
 
     @Override
@@ -83,7 +43,7 @@ public class ShapedWandRecipe implements WandRecipe {
 
     @Override
     public boolean canCraftInDimensions(int x, int y) {
-        return x <= MAX_SIZE_X && y <= MAX_SIZE_Y;
+        return x <= this.pattern.width() && y <= this.pattern.height();
     }
 
     @Override
@@ -93,17 +53,12 @@ public class ShapedWandRecipe implements WandRecipe {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
+        return pattern.ingredients();
     }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.SHAPED_WAND_RECIPE_SERIALIZER.get();
+        return ModRecipeTypes.SHAPED_WAND_RECIPE_SERIALIZER.get();
     }
 
     private static String[] patternFromJson(JsonArray jsonArr) {
@@ -121,47 +76,37 @@ public class ShapedWandRecipe implements WandRecipe {
         return astring;
     }
 
-    public String toString(){
-        return getId().toString();
-    }
-
     @Override
     public boolean isShapeless() {
         return false;
     }
 
     public static class Serializer implements RecipeSerializer<ShapedWandRecipe> {
-        @Override
-        public ShapedWandRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            String group = GsonHelper.getAsString(json, "group", "");
-            var map = ShapedRecipe.keyFromJson(GsonHelper.getAsJsonObject(json, "key"));
-            var pattern = ShapedRecipe.shrink(ShapedWandRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern")));
-            var inputs = ShapedRecipe.dissolvePattern(pattern, map, MAX_SIZE_X, MAX_SIZE_Y);
-            var output = WandAbilityIngredient.Serializer.INSTANCE.parse(GsonHelper.getAsJsonObject(json, "result"));
+        public static final Codec<ShapedWandRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(val -> val.group),
+                ShapedRecipePattern.MAP_CODEC.forGetter(val -> val.pattern),
+                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(val -> val.result)
+        ).apply(instance, ShapedWandRecipe::new));
 
-            return new ShapedWandRecipe(recipeId, group, inputs, output);
+        @Override
+        public Codec<ShapedWandRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public ShapedWandRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public ShapedWandRecipe fromNetwork(FriendlyByteBuf buffer) {
             String group = buffer.readUtf();
-            var inputs = NonNullList.withSize(MAX_SIZE_X * MAX_SIZE_Y, Ingredient.EMPTY);
+            ShapedRecipePattern pattern = ShapedRecipePattern.fromNetwork(buffer);
+            WandAbilityIngredient result = (WandAbilityIngredient) WandAbilityIngredient.fromNetwork(buffer);
 
-            inputs.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
-
-            var result = WandAbilityIngredient.Serializer.INSTANCE.parse(buffer);
-
-            return new ShapedWandRecipe(recipeId, group, inputs, result);
+            return new ShapedWandRecipe(group, pattern, result);
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, ShapedWandRecipe recipe) {
             buffer.writeUtf(recipe.group);
-            for (var ingredient : recipe.ingredients) {
-                ingredient.toNetwork(buffer);
-            }
-
-            WandAbilityIngredient.Serializer.INSTANCE.write(buffer, recipe.result);
+            recipe.pattern.toNetwork(buffer);
+            recipe.result.toNetwork(buffer);
         }
     }
 }

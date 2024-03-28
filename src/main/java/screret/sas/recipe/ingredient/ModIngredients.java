@@ -1,12 +1,9 @@
 package screret.sas.recipe.ingredient;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import screret.sas.SpellsAndSorcerers;
-import screret.sas.api.wand.ability.WandAbilityInstance;
 
 import java.util.function.Supplier;
 

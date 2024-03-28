@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -11,7 +13,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
@@ -46,12 +48,13 @@ public class BlockIngredient implements Predicate<BlockState> {
     public boolean test(@Nullable BlockState block) {
         if (block != null) {
             this.dissolve();
-            if(this.blocks.length == 0){
+            if (this.blocks.length == 0) {
                 return block.isAir();
             }
 
             for (var element : this.blocks) {
-                if(block.is(element.getBlock())) return true;
+                if (block.is(element.getBlock()))
+                    return true;
             }
 
         }
@@ -60,7 +63,7 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public final void toNetwork(FriendlyByteBuf pBuffer) {
         this.dissolve();
-        pBuffer.writeCollection(Arrays.stream(this.blocks).map(BlockState::getBlock).map(ForgeRegistries.BLOCKS::getKey).toList(), FriendlyByteBuf::writeResourceLocation);
+        pBuffer.writeCollection(Arrays.stream(this.blocks).map(BlockState::getBlock).map(BuiltInRegistries.BLOCK::getKey).toList(), FriendlyByteBuf::writeResourceLocation);
     }
 
     public JsonElement toJson() {
@@ -69,7 +72,7 @@ public class BlockIngredient implements Predicate<BlockState> {
         } else {
             JsonArray jsonarray = new JsonArray();
 
-            for(Value value : this.values) {
+            for (Value value : this.values) {
                 jsonarray.add(value.serialize());
             }
 
@@ -116,14 +119,16 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public static BlockIngredient fromNetwork(FriendlyByteBuf pBuffer) {
         var size = pBuffer.readVarInt();
-        if (size == -1) return BlockIngredientSerializer.INSTANCE.parse(pBuffer);
-        return fromValues(Stream.generate(() -> new BlockValue(pBuffer.<Block>readRegistryId())).limit(size));
+        if (size == -1)
+            return BlockIngredientSerializer.INSTANCE.parse(pBuffer);
+        return fromValues(Stream.generate(() -> new BlockValue(pBuffer.readResourceLocation())).limit(size));
     }
 
     public static BlockIngredient fromJson(@Nullable JsonElement pJson) {
         if (pJson != null && !pJson.isJsonNull()) {
             BlockIngredient ret = BlockIngredientSerializer.INSTANCE.parse(pJson.getAsJsonObject());
-            if (ret != null) return ret;
+            if (ret != null)
+                return ret;
             if (pJson.isJsonObject()) {
                 return fromValues(Stream.of(valueFromJson(pJson.getAsJsonObject())));
             } else if (pJson.isJsonArray()) {
@@ -150,7 +155,7 @@ public class BlockIngredient implements Predicate<BlockState> {
             return new BlockValue(blockFromJson(pJson));
         } else if (pJson.has("tag")) {
             ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(pJson, "tag"));
-            TagKey<Block> key = TagKey.create(Registry.BLOCK_REGISTRY, resourcelocation);
+            TagKey<Block> key = TagKey.create(Registries.BLOCK, resourcelocation);
             return new TagValue(key);
         } else {
             throw new JsonParseException("An BlockIngredient entry needs either a tag or a block");
@@ -159,9 +164,7 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public static Block blockFromJson(JsonObject pItemObject) {
         String s = GsonHelper.getAsString(pItemObject, "block");
-        Block block = Registry.BLOCK.getOptional(new ResourceLocation(s)).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown item '" + s + "'");
-        });
+        Block block = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(s)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + s + "'"));
         if (block == Blocks.AIR) {
             throw new JsonSyntaxException("Invalid item: " + s);
         } else {
@@ -181,7 +184,7 @@ public class BlockIngredient implements Predicate<BlockState> {
         }
 
         public BlockValue(ResourceLocation location) {
-            this.block = ForgeRegistries.BLOCKS.getValue(location).defaultBlockState();
+            this.block = BuiltInRegistries.BLOCK.get(location).defaultBlockState();
         }
 
         public Collection<BlockState> getBlocks() {
@@ -190,7 +193,7 @@ public class BlockIngredient implements Predicate<BlockState> {
 
         public JsonObject serialize() {
             JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("block", ForgeRegistries.BLOCKS.getKey(this.block.getBlock()).toString());
+            jsonobject.addProperty("block", BuiltInRegistries.BLOCK.getKey(this.block.getBlock()).toString());
             return jsonobject;
         }
     }
@@ -205,7 +208,7 @@ public class BlockIngredient implements Predicate<BlockState> {
         public Collection<BlockState> getBlocks() {
             List<BlockState> list = Lists.newArrayList();
 
-            for(Holder<Block> holder : Registry.BLOCK.getTagOrEmpty(this.tag)) {
+            for (Holder<Block> holder : BuiltInRegistries.BLOCK.getTagOrEmpty(this.tag)) {
                 list.add(holder.value().defaultBlockState());
             }
 

@@ -14,7 +14,7 @@ import screret.sas.recipe.recipe.WandRecipe;
 
 import java.util.function.Supplier;
 
-public class ModRecipes {
+public class ModRecipeTypes {
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, SpellsAndSorcerers.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, SpellsAndSorcerers.MODID);
@@ -25,15 +25,17 @@ public class ModRecipes {
 
     public static final Supplier<RecipeType<WandRecipe>> WAND_RECIPE = RECIPE_TYPES.register("wand", () -> new RecipeType<>() {
         private static final ResourceLocation RECIPE_TYPE_ID = Util.id("wand");
+
         @Override
-        public String toString(){
+        public String toString() {
             return RECIPE_TYPE_ID.toString();
         }
     });
     public static final Supplier<RecipeType<PotionDistillingRecipe>> POTION_DISTILLING_RECIPE = RECIPE_TYPES.register("potion_distilling", () -> new RecipeType<>() {
         private static final ResourceLocation RECIPE_TYPE_ID = Util.id("potion_distilling");
+
         @Override
-        public String toString(){
+        public String toString() {
             return RECIPE_TYPE_ID.toString();
         }
     });

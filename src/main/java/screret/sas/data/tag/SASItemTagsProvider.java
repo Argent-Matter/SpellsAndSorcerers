@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class SASItemTagsProvider extends ItemTagsProvider {
 
-    public SASItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, TagsProvider<Block> blockTagProvider, ExistingFileHelper existingFileHelper) {
+    public SASItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, blockTagProvider, SpellsAndSorcerers.MODID, existingFileHelper);
     }
 

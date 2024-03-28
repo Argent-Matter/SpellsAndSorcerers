@@ -86,7 +86,7 @@ public class ShootEnemyGoal extends Goal {
             this.seeTime = 0;
         }
 
-        if (!(d0 > (double)this.attackRadiusSqr) && this.seeTime >= 5) {
+        if (!(d0 > (double) this.attackRadiusSqr) && this.seeTime >= 5) {
             this.mob.getNavigation().stop();
         } else {
             this.mob.getNavigation().moveTo(this.target, this.speedModifier);
@@ -98,24 +98,24 @@ public class ShootEnemyGoal extends Goal {
                 return;
             }
 
-            float f = (float)Math.sqrt(d0) / this.attackRadius;
+            float f = (float) Math.sqrt(d0) / this.attackRadius;
             float f1 = Mth.clamp(f, 0.1F, 1.0F);
-            if(this.target != null){
+            if (this.target != null) {
                 this.mob.setIsAttacking(true);
                 this.mob.playSound(this.mob.getCastingSound());
                 this.mob.setCastingSpell(getSpell(this.mob.getRandom()));
                 this.mob.performRangedAttack(this.target, f1);
             }
 
-            this.attackTime = Mth.floor(f * (float)(this.attackIntervalMax - this.attackIntervalMin) + (float)this.attackIntervalMin);
+            this.attackTime = Mth.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
         } else if (this.attackTime < 0) {
-            this.attackTime = Mth.floor(Mth.lerp(Math.sqrt(d0) / (double)this.attackRadius, this.attackIntervalMin, this.attackIntervalMax));
+            this.attackTime = Mth.floor(Mth.lerp(Math.sqrt(d0) / (double) this.attackRadius, this.attackIntervalMin, this.attackIntervalMax));
         }
     }
 
-    protected WandAbilityInstance getSpell(RandomSource random){
-        if(WizardEntity.possibleWands == null){
-            WizardEntity.possibleWands = Util.customWands.values().stream().toList();
+    protected WandAbilityInstance getSpell(RandomSource random) {
+        if (WizardEntity.possibleWands == null) {
+            WizardEntity.possibleWands = Util.CUSTOM_WANDS.values().stream().toList();
         }
         return Util.getMainAbilityFromStack(WizardEntity.possibleWands.get(random.nextInt(WizardEntity.possibleWands.size() - 1))).get();
     }
