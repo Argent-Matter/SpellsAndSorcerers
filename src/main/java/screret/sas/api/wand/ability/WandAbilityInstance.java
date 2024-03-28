@@ -24,10 +24,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
-
     public static final Codec<WandAbilityInstance> CODEC = ExtraCodecs.lazyInitializedCodec(() ->
             RecordCodecBuilder.create(instance -> instance.group(
-                    WandAbility.CODEC.fieldOf("ability").forGetter(self -> self.myAbility),
+                    WandAbility.DIRECT_CODEC.fieldOf("ability").forGetter(self -> self.myAbility),
                     WandAbilityInstance.CODEC.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(self -> self.children)
             ).apply(instance, WandAbilityInstance::new)));
 

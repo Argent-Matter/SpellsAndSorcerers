@@ -1,6 +1,8 @@
 package screret.sas.api.wand.ability;
 
+import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,9 +15,11 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import screret.sas.api.capability.ability.ICapabilityWandAbility;
 
+import java.util.function.Function;
+
 public class WandAbility implements IWandAbility {
-    public static final  String ABILITIES_KEY = "wand_abilities", MAIN_ABILITY_KEY = "main_ability", CROUCH_ABILITY_KEY = "crouch_ability", POWERED_UP_KEY = "is_powered_up";
-    public static final Codec<WandAbility> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final String ABILITIES_KEY = "wand_abilities", MAIN_ABILITY_KEY = "main_ability", CROUCH_ABILITY_KEY = "crouch_ability", POWERED_UP_KEY = "is_powered_up";
+    public static final MapCodec<WandAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("use_duration").forGetter(self -> self.useDuration),
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("cooldown_duration").forGetter(self -> self.cooldownDuration),
             Codec.FLOAT.fieldOf("damage_per_hit").forGetter(self -> self.damagePerHit),
@@ -23,6 +27,7 @@ public class WandAbility implements IWandAbility {
             ParticleTypes.CODEC.fieldOf("particle").forGetter(self -> self.particle),
             Codec.INT.fieldOf("color").forGetter(self -> self.color)
     ).apply(instance, WandAbility::new));
+    public static final Codec<WandAbility> DIRECT_CODEC = WandAbilityRegistry.WAND_ABILITIES_BUILTIN.byNameCodec().dispatchStable(Function.identity(), WandAbility::codec);
 
     private final int useDuration, cooldownDuration;
     private final float damagePerHit;
@@ -40,6 +45,21 @@ public class WandAbility implements IWandAbility {
         this.color = color;
     }
 
+    public Codec<? extends WandAbility> codec() {
+        return CODEC.codec();
+    }
+
+    public static <W extends WandAbility> Products.P6<RecordCodecBuilder.Mu<W>, Integer, Integer, Float, Boolean, ParticleOptions, Integer> codecStart(RecordCodecBuilder.Instance<W> instance) {
+        return instance.group(
+                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("use_duration").forGetter(WandAbility::getUseDuration),
+                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("cooldown_duration").forGetter(WandAbility::getCooldownDuration),
+                Codec.FLOAT.fieldOf("damage_per_hit").forGetter(WandAbility::getBaseDamagePerHit),
+                Codec.BOOL.fieldOf("apply_enchants").forGetter(WandAbility::isApplyEnchants),
+                ParticleTypes.CODEC.fieldOf("particle").forGetter(WandAbility::getParticle),
+                Codec.INT.fieldOf("color").forGetter(WandAbility::getColor)
+        );
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
         return InteractionResultHolder.fail(stack);
@@ -53,6 +73,10 @@ public class WandAbility implements IWandAbility {
     @Override
     public boolean isHoldable() {
         return false;
+    }
+
+    public boolean isApplyEnchants() {
+        return applyEnchants;
     }
 
     public boolean isChargeable() {

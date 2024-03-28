@@ -1,6 +1,9 @@
 package screret.sas.ability.ability;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -14,11 +17,17 @@ import screret.sas.api.wand.ability.WandAbilityInstance;
 
 public class ShootAbility extends WandAbility {
 
+    public static final Codec<ShootAbility> CODEC = RecordCodecBuilder.create(instance ->
+            WandAbility.codecStart(instance).and(instance.group(
+                    ExtraCodecs.POSITIVE_INT.fieldOf("distance").forGetter((ShootAbility val) -> val.distance),
+                    Vec3.CODEC.fieldOf("particle_deviation").forGetter((ShootAbility val) -> val.randomDeviation)
+            )).apply(instance, ShootAbility::new));
+
     private final int distance;
 
     private final Vec3 randomDeviation;
 
-    public ShootAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, int distance, ParticleOptions particle, Vec3 randomDeviation, int color) {
+    public ShootAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color, int distance, Vec3 randomDeviation) {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color);
         this.distance = distance;
         this.randomDeviation = randomDeviation;

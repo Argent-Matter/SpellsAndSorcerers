@@ -1,6 +1,10 @@
 package screret.sas.ability.ability;
 
+import com.mojang.datafixers.Products;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -15,11 +19,21 @@ public abstract class ProjectileAbility extends WandAbility {
 
     protected final int distance;
 
+    public ProjectileAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color, int distance) {
+        super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color);
+        //oldParticle = new BlockParticleOption(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.defaultBlockState())
+        this.distance = distance;
+    }
 
-    public ProjectileAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, int distance, int color) {
+    public ProjectileAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, int color, int distance) {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, new DustParticleOptions(new Vector3f(Vec3.fromRGB24(color).toVector3f()), 2.0F), color);
         //oldParticle = new BlockParticleOption(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.defaultBlockState())
         this.distance = distance;
+    }
+
+    public static <W extends ProjectileAbility> Products.P7<RecordCodecBuilder.Mu<W>, Integer, Integer, Float, Boolean, ParticleOptions, Integer, Integer> projectileCodecStart(RecordCodecBuilder.Instance<W> instance) {
+        return WandAbility.codecStart(instance)
+                .and(ExtraCodecs.POSITIVE_INT.fieldOf("distance").forGetter((W val) -> val.distance));
     }
 
     @Override

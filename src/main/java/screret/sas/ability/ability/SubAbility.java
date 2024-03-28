@@ -1,6 +1,11 @@
 package screret.sas.ability.ability;
 
+import com.mojang.datafixers.Products;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,9 +19,9 @@ import screret.sas.api.wand.ability.WandAbilityInstance;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 public abstract class SubAbility extends WandAbility {
-
     private static final EntityTypeTest<Entity, LivingEntity> ANY_LIVING_ENTITY_TYPE = new EntityTypeTest<>() {
         public LivingEntity tryCast(Entity entity) {
             return entity instanceof LivingEntity living ? living : null;
@@ -27,9 +32,9 @@ public abstract class SubAbility extends WandAbility {
         }
     };
 
-    private final EnumSet<HitFlags> hitFlags;
+    protected final EnumSet<HitFlags> hitFlags;
 
-    public SubAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, EnumSet<HitFlags> hitFlags, int color) {
+    public SubAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color, EnumSet<HitFlags> hitFlags) {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color);
         this.hitFlags = hitFlags;
     }
@@ -62,9 +67,17 @@ public abstract class SubAbility extends WandAbility {
 
     public abstract boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged);
 
-    public enum HitFlags {
+    public enum HitFlags implements StringRepresentable {
         NONE,
         ENTITY,
         BLOCK,
+        ;
+
+        public static final Codec<HitFlags> CODEC = StringRepresentable.fromEnum(HitFlags::values);
+
+        @Override
+        public String getSerializedName() {
+            return name().toUpperCase(Locale.ROOT);
+        }
     }
 }

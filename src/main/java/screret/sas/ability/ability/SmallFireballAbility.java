@@ -1,5 +1,8 @@
 package screret.sas.ability.ability;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -8,10 +11,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import screret.sas.Util;
+import screret.sas.api.wand.ability.WandAbility;
+
+import java.util.EnumSet;
 
 public class SmallFireballAbility extends ProjectileAbility {
+    public static final Codec<SmallFireballAbility> CODEC = RecordCodecBuilder.create(instance -> ProjectileAbility.projectileCodecStart(instance).apply(instance, SmallFireballAbility::new));
+
     public SmallFireballAbility() {
-        super(0, 10, 0, true, 512, 0xFFffa500);
+        super(0, 10, 0, true, 0xFFffa500, 512);
+    }
+
+    public SmallFireballAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color, int distance) {
+        super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color, distance);
+    }
+
+    @Override
+    public Codec<? extends WandAbility> codec() {
+        return CODEC;
     }
 
     @Override

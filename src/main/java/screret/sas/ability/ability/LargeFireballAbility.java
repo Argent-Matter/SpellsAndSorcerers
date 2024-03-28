@@ -1,20 +1,40 @@
 package screret.sas.ability.ability;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import screret.sas.Util;
+import screret.sas.api.wand.ability.WandAbility;
 
 public class LargeFireballAbility extends ProjectileAbility {
-    private final int explosionPower = 1;
+    public static final Codec<LargeFireballAbility> CODEC = RecordCodecBuilder.create(instance ->
+            ProjectileAbility.projectileCodecStart(instance)
+                    .and(ExtraCodecs.POSITIVE_INT.fieldOf("explosion_power").forGetter((LargeFireballAbility val) -> val.explosionPower))
+                    .apply(instance, LargeFireballAbility::new));
+    private final int explosionPower;
 
     public LargeFireballAbility() {
-        super(0, 20, 0.5f, true, 512, 0xFFff6200);
+        super(0, 20, 0.5f, true, 0xFFff6200, 512);
+        this.explosionPower = 1;
+    }
+
+    public LargeFireballAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particleOptions, int color, int distance, int explosionPower) {
+        super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particleOptions, color, distance);
+        this.explosionPower = explosionPower;
+    }
+
+    @Override
+    public Codec<? extends WandAbility> codec() {
+        return CODEC;
     }
 
     @Override
