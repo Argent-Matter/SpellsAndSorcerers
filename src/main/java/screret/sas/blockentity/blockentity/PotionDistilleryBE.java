@@ -19,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
@@ -38,10 +37,9 @@ import org.jetbrains.annotations.NotNull;
 import screret.sas.block.ModBlocks;
 import screret.sas.block.block.PotionDistilleryBlock;
 import screret.sas.blockentity.ModBlockEntities;
-import screret.sas.container.ModContainers;
 import screret.sas.container.container.PotionDistilleryMenu;
 import screret.sas.item.handler.WrappedHandler;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.recipe.PotionDistillingRecipe;
 
 import javax.annotation.Nullable;
@@ -163,7 +161,7 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         if (pBlockEntity.isLit() || hasItem && hasFuel) {
             Recipe<?> recipe;
             if (hasFuel) {
-                recipe =  pLevel.getRecipeManager().getRecipeFor(ModRecipes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).orElse(null);
+                recipe =  pLevel.getRecipeManager().getRecipeFor(ModRecipeTypes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).orElse(null);
             } else {
                 recipe = null;
             }
@@ -218,14 +216,14 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
 
     private boolean canBurn(@Nullable Recipe<?> pRecipe, IItemHandler pStacks, int pStackSize) {
         if (!pStacks.getStackInSlot(0).isEmpty() && pRecipe != null) {
-            ItemStack itemstack = ((Recipe<Container>)pRecipe).assemble(this.itemsWrapped);
+            ItemStack itemstack = ((Recipe<Container>)pRecipe).assemble(this.itemsWrapped, this.getLevel().registryAccess());
             if (itemstack.isEmpty()) {
                 return false;
             } else {
                 ItemStack result = pStacks.getStackInSlot(SLOT_EXTRACT_MIN);
                 if (result.isEmpty()) {
                     return true;
-                } else if (!result.sameItem(itemstack)) {
+                } else if (!ItemStack.isSameItem(result, itemstack)) {
                     return false;
                 } else if (result.getCount() + itemstack.getCount() <= pStackSize && result.getCount() + itemstack.getCount() <= result.getMaxStackSize()) { // Forge fix: make furnace respect stack sizes in furnace recipes
                     return true;
@@ -241,7 +239,7 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
     private boolean burn(@Nullable Recipe<?> pRecipe, IItemHandlerModifiable pStacks, int pStackSize) {
         if (pRecipe != null && this.canBurn(pRecipe, pStacks, pStackSize)) {
             ItemStack fuel = pStacks.getStackInSlot(SLOT_FUEL);
-            ItemStack ingredient = ((Recipe<Container>) pRecipe).assemble(this.itemsWrapped);
+            ItemStack ingredient = ((Recipe<Container>) pRecipe).assemble(this.itemsWrapped, this.getLevel().registryAccess());
             ItemStack result = pStacks.getStackInSlot(SLOT_EXTRACT_MIN);
             if (result.isEmpty()) {
                 pStacks.setStackInSlot(2, ingredient.copy());
@@ -257,18 +255,18 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
     }
 
     private static int getTotalCookTime(Level pLevel, PotionDistilleryBE pBlockEntity) {
-        return pLevel.getRecipeManager().getRecipeFor(ModRecipes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).map(PotionDistillingRecipe::getProcessingTime).orElse(DEFAULT_PROCESS_TIME);
+        return pLevel.getRecipeManager().getRecipeFor(ModRecipeTypes.POTION_DISTILLING_RECIPE.get(), pBlockEntity.itemsWrapped, pLevel).map(PotionDistillingRecipe::getProcessingTime).orElse(DEFAULT_PROCESS_TIME);
     }
 
     public static boolean isFuel(ItemStack pStack) {
-        return ForgeHooks.getBurnTime(pStack, ModRecipes.POTION_DISTILLING_RECIPE.get()) > 0;
+        return ForgeHooks.getBurnTime(pStack, ModRecipeTypes.POTION_DISTILLING_RECIPE.get()) > 0;
     }
 
     protected int getBurnDuration(ItemStack pFuel) {
         if (pFuel.isEmpty()) {
             return 0;
         } else {
-            return ForgeHooks.getBurnTime(pFuel, ModRecipes.POTION_DISTILLING_RECIPE.get());
+            return ForgeHooks.getBurnTime(pFuel, ModRecipeTypes.POTION_DISTILLING_RECIPE.get());
         }
     }
 
@@ -303,15 +301,15 @@ public class PotionDistilleryBE extends BlockEntity implements MenuProvider {
         ExperienceOrb.award(pLevel, pPopVec, amount);
     }
 
-    public ItemStackHandler getInventory(){
+    public ItemStackHandler getInventory() {
         return this.items;
     }
 
-    public RecipeWrapper getInventoryWrapper(){
+    public RecipeWrapper getInventoryWrapper() {
         return this.itemsWrapped;
     }
 
-    public ContainerData getDataAccess(){
+    public ContainerData getDataAccess() {
         return this.dataAccess;
     }
 

@@ -2,18 +2,17 @@ package screret.sas.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.CraftingMenu;
-import screret.sas.SpellsAndSorcerers;
 import screret.sas.Util;
 import screret.sas.container.container.WandTableMenu;
 
 public class WandTableScreen extends AbstractContainerScreen<WandTableMenu> {
-    private static final ResourceLocation WAND_TABLE_LOCATION = Util.resource("textures/gui/container/wand_table.png");
+    private static final ResourceLocation WAND_TABLE_LOCATION = Util.id("textures/gui/container/wand_table.png");
 
     public WandTableScreen(WandTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -26,19 +25,17 @@ public class WandTableScreen extends AbstractContainerScreen<WandTableMenu> {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pPoseStack);
-        this.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pGuiGraphics);
+        this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
-        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pX, int pY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, WAND_TABLE_LOCATION);
-        this.blit(pPoseStack, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(WAND_TABLE_LOCATION, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 }

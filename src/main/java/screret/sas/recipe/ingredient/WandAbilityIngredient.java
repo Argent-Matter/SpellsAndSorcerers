@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import screret.sas.Util;
 import screret.sas.api.capability.ability.CapabilityWandAbility;
@@ -50,16 +49,16 @@ public class WandAbilityIngredient extends AbstractIngredient {
         this.isPoweredUp = isPoweredUp;
     }
 
-    public static WandAbilityIngredient fromCapability(CapabilityWandAbility cap, Item item){
-        return new WandAbilityIngredient(cap.getAbility(), cap.getCrouchAbility(), item, cap.getPoweredUp());
+    public static WandAbilityIngredient fromCapability(CapabilityWandAbility cap, Item item) {
+        return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), item, cap.getPoweredUp());
     }
 
     @Nullable
-    public static WandAbilityIngredient fromStack(ItemStack stack){
-        if(stack.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent()){
+    public static WandAbilityIngredient fromStack(ItemStack stack) {
+        if(stack.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent()) {
             var cap = stack.getCapability(WandAbilityProvider.WAND_ABILITY).resolve().get();
-            return new WandAbilityIngredient(cap.getAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
-        } else if(stack.is(ModItems.WAND_CORE.get())){
+            return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
+        } else if(stack.is(ModItems.WAND_CORE.get())) {
             return new WandAbilityIngredient(new WandAbilityInstance(WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValue(new ResourceLocation(stack.getTag().getString(WandCoreItem.ABILITY_KEY)))), null, stack.getItem(), false);
         }
         return null;
@@ -70,7 +69,7 @@ public class WandAbilityIngredient extends AbstractIngredient {
         return false;
     }
 
-    public ItemStack getStack(){
+    public ItemStack getStack() {
         return Util.createWand(this.item, this.ability, this.crouchAbility);
     }
 
@@ -79,17 +78,17 @@ public class WandAbilityIngredient extends AbstractIngredient {
         if (input == null)
             return false;
         boolean isCorrectItem = this.item == input.getItem();
-        if(this.item == ModItems.WAND.get()){
+        if(this.item == ModItems.WAND.get()) {
             boolean hasCorrectAbility;
-            if(input.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent()){
+            if(input.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent()) {
                 var cap = input.getCapability(WandAbilityProvider.WAND_ABILITY).resolve().get();
-                hasCorrectAbility = cap.getAbility().equals(this.ability) && cap.getCrouchAbility().equals(this.crouchAbility) && cap.getPoweredUp() == this.isPoweredUp;
+                hasCorrectAbility = cap.getMainAbility().equals(this.ability) && cap.getCrouchAbility().equals(this.crouchAbility) && cap.getPoweredUp() == this.isPoweredUp;
             } else {
                 return false;
             }
             return isCorrectItem && hasCorrectAbility;
-        } else if(this.item == ModItems.WAND_CORE.get()){
-            if(input.getTag().contains(WandCoreItem.ABILITY_KEY, Tag.TAG_COMPOUND)){
+        } else if(this.item == ModItems.WAND_CORE.get()) {
+            if(input.getTag().contains(WandCoreItem.ABILITY_KEY, Tag.TAG_COMPOUND)) {
                 return new WandAbilityInstance(input.getTag().getCompound(WandCoreItem.ABILITY_KEY)).equals(ability);
             }
         }
@@ -121,11 +120,11 @@ public class WandAbilityIngredient extends AbstractIngredient {
         return json;
     }
 
-    private void recurseChildren(JsonObject in, WandAbilityInstance ability){
+    private void recurseChildren(JsonObject in, WandAbilityInstance ability) {
         in.addProperty("id", ability.getId().toString());
         JsonArray children = new JsonArray();
-        if(ability.getChildren() != null){
-            for (var child : ability.getChildren()){
+        if(ability.getChildren() != null) {
+            for (var child : ability.getChildren()) {
                 JsonObject childJson = new JsonObject();
                 recurseChildren(childJson, child);
                 children.add(childJson);
@@ -142,7 +141,7 @@ public class WandAbilityIngredient extends AbstractIngredient {
             var item = buffer.<Item>readRegistryId();
             WandAbilityInstance ability = new WandAbilityInstance(buffer.readNbt());
             WandAbilityInstance crouch = null;
-            if(buffer.readBoolean()){
+            if(buffer.readBoolean()) {
                 crouch = new WandAbilityInstance(buffer.readNbt());
             }
             return new WandAbilityIngredient(ability, crouch, item, buffer.readBoolean());
@@ -163,12 +162,12 @@ public class WandAbilityIngredient extends AbstractIngredient {
             return new WandAbilityIngredient(main, crouch, item, GsonHelper.getAsBoolean(json, "powered_up"));
         }
 
-        private WandAbilityInstance unRecurseChildren(JsonObject object){
+        private WandAbilityInstance unRecurseChildren(JsonObject object) {
             WandAbilityInstance abilityInstance = new WandAbilityInstance(Util.getAbilityFromJson(object, "id"));
-            if(object.has("children")){
+            if(object.has("children")) {
                 var childrenJson = object.getAsJsonArray("children");
-                for(int i = 0; i < childrenJson.size(); ++i){
-                    if(childrenJson.get(i).isJsonObject()){
+                for(int i = 0; i < childrenJson.size(); ++i) {
+                    if(childrenJson.get(i).isJsonObject()) {
                         abilityInstance.getChildren().add(unRecurseChildren(childrenJson.get(i).getAsJsonObject()));
                     }
                 }
@@ -181,7 +180,7 @@ public class WandAbilityIngredient extends AbstractIngredient {
             Item item = ingredient.item;
             buffer.writeRegistryId(ForgeRegistries.ITEMS, item);
             buffer.writeNbt(ingredient.ability.serializeNBT());
-            if(ingredient.crouchAbility != null){
+            if(ingredient.crouchAbility != null) {
                 buffer.writeBoolean(true);
                 buffer.writeNbt(ingredient.crouchAbility.serializeNBT());
             } else {

@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 
 public class CraftOutputItemHandler extends SlotItemHandler {
     private final CraftingContainer craftSlots;
@@ -61,12 +61,12 @@ public class CraftOutputItemHandler extends SlotItemHandler {
     @Override
     protected void checkTakeAchievements(ItemStack stack) {
         if (this.removeCount > 0) {
-            stack.onCraftedBy(this.player.level, this.player, this.removeCount);
+            stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
             net.minecraftforge.event.ForgeEventFactory.firePlayerCraftingEvent(this.player, stack, this.craftSlots);
         }
 
         if (this.container instanceof RecipeHolder) {
-            ((RecipeHolder)this.container).awardUsedRecipes(this.player);
+            ((RecipeHolder)this.container).awardUsedRecipes(this.player, this.craftSlots.getItems());
         }
 
         this.removeCount = 0;
@@ -76,7 +76,7 @@ public class CraftOutputItemHandler extends SlotItemHandler {
     public void onTake(Player pPlayer, ItemStack pStack) {
         this.checkTakeAchievements(pStack);
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(pPlayer);
-        NonNullList<ItemStack> ingredients = pPlayer.level.getRecipeManager().getRemainingItemsFor(ModRecipes.WAND_RECIPE.get(), this.craftSlots, pPlayer.level);
+        NonNullList<ItemStack> ingredients = player.level().getRecipeManager().getRemainingItemsFor(ModRecipeTypes.WAND_RECIPE.get(), this.craftSlots, player.level());
         net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
         for(int i = 0; i < ingredients.size(); ++i) {
             ItemStack craftSlotItem = this.craftSlots.getItem(i);
@@ -89,7 +89,7 @@ public class CraftOutputItemHandler extends SlotItemHandler {
             if (!ingredient.isEmpty()) {
                 if (craftSlotItem.isEmpty()) {
                     this.craftSlots.setItem(i, ingredient);
-                } else if (ItemStack.isSame(craftSlotItem, ingredient) && ItemStack.tagMatches(craftSlotItem, ingredient)) {
+                } else if (ItemStack.isSameItemSameTags(craftSlotItem, ingredient)) {
                     ingredient.grow(craftSlotItem.getCount());
                     this.craftSlots.setItem(i, ingredient);
                 } else if (!this.player.getInventory().add(ingredient)) {

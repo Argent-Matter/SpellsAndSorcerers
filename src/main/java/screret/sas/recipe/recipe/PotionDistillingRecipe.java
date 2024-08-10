@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -12,7 +14,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 
 public class PotionDistillingRecipe implements Recipe<Container> {
     public static String TYPE_ID_NAME = "potion_distilling";
@@ -43,7 +45,7 @@ public class PotionDistillingRecipe implements Recipe<Container> {
     /**
      * Returns an Item that is the result of this recipe
      */
-    public ItemStack assemble(Container pInv) {
+    public ItemStack assemble(Container pInv, RegistryAccess pRegistryAccess) {
         return this.result.copy();
     }
 
@@ -71,7 +73,7 @@ public class PotionDistillingRecipe implements Recipe<Container> {
      * Get the result of this recipe, usually for display purposes (e.g. recipe book). If your recipe has more than one
      * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
      */
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return this.result;
     }
 
@@ -95,11 +97,11 @@ public class PotionDistillingRecipe implements Recipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.POTION_DISTILLING_SERIALIZER.get();
+        return ModRecipeTypes.POTION_DISTILLING_SERIALIZER.get();
     }
 
     public RecipeType<?> getType() {
-        return ModRecipes.POTION_DISTILLING_RECIPE.get();
+        return ModRecipeTypes.POTION_DISTILLING_RECIPE.get();
     }
 
     public static class Serializer implements RecipeSerializer<PotionDistillingRecipe> {
@@ -119,7 +121,7 @@ public class PotionDistillingRecipe implements Recipe<Container> {
             else {
                 String resultName = GsonHelper.getAsString(pJson, "result");
                 ResourceLocation resultId = new ResourceLocation(resultName);
-                result = new ItemStack(Registry.ITEM.getOptional(resultId).orElseThrow(() -> {
+                result = new ItemStack(BuiltInRegistries.ITEM.getOptional(resultId).orElseThrow(() -> {
                     return new IllegalStateException("Item: " + resultName + " does not exist");
                 }));
             }

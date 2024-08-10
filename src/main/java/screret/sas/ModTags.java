@@ -1,17 +1,13 @@
 package screret.sas;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import screret.sas.Util;
 
 public class ModTags {
 
@@ -28,7 +24,7 @@ public class ModTags {
 
         private static TagKey<Item> tag(String name)
         {
-            return ItemTags.create(Util.resource(name));
+            return ItemTags.create(Util.id(name));
         }
         private static TagKey<Item> forgeTag(String name)
         {
@@ -43,7 +39,7 @@ public class ModTags {
 
         private static TagKey<Block> tag(String name)
         {
-            return BlockTags.create(Util.resource(name));
+            return BlockTags.create(Util.id(name));
         }
         private static TagKey<Block> forgeTag(String name)
         {
@@ -58,7 +54,7 @@ public class ModTags {
 
         private static TagKey<Biome> tag(String name)
         {
-            return create(Util.resource(name));
+            return create(Util.id(name));
         }
         private static TagKey<Biome> create(ResourceLocation pName) {
             return TagKey.create(Registries.BIOME, pName);

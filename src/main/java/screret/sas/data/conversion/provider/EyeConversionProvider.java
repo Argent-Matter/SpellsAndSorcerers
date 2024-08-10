@@ -1,10 +1,8 @@
 package screret.sas.data.conversion.provider;
 
 import com.google.common.collect.Sets;
-import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -17,8 +15,6 @@ import org.slf4j.Logger;
 import screret.sas.Util;
 import screret.sas.data.conversion.builder.EyeConversionBuilder;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -51,16 +47,16 @@ public class EyeConversionProvider implements DataProvider {
     }
 
 
-    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, TagKey<Block> items){
+    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, TagKey<Block> items) {
         EyeConversionBuilder.conversion(result)
                 .requires(items)
-                .save(finished, Util.resource(ForgeRegistries.BLOCKS.getKey(result).getPath()));
+                .save(finished, Util.id(ForgeRegistries.BLOCKS.getKey(result).getPath()));
     }
 
-    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, Block item){
+    protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, Block item) {
         EyeConversionBuilder.conversion(result)
                 .requires(item)
-                .save(finished, Util.resource(ForgeRegistries.BLOCKS.getKey(result).getPath()));
+                .save(finished, Util.id(ForgeRegistries.BLOCKS.getKey(result).getPath()));
     }
 
     @Override

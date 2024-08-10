@@ -28,26 +28,20 @@ public class WandModel implements IUnbakedGeometry<WandModel> {
     private static final RenderTypeGroup RENDER_TYPE_GROUP = new RenderTypeGroup(RenderType.translucent(), ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
 
     @Override
-    public BakedModel bake(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
-        return CompositeModel.Baked.builder(owner, spriteGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, modelLocation)), new WandAbilityOverrideHandler(this, owner, bakery, spriteGetter, modelTransform, modelLocation), owner.getTransforms()).addQuads(new RenderTypeGroup(RenderType.translucent(), ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get())).build();
+    public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ItemOverrides overrides, ResourceLocation modelLocation) {
+        return CompositeModel.Baked.builder(owner, spriteGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, modelLocation)), new WandAbilityOverrideHandler(this, owner, baker, spriteGetter, modelTransform, modelLocation), owner.getTransforms()).addQuads(new RenderTypeGroup(RenderType.translucent(), ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get())).build();
     }
 
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.emptySet();
-    }
-
-    public BakedModel bake(TextureAtlasSprite sprite, IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation) {
-        var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, sprite);
+    public BakedModel bake(TextureAtlasSprite sprite, IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation) {
+        var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, sprite.contents());
         var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, modelState, modelLocation);
 
-        var builder = CompositeModel.Baked.builder(context, sprite, new WandAbilityOverrideHandler(this, context, bakery, spriteGetter, modelState, modelLocation), context.getTransforms());
+        var builder = CompositeModel.Baked.builder(context, sprite, new WandAbilityOverrideHandler(this, context, baker, spriteGetter, modelState, modelLocation), context.getTransforms());
 
 
         builder.addQuads(RENDER_TYPE_GROUP, quads);
 
         return builder.build();
-        //return new SimpleBakedModel(builder.build(), new HashMap<>(), false, false, false, particleSprite, owner.getTransforms(), new WandAbilityOverrideHandler(this, owner, bakery, spriteGetter, modelTransform, modelLocation), new RenderTypeGroup(RenderType.translucent(), ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get()));
     }
 
     public static final class Loader implements IGeometryLoader<WandModel>

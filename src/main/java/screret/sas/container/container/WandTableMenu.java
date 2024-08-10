@@ -14,7 +14,7 @@ import screret.sas.block.ModBlocks;
 import screret.sas.container.ModContainers;
 import screret.sas.container.stackhandler.CraftOutputItemHandler;
 import screret.sas.container.stackhandler.CraftResultStackHandler;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.recipe.WandRecipe;
 
 import java.util.Optional;
@@ -24,9 +24,9 @@ public class WandTableMenu extends AbstractContainerMenu {
     private static final int CRAFT_SLOT_START = 1, CRAFT_SLOT_END = 7, INV_SLOT_START = 7, INV_SLOT_END = 34, USE_ROW_SLOT_START = 34, USE_ROW_SLOT_END = 43;
     private static final int INPUT_X_SIZE = 3, INPUT_Y_SIZE = 2;
 
-    private final CraftingContainer inputSlots = new CraftingContainer(this, 3,2){
+    private final CraftingContainer inputSlots = new TransientCraftingContainer(this, 3, 2) {
         @Override
-        public void setChanged(){
+        public void setChanged() {
             super.setChanged();
             WandTableMenu.this.slotsChanged(this);
         }
@@ -69,11 +69,11 @@ public class WandTableMenu extends AbstractContainerMenu {
         if (!pLevel.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer)pPlayer;
             ItemStack result = ItemStack.EMPTY;
-            Optional<WandRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(ModRecipes.WAND_RECIPE.get(), pContainer, pLevel);
+            Optional<WandRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(ModRecipeTypes.WAND_RECIPE.get(), pContainer, pLevel);
             if (optional.isPresent()) {
                 WandRecipe recipe = optional.get();
                 if (pResult.setRecipeUsed(pLevel, serverplayer, recipe)) {
-                    result = recipe.assemble(pContainer);
+                    result = recipe.assemble(pContainer, pLevel.registryAccess());
                 }
             }
 
@@ -92,7 +92,7 @@ public class WandTableMenu extends AbstractContainerMenu {
 
 
     public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        return pRecipe.matches(this.inputSlots, this.player.level);
+        return pRecipe.matches(this.inputSlots, this.player.level());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class WandTableMenu extends AbstractContainerMenu {
     }
 
     public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
-        if(pSlot instanceof SlotItemHandler slot){
+        if(pSlot instanceof SlotItemHandler slot) {
             return slot.getItemHandler() != this.resultSlot && super.canTakeItemForPickAll(pStack, pSlot);
         }
         return super.canTakeItemForPickAll(pStack, pSlot);

@@ -50,10 +50,10 @@ public class ModItems {
     public static final RegistryObject<Item> WIZARD_SPAWN_EGG = ITEMS.register("wizard_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.WIZARD, 0x002017, 0x959b9b, basicItemProperties()));
     public static final RegistryObject<Item> BOSS_WIZARD_SPAWN_EGG = ITEMS.register("boss_wizard_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.BOSS_WIZARD, 0x9a080f, 0x959b9b, basicItemProperties()));
 
-    public static final RegistryObject<Item> SOULSTEEL_HELMET = ITEMS.register("soulsteel_helmet", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, EquipmentSlot.HEAD, basicItemProperties().fireResistant()));
-    public static final RegistryObject<Item> SOULSTEEL_CHESTPLATE = ITEMS.register("soulsteel_chestplate", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, EquipmentSlot.CHEST, basicItemProperties().fireResistant()));
-    public static final RegistryObject<Item> SOULSTEEL_LEGGINGS = ITEMS.register("soulsteel_leggings", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, EquipmentSlot.LEGS, basicItemProperties().fireResistant()));
-    public static final RegistryObject<Item> SOULSTEEL_BOOTS = ITEMS.register("soulsteel_boots", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, EquipmentSlot.FEET, basicItemProperties().fireResistant()));
+    public static final RegistryObject<Item> SOULSTEEL_HELMET = ITEMS.register("soulsteel_helmet", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.HELMET, basicItemProperties().fireResistant()));
+    public static final RegistryObject<Item> SOULSTEEL_CHESTPLATE = ITEMS.register("soulsteel_chestplate", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.CHESTPLATE, basicItemProperties().fireResistant()));
+    public static final RegistryObject<Item> SOULSTEEL_LEGGINGS = ITEMS.register("soulsteel_leggings", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.LEGGINGS, basicItemProperties().fireResistant()));
+    public static final RegistryObject<Item> SOULSTEEL_BOOTS = ITEMS.register("soulsteel_boots", () -> new ModArmorItem(ModArmorMaterials.SOULSTEEL, ModArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.BOOTS, basicItemProperties().fireResistant()));
     public static final RegistryObject<Item> SOULSTEEL_SWORD = ITEMS.register("soulsteel_sword", () -> new SwordItem(ModTiers.SOULSTEEL, 3, -2.4F, basicItemProperties().fireResistant()));
     public static final RegistryObject<Item> SOULSTEEL_SHOVEL = ITEMS.register("soulsteel_shovel", () -> new ShovelItem(ModTiers.SOULSTEEL, 1.5F, -3.0F, basicItemProperties().fireResistant()));
     public static final RegistryObject<Item> SOULSTEEL_PICKAXE = ITEMS.register("soulsteel_pickaxe", () -> new PickaxeItem(ModTiers.SOULSTEEL, 1, -2.8F, basicItemProperties().fireResistant()));
@@ -61,13 +61,13 @@ public class ModItems {
     public static final RegistryObject<Item> SOULSTEEL_HOE = ITEMS.register("soulsteel_hoe", () -> new HoeItem(ModTiers.SOULSTEEL, -5, 0.0F, basicItemProperties().fireResistant()));
 
 
-    private static Item.Properties basicItemProperties(){
+    private static Item.Properties basicItemProperties() {
         return new Item.Properties();
     }
-    private static Supplier<Item> basicItem(){
+    private static Supplier<Item> basicItem() {
         return () -> new Item(basicItemProperties());
     }
-    private static Supplier<BlockItem> blockItem(RegistryObject<Block> block){
+    private static Supplier<BlockItem> blockItem(RegistryObject<Block> block) {
         return () -> new BlockItem(block.get(), basicItemProperties());
     }
 }

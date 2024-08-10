@@ -21,7 +21,7 @@ public class ModPotions {
     public static final RegistryObject<Potion> LONG_MANA = POTIONS.register("long_mana", () -> new Potion(new MobEffectInstance(ModMobEffects.MANA.get(), 9600)));
     public static final RegistryObject<Potion> STRONG_MANA = POTIONS.register("strong_mana", () -> new Potion(new MobEffectInstance(ModMobEffects.MANA.get(), 1800, 1)));
 
-    public static void registerPotionMixes(){
+    public static void registerPotionMixes() {
         PotionBrewing.addMix(Potions.AWKWARD, ModItems.SOUL_BOTTLE.get(), ModPotions.MANA.get());
         PotionBrewing.addMix(ModPotions.MANA.get(), Items.REDSTONE, ModPotions.LONG_MANA.get());
         PotionBrewing.addMix(ModPotions.MANA.get(), Items.GLOWSTONE_DUST, ModPotions.STRONG_MANA.get());

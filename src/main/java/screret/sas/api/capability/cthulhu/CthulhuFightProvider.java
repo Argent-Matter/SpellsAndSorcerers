@@ -16,20 +16,20 @@ import javax.annotation.Nullable;
 
 public class CthulhuFightProvider implements ICapabilitySerializable<CompoundTag> {
 
-    public static final Capability<ICapabilityCthulhuFight> CTHULHU_FIGHT = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<ICapabilityCthulhuFight> CTHULHU_FIGHT = CapabilityManager.get(new CapabilityToken<>() {});
 
     private final ServerLevel level;
 
     CapabilityCthulhuFight backend = null;
     LazyOptional<ICapabilityCthulhuFight> optionalStorage = LazyOptional.of(this::createCapability);
 
-    public CthulhuFightProvider(ServerLevel level){
+    public CthulhuFightProvider(ServerLevel level) {
         this.level = level;
     }
 
     @NotNull
-    public CapabilityCthulhuFight createCapability(){
-        if(backend == null){
+    public CapabilityCthulhuFight createCapability() {
+        if(backend == null) {
             backend = new CapabilityCthulhuFight(level);
         }
         return backend;

@@ -39,7 +39,7 @@ public abstract class SubAbility extends WandAbility {
         if(level.isClientSide) return InteractionResultHolder.pass(stack);
 
         if(hitFlags.contains(HitFlags.NONE) || hitFlags.contains(HitFlags.BLOCK)) {
-            if(doHit(stack, user, currentPosition.real, timeCharged)){
+            if(doHit(stack, user, currentPosition.real, timeCharged)) {
                 return InteractionResultHolder.pass(stack);
             }
         }
@@ -48,7 +48,7 @@ public abstract class SubAbility extends WandAbility {
             List<LivingEntity> allHitPossibilities = level.getEntities(SubAbility.ANY_LIVING_ENTITY_TYPE, bounds, entity -> entity != user);
             allHitPossibilities.sort((thisPart, next) -> (int)Math.round(next.position().distanceTo(currentPosition.real) - thisPart.position().distanceTo(currentPosition.real)));
             if(allHitPossibilities.size() > 0) {
-                if(doHit(stack, user, allHitPossibilities.get(0), timeCharged)){
+                if(doHit(stack, user, allHitPossibilities.get(0), timeCharged)) {
                     return InteractionResultHolder.pass(stack);
                 }
             }

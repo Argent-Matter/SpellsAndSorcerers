@@ -25,20 +25,20 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     private WandAbility myAbility;
     private List<WandAbilityInstance> children;
 
-    public WandAbilityInstance(@NotNull WandAbility ability, @Nullable WandAbilityInstance... children){
+    public WandAbilityInstance(@NotNull WandAbility ability, @Nullable WandAbilityInstance... children) {
         this.myAbility = ability;
         this.children = Arrays.stream(children).collect(Collectors.toList());
     }
 
-    public WandAbilityInstance(CompoundTag tag){
+    public WandAbilityInstance(CompoundTag tag) {
         this.deserializeNBT(tag);
     }
 
     public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, Vec3Wrapped currentPos, int timeCharged) {
         var returnValue = InteractionResultHolder.fail(stack);
         returnValue = myAbility == null ? InteractionResultHolder.fail(stack) : myAbility.execute(level, user, stack, currentPos, timeCharged);
-        if(this.getChildren() != null){
-            for (var child : this.getChildren()){
+        if(this.getChildren() != null) {
+            for (var child : this.getChildren()) {
                 var val = child.execute(level, user, stack, currentPos, timeCharged).getResult();
                 if(val == InteractionResult.FAIL)
                     return InteractionResultHolder.fail(stack);
@@ -52,36 +52,36 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
         return myAbility.getKey();
     }
 
-    public List<WandAbilityInstance> getChildren(){
+    public List<WandAbilityInstance> getChildren() {
         return this.children;
     }
 
-    public WandAbility getAbility(){
+    public WandAbility getAbility() {
         return myAbility;
     }
 
-    public boolean isHoldable(){
-        if(children != null){
-            for (WandAbilityInstance ability : getChildren()){
+    public boolean isHoldable() {
+        if(children != null) {
+            for (WandAbilityInstance ability : getChildren()) {
                 if(ability.isHoldable()) return true;
             }
         }
         return myAbility.isHoldable();
     }
 
-    public boolean isChargeable(){
-        if(children != null){
-            for (WandAbilityInstance ability : getChildren()){
+    public boolean isChargeable() {
+        if(children != null) {
+            for (WandAbilityInstance ability : getChildren()) {
                 if(ability.isChargeable()) return true;
             }
         }
         return myAbility.isChargeable();
     }
 
-    public int getUseDuration(){
+    public int getUseDuration() {
         var total = 0;
-        if(children != null){
-            for (WandAbilityInstance ability : getChildren()){
+        if(children != null) {
+            for (WandAbilityInstance ability : getChildren()) {
                 if(ability.isHoldable()) total += ability.getUseDuration();
             }
         }
@@ -94,7 +94,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
         tag.putString("id", getId().toString());
         ListTag children = new ListTag();
         if(this.children == null) this.children = new ArrayList<>();
-        for (WandAbilityInstance child : this.children){
+        for (WandAbilityInstance child : this.children) {
             children.add(child.serializeNBT());
         }
         tag.put("children", children);
@@ -105,7 +105,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     public void deserializeNBT(CompoundTag nbt) {
         this.myAbility = WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValue(new ResourceLocation(nbt.getString("id")));
         ListTag children = nbt.getList("children", 10);
-        for (int i = 0; i < children.size(); ++i){
+        for (int i = 0; i < children.size(); ++i) {
             var child = children.getCompound(i);
             WandAbilityInstance a = new WandAbilityInstance(child);
             this.children = new ArrayList<>();
@@ -116,7 +116,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(o instanceof WandAbilityInstance ability){
+        if(o instanceof WandAbilityInstance ability) {
             return ability.getAbility() == this.getAbility() && ability.getChildren().equals(this.children);
         }
         return false;
@@ -128,7 +128,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     }
 
     public static class Vec3Wrapped {
-        public Vec3Wrapped(Vec3 obj){
+        public Vec3Wrapped(Vec3 obj) {
             this.real = obj;
         }
         public Vec3 real;

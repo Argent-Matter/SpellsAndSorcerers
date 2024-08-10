@@ -1,23 +1,18 @@
 package screret.sas.data.recipe.provider;
 
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCookingSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import screret.sas.ModTags;
 import screret.sas.Util;
-import screret.sas.block.ModBlocks;
 import screret.sas.item.ModItems;
 
 import javax.annotation.Nullable;
@@ -41,7 +36,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_endstone", has(Blocks.END_STONE))
                 .unlockedBy("has_wand_core", has(ModItems.WAND_CORE.get()))
                 .unlockedBy("has_wand", has(ModItems.WAND.get()))
-                .save(pFinishedRecipeConsumer, Util.resource("wand_table"));
+                .save(pFinishedRecipeConsumer, Util.id("wand_table"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SOULSTEEL_INGOT.get())
                 .requires(ModTags.Items.GLINT_GEMS)
@@ -72,8 +67,8 @@ public class ModRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOULSTEEL_SWORD.get()).define('#', ModItems.HANDLE.get()).define('X', ModTags.Items.SOULSTEEL_INGOTS).pattern("X").pattern("X").pattern("#").unlockedBy("has_diamond", has(ModTags.Items.SOULSTEEL_INGOTS)).save(pFinishedRecipeConsumer);
 
 
-        nineBlockStorageRecipesRecipesWithCustomUnpacking(pFinishedRecipeConsumer, ModTags.Items.SOULSTEEL_INGOTS, ModItems.SOULSTEEL_INGOT.get(), ModTags.Items.SOULSTEEL_BLOCKS, ModItems.SOULSTEEL_BLOCK.get(), Util.resource("soulsteel_ingot_from_soulsteel_block"), "soulsteel_ingot");
-        nineBlockStorageRecipesWithCustomPacking(pFinishedRecipeConsumer, ModTags.Items.SOULSTEEL_NUGGETS, ModItems.SOULSTEEL_NUGGET.get(), ModTags.Items.SOULSTEEL_INGOTS, ModItems.SOULSTEEL_INGOT.get(), Util.resource("soulsteel_ingot_from_nuggets"), "soulsteel_ingot");
+        nineBlockStorageRecipesRecipesWithCustomUnpacking(pFinishedRecipeConsumer, ModTags.Items.SOULSTEEL_INGOTS, ModItems.SOULSTEEL_INGOT.get(), ModTags.Items.SOULSTEEL_BLOCKS, ModItems.SOULSTEEL_BLOCK.get(), Util.id("soulsteel_ingot_from_soulsteel_block"), "soulsteel_ingot");
+        nineBlockStorageRecipesWithCustomPacking(pFinishedRecipeConsumer, ModTags.Items.SOULSTEEL_NUGGETS, ModItems.SOULSTEEL_NUGGET.get(), ModTags.Items.SOULSTEEL_INGOTS, ModItems.SOULSTEEL_INGOT.get(), Util.id("soulsteel_ingot_from_nuggets"), "soulsteel_ingot");
         oreSmelting(Ingredient.of(ModTags.Items.GLINT_ORES), ModItems.GLINT.get(), 1.5F, 200);
         oreBlasting(Ingredient.of(ModTags.Items.GLINT_ORES), ModItems.GLINT.get(), 1.5F, 100);
 
@@ -111,7 +106,7 @@ public class ModRecipeProvider extends RecipeProvider {
         SimpleCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC, pResult, pExperience, pCookingTime);
     }
 
-    protected static ResourceLocation getItemLocation(ItemLike item){
+    protected static ResourceLocation getItemLocation(ItemLike item) {
         return ForgeRegistries.ITEMS.getKey(item.asItem());
     }
 

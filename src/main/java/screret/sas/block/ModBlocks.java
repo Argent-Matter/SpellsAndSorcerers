@@ -2,9 +2,9 @@ package screret.sas.block;
 
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -13,7 +13,6 @@ import screret.sas.block.block.PalantirBlock;
 import screret.sas.block.block.PotionDistilleryBlock;
 import screret.sas.block.block.SummonSignBlock;
 import screret.sas.block.block.WandTableBlock;
-import screret.sas.blockentity.blockentity.PotionDistilleryBE;
 
 public class ModBlocks {
 
@@ -27,6 +26,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> POTION_DISTILLERY = BLOCKS.register("potion_distillery", PotionDistilleryBlock::new);
 
 
-    public static final RegistryObject<Block> SOULSTEEL_BLOCK = BLOCKS.register("soulsteel_block", () -> new Block(BlockBehaviour.Properties.of(Material.HEAVY_METAL).strength(5.0F)));
-    public static final RegistryObject<Block> GLINT_ORE = BLOCKS.register("glint_ore", () -> new DropExperienceBlock(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.0F, 9.0F), UniformInt.of(5, 10)));
+    public static final RegistryObject<Block> SOULSTEEL_BLOCK = BLOCKS.register("soulsteel_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK).strength(5.0F)));
+    public static final RegistryObject<Block> GLINT_ORE = BLOCKS.register("glint_ore", () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.STONE).requiresCorrectToolForDrops().strength(3.0F, 9.0F), UniformInt.of(5, 10)));
 }

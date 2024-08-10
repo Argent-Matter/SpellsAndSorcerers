@@ -16,12 +16,12 @@ import screret.sas.resource.EyeConversionManager;
 
 public class CthulhuEyeItem extends Item {
     public CthulhuEyeItem() {
-        super(new Item.Properties().tab(SpellsAndSorcerers.SAS_TAB));
+        super(new Item.Properties());
     }
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        if(SASConfig.Server.enableQthulhuEyeConversion.get()){
+        if(SASConfig.Server.enableQthulhuEyeConversion.get()) {
             var player = pContext.getPlayer();
             var level = pContext.getLevel();
             BlockPos blockpos = pContext.getClickedPos();
@@ -29,11 +29,11 @@ public class CthulhuEyeItem extends Item {
                 return InteractionResult.PASS;
             }
 
-            for (var block : EyeConversionManager.INSTANCE.getAllConversions()){
+            for (var block : EyeConversionManager.INSTANCE.getAllConversions()) {
                 var originalState = level.getBlockState(blockpos);
                 if(block.getValue().test(originalState)) {
                     copyProperties(level, blockpos, block.getKey().defaultBlockState(), originalState);
-                    if(!level.isClientSide){
+                    if(!level.isClientSide) {
                         var serverLevel = (ServerLevel)level;
                         var random = level.random;
                         var pos = new Vec3(blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D);
@@ -66,7 +66,7 @@ public class CthulhuEyeItem extends Item {
         return super.useOn(pContext);
     }
 
-    private static void copyProperties(Level level, BlockPos pos, BlockState toPlace, BlockState originalState){
+    private static void copyProperties(Level level, BlockPos pos, BlockState toPlace, BlockState originalState) {
         var newState = toPlace;
         for (Property<?> property : originalState.getProperties()) {
             newState = copyProperty(originalState, newState, property);

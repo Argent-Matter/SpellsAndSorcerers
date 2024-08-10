@@ -7,6 +7,7 @@ import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.EndFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -300,10 +301,11 @@ public class CthulhuFight {
             }
         }
 
-        int k = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, EndPodiumFeature.END_PODIUM_LOCATION).getY();
+        BlockPos blockpos1 = EndPodiumFeature.getLocation(BlockPos.ZERO);
+        int k = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockpos1).getY();
 
         for(int l = k; l >= this.level.getMinBuildHeight(); --l) {
-            BlockPattern.BlockPatternMatch blockpattern$blockpatternmatch1 = this.exitPortalPattern.find(this.level, new BlockPos(EndPodiumFeature.END_PODIUM_LOCATION.getX(), l, EndPodiumFeature.END_PODIUM_LOCATION.getZ()));
+            BlockPattern.BlockPatternMatch blockpattern$blockpatternmatch1 = this.exitPortalPattern.find(this.level, new BlockPos(blockpos1.getX(), l, blockpos1.getZ()));
             if (blockpattern$blockpatternmatch1 != null) {
                 if (this.portalLocation == null) {
                     this.portalLocation = blockpattern$blockpatternmatch1.getBlock(3, 3, 3).getPos();
@@ -317,15 +319,17 @@ public class CthulhuFight {
     }
 
     private boolean isArenaLoaded() {
-        for(int i = -8; i <= 8; ++i) {
-            for(int j = 8; j <= 8; ++j) {
+        ChunkPos chunkpos = new ChunkPos(0, 0);
+
+        for(int i = -8 + chunkpos.x; i <= 8 + chunkpos.x; ++i) {
+            for(int j = 8 + chunkpos.z; j <= 8 + chunkpos.z; ++j) {
                 ChunkAccess chunkaccess = this.level.getChunk(i, j, ChunkStatus.FULL, false);
                 if (!(chunkaccess instanceof LevelChunk)) {
                     return false;
                 }
 
-                ChunkHolder.FullChunkStatus chunkholder$fullchunkstatus = ((LevelChunk)chunkaccess).getFullStatus();
-                if (!chunkholder$fullchunkstatus.isOrAfter(ChunkHolder.FullChunkStatus.TICKING)) {
+                FullChunkStatus fullchunkstatus = ((LevelChunk)chunkaccess).getFullStatus();
+                if (!fullchunkstatus.isOrAfter(FullChunkStatus.BLOCK_TICKING)) {
                     return false;
                 }
             }
@@ -369,7 +373,7 @@ public class CthulhuFight {
             this.spawnExitPortal(true);
             this.spawnNewGateway();
             if (!this.previouslyKilled) {
-                this.level.setBlockAndUpdate(this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, EndPodiumFeature.END_PODIUM_LOCATION), Blocks.DRAGON_EGG.defaultBlockState());
+                this.level.setBlockAndUpdate(this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, EndPodiumFeature.getLocation(BlockPos.ZERO)), Blocks.DRAGON_EGG.defaultBlockState());
             }
 
             this.previouslyKilled = true;
@@ -389,13 +393,15 @@ public class CthulhuFight {
 
     private void spawnNewGateway(BlockPos pPos) {
         this.level.levelEvent(3000, pPos, 0);
-        EndFeatures.END_GATEWAY_DELAYED.value().place(this.level, this.level.getChunkSource().getGenerator(), RandomSource.create(), pPos);
+        this.level.registryAccess().registry(Registries.CONFIGURED_FEATURE)
+                .flatMap((feature) -> feature.getHolder(EndFeatures.END_GATEWAY_DELAYED))
+                .ifPresent((holder) -> holder.value().place(this.level, this.level.getChunkSource().getGenerator(), RandomSource.create(), pPos));
     }
 
     private void spawnExitPortal(boolean pActive) {
         EndPodiumFeature endpodiumfeature = new EndPodiumFeature(pActive);
         if (this.portalLocation == null) {
-            for(this.portalLocation = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EndPodiumFeature.END_PODIUM_LOCATION).below(); this.level.getBlockState(this.portalLocation).is(Blocks.BEDROCK) && this.portalLocation.getY() > this.level.getSeaLevel(); this.portalLocation = this.portalLocation.below()) {
+            for(this.portalLocation = this.level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EndPodiumFeature.getLocation(BlockPos.ZERO)).below(); this.level.getBlockState(this.portalLocation).is(Blocks.BEDROCK) && this.portalLocation.getY() > this.level.getSeaLevel(); this.portalLocation = this.portalLocation.below()) {
             }
         }
 

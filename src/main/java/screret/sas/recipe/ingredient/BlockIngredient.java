@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -47,7 +49,7 @@ public class BlockIngredient implements Predicate<BlockState> {
     public boolean test(@Nullable BlockState block) {
         if (block != null) {
             this.dissolve();
-            if(this.blocks.length == 0){
+            if(this.blocks.length == 0) {
                 return block.isAir();
             }
 
@@ -151,7 +153,7 @@ public class BlockIngredient implements Predicate<BlockState> {
             return new BlockIngredient.BlockValue(blockFromJson(pJson));
         } else if (pJson.has("tag")) {
             ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(pJson, "tag"));
-            TagKey<Block> key = TagKey.create(Registry.BLOCK_REGISTRY, resourcelocation);
+            TagKey<Block> key = TagKey.create(Registries.BLOCK, resourcelocation);
             return new BlockIngredient.TagValue(key);
         } else {
             throw new JsonParseException("An BlockIngredient entry needs either a tag or a block");
@@ -160,7 +162,7 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public static Block blockFromJson(JsonObject pItemObject) {
         String s = GsonHelper.getAsString(pItemObject, "block");
-        Block block = Registry.BLOCK.getOptional(new ResourceLocation(s)).orElseThrow(() -> {
+        Block block = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(s)).orElseThrow(() -> {
             return new JsonSyntaxException("Unknown item '" + s + "'");
         });
         if (block == Blocks.AIR) {
@@ -206,11 +208,11 @@ public class BlockIngredient implements Predicate<BlockState> {
         public Collection<BlockState> getBlocks() {
             List<BlockState> list = Lists.newArrayList();
 
-            for(Holder<Block> holder : Registry.BLOCK.getTagOrEmpty(this.tag)) {
+            for(Holder<Block> holder : BuiltInRegistries.BLOCK.getTagOrEmpty(this.tag)) {
                 list.add(holder.value().defaultBlockState());
             }
 
-            if (list.size() == 0) {
+            if (list.isEmpty()) {
                 list.add(Blocks.BARRIER.defaultBlockState());
             }
             return list;

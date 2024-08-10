@@ -16,7 +16,7 @@ public class CapabilityWandAbility implements ICapabilityWandAbility {
 
     private boolean isPoweredUp;
 
-    public CapabilityWandAbility(WandAbilityInstance ability, WandAbilityInstance crouchAbility, boolean isPoweredUp){
+    public CapabilityWandAbility(WandAbilityInstance ability, WandAbilityInstance crouchAbility, boolean isPoweredUp) {
         this.ability = ability;
         this.crouchAbility = crouchAbility;
         this.isPoweredUp = isPoweredUp;
@@ -28,7 +28,7 @@ public class CapabilityWandAbility implements ICapabilityWandAbility {
     }
 
     @Override
-    public WandAbilityInstance getAbility() {
+    public WandAbilityInstance getMainAbility() {
         return ability;
     }
 

@@ -52,7 +52,7 @@ public class EyeConversionBuilder {
         return this.result;
     }
 
-    public void save(Consumer<Result> pFinishedRecipeConsumer){
+    public void save(Consumer<Result> pFinishedRecipeConsumer) {
         this.save(pFinishedRecipeConsumer, ForgeRegistries.BLOCKS.getKey(this.result));
     }
 
@@ -66,8 +66,8 @@ public class EyeConversionBuilder {
      */
     private void ensureValid(ResourceLocation pId) {
 
-        for (var block : ingredient.getBlocks()){
-            if(!ForgeRegistries.BLOCKS.containsValue(block.getBlock())){
+        for (var block : ingredient.getBlocks()) {
+            if(!ForgeRegistries.BLOCKS.containsValue(block.getBlock())) {
                 throw new IllegalArgumentException("Block " + block + " is not registered!");
             }
         }

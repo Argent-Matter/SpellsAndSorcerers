@@ -100,7 +100,7 @@ public class ShootEnemyGoal extends Goal {
 
             float f = (float)Math.sqrt(d0) / this.attackRadius;
             float f1 = Mth.clamp(f, 0.1F, 1.0F);
-            if(this.target != null){
+            if(this.target != null) {
                 this.mob.setIsAttacking(true);
                 this.mob.playSound(this.mob.getCastingSound());
                 this.mob.setCastingSpell(getSpell(this.mob.getRandom()));
@@ -113,9 +113,9 @@ public class ShootEnemyGoal extends Goal {
         }
     }
 
-    protected WandAbilityInstance getSpell(RandomSource random){
-        if(WizardEntity.possibleWands == null){
-            WizardEntity.possibleWands = Util.customWands.values().stream().toList();
+    protected WandAbilityInstance getSpell(RandomSource random) {
+        if(WizardEntity.possibleWands == null) {
+            WizardEntity.possibleWands = Util.CUSTOM_WANDS.values().stream().toList();
         }
         return Util.getMainAbilityFromStack(WizardEntity.possibleWands.get(random.nextInt(WizardEntity.possibleWands.size() - 1))).get();
     }

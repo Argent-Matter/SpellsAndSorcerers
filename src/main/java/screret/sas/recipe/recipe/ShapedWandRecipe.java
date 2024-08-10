@@ -4,18 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import screret.sas.Util;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.ingredient.WandAbilityIngredient;
 
 public class ShapedWandRecipe implements WandRecipe {
@@ -76,7 +75,7 @@ public class ShapedWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container) {
+    public ItemStack assemble(CraftingContainer container, RegistryAccess pRegistryAccess) {
         return this.result.getStack();
     }
 
@@ -86,7 +85,7 @@ public class ShapedWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return result.getStack();
     }
 
@@ -102,7 +101,7 @@ public class ShapedWandRecipe implements WandRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.SHAPED_WAND_RECIPE_SERIALIZER.get();
+        return ModRecipeTypes.SHAPED_WAND_RECIPE_SERIALIZER.get();
     }
 
     private static String[] patternFromJson(JsonArray jsonArr) {
@@ -120,7 +119,7 @@ public class ShapedWandRecipe implements WandRecipe {
         return astring;
     }
 
-    public String toString(){
+    public String toString() {
         return getId().toString();
     }
 

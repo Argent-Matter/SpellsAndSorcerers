@@ -9,7 +9,7 @@ public class CapabilityCthulhuFight implements ICapabilityCthulhuFight, INBTSeri
     private CthulhuFight fight;
     private final ServerLevel level;
 
-    public CapabilityCthulhuFight(ServerLevel level){
+    public CapabilityCthulhuFight(ServerLevel level) {
         this.level = level;
     }
 
@@ -30,7 +30,7 @@ public class CapabilityCthulhuFight implements ICapabilityCthulhuFight, INBTSeri
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        long seed = level.getServer().getWorldData().worldGenSettings().seed();
+        long seed = level.getServer().getWorldData().worldGenOptions().seed();
         this.fight = new CthulhuFight(level, seed, nbt);
     }
 }

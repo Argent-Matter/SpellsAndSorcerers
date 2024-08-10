@@ -80,32 +80,32 @@ public class SummonSignBE extends BlockEntity implements GeoBlockEntity {
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, SummonSignBE pBlockEntity) {
         if (pPos.getY() >= pLevel.getMinBuildHeight() && pLevel.getDifficulty() != Difficulty.PEACEFUL) {
             var itemEntities = getItemsAt(pLevel, pBlockEntity);
-            if(!pBlockEntity.hasSpawned){
+            if(!pBlockEntity.hasSpawned) {
                 Stream<ItemStack> items = itemEntities.stream().map(ItemEntity::getItem);
                 var requiredItems = ForgeRegistries.ITEMS.tags().getTag(ModTags.Items.BOSS_SUMMON_ITEMS);
                 Set<Item> requiredSet = requiredItems.stream().collect(Collectors.toSet());
                 var counter = new RequiredCounter();
-                if(!items.allMatch(item -> testForTag(requiredSet, item, counter))){
+                if(!items.allMatch(item -> testForTag(requiredSet, item, counter))) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(SummonSignBlock.TRIGGERED, false));
                     return;
                 }
-                if(itemEntities.size() < requiredItems.size()){
+                if(itemEntities.size() < requiredItems.size()) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(SummonSignBlock.TRIGGERED, false));
                     return;
                 }
 
-                if(pBlockEntity.ticksToSpawn < 0){
+                if(pBlockEntity.ticksToSpawn < 0) {
                     pBlockEntity.ticksToSpawn = TICKS_TO_SPAWN;
                     pBlockEntity.setChanged();
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(SummonSignBlock.TRIGGERED, true));
                     return;
-                } else if(pBlockEntity.ticksToSpawn > 0){
+                } else if(pBlockEntity.ticksToSpawn > 0) {
                     --pBlockEntity.ticksToSpawn;
                     pBlockEntity.setChanged();
                     return;
                 }
 
-                for (var itemEntity : itemEntities){
+                for (var itemEntity : itemEntities) {
                     itemEntity.getItem().shrink(1);
                 }
                 

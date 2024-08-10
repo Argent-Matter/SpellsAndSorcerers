@@ -15,7 +15,7 @@ import screret.sas.blockentity.blockentity.PotionDistilleryBE;
 import screret.sas.container.ModContainers;
 import screret.sas.container.slot.DistilleryFuelSlot;
 import screret.sas.container.slot.DistilleryResultSlot;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 
 public class PotionDistilleryMenu extends AbstractContainerMenu {
     private static final int RESULT_SLOT_START = 2, RESULT_SLOT_END = 4;
@@ -37,12 +37,12 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
         this.player = pPlayerInventory.player;
         this.blockEntity = blockEntity;
 
-        if(this.blockEntity != null){
+        if(this.blockEntity != null) {
             checkContainerSize(this.blockEntity.getInventoryWrapper(), 5);
             checkContainerDataCount(blockEntity.getDataAccess(), 4);
             this.items = this.blockEntity.getInventory();
             this.data = blockEntity.getDataAccess();
-            this.level = pPlayerInventory.player.level;
+            this.level = pPlayerInventory.player.level();
             this.addSlot(new DistilleryFuelSlot(this, this.items, 0, 17, 17));
             this.addSlot(new SlotItemHandler(items, 1, 79, 17));
 
@@ -76,7 +76,7 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
             ItemStack item = slot.getItem();
             copy = item.copy();
             if (pIndex >= RESULT_SLOT_START && pIndex <= RESULT_SLOT_END) {
-                for (int index = RESULT_SLOT_START; index <= RESULT_SLOT_END; ++index){
+                for (int index = RESULT_SLOT_START; index <= RESULT_SLOT_END; ++index) {
                     if (!this.moveItemStackTo(item, index, USE_ROW_SLOT_END, true)) {
                         return ItemStack.EMPTY;
                     }
@@ -120,11 +120,11 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
     }
 
     protected boolean canSmelt(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor(ModRecipes.POTION_DISTILLING_RECIPE.get(), new SimpleContainer(pStack), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.POTION_DISTILLING_RECIPE.get(), new SimpleContainer(pStack), this.level).isPresent();
     }
 
     public boolean isFuel(ItemStack pStack) {
-        return ForgeHooks.getBurnTime(pStack, ModRecipes.POTION_DISTILLING_RECIPE.get()) > 0;
+        return ForgeHooks.getBurnTime(pStack, ModRecipeTypes.POTION_DISTILLING_RECIPE.get()) > 0;
     }
 
     public boolean isLit() {

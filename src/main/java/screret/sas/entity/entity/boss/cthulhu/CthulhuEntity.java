@@ -86,7 +86,7 @@ public class CthulhuEntity extends Mob implements Enemy, GeoEntity {
         this.entityData.set(INVULNERABLE_TICKS, pInvulnerableTicks);
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 

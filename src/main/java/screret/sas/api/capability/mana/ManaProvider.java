@@ -18,18 +18,18 @@ import javax.annotation.Nullable;
 
 public class ManaProvider implements ICapabilitySerializable<Tag> {
 
-    public static final Capability<ICapabilityMana> MANA = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<ICapabilityMana> MANA = CapabilityManager.get(new CapabilityToken<>() {});
 
     CapabilityMana backend = null;
     LazyOptional<ICapabilityMana> optionalStorage = LazyOptional.of(this::createCapability);
 
-    public ManaProvider(){
+    public ManaProvider() {
 
     }
 
     @NotNull
-    public CapabilityMana createCapability(){
-        if(backend == null){
+    public CapabilityMana createCapability() {
+        if(backend == null) {
             backend = new CapabilityMana(SASConfig.Server.maxDefaultMana.get(), SASConfig.Server.maxDefaultMana.get(), SASConfig.Server.maxDefaultMana.get(), SASConfig.Server.maxDefaultMana.get());
         }
         return backend;
@@ -45,7 +45,7 @@ public class ManaProvider implements ICapabilitySerializable<Tag> {
 
     @Override
     public Tag serializeNBT() {
-        if(optionalStorage.isPresent()){
+        if(optionalStorage.isPresent()) {
             return optionalStorage.resolve().get().serializeNBT();
         }
         if(backend == null) createCapability();
@@ -54,7 +54,7 @@ public class ManaProvider implements ICapabilitySerializable<Tag> {
 
     @Override
     public void deserializeNBT(Tag tag) {
-        if(optionalStorage.isPresent()){
+        if(optionalStorage.isPresent()) {
             optionalStorage.resolve().get().deserializeNBT(tag);
         }
     }

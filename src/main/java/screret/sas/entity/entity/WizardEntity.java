@@ -2,7 +2,6 @@ package screret.sas.entity.entity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,7 +27,6 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.items.ItemStackHandler;
@@ -41,8 +39,6 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.ClientUtils;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -58,7 +54,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         super(type, pLevel);
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 
@@ -102,11 +98,11 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
-        if(possibleWands == null){
-            if(Util.customWands.isEmpty()){
+        if(possibleWands == null) {
+            if(Util.CUSTOM_WANDS.isEmpty()) {
                 Util.addItems();
             }
-            possibleWands = Util.customWands.values().stream().toList();
+            possibleWands = Util.CUSTOM_WANDS.values().stream().toList();
         }
         this.setItemSlot(EquipmentSlot.MAINHAND, possibleWands.get(pRandom.nextInt(possibleWands.size() - 1)));
     }
@@ -161,12 +157,12 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     @Override
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
-        if(SASConfig.Server.dropWandCores.get()){
+        if(SASConfig.Server.dropWandCores.get()) {
             var toDrop = Util.getMainAbilityFromStack(this.getMainHandItem()).get();
             while (toDrop.getChildren() != null && toDrop.getChildren().size() > 0) {
                 toDrop = toDrop.getChildren().get(0);
             }
-            ItemEntity itementity = this.spawnAtLocation(Util.customWandCores.get(toDrop.getId()).copy());
+            ItemEntity itementity = this.spawnAtLocation(Util.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
             if (itementity != null) {
                 itementity.setExtendedLifetime();
             }
@@ -220,8 +216,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
 
     @Override
     public void performRangedAttack(LivingEntity pTarget, float pVelocity) {
-        if(Util.getMainAbilityFromStack(this.getMainHandItem()).isPresent()){
-            Util.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level, this, this.getMainHandItem(), new WandAbilityInstance.Vec3Wrapped(this.getEyePosition()), 50);
+        if(Util.getMainAbilityFromStack(this.getMainHandItem()).isPresent()) {
+            Util.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.Vec3Wrapped(this.getEyePosition()), 50);
         }
     }
 

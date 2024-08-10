@@ -36,7 +36,7 @@ import screret.sas.item.ModItems;
 public class ClientModEvents {
 
     @SubscribeEvent
-    public static void clientSetup(final FMLClientSetupEvent event){
+    public static void clientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(ModContainers.WAND_TABLE.get(), WandTableScreen::new);
             MenuScreens.register(ModContainers.POTION_DISTILLERY.get(), PotionDistilleryScreen::new);
@@ -44,8 +44,8 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public static void registerParticles(final RegisterParticleProvidersEvent event){
-        event.register(ModParticles.EYE.get(), EyeParticle.Provider::new);
+    public static void registerParticles(final RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.EYE.get(), EyeParticle.Provider::new);
     }
 
     @SubscribeEvent
@@ -64,7 +64,7 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerModels(final ModelEvent.RegisterAdditional event) {
-        for (var ability : WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValues()){
+        for (var ability : WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValues()) {
             if(ability instanceof SubAbility) {
                 event.register(new ResourceLocation(ability.getKey().getNamespace(), "item/wand/" + ability.getKey().getPath()));
             }
@@ -76,23 +76,23 @@ public class ClientModEvents {
         TextureAtlas map = event.getAtlas();
 
         if (map.location() == InventoryMenu.BLOCK_ATLAS) {
-            for (var ability : WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValues()){
+            for (var ability : WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValues()) {
                 event.getAtlas().getSprite(new ResourceLocation(ability.getKey().getNamespace(), "item/wand/" + ability.getKey().getPath()));
             }
         }
     }
 
     @SubscribeEvent
-    public static void registerGuiOverlay(final RegisterGuiOverlaysEvent event){
+    public static void registerGuiOverlay(final RegisterGuiOverlaysEvent event) {
         event.registerAbove(new ResourceLocation("armor_level"), "mana", new ManaBarOverlay());
     }
 
     @SubscribeEvent
-    public static void registerItemColors(final RegisterColorHandlersEvent.Item event){
+    public static void registerItemColors(final RegisterColorHandlersEvent.Item event) {
         event.register((stack, index) -> {
-            if(stack.hasTag() && stack.getTag().contains("ability") && index == 1){
+            if(stack.hasTag() && stack.getTag().contains("ability") && index == 1) {
                 var colorLocation = new ResourceLocation(stack.getTag().getString("ability"));
-                if(WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().containsKey(colorLocation)){
+                if(WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().containsKey(colorLocation)) {
                     return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValue(colorLocation).getColor();
                 }
             }
@@ -106,7 +106,7 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public static void registerBlockColors(final RegisterColorHandlersEvent.Block event){
+    public static void registerBlockColors(final RegisterColorHandlersEvent.Block event) {
         event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(SummonSignBlock.COLOR).getFireworkColor(), ModBlocks.SUMMON_SIGN.get());
     }
 }

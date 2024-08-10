@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -12,13 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import screret.sas.Util;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.ingredient.WandAbilityIngredient;
 
 public class ShapelessWandRecipe implements WandRecipe {
 
     public static final String TYPE_ID_NAME = "shapeless_wand";
-    public static final ResourceLocation TYPE_ID = Util.resource(TYPE_ID_NAME);
+    public static final ResourceLocation TYPE_ID = Util.id(TYPE_ID_NAME);
     public static final int MAX_SIZE_X = 3, MAX_SIZE_Y = 2;
 
     private final ResourceLocation id;
@@ -74,7 +75,7 @@ public class ShapelessWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container) {
+    public ItemStack assemble(CraftingContainer container, RegistryAccess pRegistryAccess) {
             return this.result.getStack();
     }
 
@@ -84,7 +85,7 @@ public class ShapelessWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return result.getStack();
     }
 
@@ -100,7 +101,7 @@ public class ShapelessWandRecipe implements WandRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipes.SHAPELESS_WAND_RECIPE_SERIALIZER.get();
+        return ModRecipeTypes.SHAPELESS_WAND_RECIPE_SERIALIZER.get();
     }
 
     private static NonNullList<Ingredient> itemsFromJson(JsonArray pIngredientArray) {
@@ -114,7 +115,7 @@ public class ShapelessWandRecipe implements WandRecipe {
         return ingredients;
     }
 
-    public String toString(){
+    public String toString() {
         return getId().toString();
     }
 

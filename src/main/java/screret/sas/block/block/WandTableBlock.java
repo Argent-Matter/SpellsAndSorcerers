@@ -16,11 +16,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -37,7 +37,7 @@ public class WandTableBlock extends Block {
 
 
     public WandTableBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.SAND).strength(3.0F, 36.0F).lightLevel((function) -> 7));
+        super(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.SAND).strength(3.0F, 36.0F).lightLevel((function) -> 7));
     }
 
     @Override

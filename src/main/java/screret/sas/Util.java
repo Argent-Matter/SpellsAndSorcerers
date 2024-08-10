@@ -35,10 +35,10 @@ import java.util.function.Predicate;
 
 public class Util {
 
-    public static final Map<ResourceLocation, ItemStack> customWands = Maps.newHashMap();
-    public static final Map<ResourceLocation, ItemStack> customWandCores = Maps.newHashMap();
+    public static final Map<ResourceLocation, ItemStack> CUSTOM_WANDS = Maps.newHashMap();
+    public static final Map<ResourceLocation, ItemStack> CUSTOM_WAND_CORES = Maps.newHashMap();
 
-    public static void addItems(){
+    public static void addItems() {
         addWand(new WandAbilityInstance(ModWandAbilities.SHOOT_RAY.get(), new WandAbilityInstance(ModWandAbilities.DAMAGE.get())), null);
         addWand(new WandAbilityInstance(ModWandAbilities.SHOOT_HOLD_DOWN.get(), new WandAbilityInstance(ModWandAbilities.HEAL.get())), new WandAbilityInstance(ModWandAbilities.HEAL_SELF.get()));
         addWand(new WandAbilityInstance(ModWandAbilities.SHOOT_ANGRY_RAY.get(), new WandAbilityInstance(ModWandAbilities.EXPLODE.get())), null);
@@ -47,12 +47,12 @@ public class Util {
         addWand(ModWandAbilities.LARGE_FIREBALL.get(), null);
         addWand(new WandAbilityInstance(ModWandAbilities.SHOOT_LIGHTNING.get(), new WandAbilityInstance(ModWandAbilities.LIGHTNING.get())), null);
 
-        for(WandAbility ability : WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValues()){
+        for(WandAbility ability : WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValues()) {
             addWandCore(ability);
         }
     }
 
-    public static ItemStack createWand(WandAbility main, @Nullable WandAbility crouch){
+    public static ItemStack createWand(WandAbility main, @Nullable WandAbility crouch) {
         var tag = new CompoundTag();
         var ability = new WandAbilityInstance(main);
         tag.put(WandAbility.BASIC_ABILITY_KEY, ability.serializeNBT());
@@ -63,11 +63,11 @@ public class Util {
         return new ItemStack(ModItems.WAND.get(), 1, tag);
     }
 
-    public static ItemStack addWand(WandAbility main, @Nullable WandAbility crouch){
-        return customWands.put(main.getKey(), createWand(main, crouch));
+    public static ItemStack addWand(WandAbility main, @Nullable WandAbility crouch) {
+        return CUSTOM_WANDS.put(main.getKey(), createWand(main, crouch));
     }
 
-    public static ItemStack createWand(Item item, WandAbilityInstance main, @Nullable WandAbilityInstance crouch){
+    public static ItemStack createWand(Item item, WandAbilityInstance main, @Nullable WandAbilityInstance crouch) {
         var tag = new CompoundTag();
         tag.put(WandAbility.BASIC_ABILITY_KEY, main.serializeNBT());
         if(crouch != null) {
@@ -76,23 +76,23 @@ public class Util {
         return new ItemStack(item, 1, tag);
     }
 
-    public static ItemStack addWand(WandAbilityInstance main, @Nullable WandAbilityInstance crouch){
+    public static ItemStack addWand(WandAbilityInstance main, @Nullable WandAbilityInstance crouch) {
         var childestAbility = main;
-        while (childestAbility.getChildren() != null && !childestAbility.getChildren().isEmpty()){
+        while (childestAbility.getChildren() != null && !childestAbility.getChildren().isEmpty()) {
             childestAbility = childestAbility.getChildren().get(0);
         }
-        return customWands.put(childestAbility.getId(), createWand(ModItems.WAND.get(), main, crouch));
+        return CUSTOM_WANDS.put(childestAbility.getId(), createWand(ModItems.WAND.get(), main, crouch));
     }
 
-    public static ItemStack addWandCore(WandAbility ability){
+    public static ItemStack addWandCore(WandAbility ability) {
         var coreStack = new ItemStack(ModItems.WAND_CORE.get(), 1);
         var tag = new CompoundTag();
         tag.putString(WandCoreItem.ABILITY_KEY, ability.toString());
         coreStack.setTag(tag);
-        return customWandCores.put(ability.getKey(), coreStack);
+        return CUSTOM_WAND_CORES.put(ability.getKey(), coreStack);
     }
 
-    public static WandAbility getAbilityFromJson(JsonObject json, String key){
+    public static WandAbility getAbilityFromJson(JsonObject json, String key) {
         return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValue(new ResourceLocation(GsonHelper.getAsString(json, key)));
     }
 
@@ -100,14 +100,14 @@ public class Util {
         return (randomSource.nextDouble() * (max - min)) + min;
     }
 
-    public static Optional<WandAbilityInstance> getMainAbilityFromStack(ItemStack stack){
-        if(stack.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent()){
-            return Optional.of(stack.getCapability(WandAbilityProvider.WAND_ABILITY).resolve().get().getAbility());
+    public static Optional<WandAbilityInstance> getMainAbilityFromStack(ItemStack stack) {
+        if(stack.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent()) {
+            return Optional.of(stack.getCapability(WandAbilityProvider.WAND_ABILITY).resolve().get().getMainAbility());
         }
         return Optional.empty();
     }
 
-    public static ResourceLocation resource(String path){
+    public static ResourceLocation id(String path) {
         return new ResourceLocation(SpellsAndSorcerers.MODID, path);
     }
 
@@ -121,7 +121,7 @@ public class Util {
         return ProjectileUtil.getEntityHitResult(entity, entity.getEyePosition(), entityPosStuff.to, AABB.ofSize(entityPosStuff.from, distance, distance, distance), filter, distance);
     }
 
-    public static EntityPosStuff getEntityPos(LivingEntity entity, double distance){
+    public static EntityPosStuff getEntityPos(LivingEntity entity, double distance) {
         EntityPosStuff stuff = new EntityPosStuff();
         var xRot = entity.getXRot();
         var yRot = entity.getYRot();
@@ -137,7 +137,7 @@ public class Util {
         return stuff;
     }
 
-    public static void spawnParticlesInLine(Level level, Vec3 start, Vec3 end, ParticleOptions particle, int pointsPerLine, Vec3 randomDeviation, boolean alwaysRender){
+    public static void spawnParticlesInLine(Level level, Vec3 start, Vec3 end, ParticleOptions particle, int pointsPerLine, Vec3 randomDeviation, boolean alwaysRender) {
         double d = start.distanceTo(end) / pointsPerLine;
         for (int i = 0; i < pointsPerLine; i++) {
             Vec3 pos = new Vec3(start.x, start.y, start.z);
@@ -145,7 +145,7 @@ public class Util {
             Vec3 v = direction.multiply(i * d, i * d, i * d);
 
             pos = pos.add(v);
-            if(level.isClientSide){
+            if(level.isClientSide) {
                 level.addParticle(particle, alwaysRender, pos.x, pos.y, pos.z, randomDeviation.x, randomDeviation.y, randomDeviation.z);
                 continue;
             }

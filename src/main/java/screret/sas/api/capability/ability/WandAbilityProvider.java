@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 
 public class WandAbilityProvider implements ICapabilitySerializable<CompoundTag> {
 
-    public static final Capability<ICapabilityWandAbility> WAND_ABILITY = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<ICapabilityWandAbility> WAND_ABILITY = CapabilityManager.get(new CapabilityToken<>() {});
 
     private final WandAbilityInstance main, crouch;
     private boolean isPoweredUp;
@@ -20,7 +20,7 @@ public class WandAbilityProvider implements ICapabilitySerializable<CompoundTag>
     CapabilityWandAbility backend = null;
     LazyOptional<ICapabilityWandAbility> optionalStorage = LazyOptional.of(this::createCapability);
 
-    public WandAbilityProvider(WandAbilityInstance mainAbility, WandAbilityInstance crouchAbility, boolean isPoweredUp){
+    public WandAbilityProvider(WandAbilityInstance mainAbility, WandAbilityInstance crouchAbility, boolean isPoweredUp) {
         this.main = mainAbility;
         this.crouch = crouchAbility;
         this.isPoweredUp = isPoweredUp;
@@ -28,8 +28,8 @@ public class WandAbilityProvider implements ICapabilitySerializable<CompoundTag>
     }
 
     @NotNull
-    public CapabilityWandAbility createCapability(){
-        if(backend == null){
+    public CapabilityWandAbility createCapability() {
+        if(backend == null) {
             backend = new CapabilityWandAbility(main, crouch, isPoweredUp);
         }
         return backend;
@@ -45,7 +45,7 @@ public class WandAbilityProvider implements ICapabilitySerializable<CompoundTag>
 
     @Override
     public CompoundTag serializeNBT() {
-        if(optionalStorage.isPresent()){
+        if(optionalStorage.isPresent()) {
             return optionalStorage.resolve().get().serializeNBT();
         }
         if(backend == null) createCapability();
@@ -54,7 +54,7 @@ public class WandAbilityProvider implements ICapabilitySerializable<CompoundTag>
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        if(optionalStorage.isPresent()){
+        if(optionalStorage.isPresent()) {
             optionalStorage.resolve().get().deserializeNBT(tag);
         }
     }

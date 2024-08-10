@@ -52,7 +52,7 @@ public class DistilleryResultSlot extends SlotItemHandler {
      * @param pStack the output - ie, iron ingots, and pickaxes, not ore and wood.
      */
     protected void checkTakeAchievements(ItemStack pStack) {
-        pStack.onCraftedBy(this.player.level, this.player, this.removeCount);
+        pStack.onCraftedBy(this.player.level(), this.player, this.removeCount);
         if (this.player instanceof ServerPlayer && this.container instanceof AbstractFurnaceBlockEntity) {
             ((AbstractFurnaceBlockEntity)this.container).awardUsedRecipesAndPopExperience((ServerPlayer)this.player);
         }

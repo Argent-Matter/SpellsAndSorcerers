@@ -31,8 +31,8 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
     private final MobEffectInstance fullSetEffect;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public ModArmorItem(ArmorMaterial material, MobEffectInstance fullSetEffect, EquipmentSlot slot, Properties builder) {
-        super(material, slot, builder);
+    public ModArmorItem(ArmorMaterial material, MobEffectInstance fullSetEffect, ArmorItem.Type type, Properties builder) {
+        super(material, type, builder);
         this.fullSetEffect = fullSetEffect;
     }
 
@@ -58,7 +58,7 @@ public class ModArmorItem extends ArmorItem implements GeoItem {
     @Override
     public void onArmorTick(ItemStack stack, Level world, Player player) {
         if(!world.isClientSide()) {
-            if(SASConfig.Server.armorGiveEffects.get()){
+            if(SASConfig.Server.armorGiveEffects.get()) {
                 if(hasFullSuitOfArmorOn(player)) {
                     evaluateArmorEffects(player);
                 }

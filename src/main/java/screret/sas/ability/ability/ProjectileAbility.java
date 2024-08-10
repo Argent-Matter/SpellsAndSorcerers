@@ -24,7 +24,7 @@ public abstract class ProjectileAbility extends WandAbility {
 
     @Override
     public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.Vec3Wrapped currentPosition, int timeCharged) {
-        if(!level.isClientSide){
+        if(!level.isClientSide) {
             level.addFreshEntity(spawnProjectile(level, user, stack, timeCharged));
             return InteractionResultHolder.pass(stack);
         }

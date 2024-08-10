@@ -13,7 +13,7 @@ import screret.sas.recipe.recipe.ShapedWandRecipe;
 import screret.sas.recipe.recipe.ShapelessWandRecipe;
 import screret.sas.recipe.recipe.WandRecipe;
 
-public class ModRecipes {
+public class ModRecipeTypes {
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, SpellsAndSorcerers.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, SpellsAndSorcerers.MODID);
@@ -23,16 +23,16 @@ public class ModRecipes {
     public static final RegistryObject<RecipeSerializer<PotionDistillingRecipe>> POTION_DISTILLING_SERIALIZER = RECIPE_SERIALIZERS.register(PotionDistillingRecipe.TYPE_ID_NAME, PotionDistillingRecipe.Serializer::new);
 
     public static final RegistryObject<RecipeType<WandRecipe>> WAND_RECIPE = RECIPE_TYPES.register("wand", () -> new RecipeType<>() {
-        private static final ResourceLocation RECIPE_TYPE_ID = Util.resource("wand");
+        private static final ResourceLocation RECIPE_TYPE_ID = Util.id("wand");
         @Override
-        public String toString(){
+        public String toString() {
             return RECIPE_TYPE_ID.toString();
         }
     });
     public static final RegistryObject<RecipeType<PotionDistillingRecipe>> POTION_DISTILLING_RECIPE = RECIPE_TYPES.register("potion_distilling", () -> new RecipeType<>() {
-        private static final ResourceLocation RECIPE_TYPE_ID = Util.resource("potion_distilling");
+        private static final ResourceLocation RECIPE_TYPE_ID = Util.id("potion_distilling");
         @Override
-        public String toString(){
+        public String toString() {
             return RECIPE_TYPE_ID.toString();
         }
     });

@@ -7,6 +7,6 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 public class SoulsteelArmorRenderer extends GeoArmorRenderer<ModArmorItem> {
     public SoulsteelArmorRenderer() {
-        super(new DefaultedItemGeoModel<>(Util.resource("armor/soulsteel_armor")));
+        super(new DefaultedItemGeoModel<>(Util.id("armor/soulsteel_armor")));
     }
 }

@@ -77,7 +77,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         return navigation;
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 
@@ -85,13 +85,13 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         this.entityData.set(IS_ATTACKING, isAttacking);
     }
 
-    public void setSpawningPosition(BlockPos pos){
+    public void setSpawningPosition(BlockPos pos) {
         this.spawnPos = pos;
     }
 
     @Override
     public void checkDespawn() {
-        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
+        if (this.level().getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
             this.discard();
         } else {
             this.noActionTime = 0;
@@ -129,24 +129,24 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     @Override
     protected void customServerAiStep() {
         if (this.getInvulnerableTicks() > 0) {
-            if(!(this.level.getBlockEntity(this.spawnPos) instanceof SummonSignBE)){
+            if(!(this.level().getBlockEntity(this.spawnPos) instanceof SummonSignBE)) {
                 this.discard();
             }
-            if(this.level.getBlockState(this.spawnPos.above(2)) != Blocks.AIR.defaultBlockState()){
-                this.level.setBlockAndUpdate(this.spawnPos.above(2), Blocks.AIR.defaultBlockState());
-                this.level.setBlockAndUpdate(this.spawnPos.above(), Blocks.AIR.defaultBlockState());
+            if(this.level().getBlockState(this.spawnPos.above(2)) != Blocks.AIR.defaultBlockState()) {
+                this.level().setBlockAndUpdate(this.spawnPos.above(2), Blocks.AIR.defaultBlockState());
+                this.level().setBlockAndUpdate(this.spawnPos.above(), Blocks.AIR.defaultBlockState());
 
             }
 
             int ticks = this.getInvulnerableTicks() - 1;
             this.bossEvent.setProgress(1.0F - (float)ticks / MAX_INVULNERABLE_TICKS);
             if (ticks <= 0) {
-                //Explosion.BlockInteraction explosion = ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-                //this.level.explode(this, this.getX(), this.getEyeY(), this.getZ(), 7.0F, false, explosion);
-                this.level.setBlockAndUpdate(this.spawnPos, Blocks.AIR.defaultBlockState());
+                //Explosion.BlockInteraction explosion = ForgeEventFactory.getMobGriefingEvent(this.level(), this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+                //this.level().explode(this, this.getX(), this.getEyeY(), this.getZ(), 7.0F, false, explosion);
+                this.level().setBlockAndUpdate(this.spawnPos, Blocks.AIR.defaultBlockState());
                 this.setInvulnerable(false);
                 if (!this.isSilent()) {
-                    this.level.globalLevelEvent(LevelEvent.SOUND_WITHER_BOSS_SPAWN, this.blockPosition(), 0);
+                    this.level().globalLevelEvent(LevelEvent.SOUND_WITHER_BOSS_SPAWN, this.blockPosition(), 0);
                 }
             }
 
@@ -182,8 +182,8 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (this.isInvulnerableTo(pSource)) {
             return false;
-        } else if (pSource != DamageSource.DROWN && !(pSource.getEntity() instanceof BossWizardEntity)) {
-            if (this.getInvulnerableTicks() > 0 && pSource != DamageSource.OUT_OF_WORLD) {
+        } else if (pSource != damageSources().drown() && !(pSource.getEntity() instanceof BossWizardEntity)) {
+            if (this.getInvulnerableTicks() > 0 && pSource != damageSources().fellOutOfWorld()) {
                 return false;
             } else {
                 Entity entity1 = pSource.getEntity();
@@ -209,12 +209,12 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if(SASConfig.Server.dropWandCores.get()){
+        if(SASConfig.Server.dropWandCores.get()) {
             var toDrop = Util.getMainAbilityFromStack(this.getMainHandItem()).get();
             while (toDrop.getChildren() != null && toDrop.getChildren().size() > 0) {
                 toDrop = toDrop.getChildren().get(0);
             }
-            ItemEntity itementity = this.spawnAtLocation(Util.customWandCores.get(toDrop.getId()).copy());
+            ItemEntity itementity = this.spawnAtLocation(Util.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
             if (itementity != null) {
                 itementity.setExtendedLifetime();
             }
@@ -257,7 +257,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     public boolean isCastingSpell() {
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             return currentSpell != DUMMY_SPELL;
         } else {
             return this.spellCastingTickCount > 0;
@@ -302,7 +302,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     @Override
     public void performRangedAttack(LivingEntity pTarget, float pVelocity) {
-        currentSpell.execute(this.level, this, this.getMainHandItem(), new WandAbilityInstance.Vec3Wrapped(this.getEyePosition()), 50);
+        currentSpell.execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.Vec3Wrapped(this.getEyePosition()), 50);
     }
 
     @Override
@@ -323,7 +323,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
 
-    private static ItemStack createBossWand(){
+    private static ItemStack createBossWand() {
         var wandItem = Util.createWand(ModWandAbilities.LARGE_FIREBALL.get(), ModWandAbilities.HEAL_SELF.get());
         wandItem.enchant(ModEnchantments.POWER.get(), 1);
         wandItem.enchant(ModEnchantments.QUICK_CHARGE.get(), 3);

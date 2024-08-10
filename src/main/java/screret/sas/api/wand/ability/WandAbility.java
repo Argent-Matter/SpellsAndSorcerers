@@ -20,7 +20,7 @@ public class WandAbility implements IWandAbility {
 
     private final int color;
 
-    public WandAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color){
+    public WandAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color) {
         this.useDuration = useDuration;
         this.cooldownDuration = cooldownDuration;
         this.damagePerHit = damagePerHit;
@@ -44,7 +44,7 @@ public class WandAbility implements IWandAbility {
         return false;
     }
 
-    public boolean isChargeable(){
+    public boolean isChargeable() {
         return false;
     }
 
@@ -59,11 +59,11 @@ public class WandAbility implements IWandAbility {
     }
 
     @Override
-    public float getDamagePerHit(ItemStack stack){
+    public float getDamagePerHit(ItemStack stack) {
         return applyEnchants ? damagePerHit + (damagePerHit / 5) * stack.getEnchantmentLevel(ModEnchantments.POWER.get()) : damagePerHit;
     }
 
-    public boolean getPoweredUpMultiplier(ItemStack stack){
+    public boolean getPoweredUpMultiplier(ItemStack stack) {
         return stack.getCapability(WandAbilityProvider.WAND_ABILITY).isPresent() && stack.getCapability(WandAbilityProvider.WAND_ABILITY).resolve().get().getPoweredUp();
     }
 
@@ -82,11 +82,11 @@ public class WandAbility implements IWandAbility {
         return getKey().toString();
     }
 
-    public ParticleOptions getParticle(){
+    public ParticleOptions getParticle() {
         return particle;
     }
 
-    public WandAbilityInstance getBasicInstance(){
+    public WandAbilityInstance getBasicInstance() {
         return new WandAbilityInstance(this);
     }
 }

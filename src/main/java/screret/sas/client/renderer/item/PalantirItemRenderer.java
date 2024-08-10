@@ -7,6 +7,6 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class PalantirItemRenderer extends GeoItemRenderer<PalantirItem> {
     public PalantirItemRenderer() {
-        super(new DefaultedItemGeoModel<>(Util.resource("palantir")));
+        super(new DefaultedItemGeoModel<>(Util.id("palantir")));
     }
 }

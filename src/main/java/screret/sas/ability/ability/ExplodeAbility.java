@@ -30,14 +30,14 @@ public class ExplodeAbility extends SubAbility {
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged) {
         var explosionPower = getDamagePerHit(usedItem) * timeCharged / 8;
-        user.level.explode(user, hitEnt.getX(), hitEnt.getY(), hitEnt.getZ(), explosionPower, Level.ExplosionInteraction.MOB);
+        user.level().explode(user, hitEnt.getX(), hitEnt.getY(), hitEnt.getZ(), explosionPower, Level.ExplosionInteraction.MOB);
         return true;
     }
 
     @Override
     public boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged) {
         var explosionPower = getDamagePerHit(usedItem) * timeCharged / 8;
-        user.level.explode(user, hitPoint.x, hitPoint.y, hitPoint.z, explosionPower, Level.ExplosionInteraction.MOB);
+        user.level().explode(user, hitPoint.x, hitPoint.y, hitPoint.z, explosionPower, Level.ExplosionInteraction.MOB);
         return true;
     }
 }

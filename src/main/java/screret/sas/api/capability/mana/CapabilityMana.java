@@ -52,7 +52,7 @@ public class CapabilityMana implements ICapabilityMana {
         return energyExtracted;
     }
 
-    public void setMaxManaStored(int max){
+    public void setMaxManaStored(int max) {
         this.capacity = max;
     }
 

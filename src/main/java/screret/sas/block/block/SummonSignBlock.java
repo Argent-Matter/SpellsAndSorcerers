@@ -8,6 +8,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -34,7 +34,7 @@ public class SummonSignBlock extends BaseEntityBlock {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
     public SummonSignBlock() {
-        super(BlockBehaviour.Properties.of(Material.PORTAL).lightLevel((state) -> state.getValue(TRIGGERED) ? 9 : 2).strength(-1.0F, 3600F).noOcclusion());
+        super(BlockBehaviour.Properties.copy(Blocks.NETHER_PORTAL).lightLevel((state) -> state.getValue(TRIGGERED) ? 9 : 2).strength(-1.0F, 3600F).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(COLOR, DyeColor.RED).setValue(TRIGGERED, false));
     }
 
@@ -72,12 +72,12 @@ public class SummonSignBlock extends BaseEntityBlock {
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         super.animateTick(pState, pLevel, pPos, pRandom);
 
-        if(pState.getValue(SummonSignBlock.TRIGGERED)){
+        if(pState.getValue(SummonSignBlock.TRIGGERED)) {
             Vec3 pos = new Vec3(pPos.getX() + 0.5D, pPos.getY() + 1.0D, pPos.getZ() + 0.5D);
-            for (int i = 0; i < 10; ++i){
+            for (int i = 0; i < 10; ++i) {
                 pLevel.addParticle(ParticleTypes.ENCHANT, pPos.getX() + pRandom.nextDouble(), pPos.getY() + 2D + pRandom.nextDouble(), pPos.getZ() + pRandom.nextDouble(), 0D, -3D - pRandom.nextDouble(), 0D);
             }
-            if(pRandom.nextInt(4) == 0){
+            if(pRandom.nextInt(4) == 0) {
                 pLevel.addParticle(ModParticles.EYE.get(), true, pos.x, pos.y, pos.z, 0, 1D, 0);
             }
         }

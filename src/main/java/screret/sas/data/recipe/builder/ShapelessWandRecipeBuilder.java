@@ -1,8 +1,6 @@
 package screret.sas.data.recipe.builder;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Advancement;
@@ -12,8 +10,6 @@ import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -22,16 +18,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
-import net.minecraftforge.registries.ForgeRegistries;
 import screret.sas.SpellsAndSorcerers;
-import screret.sas.api.capability.ability.WandAbilityProvider;
-import screret.sas.recipe.ModRecipes;
+import screret.sas.recipe.ModRecipeTypes;
 import screret.sas.recipe.ingredient.WandAbilityIngredient;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class ShapelessWandRecipeBuilder implements RecipeBuilder {
@@ -117,7 +109,7 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
    public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
       this.ensureValid(pRecipeId);
       this.advancement.parent(ROOT_RECIPE_ADVANCEMENT).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pRecipeId)).rewards(AdvancementRewards.Builder.recipe(pRecipeId)).requirements(RequirementsStrategy.OR);
-      pFinishedRecipeConsumer.accept(new Result(pRecipeId, this.result, this.group == null ? "" : this.group, this.ingredients, this.advancement, new ResourceLocation(pRecipeId.getNamespace(), "recipes/" + SpellsAndSorcerers.SAS_TAB.getRecipeFolderName() + "/" + pRecipeId.getPath())));
+      pFinishedRecipeConsumer.accept(new Result(pRecipeId, this.result, this.group == null ? "" : this.group, this.ingredients, this.advancement, new ResourceLocation(pRecipeId.getNamespace(), "recipes/" + pRecipeId.getPath())));
    }
 
    /**
@@ -163,7 +155,7 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
       }
 
       public RecipeSerializer<?> getType() {
-         return ModRecipes.SHAPELESS_WAND_RECIPE_SERIALIZER.get();
+         return ModRecipeTypes.SHAPELESS_WAND_RECIPE_SERIALIZER.get();
       }
 
       /**

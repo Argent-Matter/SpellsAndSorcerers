@@ -19,7 +19,7 @@ public class WandCoreItem extends Item {
     @Override
     public Component getName(ItemStack stack) {
         String name = "item.sas.basic";
-        if(stack.hasTag() && stack.getTag().contains(ABILITY_KEY)){
+        if(stack.hasTag() && stack.getTag().contains(ABILITY_KEY)) {
 
             name = "ability.sas." + WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get().getValue(new ResourceLocation(stack.getTag().getString(ABILITY_KEY))).getKey().getPath();
         }

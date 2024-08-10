@@ -13,7 +13,7 @@ public class ManaMobEffect extends MobEffect {
     }
 
     public void removeAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-        if(pLivingEntity instanceof Player player){
+        if(pLivingEntity instanceof Player player) {
             player.getCapability(ManaProvider.MANA).ifPresent((cap) -> {
                 cap.setMaxManaStored(cap.getMaxManaStored() - 25 * (pAmplifier + 1));
             });
@@ -22,7 +22,7 @@ public class ManaMobEffect extends MobEffect {
     }
 
     public void addAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-        if(pLivingEntity instanceof Player player){
+        if(pLivingEntity instanceof Player player) {
             player.getCapability(ManaProvider.MANA).ifPresent((cap) -> {
                 cap.setMaxManaStored(cap.getMaxManaStored() + 25 * (pAmplifier + 1));
             });
