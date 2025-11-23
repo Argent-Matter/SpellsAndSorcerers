@@ -1,0 +1,112 @@
+[versions]
+# JIJ dependencies
+geckoLib = "4.8.2"
+mcLib = "20"
+smartBrainLib = "1.16.11"
+
+# Recipe viewers
+emi = "1.1.21+1.21.1"
+jei = "19.21.0.247"
+
+rei = "16.0.799"
+architectury = "13.0.8"
+clothConfig = "15.0.140"
+
+# KJS
+kubejs = "2101.7.1-build.181"
+rhino = "2101.2.7-build.74"
+
+# WAILA-likes
+theOneProbe = "1.21_neo-12.0.4-6"
+jade = "15.10.0+neoforge" # modrinth maven
+
+# Curios
+curios = "9.4.2+1.21.1"
+
+# Maps
+journeyMapApi = "2.0.0-1.21.1-SNAPSHOT"
+journeyMap = "6383889" # cursemaven
+ftbChunks = "2101.1.8"
+xaerosWorldMap = "6212662" # cursemaven
+xaerosMiniMap = "6306189" # cursemaven
+
+# Teams / Quests
+ftbTeams = "2101.1.2"
+ftbQuests = "2101.1.8"
+ftbLibrary = "2101.1.12"
+argonauts = "1.2.4"
+# FIXME for some reason their maven only has versions up to 1.1.10?
+heracles = "1.1.10"
+resourcefulLib = "3.0.12"
+
+# Rendering & Optimizations
+sodium = "mc1.21.1-0.6.13-neoforge" # modrinth maven
+iris = "1.8.8+1.21.1-neoforge" # modrinth maven
+modernFix = "4SPHwiDB" # 5.24.3+mc1.21.1; modrinth maven
+
+# Performance metrics
+spark = "6225208" # cursemaven
+observable = "5733591" # cursemaven
+kotlinForForge = "5.7.0"
+
+[libraries]
+# JIJ dependencies
+geckoLib            = { module = "software.bernie.geckolib:geckolib-neoforge-1.21.1", version.ref = "geckoLib" }
+mcLib               = { module = "com.eliotlash.mclib:mclib", version.ref = "mcLib" }
+smartBrainLib       = { module = "net.tslat.smartbrainlib:SmartBrainLib-neoforge-1.21.1", version.ref = "smartBrainLib" }
+
+# Recipe viewers
+jei-common-api      = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
+jei-neoforge-api    = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
+jei-neoforge-impl   = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
+rei-plugin          = { module = "me.shedaniel:RoughlyEnoughItems-default-plugin-neoforge", version.ref = "rei" }
+rei-api             = { module = "me.shedaniel:RoughlyEnoughItems-api-neoforge", version.ref = "rei" }
+rei-neoforge        = { module = "me.shedaniel:RoughlyEnoughItems-neoforge", version.ref = "rei" }
+clothConfig         = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
+emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
+
+# WAILA-likes
+theOneProbe         = { module = "mcjty.theoneprobe:theoneprobe", version.ref = "theOneProbe" }
+jade                = { module = "maven.modrinth:jade", version.ref = "jade" }
+
+# KJS
+kubejs              = { module = "dev.latvian.mods:kubejs-neoforge", version.ref = "kubejs" }
+rhino               = { module = "dev.latvian.mods:rhino-neoforge", version.ref = "rhino" }
+architectury        = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury" }
+
+# Curios
+curios              = { module = "top.theillusivec4.curios:curios-neoforge", version.ref = "curios" }
+
+# Rendering & Optimizations
+sodium              = { module = "maven.modrinth:sodium", version.ref = "sodium" }
+iris                = { module = "maven.modrinth:iris", version.ref = "iris" }
+modernFix           = { module = "maven.modrinth:modernfix", version.ref = "modernFix" }
+
+# Teams / Quests / Gamestages
+ftbLibrary          = { module = "dev.ftb.mods:ftb-library-neoforge", version.ref = "ftbLibrary" }
+ftbTeams            = { module = "dev.ftb.mods:ftb-teams-neoforge", version.ref = "ftbTeams" }
+ftbQuests           = { module = "dev.ftb.mods:ftb-quests-neoforge", version.ref = "ftbQuests" }
+resourcefulLib      = { module = "com.teamresourceful.resourcefullib:resourcefullib-neoforge-1.21", version.ref = "resourcefulLib" }
+argonauts           = { module = "earth.terrarium.odyssey_allies:odyssey_allies-neoforge-1.21", version.ref = "argonauts" }
+# TODO update these once there's 1.21 versions
+heracles            = { module = "earth.terrarium.heracles:heracles-neoforge-1.20.1", version.ref = "heracles" }
+
+# Maps
+ftbChunks           = { module = "dev.ftb.mods:ftb-chunks-neoforge", version.ref = "ftbChunks" }
+xaerosMiniMap       = { module = "curse.maven:xaeros-minimap-263420", version.ref = "xaerosMiniMap" }
+xaerosWorldMap      = { module = "curse.maven:xaeros-world-map-317780", version.ref = "xaerosWorldMap" }
+journeyMap-api      = { module = "info.journeymap:journeymap-api", version.ref = "journeyMapApi" }
+journeyMap-neoforge = { module = "curse.maven:journeymap-32274", version.ref = "journeyMap" }
+
+# Performance metrics
+spark               = { module = "curse.maven:spark-361579", version.ref = "spark" }
+observable          = { module = "curse.maven:observable-509575", version.ref = "observable" }
+kotlinForForge      = { module = "thedarkcolour:kotlinforforge", version.ref = "kotlinForForge" }
+
+[bundles]
+geckoLib = ["geckoLib", "mcLib"]
+jei = ["jei-common-api", "jei-neoforge-api", "jei-neoforge-impl"]
+rei = ["rei-plugin", "rei-neoforge"]
+rei-runtime = ["rei-neoforge", "architectury", "clothConfig"]
+kjs = ["kubejs", "rhino"]
+

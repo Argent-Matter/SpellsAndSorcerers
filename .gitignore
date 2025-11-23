@@ -1,26 +1,25 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
-
-# idea
-out
+build/
 *.ipr
+run*/
 *.iws
+out/
 *.iml
-.idea
+.gradle/
+output/
+bin/
 
-# gradle
-build
-.gradle
+.classpath
+*/.factorypath
+.project
+.idea/
+classes/
+.metadata
+.vscode
+.settings
+*.launch
+src/generated/resources/.cache/
 
-# other
-eclipse
-run
-runs
-run-data
+*.patch
+*.DS_Store
 
-repo
+qodana.yaml

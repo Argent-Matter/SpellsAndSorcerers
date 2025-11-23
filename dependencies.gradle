@@ -1,0 +1,81 @@
+dependencies {
+    compileOnly(libs.jetbrains.annotations)
+
+    // JIJ dependencies
+    jarJar(api(deps.geckoLib.get()))
+    jarJar(api(deps.mcLib.get()))
+    jarJar(api(deps.smartBrainLib.get()))
+
+    // Recipe Viewers
+    compileOnly(deps.bundles.jei)
+    compileOnly(deps.bundles.rei)
+    compileOnly(deps.emi)
+
+    // WAILA-likes
+    compileOnly(deps.theOneProbe)
+    compileOnly(deps.jade)
+
+    // Curios
+    compileOnly(variantOf(deps.curios) { classifier("api") })
+
+    // KJS
+    compileOnly(deps.bundles.kjs)
+
+    // Rendering & Optimizations
+    compileOnly(deps.sodium)
+    compileOnly(deps.iris)
+    compileOnly(deps.modernFix)
+
+    // Teams
+    compileOnly(deps.ftbLibrary)
+    compileOnly(deps.ftbTeams)
+    compileOnly(deps.ftbQuests)
+    compileOnly(deps.resourcefulLib)
+    compileOnly(deps.argonauts)
+    compileOnly(deps.heracles)
+
+    // Maps
+    compileOnly(deps.ftbChunks)
+    compileOnly(deps.xaerosMiniMap)
+    compileOnly(deps.xaerosWorldMap)
+    compileOnly(deps.journeyMap.api)
+    compileOnly(deps.journeyMap.neoforge)
+
+    // Standard runtime mods //
+    localRuntime(deps.jade)
+    localRuntime(deps.spark)
+    localRuntime(deps.modernFix)
+    localRuntime(deps.curios)
+
+    // Runtime Recipe Viewers - uncomment whichever one you want to use //
+    localRuntime(deps.emi)
+//    localRuntime(deps.jei.neoforge.impl)
+//    localRuntime(deps.bundles.rei.runtime)
+
+    // Client-only runtime mods //
+    clientLocalRuntime(deps.sodium)
+    clientLocalRuntime(deps.iris)
+    renderNurseCfg(libs.renderNurse)
+
+    //////////////////////////////////////////////////////
+    // Runtime mods for dev testing with unclean client //
+    //////////////////////////////////////////////////////
+    extraLocalRuntime(deps.bundles.kjs)
+
+    extraLocalRuntime(deps.ftbLibrary)
+    extraLocalRuntime(deps.ftbTeams)
+    extraLocalRuntime(deps.ftbQuests)
+
+//    extraLocalRuntime(deps.heracles)
+    extraLocalRuntime(deps.resourcefulLib)
+
+//    extraLocalRuntime(deps.xaerosminimap)
+//    extraLocalRuntime(deps.xaerosworldmap)
+//    extraLocalRuntime(deps.journeymap.neoforge)
+//    extraLocalRuntime(deps.ftbchunks)
+
+    extraLocalRuntime(deps.kotlinForForge) {
+        transitive = false
+    }
+    extraLocalRuntime(deps.observable)
+}
