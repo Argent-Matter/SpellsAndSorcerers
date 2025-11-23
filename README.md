@@ -1,5 +1,4 @@
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/Argent-Matter/SpellsAndSorcerers/refs/heads/1.21.1/src/main/resources/logo_assets/logo.png" style="width:200px;height:200px;" alt="Logo"></p>
-<h1 style="text-align: center;">Spells & Sorcerers</h1>
+<p style="text-align: center;"><img src="https://raw.githubusercontent.com/Argent-Matter/SpellsAndSorcerers/refs/heads/1.21.1/src/main/resources/logo_assets/logo.png" alt="Logo"></p>
 <h1 style="text-align: center;">
     <a href="https://www.curseforge.com/minecraft/mc-mods/spells-and-sorcerers"><img src="https://img.shields.io/badge/Available%20for-MC%201.21.1%20-informational?style=for-the-badge" alt="Supported Versions"></a>
     <a href="https://github.com/Argent-Matter/gcyr/blob/1.21.1/LICENSE.md"><img src="https://img.shields.io/github/license/Argent-Matter/SpellsAndSorcerers?style=for-the-badge&logo=github" alt="License"></a>
