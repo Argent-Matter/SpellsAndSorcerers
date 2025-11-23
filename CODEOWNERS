@@ -1,0 +1,7 @@
+# All other changes require the primary team
+* @Argent-Matter/spells-sorcerers-devs
+
+# Specific files requiring admin approval
+CODEOWNERS @Argent-Matter/admin
+LICENSE.md @Argent-Matter/admin
+/README.md @Argent-Matter/admin
