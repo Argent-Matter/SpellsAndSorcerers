@@ -25,5 +25,8 @@ afterEvaluate {
                 'Implementation-Version': version,
                 'Implementation-Vendor': 'GregTechCEu Team',
         ])
+
+        exclude ".cache"
+        exclude "logo_assets"
     }
 }

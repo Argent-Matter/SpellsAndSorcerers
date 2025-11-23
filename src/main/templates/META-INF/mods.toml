@@ -32,7 +32,7 @@ enumExtensions = "META-INF/enum_extensions.json"
 [[dependencies.${mod_id}]]
     modId = "minecraft"
     type = "required"
-    versionRange = "${minecraft_version}"
+    versionRange = "[${minecraft_version}]"
     ordering = "NONE"
     side = "BOTH"
 
@@ -88,12 +88,12 @@ enumExtensions = "META-INF/enum_extensions.json"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.${mod_id}]]
-    modId = "theoneprobe"
-    type = "optional"
-    versionRange = "[${top_version},)"
-    ordering = "NONE"
-    side = "BOTH"
+#[[dependencies.${mod_id}]]
+#    modId = "theoneprobe"
+#    type = "optional"
+#    versionRange = "[${top_version},)"
+#    ordering = "NONE"
+#    side = "BOTH"
 
 [[dependencies.${mod_id}]]
     modId = "jade"

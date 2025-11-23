@@ -29,7 +29,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
     var replaceProperties = [
             version             : version_toml,
             mod_id              : mod_id,
-            minecraft_version   : "[1.21, 1.21.1]",
+            minecraft_version   : libs.versions.minecraft.get(),
             loader_version      : libs.versions.loader.get(),
             neo_version         : neoVersion,
             geckolib_version    : deps.versions.geckoLib.get(),
@@ -40,7 +40,6 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             emi_version         : deps.versions.emi.get(),
             top_version         : deps.versions.theOneProbe.get(),
             jade_version        : deps.versions.jade.get(),
-            modernfix_version   : deps.versions.modernFix.get(),
             mod_license         : mod_license,
             mod_name            : mod_name,
             mod_description     : mod_description,
@@ -60,10 +59,6 @@ neoForge.ideSyncTask generateModMetadata
 
 // exclude all the branding assets from the jar EXCEPT the main logo
 processResources {
-    exclude "src/main/resources/logo_assets"
-
-    copy {
-        file "src/main/resources/logo_assets/logo.png"
-        into "build/generated/sources/modMetadata"
-    }
+    exclude ".cache"
+    exclude "logo_assets"
 }
