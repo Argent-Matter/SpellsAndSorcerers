@@ -1,11 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "screret.sas.mixin",
+  "package": "dev.screret.sas.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "sas.refmap.json",
   "mixins": [
-    "MobEffectAccessor",
+    "MobEffectAccessor"
   ],
   "client": [
   ],
