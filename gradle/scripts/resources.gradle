@@ -57,3 +57,13 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 neoForge.ideSyncTask generateModMetadata
+
+// exclude all the branding assets from the jar EXCEPT the main logo
+processResources {
+    exclude "src/main/resources/logo_assets"
+
+    copy {
+        file "src/main/resources/logo_assets/logo.png"
+        into "build/generated/sources/modMetadata"
+    }
+}
