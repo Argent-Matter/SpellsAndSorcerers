@@ -13,8 +13,8 @@ architectury = "13.0.8"
 clothConfig = "15.0.140"
 
 # KJS
-kubejs = "2101.7.1-build.181"
-rhino = "2101.2.7-build.74"
+kubejs = "2101.7.2-build.334"
+rhino = "2101.2.7-build.81"
 
 # WAILA-likes
 theOneProbe = "1.21_neo-12.0.4-6"
@@ -56,14 +56,17 @@ mcLib               = { module = "com.eliotlash.mclib:mclib", version.ref = "mcL
 smartBrainLib       = { module = "net.tslat.smartbrainlib:SmartBrainLib-neoforge-1.21.1", version.ref = "smartBrainLib" }
 
 # Recipe viewers
+emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
+
 jei-common-api      = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
 jei-neoforge-api    = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
 jei-neoforge-impl   = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
+
 rei-plugin          = { module = "me.shedaniel:RoughlyEnoughItems-default-plugin-neoforge", version.ref = "rei" }
 rei-api             = { module = "me.shedaniel:RoughlyEnoughItems-api-neoforge", version.ref = "rei" }
 rei-neoforge        = { module = "me.shedaniel:RoughlyEnoughItems-neoforge", version.ref = "rei" }
 clothConfig         = { module = "me.shedaniel.cloth:cloth-config-neoforge", version.ref = "clothConfig" }
-emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
+architectury        = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury" }
 
 # WAILA-likes
 theOneProbe         = { module = "mcjty.theoneprobe:theoneprobe", version.ref = "theOneProbe" }
@@ -71,8 +74,7 @@ jade                = { module = "maven.modrinth:jade", version.ref = "jade" }
 
 # KJS
 kubejs              = { module = "dev.latvian.mods:kubejs-neoforge", version.ref = "kubejs" }
-rhino               = { module = "dev.latvian.mods:rhino-neoforge", version.ref = "rhino" }
-architectury        = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury" }
+rhino               = { module = "dev.latvian.mods:rhino", version.ref = "rhino" }
 
 # Curios
 curios              = { module = "top.theillusivec4.curios:curios-neoforge", version.ref = "curios" }
@@ -87,15 +89,15 @@ ftbLibrary          = { module = "dev.ftb.mods:ftb-library-neoforge", version.re
 ftbTeams            = { module = "dev.ftb.mods:ftb-teams-neoforge", version.ref = "ftbTeams" }
 ftbQuests           = { module = "dev.ftb.mods:ftb-quests-neoforge", version.ref = "ftbQuests" }
 resourcefulLib      = { module = "com.teamresourceful.resourcefullib:resourcefullib-neoforge-1.21", version.ref = "resourcefulLib" }
-argonauts           = { module = "earth.terrarium.odyssey_allies:odyssey_allies-neoforge-1.21", version.ref = "argonauts" }
 # TODO update these once there's 1.21 versions
-heracles            = { module = "earth.terrarium.heracles:heracles-neoforge-1.20.1", version.ref = "heracles" }
+argonauts           = { module = "earth.terrarium.argonauts:argonauts-neoforge-1.20.4", version.ref = "argonauts" }
+heracles            = { module = "earth.terrarium.heracles:heracles-forge-1.20.1", version.ref = "heracles" }
 
 # Maps
 ftbChunks           = { module = "dev.ftb.mods:ftb-chunks-neoforge", version.ref = "ftbChunks" }
 xaerosMiniMap       = { module = "curse.maven:xaeros-minimap-263420", version.ref = "xaerosMiniMap" }
 xaerosWorldMap      = { module = "curse.maven:xaeros-world-map-317780", version.ref = "xaerosWorldMap" }
-journeyMap-api      = { module = "info.journeymap:journeymap-api", version.ref = "journeyMapApi" }
+journeyMap-api      = { module = "info.journeymap:journeymap-api-neoforge", version.ref = "journeyMapApi" }
 journeyMap-neoforge = { module = "curse.maven:journeymap-32274", version.ref = "journeyMap" }
 
 # Performance metrics
