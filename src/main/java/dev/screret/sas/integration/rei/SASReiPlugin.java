@@ -12,7 +12,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import dev.screret.sas.Util;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
+import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.integration.rei.wand.DefaultWandDisplay;
 import dev.screret.sas.integration.rei.wand.WandRecipeCategory;
 import dev.screret.sas.data.ModItems;
@@ -50,8 +50,8 @@ public class SASReiPlugin implements REIClientPlugin {
         registry.group(Util.id("wands"), Component.translatable("group.sas.wands"), entryStack -> {
             if (entryStack.getType() == VanillaEntryTypes.ITEM) {
                 ItemStack itemStack = entryStack.castValue();
-                if (itemStack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-                    ICapabilityWandAbility cap = itemStack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+                if (itemStack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+                    CapabilityWandAbility cap = itemStack.getCapability(CapabilityWandAbility.WAND_ABILITY);
                     return cap.getMainAbility() != null;
                 }
             }

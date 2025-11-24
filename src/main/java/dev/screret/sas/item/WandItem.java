@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import dev.screret.sas.Util;
 import dev.screret.sas.data.ModWandAbilities;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
+import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.data.ModAttachmentTypes;
 import dev.screret.sas.client.model.item.WandItemClientExtensions;
@@ -41,8 +41,8 @@ public class WandItem extends Item {
     @Override
     public Component getName(ItemStack stack) {
         String name = "item.sas.basic";
-        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-            var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+        if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
             var current = cap.getMainAbility();
             while (current.getChildren() != null && current.getChildren().size() > 0) {
                 current = cap.getMainAbility().getChildren().get(0);
@@ -61,8 +61,8 @@ public class WandItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         InteractionResultHolder<ItemStack> reference = InteractionResultHolder.fail(itemstack);
-        if (itemstack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-            var cap = itemstack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+        if (itemstack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = itemstack.getCapability(CapabilityWandAbility.WAND_ABILITY);
             if (player.isCrouching() && cap.getCrouchAbility() != null) {
                 var crouchAbility = cap.getCrouchAbility();
                 if ((crouchAbility.isChargeable() || crouchAbility.isHoldable()) && !player.isUsingItem()) {
@@ -84,7 +84,7 @@ public class WandItem extends Item {
         return reference;
     }
 
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, int timeCharged, ICapabilityWandAbility cap) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, int timeCharged, CapabilityWandAbility cap) {
         Item currentItem = stack.getItem();
         var returnValue = InteractionResultHolder.fail(stack);
         if (currentItem instanceof WandItem) {
@@ -123,8 +123,8 @@ public class WandItem extends Item {
     @Override
     public void onUseTick(Level level, LivingEntity user, ItemStack stack, int usageTicks) {
         if (!level.isClientSide) {
-            if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-                var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+            if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+                var cap = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
                 if (cap.getMainAbility().isHoldable() || (cap.getCrouchAbility() != null && cap.getCrouchAbility().isHoldable()))
                     this.execute(level, user, stack, usageTicks, cap);
             }
@@ -133,8 +133,8 @@ public class WandItem extends Item {
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
-        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-            var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+        if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
             var useDuration = cap.getMainAbility().getUseDuration();
             if (useDuration > 0) {
                 if (cap.getMainAbility().isChargeable() || (cap.getCrouchAbility() != null && cap.getCrouchAbility().isChargeable()))
@@ -154,8 +154,8 @@ public class WandItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-            return stack.getCapability(ICapabilityWandAbility.WAND_ABILITY).getMainAbility().getUseDuration();
+        if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+            return stack.getCapability(CapabilityWandAbility.WAND_ABILITY).getMainAbility().getUseDuration();
         }
         return 0;
     }

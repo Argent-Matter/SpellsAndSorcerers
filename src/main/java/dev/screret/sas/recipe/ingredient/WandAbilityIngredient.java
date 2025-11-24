@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import dev.screret.sas.Util;
 import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
 import dev.screret.sas.data.ModItems;
@@ -85,8 +84,8 @@ public class WandAbilityIngredient extends Ingredient {
         boolean isCorrectItem = this.item == input.getItem();
         if (this.item == ModItems.WAND.get()) {
             boolean hasCorrectAbility;
-            if (input.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-                var cap = input.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+            if (input.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+                var cap = input.getCapability(CapabilityWandAbility.WAND_ABILITY);
                 hasCorrectAbility = cap.getMainAbility().equals(this.ability) && cap.getCrouchAbility().equals(this.crouchAbility) && cap.getPoweredUp() == this.isPoweredUp;
             } else {
                 return false;

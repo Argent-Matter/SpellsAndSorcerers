@@ -4,13 +4,17 @@ import com.google.common.collect.Lists;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 
+import dev.screret.sas.Util;
 import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 
 import java.util.List;
 
-public class CapabilityWandAbility implements ICapabilityWandAbility {
+public class CapabilityWandAbility {
+
+    public static final ItemCapability<CapabilityWandAbility, Void> WAND_ABILITY = ItemCapability.createVoid(Util.id("wand_ability"), CapabilityWandAbility.class);
 
     private WandAbilityInstance ability;
     private WandAbilityInstance crouchAbility;
@@ -40,43 +44,34 @@ public class CapabilityWandAbility implements ICapabilityWandAbility {
         return new CapabilityWandAbility(main, crouch, isPoweredUp);
     }
 
-    @Override
     public WandAbilityInstance getCrouchAbility() {
         return crouchAbility;
     }
 
-    @Override
     public WandAbilityInstance getMainAbility() {
         return ability;
     }
 
-    @Override
     public void setPoweredUp(boolean poweredUp) {
         this.isPoweredUp = poweredUp;
     }
 
-    @Override
     public boolean getPoweredUp() {
         return isPoweredUp;
     }
 
-    @Override
     public void setMainAbility(WandAbilityInstance ability) {
         this.ability = ability;
     }
 
-    @Override
     public void setCrouchAbility(WandAbilityInstance ability) {
         this.crouchAbility = ability;
     }
 
-
-    @Override
     public List<WandAbilityInstance> getAll() {
         return Lists.newArrayList(ability, crouchAbility);
     }
 
-    @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         if (ability != null)
@@ -87,7 +82,6 @@ public class CapabilityWandAbility implements ICapabilityWandAbility {
         return tag;
     }
 
-    @Override
     public void deserializeNBT(CompoundTag nbt) {
         ability.deserializeNBT(nbt.getCompound(WandAbility.MAIN_ABILITY_KEY));
         if (crouchAbility != null)

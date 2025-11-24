@@ -3,7 +3,7 @@ package dev.screret.sas.api.capability.mana;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 
-public class Mana implements IMana {
+public class Mana {
 
     protected int mana;
     protected int capacity;
@@ -29,7 +29,6 @@ public class Mana implements IMana {
         this.mana = Math.max(0, Math.min(capacity, mana));
     }
 
-    @Override
     public int addMana(int maxReceive, boolean simulate) {
         if (!canReceive())
             return 0;
@@ -40,7 +39,6 @@ public class Mana implements IMana {
         return manaReceived;
     }
 
-    @Override
     public int deductMana(int maxExtract, boolean simulate) {
         if (!canExtract())
             return 0;
@@ -51,7 +49,6 @@ public class Mana implements IMana {
         return manaExtracted;
     }
 
-    @Override
     public int getMaxManaStored() {
         return capacity;
     }
@@ -60,7 +57,6 @@ public class Mana implements IMana {
         this.capacity = max;
     }
 
-    @Override
     public int getManaStored() {
         return mana;
     }
@@ -69,22 +65,18 @@ public class Mana implements IMana {
         this.mana = mana;
     }
 
-    @Override
     public boolean canExtract() {
         return this.maxExtract > 0;
     }
 
-    @Override
     public boolean canReceive() {
         return this.maxReceive > 0;
     }
 
-    @Override
     public Tag serializeNBT() {
         return IntTag.valueOf(this.getManaStored());
     }
 
-    @Override
     public void deserializeNBT(Tag nbt) {
         if (!(nbt instanceof IntTag intNbt))
             throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");

@@ -62,7 +62,7 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerModels(final ModelEvent.RegisterAdditional event) {
-        WandAbilityRegistry.WAND_ABILITIES_BUILTIN.holders().forEach(ability -> {
+        SASRegistries.WAND_ABILITIES.holders().forEach(ability -> {
             if (ability.value() instanceof SubAbility) {
                 event.register(ModelResourceLocation.inventory(ability.key().location().withPrefix("item/wand/")));
             }
@@ -75,7 +75,7 @@ public class ClientModEvents {
         TextureAtlas map = event.getAtlas();
 
         if (map.location() == InventoryMenu.BLOCK_ATLAS) {
-            WandAbilityRegistry.WAND_ABILITIES_BUILTIN.holders().forEach(ability -> {
+            SASRegistries.WAND_ABILITIES.holders().forEach(ability -> {
                 event.getAtlas().getSprite(ability.key().location().withPrefix("item/wand/"));
             });
         }
@@ -91,8 +91,8 @@ public class ClientModEvents {
         event.register((stack, index) -> {
             if (stack.hasTag() && stack.getTag().contains("ability") && index == 1) {
                 var colorLocation = ResourceLocation.parse(stack.getTag().getString("ability"));
-                if (WandAbilityRegistry.WAND_ABILITIES_BUILTIN.containsKey(colorLocation)) {
-                    return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(colorLocation).getColor();
+                if (SASRegistries.WAND_ABILITIES.containsKey(colorLocation)) {
+                    return SASRegistries.WAND_ABILITIES.get(colorLocation).getColor();
                 }
             }
             return 0xFFFFFFFF;

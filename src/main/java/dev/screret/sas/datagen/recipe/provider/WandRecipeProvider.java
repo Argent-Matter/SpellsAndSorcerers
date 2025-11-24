@@ -14,7 +14,7 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import dev.screret.sas.Util;
 import dev.screret.sas.data.ModWandAbilities;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
+import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.datagen.recipe.builder.ShapedWandRecipeBuilder;
@@ -149,8 +149,8 @@ public class WandRecipeProvider {
         for (var wand : Util.CUSTOM_WANDS.values()) {
             var result = wand.copy();
             WandAbilityInstance mainAbility = null;
-            if (result.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-                var cap = result.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+            if (result.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+                var cap = result.getCapability(CapabilityWandAbility.WAND_ABILITY);
                 cap.setPoweredUp(true);
                 mainAbility = cap.getMainAbility();
             }

@@ -175,7 +175,7 @@ public class SpellsAndSorcerers {
     }
 
     private void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        event.registerItem(ICapabilityWandAbility.WAND_ABILITY, (stack, ctx) -> CapabilityWandAbility.wandAbility(stack), ModItems.WAND);
+        event.registerItem(CapabilityWandAbility.WAND_ABILITY, (stack, ctx) -> CapabilityWandAbility.wandAbility(stack), ModItems.WAND);
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.POTION_DISTILLERY.get(), PotionDistilleryBlockEntity::getItemHandler);
     }
 

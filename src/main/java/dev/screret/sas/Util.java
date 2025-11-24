@@ -21,7 +21,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import dev.screret.sas.data.ModWandAbilities;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
+import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
@@ -114,8 +114,8 @@ public class Util {
     }
 
     public static Optional<WandAbilityInstance> getMainAbilityFromStack(ItemStack stack) {
-        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-            return Optional.of(stack.getCapability(ICapabilityWandAbility.WAND_ABILITY).getMainAbility());
+        if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+            return Optional.of(stack.getCapability(CapabilityWandAbility.WAND_ABILITY).getMainAbility());
         }
         return Optional.empty();
     }

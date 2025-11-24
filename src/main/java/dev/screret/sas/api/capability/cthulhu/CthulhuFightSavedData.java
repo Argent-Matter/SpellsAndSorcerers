@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import dev.screret.sas.entity.boss.cthulhu.CthulhuFight;
 
-public class CthulhuFightSavedData extends SavedData implements ICapabilityCthulhuFight {
+public class CthulhuFightSavedData extends SavedData {
     public static CthulhuFightSavedData getOrCreate(ServerLevel level) {
         return level.getDataStorage().get(new SavedData.Factory<>(() -> new CthulhuFightSavedData(level), (tag) -> load(level, tag)), "cthulhu_fight");
     }

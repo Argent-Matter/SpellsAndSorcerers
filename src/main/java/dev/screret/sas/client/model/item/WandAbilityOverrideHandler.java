@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
+import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 
 import javax.annotation.Nonnull;
@@ -67,7 +67,7 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
     }
 
     ResourceLocation getCacheKey(ItemStack stack) {
-        ICapabilityWandAbility ability = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+        CapabilityWandAbility ability = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
         if (ability != null) {
             WandAbilityInstance current = ability.getMainAbility();
             while (current.getChildren() != null && current.getChildren().size() > 0) {

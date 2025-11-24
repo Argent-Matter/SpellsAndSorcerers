@@ -14,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+
+import dev.screret.sas.api.registry.SASRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,7 +127,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        this.myAbility = WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(ResourceLocation.parse(nbt.getString("ability")));
+        this.myAbility = SASRegistries.WAND_ABILITIES.get(ResourceLocation.parse(nbt.getString("ability")));
         ListTag children = nbt.getList("children", Tag.TAG_COMPOUND);
         for (int i = 0; i < children.size(); ++i) {
             var child = children.getCompound(i);
