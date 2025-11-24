@@ -164,6 +164,8 @@ public class SpellsAndSorcerers {
         gen.addProvider(event.includeServer(), new SASBiomeTagsProvider(packOutput, lookupProvider, existingFileHelper));
 
         //gen.addProvider(event.includeServer(), new ModBlockstateProvider(gen, existingFileHelper));
+
+        gen.addProvider(event.includeClient(), new ModLangProvider(packOutput, SpellsAndSorcerers.MODID, "en_us"));
     }
 
     private void registerCapabilities(final RegisterCapabilitiesEvent event) {

@@ -40,6 +40,8 @@ public class ModItems {
     public static final DeferredItem<Item> SOULSTEEL_NUGGET = ITEMS.register("soulsteel_nugget", basicItem());
     public static final DeferredItem<Item> GLINT = ITEMS.register("glint", basicItem());
 
+    public static final DeferredItem<OneRingItem> THE_ONE_RING = ITEMS.register("the_one_ring", OneRingItem::new);
+
 
     public static final DeferredItem<DeferredSpawnEggItem> WIZARD_SPAWN_EGG = ITEMS.register("wizard_spawn_egg", () -> new DeferredSpawnEggItem(ModEntities.WIZARD, 0x002017, 0x959b9b, basicItemProperties()));
     public static final DeferredItem<DeferredSpawnEggItem> BOSS_WIZARD_SPAWN_EGG = ITEMS.register("boss_wizard_spawn_egg", () -> new DeferredSpawnEggItem(ModEntities.BOSS_WIZARD, 0x9a080f, 0x959b9b, basicItemProperties()));
