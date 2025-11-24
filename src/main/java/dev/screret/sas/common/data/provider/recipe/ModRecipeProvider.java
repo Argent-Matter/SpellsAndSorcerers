@@ -1,5 +1,6 @@
-package dev.screret.sas.common.data.recipe.provider;
+package dev.screret.sas.common.data.provider.recipe;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -15,12 +16,14 @@ import dev.screret.sas.data.ModTags;
 import dev.screret.sas.Util;
 import dev.screret.sas.data.ModItems;
 
+import java.util.concurrent.CompletableFuture;
+
 import javax.annotation.Nullable;
 
 public class ModRecipeProvider extends RecipeProvider {
 
-    public ModRecipeProvider(PackOutput output) {
-        super(output);
+    public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override
@@ -49,13 +52,13 @@ public class ModRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PALANTIR.get())
                 .define('E', ModItems.CTHULHU_EYE.get())
-                .define('G', Tags.Items.GLASS_TINTED)
+                .define('G', Tags.Items.GLASS_BLOCKS_TINTED)
                 .define('B', Items.POLISHED_BLACKSTONE_BRICKS)
                 .pattern("GGG")
                 .pattern("GEG")
                 .pattern("BBB")
                 .unlockedBy("has_eye", has(ModItems.CTHULHU_EYE.get()))
-                .unlockedBy("has_glass", has(Tags.Items.GLASS_TINTED))
+                .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS_TINTED))
                 .save(provider);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SOULSTEEL_BOOTS.get()).define('X', ModTags.Items.SOULSTEEL_INGOTS).pattern("X X").pattern("X X").unlockedBy("has_diamond", has(ModTags.Items.SOULSTEEL_INGOTS)).save(provider);

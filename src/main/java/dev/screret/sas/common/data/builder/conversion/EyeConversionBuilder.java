@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.conversion.builder;
+package dev.screret.sas.common.data.builder.conversion;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;

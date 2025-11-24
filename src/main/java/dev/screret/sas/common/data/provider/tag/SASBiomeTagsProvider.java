@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.tag;
+package dev.screret.sas.common.data.provider.tag;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

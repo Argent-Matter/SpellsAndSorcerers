@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -25,12 +25,13 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
+import dev.screret.sas.common.data.provider.lang.ModLangProvider;
 import dev.screret.sas.data.*;
 import org.slf4j.Logger;
 import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
@@ -38,15 +39,15 @@ import dev.screret.sas.api.capability.mana.Mana;
 import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.common.blockentity.PotionDistilleryBlockEntity;
 import dev.screret.sas.config.SASConfig;
-import dev.screret.sas.common.data.conversion.provider.EyeConversionProvider;
-import dev.screret.sas.common.data.recipe.provider.ModRecipeProvider;
-import dev.screret.sas.common.data.tag.SASBiomeTagsProvider;
-import dev.screret.sas.common.data.tag.SASBlockTagsProvider;
-import dev.screret.sas.common.data.tag.SASItemTagsProvider;
+import dev.screret.sas.common.data.provider.conversion.EyeConversionProvider;
+import dev.screret.sas.common.data.provider.recipe.ModRecipeProvider;
+import dev.screret.sas.common.data.provider.tag.SASBiomeTagsProvider;
+import dev.screret.sas.common.data.provider.tag.SASBlockTagsProvider;
+import dev.screret.sas.common.data.provider.tag.SASItemTagsProvider;
 import dev.screret.sas.common.entity.BossWizardEntity;
 import dev.screret.sas.common.entity.WizardEntity;
 import dev.screret.sas.common.recipe.ingredient.ModIngredients;
-import dev.screret.sas.common.data.conversion.EyeConversionManager;
+import dev.screret.sas.common.data.EyeConversionManager;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -59,7 +60,7 @@ public class SpellsAndSorcerers {
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public SpellsAndSorcerers(IEventBus modEventBus) {
+    public SpellsAndSorcerers(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerRegistries);
@@ -95,8 +96,8 @@ public class SpellsAndSorcerers {
 
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SASConfig.Client.clientSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SASConfig.Server.serverSpec);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, SASConfig.Client.clientSpec);
+        modContainer.registerConfig(ModConfig.Type.SERVER, SASConfig.Server.serverSpec);
     }
 
     @SuppressWarnings("Convert2MethodRef")
@@ -157,7 +158,7 @@ public class SpellsAndSorcerers {
         gen.addProvider(event.includeServer(), blockTags);
         gen.addProvider(event.includeServer(), new SASItemTagsProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
 
-        gen.addProvider(event.includeServer(), new ModRecipeProvider(packOutput));
+        gen.addProvider(event.includeServer(), new ModRecipeProvider(packOutput, lookupProvider));
         gen.addProvider(event.includeServer(), new EyeConversionProvider(packOutput));
 
         gen.addProvider(event.includeServer(), new SASBiomeTagsProvider(packOutput, lookupProvider, existingFileHelper));
@@ -176,8 +177,8 @@ public class SpellsAndSorcerers {
     }
 
     public void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {
-        if (!event.has(EntityType.PLAYER, ModAttributes.MANA.get())) {
-            event.add(EntityType.PLAYER, ModAttributes.MANA.get());
+        if (!event.has(EntityType.PLAYER, ModAttributes.MANA)) {
+            event.add(EntityType.PLAYER, ModAttributes.MANA);
         }
     }
 
@@ -185,13 +186,13 @@ public class SpellsAndSorcerers {
     @EventBusSubscriber(modid = SpellsAndSorcerers.MODID)
     private static class ForgeBusEvents {
         @SubscribeEvent
-        public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
-            if (event.phase == TickEvent.Phase.END && event.player.tickCount % 20 == 0) {
-                AttributeInstance manaAttribute = event.player.getAttribute(ModAttributes.MANA.get());
-                Mana mana = event.player.getData(ModAttachmentTypes.MANA);
+        public static void onPlayerTick(final PlayerTickEvent.Post event) {
+            if (event.getEntity().tickCount % 20 == 0) {
+                AttributeInstance manaAttribute = event.getEntity().getAttribute(ModAttributes.MANA);
+                Mana mana = event.getEntity().getData(ModAttachmentTypes.MANA);
                 mana.setMaxManaStored(Mth.floor(manaAttribute.getValue()));
                 mana.addMana(1, false);
-                event.player.setData(ModAttachmentTypes.MANA, mana);
+                event.getEntity().setData(ModAttachmentTypes.MANA, mana);
             }
         }
 

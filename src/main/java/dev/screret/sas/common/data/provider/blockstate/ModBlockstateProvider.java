@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.blockstate;
+package dev.screret.sas.common.data.provider.blockstate;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;

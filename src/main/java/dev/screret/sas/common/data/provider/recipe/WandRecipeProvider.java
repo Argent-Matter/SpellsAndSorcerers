@@ -1,14 +1,18 @@
-package dev.screret.sas.common.data.recipe.provider;
+package dev.screret.sas.common.data.provider.recipe;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
@@ -17,8 +21,8 @@ import dev.screret.sas.data.ModWandAbilities;
 import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
-import dev.screret.sas.common.data.recipe.builder.ShapedWandRecipeBuilder;
-import dev.screret.sas.common.data.recipe.builder.ShapelessWandRecipeBuilder;
+import dev.screret.sas.common.data.builder.recipe.ShapedWandRecipeBuilder;
+import dev.screret.sas.common.data.builder.recipe.ShapelessWandRecipeBuilder;
 import dev.screret.sas.data.ModItems;
 
 import java.util.Arrays;
@@ -35,7 +39,7 @@ public class WandRecipeProvider {
                 .pattern("LSL")
                 .define('S', ModItems.HANDLE.get())
                 .define('C', getWandCore(ModWandAbilities.DAMAGE.get()))
-                .define('L', Tags.Items.LEATHER)
+                .define('L', Tags.Items.LEATHERS)
                 .define('B', ModItems.SOUL_BOTTLE.get())
                 .group("wands")
                 .unlockedBy("has_core", hasCore(ModWandAbilities.DAMAGE.get()))
@@ -46,7 +50,7 @@ public class WandRecipeProvider {
                 .pattern("LSL")
                 .define('S', ModItems.HANDLE.get())
                 .define('C', getWandCore(ModWandAbilities.EXPLODE.get()))
-                .define('L', Tags.Items.LEATHER)
+                .define('L', Tags.Items.LEATHERS)
                 .define('B', Items.TNT)
                 .group("wands")
                 .unlockedBy("has_core", hasCore(ModWandAbilities.EXPLODE.get()))
@@ -57,7 +61,7 @@ public class WandRecipeProvider {
                 .pattern("LSL")
                 .define('S', ModItems.HANDLE.get())
                 .define('C', getWandCore(ModWandAbilities.LARGE_FIREBALL.get()))
-                .define('L', Tags.Items.LEATHER)
+                .define('L', Tags.Items.LEATHERS)
                 .define('B', Items.FIRE_CHARGE)
                 .group("wands")
                 .unlockedBy("has_core", hasCore(ModWandAbilities.LARGE_FIREBALL.get()))
@@ -68,7 +72,7 @@ public class WandRecipeProvider {
                 .pattern("LSL")
                 .define('S', ModItems.HANDLE.get())
                 .define('C', getWandCore(ModWandAbilities.SMALL_FIREBALL.get()))
-                .define('L', Tags.Items.LEATHER)
+                .define('L', Tags.Items.LEATHERS)
                 .define('B', Items.FIREWORK_STAR)
                 .group("wands")
                 .unlockedBy("has_core", hasCore(ModWandAbilities.SMALL_FIREBALL.get()))
@@ -79,8 +83,8 @@ public class WandRecipeProvider {
                 .pattern("LSL")
                 .define('S', ModItems.HANDLE.get())
                 .define('C', getWandCore(ModWandAbilities.HEAL.get()))
-                .define('L', Tags.Items.LEATHER)
-                .define('B', PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRONG_HEALING))
+                .define('L', Tags.Items.LEATHERS)
+                .define('B', PotionContents.createItemStack(Items.POTION, Potions.STRONG_HEALING))
                 .group("wands")
                 .unlockedBy("has_core", hasCore(ModWandAbilities.HEAL.get()))
                 .save(provider, Util.id("wand/heal"));
@@ -90,7 +94,7 @@ public class WandRecipeProvider {
                 .pattern("LSL")
                 .define('S', ModItems.HANDLE.get())
                 .define('C', getWandCore(ModWandAbilities.LIGHTNING.get()))
-                .define('L', Tags.Items.LEATHER)
+                .define('L', Tags.Items.LEATHERS)
                 .define('B', ModItems.CLOUD_BOTTLE.get())
                 .group("wands")
                 .unlockedBy("has_core", hasCore(ModWandAbilities.LIGHTNING.get()))
@@ -127,18 +131,13 @@ public class WandRecipeProvider {
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemStack stack) {
-        var saved = stack.save(new CompoundTag());
-        var tag = new CompoundTag();
-        if (saved.contains("tag")) {
-            tag = tag.merge(saved.getCompound("tag"));
+        ItemPredicate.Builder itemPredicate = ItemPredicate.Builder.item()
+                .of(stack.getItem());
+        if (stack.isComponentsPatchEmpty()) {
+            return inventoryTrigger(itemPredicate.build());
         }
-        if (saved.contains("ForgeCaps")) {
-            tag.put("ForgeCaps", saved.getCompound("ForgeCaps"));
-        }
-        if (saved.contains("tag") || saved.contains("ForgeCaps"))
-            return inventoryTrigger(ItemPredicate.Builder.item().of(stack.getItem()).hasNbt(tag).build());
-        else
-            return inventoryTrigger(ItemPredicate.Builder.item().of(stack.getItem()).build());
+        itemPredicate.hasComponents(DataComponentPredicate.allOf(stack.getComponents()));
+        return inventoryTrigger(itemPredicate.build());
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> hasCore(WandAbility ability) {

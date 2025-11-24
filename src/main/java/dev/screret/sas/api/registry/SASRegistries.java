@@ -13,6 +13,4 @@ public class SASRegistries {
     public static final Registry<WandAbility> WAND_ABILITIES = new RegistryBuilder<>(WAND_ABILITY_REGISTRY)
             .defaultKey(Util.id("dummy"))
             .create();
-
-    public static void init() {}
 }

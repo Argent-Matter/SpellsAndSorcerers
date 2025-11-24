@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.conversion;
+package dev.screret.sas.common.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;

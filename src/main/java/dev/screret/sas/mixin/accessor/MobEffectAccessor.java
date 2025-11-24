@@ -1,4 +1,4 @@
-package dev.screret.sas.mixin;
+package dev.screret.sas.mixin.accessor;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(MobEffect.class)
 public interface MobEffectAccessor {
+
     @Invoker("<init>")
     static MobEffect callInit(MobEffectCategory pCategory, int pColor) {
         throw new AssertionError();

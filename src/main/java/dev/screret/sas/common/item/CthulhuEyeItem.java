@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 
 import dev.screret.sas.config.SASConfig;
-import dev.screret.sas.common.data.conversion.EyeConversionManager;
+import dev.screret.sas.common.data.EyeConversionManager;
 
 public class CthulhuEyeItem extends Item {
     public CthulhuEyeItem() {

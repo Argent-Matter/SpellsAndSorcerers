@@ -17,7 +17,7 @@ public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.Items.createItems(SpellsAndSorcerers.MODID);
 
 
-    //BLOCK ITEMS
+    // BLOCK ITEMS
     public static final DeferredItem<BlockItem> WAND_TABLE = ITEMS.register("wand_table", blockItem(ModBlocks.WAND_TABLE));
     public static final DeferredItem<BlockItem> SUMMON_SIGN = ITEMS.register("summon_sign", blockItem(ModBlocks.SUMMON_SIGN));
     public static final DeferredItem<BlockItem> PALANTIR = ITEMS.register("palantir", () -> new BlockItem(ModBlocks.PALANTIR.get(), new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON)));
@@ -31,7 +31,7 @@ public class ModItems {
     public static final DeferredItem<WandCoreItem> WAND_CORE = ITEMS.register("wand_core", WandCoreItem::new);
 
 
-    //OTHER ITEMS
+    // OTHER ITEMS
     public static final DeferredItem<Item> HANDLE = ITEMS.register("handle", basicItem());
     public static final DeferredItem<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle", () -> new Item(basicItemProperties().craftRemainder(Items.GLASS_BOTTLE)));
     public static final DeferredItem<Item> CLOUD_BOTTLE = ITEMS.register("cloud_bottle", () -> new Item(basicItemProperties().craftRemainder(Items.GLASS_BOTTLE)));

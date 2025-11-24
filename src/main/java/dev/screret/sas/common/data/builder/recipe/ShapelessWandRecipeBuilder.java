@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.recipe.builder;
+package dev.screret.sas.common.data.builder.recipe;
 
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
@@ -11,7 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.NBTIngredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import dev.screret.sas.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.sas.common.recipe.wand.ShapelessWandRecipe;
@@ -47,11 +47,11 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
     }
 
     public ShapelessWandRecipeBuilder requires(ItemStack pItem) {
-        return this.requires(NBTIngredient.of(true, pItem), 1);
+        return this.requires(DataComponentIngredient.of(true, pItem), 1);
     }
 
     public ShapelessWandRecipeBuilder requires(ItemStack pItem, int count) {
-        return this.requires(NBTIngredient.of(true, pItem), count);
+        return this.requires(DataComponentIngredient.of(true, pItem), count);
     }
 
     /**

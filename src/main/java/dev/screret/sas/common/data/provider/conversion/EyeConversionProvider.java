@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.conversion.provider;
+package dev.screret.sas.common.data.provider.conversion;
 
 import com.google.common.collect.Sets;
 import com.mojang.logging.LogUtils;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import org.slf4j.Logger;
 import dev.screret.sas.Util;
-import dev.screret.sas.common.data.conversion.builder.EyeConversionBuilder;
+import dev.screret.sas.common.data.builder.conversion.EyeConversionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +36,8 @@ public class EyeConversionProvider implements DataProvider {
         addConversion(finished, Blocks.EMERALD_BLOCK, Tags.Blocks.STORAGE_BLOCKS_DIAMOND);
         addConversion(finished, Blocks.COAL_BLOCK, Tags.Blocks.STORAGE_BLOCKS_RAW_COPPER);
         addConversion(finished, Blocks.RAW_COPPER_BLOCK, Tags.Blocks.STORAGE_BLOCKS_COAL);
-        addConversion(finished, Blocks.COBBLED_DEEPSLATE, Tags.Blocks.COBBLESTONE_NORMAL);
-        addConversion(finished, Blocks.COBBLESTONE, Tags.Blocks.COBBLESTONE_DEEPSLATE);
+        addConversion(finished, Blocks.COBBLED_DEEPSLATE, Tags.Blocks.COBBLESTONES_NORMAL);
+        addConversion(finished, Blocks.COBBLESTONE, Tags.Blocks.COBBLESTONES_DEEPSLATE);
 
         addConversion(finished, Blocks.ZOMBIE_HEAD, Blocks.SKELETON_SKULL);
         addConversion(finished, Blocks.SKELETON_SKULL, Blocks.ZOMBIE_HEAD);

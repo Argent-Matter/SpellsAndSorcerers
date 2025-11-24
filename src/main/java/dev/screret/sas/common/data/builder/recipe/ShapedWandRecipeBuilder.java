@@ -1,4 +1,4 @@
-package dev.screret.sas.common.data.recipe.builder;
+package dev.screret.sas.common.data.builder.recipe;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.NBTIngredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import dev.screret.sas.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.sas.common.recipe.wand.ShapedWandRecipe;
@@ -53,7 +53,7 @@ public class ShapedWandRecipeBuilder implements RecipeBuilder {
      * Adds a key to the recipe pattern.
      */
     public ShapedWandRecipeBuilder define(Character symbol, ItemStack stack) {
-        return this.define(symbol, NBTIngredient.of(true, stack));
+        return this.define(symbol, DataComponentIngredient.of(true, stack));
     }
 
     /**
