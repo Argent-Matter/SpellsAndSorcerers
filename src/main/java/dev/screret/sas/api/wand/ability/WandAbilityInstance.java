@@ -125,7 +125,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        this.myAbility = WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(new ResourceLocation(nbt.getString("ability")));
+        this.myAbility = WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(ResourceLocation.parse(nbt.getString("ability")));
         ListTag children = nbt.getList("children", Tag.TAG_COMPOUND);
         for (int i = 0; i < children.size(); ++i) {
             var child = children.getCompound(i);

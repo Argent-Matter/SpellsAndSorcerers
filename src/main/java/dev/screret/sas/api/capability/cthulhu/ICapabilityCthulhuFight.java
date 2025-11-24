@@ -1,6 +1,6 @@
 package dev.screret.sas.api.capability.cthulhu;
 
-import dev.screret.sas.entity.entity.boss.cthulhu.CthulhuFight;
+import dev.screret.sas.entity.boss.cthulhu.CthulhuFight;
 
 public interface ICapabilityCthulhuFight {
 

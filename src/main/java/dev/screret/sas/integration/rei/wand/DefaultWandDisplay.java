@@ -5,7 +5,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import dev.screret.sas.recipe.recipe.WandRecipe;
+import dev.screret.sas.recipe.wand.WandRecipe;
 
 import java.util.Collections;
 import java.util.Optional;

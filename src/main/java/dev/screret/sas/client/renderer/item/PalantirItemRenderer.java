@@ -1,7 +1,7 @@
 package dev.screret.sas.client.renderer.item;
 
 import dev.screret.sas.Util;
-import dev.screret.sas.item.item.PalantirItem;
+import dev.screret.sas.item.PalantirItem;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 

@@ -13,8 +13,8 @@ import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
-import dev.screret.sas.item.ModItems;
-import dev.screret.sas.item.item.WandCoreItem;
+import dev.screret.sas.data.ModItems;
+import dev.screret.sas.item.WandCoreItem;
 
 import javax.annotation.Nullable;
 import java.util.Optional;

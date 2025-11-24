@@ -14,7 +14,7 @@ import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.block.ModBlocks;
+import dev.screret.sas.data.ModBlocks;
 
 import java.util.List;
 

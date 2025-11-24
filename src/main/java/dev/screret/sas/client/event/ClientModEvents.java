@@ -1,6 +1,7 @@
 package dev.screret.sas.client.event;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.BlockItem;
@@ -11,24 +12,24 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.*;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
-import dev.screret.sas.ability.ability.SubAbility;
+import dev.screret.sas.ability.SubAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
-import dev.screret.sas.block.ModBlocks;
-import dev.screret.sas.block.block.SummonSignBlock;
-import dev.screret.sas.blockentity.ModBlockEntities;
+import dev.screret.sas.data.ModBlocks;
+import dev.screret.sas.block.SummonSignBlock;
+import dev.screret.sas.data.ModBlockEntities;
 import dev.screret.sas.client.gui.overlay.ManaBarOverlay;
 import dev.screret.sas.client.gui.screen.PotionDistilleryScreen;
 import dev.screret.sas.client.gui.screen.WandTableScreen;
 import dev.screret.sas.client.model.item.WandModel;
-import dev.screret.sas.client.particle.ModParticles;
-import dev.screret.sas.client.particle.particle.EyeParticle;
+import dev.screret.sas.data.ModParticles;
+import dev.screret.sas.client.particle.EyeParticle;
 import dev.screret.sas.client.renderer.blockentity.PalantirBERenderer;
 import dev.screret.sas.client.renderer.blockentity.SummonSignBERenderer;
 import dev.screret.sas.client.renderer.entity.BossWizardRenderer;
 import dev.screret.sas.client.renderer.entity.WizardRenderer;
-import dev.screret.sas.container.ModContainers;
-import dev.screret.sas.entity.ModEntities;
-import dev.screret.sas.item.ModItems;
+import dev.screret.sas.data.ModContainers;
+import dev.screret.sas.data.ModEntities;
+import dev.screret.sas.data.ModItems;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = SpellsAndSorcerers.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

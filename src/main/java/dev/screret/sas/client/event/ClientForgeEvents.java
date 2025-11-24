@@ -12,9 +12,9 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
-import dev.screret.sas.entity.ModEntities;
-import dev.screret.sas.entity.entity.BossWizardEntity;
-import dev.screret.sas.item.ModItems;
+import dev.screret.sas.data.ModEntities;
+import dev.screret.sas.entity.BossWizardEntity;
+import dev.screret.sas.data.ModItems;
 
 @Mod.EventBusSubscriber(modid = SpellsAndSorcerers.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientForgeEvents {

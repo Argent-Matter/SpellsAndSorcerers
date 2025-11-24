@@ -20,13 +20,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import dev.screret.sas.ability.ModWandAbilities;
+import dev.screret.sas.data.ModWandAbilities;
 import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
-import dev.screret.sas.item.ModItems;
-import dev.screret.sas.item.item.WandCoreItem;
+import dev.screret.sas.data.ModItems;
+import dev.screret.sas.item.WandCoreItem;
 
 import java.util.Map;
 import java.util.Optional;

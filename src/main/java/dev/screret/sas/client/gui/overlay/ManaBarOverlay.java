@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import dev.screret.sas.Util;
-import dev.screret.sas.attachmenttypes.ModAttachmentTypes;
+import dev.screret.sas.data.ModAttachmentTypes;
 import dev.screret.sas.config.SASConfig;
 
 public class ManaBarOverlay implements IGuiOverlay {

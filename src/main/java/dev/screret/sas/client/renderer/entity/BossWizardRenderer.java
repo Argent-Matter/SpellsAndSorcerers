@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import dev.screret.sas.Util;
 import dev.screret.sas.client.model.entity.BossWizardModel;
-import dev.screret.sas.entity.entity.BossWizardEntity;
+import dev.screret.sas.entity.BossWizardEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

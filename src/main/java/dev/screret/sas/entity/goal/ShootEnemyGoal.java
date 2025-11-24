@@ -6,8 +6,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import dev.screret.sas.Util;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
-import dev.screret.sas.entity.entity.BossWizardEntity;
-import dev.screret.sas.entity.entity.WizardEntity;
+import dev.screret.sas.entity.BossWizardEntity;
+import dev.screret.sas.entity.WizardEntity;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;

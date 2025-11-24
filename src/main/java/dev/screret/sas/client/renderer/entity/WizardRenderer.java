@@ -8,10 +8,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import dev.screret.sas.Util;
 import dev.screret.sas.client.model.entity.WizardModel;
-import dev.screret.sas.entity.entity.WizardEntity;
+import dev.screret.sas.entity.WizardEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WizardRenderer extends GeoEntityRenderer<WizardEntity> {

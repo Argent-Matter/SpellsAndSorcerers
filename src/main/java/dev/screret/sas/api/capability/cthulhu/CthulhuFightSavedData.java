@@ -3,7 +3,7 @@ package dev.screret.sas.api.capability.cthulhu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import dev.screret.sas.entity.entity.boss.cthulhu.CthulhuFight;
+import dev.screret.sas.entity.boss.cthulhu.CthulhuFight;
 
 public class CthulhuFightSavedData extends SavedData implements ICapabilityCthulhuFight {
     public static CthulhuFightSavedData getOrCreate(ServerLevel level) {
