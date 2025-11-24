@@ -65,7 +65,7 @@ public class WandAbilityIngredient extends Ingredient {
             var cap = CapabilityWandAbility.wandAbility(stack);
             return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
         } else if (stack.is(ModItems.WAND_CORE.get())) {
-            return new WandAbilityIngredient(new WandAbilityInstance(WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(new ResourceLocation(stack.getTag().getString(WandCoreItem.ABILITY_KEY)))), null, stack.getItem(), false);
+            return new WandAbilityIngredient(new WandAbilityInstance(WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(ResourceLocation.parse(stack.getTag().getString(WandCoreItem.ABILITY_KEY)))), null, stack.getItem(), false);
         }
         return null;
     }

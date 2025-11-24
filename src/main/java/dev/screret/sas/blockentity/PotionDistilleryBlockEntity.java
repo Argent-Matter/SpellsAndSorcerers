@@ -118,7 +118,7 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
         CompoundTag compoundtag = pTag.getCompound("RecipesUsed");
 
         for (String recipe : compoundtag.getAllKeys()) {
-            this.recipesUsed.put(new ResourceLocation(recipe), compoundtag.getInt(recipe));
+            this.recipesUsed.put(ResourceLocation.parse(recipe), compoundtag.getInt(recipe));
         }
 
     }

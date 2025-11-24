@@ -57,7 +57,7 @@ public class EyeConversionManager extends SimpleJsonResourceReloadListener {
     }
 
     public static Map.Entry<Block, BlockIngredient> fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
-        Block result = BuiltInRegistries.BLOCK.get(new ResourceLocation(pJson.getAsJsonPrimitive("result").getAsString()));
+        Block result = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(pJson.getAsJsonPrimitive("result").getAsString()));
         BlockIngredient ingredient = BlockIngredient.fromJson(GsonHelper.getAsJsonObject(pJson, "ingredient"));
         if (ingredient == null)
             return null;

@@ -105,7 +105,7 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
         this.ensureValid(pId);
         var advancement = pRecipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pId)).rewards(AdvancementRewards.Builder.recipe(pId)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        pRecipeOutput.accept(pId, new ShapelessWandRecipe(this.group, this.ingredients, this.result), advancement.build(new ResourceLocation(pId.getNamespace(), "recipes/" + pId.getPath())));
+        pRecipeOutput.accept(pId, new ShapelessWandRecipe(this.group, this.ingredients, this.result), advancement.build(pId.withPrefix("recipes/")));
     }
 
     /**

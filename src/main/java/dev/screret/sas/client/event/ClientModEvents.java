@@ -64,7 +64,7 @@ public class ClientModEvents {
     public static void registerModels(final ModelEvent.RegisterAdditional event) {
         WandAbilityRegistry.WAND_ABILITIES_BUILTIN.holders().forEach(ability -> {
             if (ability.value() instanceof SubAbility) {
-                event.register(new ResourceLocation(ability.key().location().getNamespace(), "item/wand/" + ability.key().location().getPath()));
+                event.register(ModelResourceLocation.inventory(ability.key().location().withPrefix("item/wand/")));
             }
 
         });
@@ -76,21 +76,21 @@ public class ClientModEvents {
 
         if (map.location() == InventoryMenu.BLOCK_ATLAS) {
             WandAbilityRegistry.WAND_ABILITIES_BUILTIN.holders().forEach(ability -> {
-                event.getAtlas().getSprite(new ResourceLocation(ability.key().location().getNamespace(), "item/wand/" + ability.key().location().getPath()));
+                event.getAtlas().getSprite(ability.key().location().withPrefix("item/wand/"));
             });
         }
     }
 
     @SubscribeEvent
     public static void registerGuiOverlay(final RegisterGuiOverlaysEvent event) {
-        event.registerAbove(new ResourceLocation("armor_level"), Util.id("mana"), new ManaBarOverlay());
+        event.registerAbove(ResourceLocation.withDefaultNamespace("armor_level"), Util.id("mana"), new ManaBarOverlay());
     }
 
     @SubscribeEvent
     public static void registerItemColors(final RegisterColorHandlersEvent.Item event) {
         event.register((stack, index) -> {
             if (stack.hasTag() && stack.getTag().contains("ability") && index == 1) {
-                var colorLocation = new ResourceLocation(stack.getTag().getString("ability"));
+                var colorLocation = ResourceLocation.parse(stack.getTag().getString("ability"));
                 if (WandAbilityRegistry.WAND_ABILITIES_BUILTIN.containsKey(colorLocation)) {
                     return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(colorLocation).getColor();
                 }

@@ -27,7 +27,7 @@ public class ModTags {
         }
 
         private static TagKey<Item> forgeTag(String name) {
-            return ItemTags.create(new ResourceLocation("forge", name));
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", name));
         }
     }
 
@@ -41,7 +41,7 @@ public class ModTags {
         }
 
         private static TagKey<Block> forgeTag(String name) {
-            return BlockTags.create(new ResourceLocation("forge", name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath("forge", name));
         }
     }
 

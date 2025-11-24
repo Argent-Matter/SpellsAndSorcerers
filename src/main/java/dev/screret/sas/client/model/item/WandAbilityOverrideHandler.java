@@ -61,7 +61,9 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
     }
 
     protected BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity, ResourceLocation key) {
-        return this.model.bake(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(new ResourceLocation(key.getNamespace(), "item/wand/" + key.getPath())), this.owner, this.baker, this.spriteGetter, this.modelTransform, this, this.modelLocation);
+        return this.model.bake(Minecraft.getInstance()
+                .getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
+                .getSprite(key.withPrefix("item/wand/")), this.owner, this.baker, this.spriteGetter, this.modelTransform, this, this.modelLocation);
     }
 
     ResourceLocation getCacheKey(ItemStack stack) {

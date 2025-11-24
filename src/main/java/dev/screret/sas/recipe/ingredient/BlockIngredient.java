@@ -153,7 +153,7 @@ public class BlockIngredient implements Predicate<BlockState> {
         } else if (pJson.has("block")) {
             return new BlockValue(blockFromJson(pJson));
         } else if (pJson.has("tag")) {
-            ResourceLocation resourcelocation = new ResourceLocation(GsonHelper.getAsString(pJson, "tag"));
+            ResourceLocation resourcelocation = ResourceLocation.parse(GsonHelper.getAsString(pJson, "tag"));
             TagKey<Block> key = TagKey.create(Registries.BLOCK, resourcelocation);
             return new TagValue(key);
         } else {
@@ -163,7 +163,7 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public static Block blockFromJson(JsonObject pItemObject) {
         String s = GsonHelper.getAsString(pItemObject, "block");
-        Block block = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(s)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + s + "'"));
+        Block block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(s)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + s + "'"));
         if (block == Blocks.AIR) {
             throw new JsonSyntaxException("Invalid item: " + s);
         } else {

@@ -17,7 +17,7 @@ public class WandCoreItem extends Item {
     public Component getName(ItemStack stack) {
         String name = "item.sas.basic";
         if (stack.hasTag() && stack.getTag().contains(ABILITY_KEY)) {
-            name = new ResourceLocation(stack.getTag().getString(ABILITY_KEY)).toLanguageKey(ABILITY_KEY);
+            name = ResourceLocation.parse(stack.getTag().getString(ABILITY_KEY)).toLanguageKey(ABILITY_KEY);
         }
         return Component.translatable(super.getDescriptionId(stack), Component.translatable(name));
     }

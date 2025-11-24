@@ -17,7 +17,7 @@ public class ModBlockstateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        ModelFile summonSign = models().singleTexture("summon_sign", new ResourceLocation("geckolib3:block/box"), Util.id("block/summon_sign"));
+        ModelFile summonSign = models().singleTexture("summon_sign", ResourceLocation.fromNamespaceAndPath("geckolib3", "block/box"), Util.id("block/summon_sign"));
 
         getVariantBuilder(ModBlocks.SUMMON_SIGN.get())
                 .forAllStates(state -> ConfiguredModel.builder()

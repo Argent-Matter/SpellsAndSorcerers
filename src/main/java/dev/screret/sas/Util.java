@@ -106,7 +106,7 @@ public class Util {
     }
 
     public static WandAbility getAbilityFromJson(JsonObject json, String key) {
-        return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(new ResourceLocation(GsonHelper.getAsString(json, key)));
+        return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(ResourceLocation.parse(GsonHelper.getAsString(json, key)));
     }
 
     public static double randomInRange(RandomSource randomSource, double min, double max) {
@@ -121,7 +121,7 @@ public class Util {
     }
 
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(SpellsAndSorcerers.MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(SpellsAndSorcerers.MODID, path);
     }
 
     public static BlockHitResult getHitResult(Level level, LivingEntity entity, ClipContext.Fluid fluidInteractionMode, double distance) {
