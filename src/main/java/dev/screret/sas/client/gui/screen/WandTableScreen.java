@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import dev.screret.sas.Util;
-import dev.screret.sas.menu.container.WandTableMenu;
+import dev.screret.sas.common.menu.container.WandTableMenu;
 
 public class WandTableScreen extends AbstractContainerScreen<WandTableMenu> {
     private static final ResourceLocation WAND_TABLE_LOCATION = Util.id("textures/gui/container/wand_table.png");

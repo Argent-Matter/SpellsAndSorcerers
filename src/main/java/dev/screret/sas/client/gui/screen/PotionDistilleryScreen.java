@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import dev.screret.sas.Util;
-import dev.screret.sas.menu.container.PotionDistilleryMenu;
+import dev.screret.sas.common.menu.container.PotionDistilleryMenu;
 
 public class PotionDistilleryScreen extends AbstractContainerScreen<PotionDistilleryMenu> {
     private static final ResourceLocation TEXTURE_LOCATION = Util.id("textures/gui/container/potion_distillery.png");

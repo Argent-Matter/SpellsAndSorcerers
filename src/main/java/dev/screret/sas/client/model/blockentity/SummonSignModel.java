@@ -1,7 +1,7 @@
 package dev.screret.sas.client.model.blockentity;
 
 import dev.screret.sas.Util;
-import dev.screret.sas.blockentity.SummonSignBlockEntity;
+import dev.screret.sas.common.blockentity.SummonSignBlockEntity;
 import software.bernie.geckolib.model.DefaultedBlockGeoModel;
 
 public class SummonSignModel extends DefaultedBlockGeoModel<SummonSignBlockEntity> {

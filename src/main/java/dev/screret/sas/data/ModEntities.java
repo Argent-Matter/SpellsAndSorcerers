@@ -7,9 +7,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.entity.BossWizardEntity;
-import dev.screret.sas.entity.boss.cthulhu.CthulhuEntity;
-import dev.screret.sas.entity.WizardEntity;
+import dev.screret.sas.common.entity.BossWizardEntity;
+import dev.screret.sas.common.entity.boss.cthulhu.CthulhuEntity;
+import dev.screret.sas.common.entity.WizardEntity;
 
 public class ModEntities {
 

@@ -17,7 +17,7 @@ import dev.screret.sas.integration.rei.wand.DefaultWandDisplay;
 import dev.screret.sas.integration.rei.wand.WandRecipeCategory;
 import dev.screret.sas.data.ModItems;
 import dev.screret.sas.data.ModRecipeTypes;
-import dev.screret.sas.recipe.wand.WandRecipe;
+import dev.screret.sas.common.recipe.wand.WandRecipe;
 
 import java.util.stream.Collectors;
 

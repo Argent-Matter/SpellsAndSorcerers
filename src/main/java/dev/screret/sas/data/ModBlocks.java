@@ -7,10 +7,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.block.PalantirBlock;
-import dev.screret.sas.block.PotionDistilleryBlock;
-import dev.screret.sas.block.SummonSignBlock;
-import dev.screret.sas.block.WandTableBlock;
+import dev.screret.sas.common.block.PalantirBlock;
+import dev.screret.sas.common.block.PotionDistilleryBlock;
+import dev.screret.sas.common.block.SummonSignBlock;
+import dev.screret.sas.common.block.WandTableBlock;
 
 public class ModBlocks {
 

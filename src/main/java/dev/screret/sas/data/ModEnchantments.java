@@ -6,9 +6,9 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.enchantment.ManaEfficiencyEnchantment;
-import dev.screret.sas.enchantment.ProlongedUseEnchantment;
-import dev.screret.sas.item.WandItem;
+import dev.screret.sas.common.enchantment.ManaEfficiencyEnchantment;
+import dev.screret.sas.common.enchantment.ProlongedUseEnchantment;
+import dev.screret.sas.common.item.WandItem;
 
 import java.util.function.Supplier;
 

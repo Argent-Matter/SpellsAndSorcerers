@@ -5,9 +5,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import dev.screret.sas.ability.*;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.api.registry.SASRegistries;
+import dev.screret.sas.common.ability.*;
 import dev.screret.sas.api.wand.ability.WandAbility;
 
 

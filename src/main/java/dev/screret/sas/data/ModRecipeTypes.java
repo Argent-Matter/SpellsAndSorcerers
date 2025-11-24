@@ -7,10 +7,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
-import dev.screret.sas.recipe.PotionDistillingRecipe;
-import dev.screret.sas.recipe.wand.ShapedWandRecipe;
-import dev.screret.sas.recipe.wand.ShapelessWandRecipe;
-import dev.screret.sas.recipe.wand.WandRecipe;
+import dev.screret.sas.common.recipe.PotionDistillingRecipe;
+import dev.screret.sas.common.recipe.wand.ShapedWandRecipe;
+import dev.screret.sas.common.recipe.wand.ShapelessWandRecipe;
+import dev.screret.sas.common.recipe.wand.WandRecipe;
 
 import java.util.function.Supplier;
 

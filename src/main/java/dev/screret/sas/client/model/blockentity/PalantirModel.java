@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import dev.screret.sas.Util;
-import dev.screret.sas.blockentity.PalantirBlockEntity;
+import dev.screret.sas.common.blockentity.PalantirBlockEntity;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedBlockGeoModel;

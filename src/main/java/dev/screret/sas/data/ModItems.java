@@ -7,7 +7,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.item.*;
+import dev.screret.sas.common.item.*;
 
 import java.util.function.Supplier;
 

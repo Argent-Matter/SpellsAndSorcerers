@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
 import dev.screret.sas.data.ModEntities;
-import dev.screret.sas.entity.BossWizardEntity;
+import dev.screret.sas.common.entity.BossWizardEntity;
 import dev.screret.sas.data.ModItems;
 
 @EventBusSubscriber(modid = SpellsAndSorcerers.MODID, value = Dist.CLIENT)

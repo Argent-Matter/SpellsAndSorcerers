@@ -1,7 +1,7 @@
 package dev.screret.sas.client.renderer.armor;
 
 import dev.screret.sas.Util;
-import dev.screret.sas.item.ModArmorItem;
+import dev.screret.sas.common.item.ModArmorItem;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 

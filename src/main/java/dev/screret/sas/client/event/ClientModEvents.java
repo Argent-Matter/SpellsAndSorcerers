@@ -15,7 +15,7 @@ import dev.screret.sas.Util;
 import dev.screret.sas.common.ability.SubAbility;
 import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.data.ModBlocks;
-import dev.screret.sas.block.SummonSignBlock;
+import dev.screret.sas.common.block.SummonSignBlock;
 import dev.screret.sas.data.ModBlockEntities;
 import dev.screret.sas.client.gui.overlay.ManaBarOverlay;
 import dev.screret.sas.client.gui.screen.PotionDistilleryScreen;

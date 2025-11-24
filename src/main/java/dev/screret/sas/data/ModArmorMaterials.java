@@ -7,7 +7,6 @@ import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
-import dev.screret.sas.ModTags;
 
 import java.util.EnumMap;
 import java.util.function.Supplier;

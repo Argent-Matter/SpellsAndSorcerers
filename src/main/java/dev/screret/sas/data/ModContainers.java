@@ -5,8 +5,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.menu.container.PotionDistilleryMenu;
-import dev.screret.sas.menu.container.WandTableMenu;
+import dev.screret.sas.common.menu.container.PotionDistilleryMenu;
+import dev.screret.sas.common.menu.container.WandTableMenu;
 
 import java.util.function.Supplier;
 

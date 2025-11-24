@@ -4,9 +4,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.sas.SpellsAndSorcerers;
-import dev.screret.sas.blockentity.PalantirBlockEntity;
-import dev.screret.sas.blockentity.PotionDistilleryBlockEntity;
-import dev.screret.sas.blockentity.SummonSignBlockEntity;
+import dev.screret.sas.common.blockentity.PalantirBlockEntity;
+import dev.screret.sas.common.blockentity.PotionDistilleryBlockEntity;
+import dev.screret.sas.common.blockentity.SummonSignBlockEntity;
 
 import java.util.function.Supplier;
 

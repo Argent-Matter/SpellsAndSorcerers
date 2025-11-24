@@ -26,7 +26,7 @@ import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
 import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.data.ModItems;
-import dev.screret.sas.item.WandCoreItem;
+import dev.screret.sas.common.item.WandCoreItem;
 
 import java.util.Map;
 import java.util.Optional;
