@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import dev.screret.sas.Util;
 import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
-import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
+import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.data.ModItems;
 import dev.screret.sas.item.WandCoreItem;
 
@@ -56,15 +56,15 @@ public class WandAbilityIngredient extends Ingredient {
 
     @Nullable
     public static WandAbilityIngredient fromStack(ItemStack stack) {
-        if (stack.getCapability(ICapabilityWandAbility.WAND_ABILITY) != null) {
-            var cap = stack.getCapability(ICapabilityWandAbility.WAND_ABILITY);
+        if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
+            var cap = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
             return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
         } else if (stack.getTag().contains("wand_ability")) {
             // For datagen as capabilities are not loaded for some reason.
             var cap = CapabilityWandAbility.wandAbility(stack);
             return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
         } else if (stack.is(ModItems.WAND_CORE.get())) {
-            return new WandAbilityIngredient(new WandAbilityInstance(WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(ResourceLocation.parse(stack.getTag().getString(WandCoreItem.ABILITY_KEY)))), null, stack.getItem(), false);
+            return new WandAbilityIngredient(new WandAbilityInstance(SASRegistries.WAND_ABILITIES.get(ResourceLocation.parse(stack.getTag().getString(WandCoreItem.ABILITY_KEY)))), null, stack.getItem(), false);
         }
         return null;
     }

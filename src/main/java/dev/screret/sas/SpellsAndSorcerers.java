@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,14 +29,15 @@ import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+
 import org.slf4j.Logger;
 import dev.screret.sas.data.ModWandAbilities;
 import dev.screret.sas.data.ModMobEffects;
 import dev.screret.sas.data.ModPotions;
 import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
-import dev.screret.sas.api.capability.ability.ICapabilityWandAbility;
 import dev.screret.sas.api.capability.mana.Mana;
-import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
+import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.data.ModAttachmentTypes;
 import dev.screret.sas.data.ModAttributes;
 import dev.screret.sas.data.ModBlocks;
@@ -73,16 +75,14 @@ public class SpellsAndSorcerers {
     public SpellsAndSorcerers(IEventBus modEventBus) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::addItemsVanillaTabs);
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(this::registerEntityAttributes);
         modEventBus.addListener(this::registerVanillaEntityAttributes);
 
-
-        WandAbilityRegistry.init();
-        ModWandAbilities.init();
-        WandAbilityRegistry.WAND_ABILITIES.register(modEventBus);
+        ModWandAbilities.WAND_ABILITIES.register(modEventBus);
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
@@ -118,6 +118,10 @@ public class SpellsAndSorcerers {
         event.enqueueWork(() -> {
             ModPotions.registerPotionMixes();
         });
+    }
+
+    private void registerRegistries(final NewRegistryEvent event) {
+        event.register(SASRegistries.WAND_ABILITIES);
     }
 
     public void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
@@ -191,7 +195,7 @@ public class SpellsAndSorcerers {
     }
 
     @SuppressWarnings("unused")
-    @Mod.EventBusSubscriber(modid = SpellsAndSorcerers.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = SpellsAndSorcerers.MODID)
     private static class ForgeBusEvents {
         @SubscribeEvent
         public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {

@@ -24,7 +24,7 @@ import dev.screret.sas.data.ModWandAbilities;
 import dev.screret.sas.api.capability.ability.CapabilityWandAbility;
 import dev.screret.sas.api.wand.ability.WandAbility;
 import dev.screret.sas.api.wand.ability.WandAbilityInstance;
-import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
+import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.data.ModItems;
 import dev.screret.sas.item.WandCoreItem;
 
@@ -50,7 +50,7 @@ public class Util {
         addWand(ModWandAbilities.LARGE_FIREBALL.get(), null);
         addWand(new WandAbilityInstance(ModWandAbilities.SHOOT_LIGHTNING.get(), new WandAbilityInstance(ModWandAbilities.LIGHTNING.get())), null);
 
-        WandAbilityRegistry.WAND_ABILITIES_BUILTIN.holders().forEach(ability -> {
+        SASRegistries.WAND_ABILITIES.holders().forEach(ability -> {
             addWandCore(ability.value());
         });
     }
@@ -106,7 +106,7 @@ public class Util {
     }
 
     public static WandAbility getAbilityFromJson(JsonObject json, String key) {
-        return WandAbilityRegistry.WAND_ABILITIES_BUILTIN.get(ResourceLocation.parse(GsonHelper.getAsString(json, key)));
+        return SASRegistries.WAND_ABILITIES.get(ResourceLocation.parse(GsonHelper.getAsString(json, key)));
     }
 
     public static double randomInRange(RandomSource randomSource, double min, double max) {

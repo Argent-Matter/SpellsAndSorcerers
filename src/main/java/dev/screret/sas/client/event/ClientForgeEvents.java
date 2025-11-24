@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
@@ -16,7 +16,7 @@ import dev.screret.sas.data.ModEntities;
 import dev.screret.sas.entity.BossWizardEntity;
 import dev.screret.sas.data.ModItems;
 
-@Mod.EventBusSubscriber(modid = SpellsAndSorcerers.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = SpellsAndSorcerers.MODID, value = Dist.CLIENT)
 public class ClientForgeEvents {
 
     private static BossWizardEntity hallucination;

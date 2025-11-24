@@ -8,12 +8,12 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import dev.screret.sas.SpellsAndSorcerers;
 import dev.screret.sas.Util;
-import dev.screret.sas.ability.SubAbility;
-import dev.screret.sas.api.wand.ability.WandAbilityRegistry;
+import dev.screret.sas.common.ability.SubAbility;
+import dev.screret.sas.api.registry.SASRegistries;
 import dev.screret.sas.data.ModBlocks;
 import dev.screret.sas.block.SummonSignBlock;
 import dev.screret.sas.data.ModBlockEntities;
@@ -32,7 +32,7 @@ import dev.screret.sas.data.ModEntities;
 import dev.screret.sas.data.ModItems;
 
 @SuppressWarnings("unused")
-@Mod.EventBusSubscriber(modid = SpellsAndSorcerers.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = SpellsAndSorcerers.MODID, value = Dist.CLIENT)
 public class ClientModEvents {
 
     @SubscribeEvent
