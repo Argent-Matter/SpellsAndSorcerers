@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.screret.mitm.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mitm.refmap.json",
+  "mixins": [
+    "accessor.ItemEntityAccessor",
+    "accessor.MobEffectAccessor"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

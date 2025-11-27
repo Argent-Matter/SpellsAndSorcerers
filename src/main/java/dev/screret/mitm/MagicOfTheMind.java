@@ -1,0 +1,220 @@
+package dev.screret.mitm;
+
+import com.mojang.logging.LogUtils;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+
+import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
+import dev.screret.mitm.data.*;
+import org.slf4j.Logger;
+import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
+import dev.screret.mitm.api.capability.mana.Mana;
+import dev.screret.mitm.api.registry.MITMRegistries;
+import dev.screret.mitm.common.blockentity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.config.MITMConfig;
+import dev.screret.mitm.common.data.provider.conversion.EyeConversionProvider;
+import dev.screret.mitm.common.data.provider.recipe.MITMRecipeProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMBiomeTagsProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMBlockTagsProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMItemTagsProvider;
+import dev.screret.mitm.common.entity.BossWizardEntity;
+import dev.screret.mitm.common.entity.WizardEntity;
+import dev.screret.mitm.common.recipe.ingredient.MITMIngredients;
+import dev.screret.mitm.common.data.EyeConversionManager;
+
+import java.util.concurrent.CompletableFuture;
+
+// The value here should match an entry in the META-INF/mods.toml file
+@Mod(MagicOfTheMind.MODID)
+public class MagicOfTheMind {
+
+    // Define mod id in a common place for everything to reference
+    public static final String MODID = "mitm";
+    // Directly reference a slf4j logger
+    public static final Logger LOGGER = LogUtils.getLogger();
+
+    public MagicOfTheMind(IEventBus modEventBus, ModContainer modContainer) {
+        // Register the commonSetup method for modloading
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerRegistries);
+        modEventBus.addListener(this::addItemsVanillaTabs);
+        modEventBus.addListener(this::gatherData);
+        modEventBus.addListener(this::registerCapabilities);
+        modEventBus.addListener(this::registerEntityAttributes);
+        modEventBus.addListener(this::registerVanillaEntityAttributes);
+
+        MITMWandAbilities.WAND_ABILITIES.register(modEventBus);
+
+        MITMBlocks.BLOCKS.register(modEventBus);
+        MITMItems.ITEMS.register(modEventBus);
+
+        MITMEnchantments.ENCHANTS.register(modEventBus);
+        MITMEnchantments.ENCHANTS_MINECRAFT.register(modEventBus);
+
+        MITMRecipeTypes.RECIPE_TYPES.register(modEventBus);
+        MITMRecipeTypes.RECIPE_SERIALIZERS.register(modEventBus);
+        MITMIngredients.INGREDIENT_TYPES.register(modEventBus);
+
+        MITMAttributes.ATTRIBUTES.register(modEventBus);
+        MITMAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
+        MITMMobEffects.EFFECTS.register(modEventBus);
+        MITMPotions.POTIONS.register(modEventBus);
+
+        MITMContainers.MENU_TYPES.register(modEventBus);
+
+        MITMEntities.ENTITY_TYPES.register(modEventBus);
+        MITMBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+
+        MITMParticles.PARTICLES.register(modEventBus);
+
+        MITMCreativeTabs.CREATIVE_TABS.register(modEventBus);
+
+        modContainer.registerConfig(ModConfig.Type.CLIENT, MITMConfig.Client.clientSpec);
+        modContainer.registerConfig(ModConfig.Type.SERVER, MITMConfig.Server.serverSpec);
+    }
+
+    @SuppressWarnings("Convert2MethodRef")
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        // Some common setup code
+        event.enqueueWork(() -> {
+            MITMPotions.registerPotionMixes();
+        });
+    }
+
+    private void registerRegistries(final NewRegistryEvent event) {
+        event.register(MITMRegistries.WAND_ABILITIES);
+    }
+
+    public void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
+        MITMUtil.generateWandItems();
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+            event.accept(MITMItems.SOULSTEEL_AXE.get());
+            event.accept(MITMItems.SOULSTEEL_SWORD.get());
+            event.accept(MITMItems.SOULSTEEL_HELMET.get());
+            event.accept(MITMItems.SOULSTEEL_CHESTPLATE.get());
+            event.accept(MITMItems.SOULSTEEL_LEGGINGS.get());
+            event.accept(MITMItems.SOULSTEEL_BOOTS.get());
+            event.acceptAll(MITMUtil.CUSTOM_WANDS.values());
+            event.acceptAll(MITMUtil.CUSTOM_WAND_CORES.values());
+        } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(MITMItems.SOULSTEEL_AXE.get());
+            event.accept(MITMItems.SOULSTEEL_HOE.get());
+            event.accept(MITMItems.SOULSTEEL_PICKAXE.get());
+            event.accept(MITMItems.SOULSTEEL_SHOVEL.get());
+            event.accept(MITMItems.CTHULHU_EYE.get());
+        } else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.accept(MITMItems.SOULSTEEL_BLOCK.get());
+        } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.accept(MITMItems.PALANTIR.get());
+            event.accept(MITMItems.POTION_DISTILLERY.get());
+            event.accept(MITMItems.WAND_TABLE.get());
+        } else if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
+            event.accept(MITMItems.POTION_DISTILLERY.get());
+        } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(MITMItems.HANDLE.get());
+            event.accept(MITMItems.CLOUD_BOTTLE.get());
+            event.accept(MITMItems.SOUL_BOTTLE.get());
+            event.accept(MITMItems.SOULSTEEL_INGOT.get());
+        } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(MITMItems.WIZARD_SPAWN_EGG.get());
+            event.accept(MITMItems.BOSS_WIZARD_SPAWN_EGG.get());
+        }
+    }
+
+    public void gatherData(GatherDataEvent event) {
+        DataGenerator gen = event.getGenerator();
+        PackOutput packOutput = gen.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        MITMBlockTagsProvider blockTags = new MITMBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
+        gen.addProvider(event.includeServer(), blockTags);
+        gen.addProvider(event.includeServer(), new MITMItemTagsProvider(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
+
+        gen.addProvider(event.includeServer(), new MITMRecipeProvider(packOutput, lookupProvider));
+        gen.addProvider(event.includeServer(), new EyeConversionProvider(packOutput));
+
+        gen.addProvider(event.includeServer(), new MITMBiomeTagsProvider(packOutput, lookupProvider, existingFileHelper));
+
+        //gen.addProvider(event.includeServer(), new ModBlockstateProvider(gen, existingFileHelper));
+
+        gen.addProvider(event.includeClient(), new MITMLangProvider(packOutput, MagicOfTheMind.MODID, "en_us"));
+    }
+
+    private void registerCapabilities(final RegisterCapabilitiesEvent event) {
+        event.registerItem(CapabilityWandAbility.WAND_ABILITY, (stack, ctx) -> CapabilityWandAbility.wandAbility(stack), MITMItems.WAND);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MITMBlockEntities.POTION_DISTILLERY.get(), PotionDistilleryBlockEntity::getItemHandler);
+    }
+
+    public void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+        event.put(MITMEntities.WIZARD.get(), WizardEntity.createAttributes().build());
+        event.put(MITMEntities.BOSS_WIZARD.get(), BossWizardEntity.createAttributes().build());
+    }
+
+    public void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {
+        if (!event.has(EntityType.PLAYER, MITMAttributes.MANA)) {
+            event.add(EntityType.PLAYER, MITMAttributes.MANA);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @EventBusSubscriber(modid = MagicOfTheMind.MODID)
+    private static class ForgeBusEvents {
+        @SubscribeEvent
+        public static void onPlayerTick(final PlayerTickEvent.Post event) {
+            if (event.getEntity().tickCount % 20 == 0) {
+                AttributeInstance manaAttribute = event.getEntity().getAttribute(MITMAttributes.MANA);
+                Mana mana = event.getEntity().getData(MITMAttachmentTypes.MANA);
+                mana.setMaxManaStored(Mth.floor(manaAttribute.getValue()));
+                mana.addMana(1, false);
+                event.getEntity().setData(MITMAttachmentTypes.MANA, mana);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onRightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
+            if (event.getEntity().getItemInHand(event.getHand()).is(MITMTags.Items.GLASS_BOTTLES)) {
+                if (event.getLevel().getBlockState(event.getHitVec().getBlockPos()).is(BlockTags.SOUL_FIRE_BASE_BLOCKS)) {
+                    event.getEntity().awardStat(Stats.ITEM_USED.get(event.getEntity().getUseItem().getItem()));
+                    ItemUtils.createFilledResult(event.getEntity().getUseItem(), event.getEntity(), new ItemStack(MITMItems.SOUL_BOTTLE.get()));
+                } else if (event.getEntity().getY() > 320 - 16) {
+                    event.getEntity().awardStat(Stats.ITEM_USED.get(event.getEntity().getUseItem().getItem()));
+                    ItemUtils.createFilledResult(event.getEntity().getUseItem(), event.getEntity(), new ItemStack(MITMItems.CLOUD_BOTTLE.get()));
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public static void registerReloadListeners(final AddReloadListenerEvent event) {
+            EyeConversionManager.INSTANCE = new EyeConversionManager();
+            event.addListener(EyeConversionManager.INSTANCE);
+        }
+    }
+}

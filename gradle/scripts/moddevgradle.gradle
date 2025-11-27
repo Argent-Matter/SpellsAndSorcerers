@@ -68,7 +68,7 @@ neoForge {
             systemProperty('neoforge.enabledGameTestNamespaces', project.mod_id)
         }
 
-        // Client with SAS + Jade, EMI, Curios
+        // Client with MITM + Jade, EMI, Curios
         cleanClient {
             client()
             sourceSet = sourceSets.client

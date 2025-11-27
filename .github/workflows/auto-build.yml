@@ -66,7 +66,7 @@ jobs:
           name: '${{ steps.ver.outputs.version }} SNAPSHOT ${{ env.VERSION_SUFFIX }}'
           prerelease: true
           body: |
-            The latest build of SAS for Minecraft ${{ github.ref_name }}.
+            The latest build of Magic of the Mind for Minecraft ${{ github.ref_name }}.
             Please report any [issues](https://github.com/Argent-Matter/SpellsAndSorcerers/issues).
             ${{ steps.changelog.outputs.changelog }}
           files: build/libs/*.jar

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "mitm:block/glint_ore"
+    }
+  }
+}
