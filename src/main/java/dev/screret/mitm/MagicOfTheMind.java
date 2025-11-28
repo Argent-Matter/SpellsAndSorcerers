@@ -83,8 +83,8 @@ public class MagicOfTheMind {
         MITMBlocks.BLOCKS.register(modEventBus);
         MITMItems.ITEMS.register(modEventBus);
 
-        MITMEnchantments.ENCHANTS.register(modEventBus);
-        MITMEnchantments.ENCHANTS_MINECRAFT.register(modEventBus);
+        // MITMEnchantments.ENCHANTS.register(modEventBus);
+        // MITMEnchantments.ENCHANTS_MINECRAFT.register(modEventBus);
 
         MITMRecipeTypes.RECIPE_TYPES.register(modEventBus);
         MITMRecipeTypes.RECIPE_SERIALIZERS.register(modEventBus);
