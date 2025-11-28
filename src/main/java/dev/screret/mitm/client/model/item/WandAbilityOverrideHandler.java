@@ -14,10 +14,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
 import dev.screret.mitm.api.ability.WandAbilityInstance;
 
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMWandAbilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.ExecutionException;
@@ -57,21 +58,21 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
         return output;
     }
 
-    protected BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity, ResourceLocation key) {
+    private BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity, ResourceLocation key) {
         return this.model.bake(Minecraft.getInstance()
                 .getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
                 .getSprite(key.withPrefix("item/wand/")), this.owner, this.baker, this.spriteGetter, this.modelTransform, this);
     }
 
-    ResourceLocation getCacheKey(ItemStack stack) {
-        CapabilityWandAbility ability = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
-        if (ability != null) {
-            WandAbilityInstance current = ability.getMainAbility();
-            while (current.getChildren() != null && current.getChildren().size() > 0) {
-                current = ability.getMainAbility().getChildren().get(0);
+    private ResourceLocation getCacheKey(ItemStack stack) {
+        WandComponent component = stack.get(MITMDataComponents.WAND);
+        if (component != null) {
+            WandAbilityInstance current = component.primary();
+            while (!current.getChildren().isEmpty()) {
+                current = current.getChildren().getFirst();
             }
             return current.getId();
         }
-        return MITMUtil.id("dummy");
+        return MITMWandAbilities.DUMMY.getId();
     }
 }

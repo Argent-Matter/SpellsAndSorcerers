@@ -7,11 +7,13 @@ import net.minecraft.network.codec.StreamCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.screret.mitm.api.ability.WandAbilityInstance;
+import lombok.With;
+import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record WandComponent(WandAbilityInstance primary, Optional<WandAbilityInstance> secondary, boolean poweredUp) {
+public record WandComponent(@With WandAbilityInstance primary, @With Optional<WandAbilityInstance> secondary, @With boolean poweredUp) {
 
     // spotless:off
     public static final Codec<WandComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -29,5 +31,10 @@ public record WandComponent(WandAbilityInstance primary, Optional<WandAbilityIns
 
     public @Nullable WandAbilityInstance secondaryOrNull() {
         return secondary.orElse(null);
+    }
+
+    @Tolerate
+    public WandComponent withSecondary(@Nullable WandAbilityInstance secondary) {
+        return new WandComponent(primary, Optional.ofNullable(secondary), poweredUp);
     }
 }

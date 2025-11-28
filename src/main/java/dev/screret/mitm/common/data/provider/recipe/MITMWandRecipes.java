@@ -13,8 +13,9 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
 import dev.screret.mitm.data.MITMWandAbilities;
-import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
 import dev.screret.mitm.api.ability.WandAbility;
 import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.common.data.builder.recipe.ShapedWandRecipeBuilder;
@@ -143,21 +144,19 @@ public class MITMWandRecipes {
     private static void addWandUpgradeRecipes(RecipeOutput output) {
         for (var wand : MITMUtil.CUSTOM_WANDS.values()) {
             var result = wand.copy();
-            WandAbilityInstance mainAbility = null;
-            if (result.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
-                var cap = result.getCapability(CapabilityWandAbility.WAND_ABILITY);
-                cap.setPoweredUp(true);
-                mainAbility = cap.getMainAbility();
-            }
-            if (mainAbility == null) {
+            if (!result.has(MITMDataComponents.WAND)) {
                 return;
             }
+            WandComponent component = result.get(MITMDataComponents.WAND);
+            component = component.withPoweredUp(true);
+            WandAbilityInstance primary = component.primary();
+
             getShapeless(result)
                     .requires(MITMItems.CTHULHU_EYE.get())
                     .requires(wand)
                     .unlockedBy("has_cthulhu_eye", has(MITMItems.CTHULHU_EYE.get()))
                     .group("wand_upgrades")
-                    .save(output, MITMUtil.id("wand_upgrade/" + mainAbility.getId().getPath()));
+                    .save(output, MITMUtil.id("wand_upgrade/" + primary.getId().getPath()));
         }
     }
 }
