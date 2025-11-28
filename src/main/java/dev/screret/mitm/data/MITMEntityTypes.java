@@ -8,7 +8,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.mitm.MagicOfTheMind;
 import dev.screret.mitm.common.entity.BossWizardEntity;
-import dev.screret.mitm.common.entity.boss.cthulhu.CthulhuEntity;
 import dev.screret.mitm.common.entity.WizardEntity;
 import dev.screret.mitm.common.item.OneRingItem;
 
@@ -23,10 +22,6 @@ public class MITMEntityTypes {
     public static final DeferredHolder<EntityType<?>, EntityType<BossWizardEntity>> BOSS_WIZARD = ENTITY_TYPES.register("boss_wizard",
             () -> EntityType.Builder.of(BossWizardEntity::new, MobCategory.MONSTER)
                     .fireImmune().immuneTo(Blocks.WITHER_ROSE).sized(0.7F, 2.4F).clientTrackingRange(8)
-                    .build(BossWizardEntity.class.getSimpleName().toLowerCase()));
-    public static final DeferredHolder<EntityType<?>, EntityType<CthulhuEntity>> CTHULHU = ENTITY_TYPES.register("cthulhu",
-            () -> EntityType.Builder.of(CthulhuEntity::new, MobCategory.MONSTER)
-                    .fireImmune().immuneTo(Blocks.WITHER_ROSE).sized(0.7F, 2.4F).clientTrackingRange(10)
                     .build(BossWizardEntity.class.getSimpleName().toLowerCase()));
 
 
