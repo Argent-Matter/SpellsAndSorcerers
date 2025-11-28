@@ -1,6 +1,8 @@
 package dev.screret.mitm.common.block;
 
-import com.mojang.serialization.MapCodec;
+import dev.screret.mitm.api.util.ItemHandlerUtil;
+import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.data.MITMBlockEntities;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -23,12 +25,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-import dev.screret.mitm.api.util.ItemHandlerUtil;
-import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
+import com.mojang.serialization.MapCodec;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -58,7 +59,7 @@ public class PotionDistilleryBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level,BlockPos pos,
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                Player player, BlockHitResult hitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -120,8 +121,9 @@ public class PotionDistilleryBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, MITMBlockEntities.POTION_DISTILLERY.get(), PotionDistilleryBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                                  BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, MITMBlockEntities.POTION_DISTILLERY.get(),
+                PotionDistilleryBlockEntity::serverTick);
     }
-
 }

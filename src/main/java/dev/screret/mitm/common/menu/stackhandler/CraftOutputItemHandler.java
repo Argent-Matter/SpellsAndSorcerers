@@ -1,5 +1,7 @@
 package dev.screret.mitm.common.menu.stackhandler;
 
+import dev.screret.mitm.data.MITMRecipeTypes;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -10,15 +12,16 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
-import dev.screret.mitm.data.MITMRecipeTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class CraftOutputItemHandler extends SlotItemHandler {
+
     private final CraftingContainer craftSlots;
     private int removeCount;
     private final Player player;
 
-    public CraftOutputItemHandler(Player player, CraftingContainer craftSlots, IItemHandler inventory, int index, int xPosition, int yPosition) {
+    public CraftOutputItemHandler(Player player, CraftingContainer craftSlots, IItemHandler inventory, int index, int xPosition,
+                                  int yPosition) {
         super(inventory, index, xPosition, yPosition);
         this.player = player;
         this.craftSlots = craftSlots;
@@ -59,7 +62,6 @@ public class CraftOutputItemHandler extends SlotItemHandler {
         if (i > 0) {
             this.onQuickCraft(newStackIn, i);
         }
-
     }
 
     @Override

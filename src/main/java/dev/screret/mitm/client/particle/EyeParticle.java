@@ -5,6 +5,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class EyeParticle extends SimpleAnimatedParticle {
+
     protected EyeParticle(ClientLevel level, double x, double y, double z, SpriteSet sprites) {
         super(level, x, y, z, sprites, 0);
         this.quadSize = 0.75F;
@@ -21,13 +22,15 @@ public class EyeParticle extends SimpleAnimatedParticle {
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
+
         private final SpriteSet sprites;
 
         public Provider(SpriteSet sprites) {
             this.sprites = sprites;
         }
 
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed,
+                                       double ySpeed, double zSpeed) {
             return new EyeParticle(level, x, y, z, this.sprites);
         }
     }

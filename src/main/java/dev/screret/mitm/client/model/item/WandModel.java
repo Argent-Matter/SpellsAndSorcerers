@@ -1,7 +1,5 @@
 package dev.screret.mitm.client.model.item;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
 import dev.screret.mitm.MITMUtil;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -22,16 +20,21 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import net.neoforged.neoforge.client.model.geometry.UnbakedGeometryHelper;
 
-import org.jetbrains.annotations.NotNull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
 
 import java.util.function.Function;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.NotNull;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WandModel implements IUnbakedGeometry<WandModel> {
 
-    private static final RenderTypeGroup RENDER_TYPE_GROUP = new RenderTypeGroup(RenderType.translucent(), NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
+    private static final RenderTypeGroup RENDER_TYPE_GROUP = new RenderTypeGroup(RenderType.translucent(),
+            NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
     private static final ResourceLocation DEFAULT_TEXTURE_LOC = MITMUtil.id("item/wand/error");
 
     @Override
@@ -61,6 +64,7 @@ public class WandModel implements IUnbakedGeometry<WandModel> {
     }
 
     public static final class Loader implements IGeometryLoader<WandModel> {
+
         public static final Loader INSTANCE = new Loader();
 
         @NotNull

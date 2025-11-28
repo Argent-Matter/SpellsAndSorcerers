@@ -1,8 +1,7 @@
 package dev.screret.mitm.common.data.builder.recipe;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
+import dev.screret.mitm.common.recipe.wand.ShapedWandRecipe;
 
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
@@ -17,13 +16,16 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
-import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
-import dev.screret.mitm.common.recipe.wand.ShapedWandRecipe;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ShapedWandRecipeBuilder implements RecipeBuilder {
+
     private final WandAbilityIngredient result;
     private final List<String> rows = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
@@ -40,7 +42,6 @@ public class ShapedWandRecipeBuilder implements RecipeBuilder {
     public ShapedWandRecipeBuilder(ItemStack result) {
         this.result = WandAbilityIngredient.fromStack(result);
     }
-
 
     /**
      * Adds a key to the recipe pattern.
@@ -109,9 +110,11 @@ public class ShapedWandRecipeBuilder implements RecipeBuilder {
     @Override
     public void save(RecipeOutput recipeOutput, ResourceLocation id) {
         this.ensureValid(id);
-        var advancement = recipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(AdvancementRequirements.Strategy.OR);
+        var advancement = recipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                .rewards(AdvancementRewards.Builder.recipe(id)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        recipeOutput.accept(id, new ShapedWandRecipe(this.group, ShapedRecipePattern.of(this.key, this.rows), this.result), advancement.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(id, new ShapedWandRecipe(this.group, ShapedRecipePattern.of(this.key, this.rows), this.result),
+                advancement.build(id.withPrefix("recipes/")));
     }
 
     /**
@@ -138,7 +141,8 @@ public class ShapedWandRecipeBuilder implements RecipeBuilder {
             if (!set.isEmpty()) {
                 throw new IllegalStateException("Ingredients are defined but not used in pattern for recipe " + id);
             } else if (this.rows.size() == 1 && this.rows.get(0).length() == 1) {
-                throw new IllegalStateException("Shaped recipe " + id + " only takes in a single item - should it be a shapeless recipe instead?");
+                throw new IllegalStateException(
+                        "Shaped recipe " + id + " only takes in a single item - should it be a shapeless recipe instead?");
             } else if (this.criteria.isEmpty()) {
                 throw new IllegalStateException("No way of obtaining recipe " + id);
             }

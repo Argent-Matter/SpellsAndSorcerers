@@ -1,7 +1,8 @@
 package dev.screret.mitm.common.data.provider.conversion;
 
-import com.google.common.collect.Sets;
-import com.mojang.logging.LogUtils;
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.common.data.builder.conversion.EyeConversionBuilder;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -11,9 +12,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-import org.slf4j.Logger;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.data.builder.conversion.EyeConversionBuilder;
+
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +42,7 @@ public class EyeConversionProvider implements DataProvider {
         addConversion(finished, Blocks.SKELETON_SKULL, Blocks.ZOMBIE_HEAD);
         addConversion(finished, Blocks.ZOMBIE_WALL_HEAD, Blocks.SKELETON_WALL_SKULL);
         addConversion(finished, Blocks.SKELETON_WALL_SKULL, Blocks.ZOMBIE_WALL_HEAD);
-
     }
-
 
     protected void addConversion(Consumer<EyeConversionBuilder.Result> finished, Block result, TagKey<Block> items) {
         EyeConversionBuilder.conversion(result)

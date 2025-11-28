@@ -1,13 +1,13 @@
 package dev.screret.mitm.client.model.item;
 
+import dev.screret.mitm.data.inject.MITMEnumProxies;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-
-import dev.screret.mitm.data.inject.MITMEnumProxies;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

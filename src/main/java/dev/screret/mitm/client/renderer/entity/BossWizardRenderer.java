@@ -1,18 +1,22 @@
 package dev.screret.mitm.client.renderer.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.client.model.entity.BossWizardModel;
 import dev.screret.mitm.common.entity.BossWizardEntity;
-import org.jetbrains.annotations.Nullable;
+
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import org.jetbrains.annotations.Nullable;
+
 public class BossWizardRenderer extends GeoEntityRenderer<BossWizardEntity> {
+
     public BossWizardRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BossWizardModel());
     }
@@ -24,7 +28,8 @@ public class BossWizardRenderer extends GeoEntityRenderer<BossWizardEntity> {
         if (model.getBone("rightArm").isPresent() && MITMUtil.getMainAbilityFromStack(animatable.getMainHandItem()).isPresent()) {
             var handWorldPos = model.getBone("rightArm").get().getWorldPosition();
             if (animatable.isCastingSpell()) {
-                animatable.getCommandSenderWorld().addParticle(MITMUtil.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
+                animatable.getCommandSenderWorld().addParticle(
+                        MITMUtil.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
                         handWorldPos.x,
                         handWorldPos.y,
                         handWorldPos.z,

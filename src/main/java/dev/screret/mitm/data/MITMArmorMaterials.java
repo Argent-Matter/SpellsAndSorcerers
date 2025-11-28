@@ -1,5 +1,7 @@
 package dev.screret.mitm.data;
 
+import dev.screret.mitm.MagicOfTheMind;
+
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -12,15 +14,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import dev.screret.mitm.MagicOfTheMind;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class MITMArmorMaterials {
 
-    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MagicOfTheMind.MODID);
+    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL,
+            MagicOfTheMind.MODID);
 
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> SOULSTEEL = register("soulsteel",
             Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {

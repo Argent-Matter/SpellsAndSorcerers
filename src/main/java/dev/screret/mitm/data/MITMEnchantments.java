@@ -5,13 +5,13 @@ import net.minecraft.world.item.enchantment.Enchantment;
 
 public class MITMEnchantments {
 
-    // public static final DeferredRegister<Enchantment> ENCHANTS = DeferredRegister.create(BuiltInRegistries.ENCHANTMENT, MagicOfTheMind.MODID);
+    // public static final DeferredRegister<Enchantment> ENCHANTS = DeferredRegister.create(BuiltInRegistries.ENCHANTMENT,
+    // MagicOfTheMind.MODID);
 
-    // public static final DeferredHolder<Enchantment, Enchantment> PROLONGED_USE = ENCHANTS.register("prolonged_use", () -> new ProlongedUseEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
-    // public static final DeferredHolder<Enchantment, Enchantment> MANA_EFFICIENCY = ENCHANTS.register("mana_efficiency", () -> new ManaEfficiencyEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
+    // public static final DeferredHolder<Enchantment, Enchantment> PROLONGED_USE = ENCHANTS.register("prolonged_use", () -> new
+    // ProlongedUseEnchantment(Enchantment.Rarity.RARE, EquipmentSlot.MAINHAND));
+    // public static final DeferredHolder<Enchantment, Enchantment> MANA_EFFICIENCY = ENCHANTS.register("mana_efficiency", () ->
+    // new ManaEfficiencyEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
 
-
-    public static void bootstrap(BootstrapContext<Enchantment> context) {
-
-    }
+    public static void bootstrap(BootstrapContext<Enchantment> context) {}
 }

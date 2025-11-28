@@ -1,9 +1,7 @@
 package dev.screret.mitm.api.ability;
 
-import com.mojang.datafixers.Products;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.screret.mitm.api.registry.MITMRegistries;
+import dev.screret.mitm.data.MITMDataComponents;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,15 +15,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
-import dev.screret.mitm.api.registry.MITMRegistries;
-import dev.screret.mitm.data.MITMDataComponents;
+import com.mojang.datafixers.Products;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 
 import java.util.function.Function;
 
 public abstract class WandAbility<T extends WandAbility<T>> {
 
-    public static final Codec<WandAbility<?>> CODEC = MITMRegistries.WAND_ABILITIES.byNameCodec().dispatchStable(Function.identity(), WandAbility::codec);
+    public static final Codec<WandAbility<?>> CODEC = MITMRegistries.WAND_ABILITIES.byNameCodec()
+            .dispatchStable(Function.identity(), WandAbility::codec);
 
     @Getter
     private final int useDuration, cooldownDuration;
@@ -38,7 +39,8 @@ public abstract class WandAbility<T extends WandAbility<T>> {
     @Getter
     private final int color;
 
-    public WandAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color) {
+    public WandAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle,
+                       int color) {
         this.useDuration = useDuration;
         this.cooldownDuration = cooldownDuration;
         this.damagePerHit = damagePerHit;
@@ -49,18 +51,19 @@ public abstract class WandAbility<T extends WandAbility<T>> {
 
     public abstract MapCodec<T> codec();
 
-    public static <W extends WandAbility<?>> Products.P6<RecordCodecBuilder.Mu<W>, Integer, Integer, Float, Boolean, ParticleOptions, Integer> codecStart(RecordCodecBuilder.Instance<W> instance) {
+    public static <
+            W extends WandAbility<?>> Products.P6<RecordCodecBuilder.Mu<W>, Integer, Integer, Float, Boolean, ParticleOptions, Integer> codecStart(RecordCodecBuilder.Instance<W> instance) {
         return instance.group(
                 ExtraCodecs.NON_NEGATIVE_INT.fieldOf("use_duration").forGetter(WandAbility::getUseDuration),
                 ExtraCodecs.NON_NEGATIVE_INT.fieldOf("cooldown_duration").forGetter(WandAbility::getCooldownDuration),
                 Codec.FLOAT.fieldOf("damage_per_hit").forGetter(WandAbility::getBaseDamagePerHit),
                 Codec.BOOL.fieldOf("apply_enchants").forGetter(WandAbility::isApplyEnchants),
                 ParticleTypes.CODEC.fieldOf("particle").forGetter(WandAbility::getParticle),
-                Codec.INT.fieldOf("color").forGetter(WandAbility::getColor)
-        );
+                Codec.INT.fieldOf("color").forGetter(WandAbility::getColor));
     }
 
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack,
+                                                      WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
         return InteractionResultHolder.fail(stack);
     }
 

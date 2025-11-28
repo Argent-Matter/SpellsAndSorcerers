@@ -1,11 +1,6 @@
 package dev.screret.mitm.common.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.screret.mitm.data.MITMRecipeTypes;
-import lombok.AccessLevel;
-import lombok.Getter;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.AccessLevel;
+import lombok.Getter;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
@@ -24,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class PotionDistillingRecipe implements Recipe<RecipeInput> {
 
     /**
-     *  Recipes with equal group are combined into one button in the recipe book
+     * Recipes with equal group are combined into one button in the recipe book
      */
     @Getter
     protected final String group;
@@ -33,12 +34,12 @@ public class PotionDistillingRecipe implements Recipe<RecipeInput> {
     @Getter(AccessLevel.PRIVATE)
     protected final ItemStack result;
     /**
-     *  Gets the experience of this recipe
+     * Gets the experience of this recipe
      */
     @Getter
     protected final float experience;
     /**
-     *  Gets the processing time in ticks
+     * Gets the processing time in ticks
      */
     @Getter
     protected final int processingTime;
@@ -121,5 +122,4 @@ public class PotionDistillingRecipe implements Recipe<RecipeInput> {
             return STREAM_CODEC;
         }
     }
-
 }

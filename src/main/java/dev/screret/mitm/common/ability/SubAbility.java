@@ -1,6 +1,7 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.Codec;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.StringRepresentable;
@@ -13,17 +14,19 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import dev.screret.mitm.api.ability.WandAbility;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class SubAbility<T extends SubAbility<T>> extends WandAbility<T> {
+
     private static final EntityTypeTest<Entity, LivingEntity> ANY_LIVING_ENTITY_TYPE = new EntityTypeTest<>() {
+
         public LivingEntity tryCast(@NotNull Entity entity) {
             return entity instanceof LivingEntity living ? living : null;
         }
@@ -35,7 +38,8 @@ public abstract class SubAbility<T extends SubAbility<T>> extends WandAbility<T>
 
     protected final EnumSet<HitFlags> hitFlags;
 
-    public SubAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color, EnumSet<HitFlags> hitFlags) {
+    public SubAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle,
+                      int color, EnumSet<HitFlags> hitFlags) {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color);
         this.hitFlags = hitFlags;
     }
@@ -44,7 +48,8 @@ public abstract class SubAbility<T extends SubAbility<T>> extends WandAbility<T>
     public abstract MapCodec<T> codec();
 
     @Override
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack,
+                                                      WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
         if (level.isClientSide)
             return InteractionResultHolder.pass(stack);
 
@@ -55,8 +60,10 @@ public abstract class SubAbility<T extends SubAbility<T>> extends WandAbility<T>
         }
         if (hitFlags.contains(HitFlags.ENTITY)) {
             AABB bounds = AABB.ofSize(currentPosition.real, 0.01, 0.01, 0.01);
-            List<LivingEntity> allHitPossibilities = level.getEntities(SubAbility.ANY_LIVING_ENTITY_TYPE, bounds, entity -> entity != user);
-            allHitPossibilities.sort((thisPart, next) -> (int) Math.round(next.position().distanceTo(currentPosition.real) - thisPart.position().distanceTo(currentPosition.real)));
+            List<LivingEntity> allHitPossibilities = level.getEntities(SubAbility.ANY_LIVING_ENTITY_TYPE, bounds,
+                    entity -> entity != user);
+            allHitPossibilities.sort((thisPart, next) -> (int) Math.round(
+                    next.position().distanceTo(currentPosition.real) - thisPart.position().distanceTo(currentPosition.real)));
             if (allHitPossibilities.size() > 0) {
                 if (doHit(stack, user, allHitPossibilities.get(0), timeCharged)) {
                     return InteractionResultHolder.pass(stack);
@@ -72,6 +79,7 @@ public abstract class SubAbility<T extends SubAbility<T>> extends WandAbility<T>
     public abstract boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged);
 
     public enum HitFlags implements StringRepresentable {
+
         NONE,
         ENTITY,
         BLOCK,

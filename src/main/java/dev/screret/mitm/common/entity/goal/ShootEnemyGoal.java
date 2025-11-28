@@ -1,18 +1,21 @@
 package dev.screret.mitm.common.entity.goal;
 
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.common.entity.BossWizardEntity;
 import dev.screret.mitm.common.entity.WizardEntity;
 
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+
 import java.util.EnumSet;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ShootEnemyGoal extends Goal {
+
     private final BossWizardEntity mob;
     @Nullable
     private LivingEntity target;
@@ -28,7 +31,8 @@ public class ShootEnemyGoal extends Goal {
         this(rangedAttackMob, speedModifier, attackInterval, attackInterval, attackRadius);
     }
 
-    public ShootEnemyGoal(BossWizardEntity rangedAttackMob, double speedModifier, int attackIntervalMin, int attackIntervalMax, float attackRadius) {
+    public ShootEnemyGoal(BossWizardEntity rangedAttackMob, double speedModifier, int attackIntervalMin, int attackIntervalMax,
+                          float attackRadius) {
         this.mob = rangedAttackMob;
         this.speedModifier = speedModifier;
         this.attackIntervalMin = attackIntervalMin;
@@ -107,9 +111,11 @@ public class ShootEnemyGoal extends Goal {
                 this.mob.performRangedAttack(this.target, f1);
             }
 
-            this.attackTime = Mth.floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            this.attackTime = Mth
+                    .floor(f * (float) (this.attackIntervalMax - this.attackIntervalMin) + (float) this.attackIntervalMin);
         } else if (this.attackTime < 0) {
-            this.attackTime = Mth.floor(Mth.lerp(Math.sqrt(d0) / (double) this.attackRadius, this.attackIntervalMin, this.attackIntervalMax));
+            this.attackTime = Mth
+                    .floor(Mth.lerp(Math.sqrt(d0) / (double) this.attackRadius, this.attackIntervalMin, this.attackIntervalMax));
         }
     }
 
@@ -117,6 +123,8 @@ public class ShootEnemyGoal extends Goal {
         if (WizardEntity.possibleWands == null) {
             WizardEntity.possibleWands = MITMUtil.CUSTOM_WANDS.values().stream().toList();
         }
-        return MITMUtil.getMainAbilityFromStack(WizardEntity.possibleWands.get(random.nextInt(WizardEntity.possibleWands.size() - 1))).get();
+        return MITMUtil
+                .getMainAbilityFromStack(WizardEntity.possibleWands.get(random.nextInt(WizardEntity.possibleWands.size() - 1)))
+                .get();
     }
 }

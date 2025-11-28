@@ -1,7 +1,6 @@
 package dev.screret.mitm.api.ability;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.screret.mitm.api.registry.MITMRegistries;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
@@ -20,9 +19,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
-import dev.screret.mitm.api.registry.MITMRegistries;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +30,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -57,7 +58,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     @Getter
     private List<WandAbilityInstance> children;
 
-    public WandAbilityInstance(WandAbility<?> ability, WandAbilityInstance @Nullable ... children) {
+    public WandAbilityInstance(WandAbility<?> ability, WandAbilityInstance @Nullable... children) {
         this.ability = ability;
         this.children = children == null ? new ArrayList<>() : Arrays.stream(children).collect(Collectors.toList());
     }
@@ -71,7 +72,8 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
         this.deserializeNBT(registries, nbt);
     }
 
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WrappedVec3 currentPos, int timeCharged) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WrappedVec3 currentPos,
+                                                      int timeCharged) {
         var returnValue = InteractionResultHolder.fail(stack);
         if (ability != null) {
             returnValue = ability.execute(level, user, stack, currentPos, timeCharged);
@@ -165,11 +167,11 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     }
 
     public static class WrappedVec3 {
+
         public WrappedVec3(Vec3 obj) {
             this.real = obj;
         }
 
         public Vec3 real;
     }
-
 }

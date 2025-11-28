@@ -1,6 +1,22 @@
 package dev.screret.mitm;
 
-import com.mojang.logging.LogUtils;
+import dev.screret.mitm.api.capability.mana.Mana;
+import dev.screret.mitm.api.registry.MITMRegistries;
+import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.common.data.EyeConversionManager;
+import dev.screret.mitm.common.data.provider.conversion.EyeConversionProvider;
+import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
+import dev.screret.mitm.common.data.provider.recipe.MITMRecipeProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMBiomeTagsProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMBlockTagsProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMEntityTypeTagsProvider;
+import dev.screret.mitm.common.data.provider.tag.MITMItemTagsProvider;
+import dev.screret.mitm.common.entity.BossWizardEntity;
+import dev.screret.mitm.common.entity.WizardEntity;
+import dev.screret.mitm.config.MITMConfig;
+import dev.screret.mitm.data.*;
+import dev.screret.mitm.data.MITMIngredientTypes;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -22,7 +38,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -35,24 +50,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-import dev.screret.mitm.client.model.item.WandItemClientExtensions;
-import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
-import dev.screret.mitm.common.data.provider.tag.MITMEntityTypeTagsProvider;
-import dev.screret.mitm.data.*;
+import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
-import dev.screret.mitm.api.capability.mana.Mana;
-import dev.screret.mitm.api.registry.MITMRegistries;
-import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
-import dev.screret.mitm.config.MITMConfig;
-import dev.screret.mitm.common.data.provider.conversion.EyeConversionProvider;
-import dev.screret.mitm.common.data.provider.recipe.MITMRecipeProvider;
-import dev.screret.mitm.common.data.provider.tag.MITMBiomeTagsProvider;
-import dev.screret.mitm.common.data.provider.tag.MITMBlockTagsProvider;
-import dev.screret.mitm.common.data.provider.tag.MITMItemTagsProvider;
-import dev.screret.mitm.common.entity.BossWizardEntity;
-import dev.screret.mitm.common.entity.WizardEntity;
-import dev.screret.mitm.data.MITMIngredientTypes;
-import dev.screret.mitm.common.data.EyeConversionManager;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -161,14 +160,14 @@ public class MagicOfTheMind {
         DatapackBuiltinEntriesProvider provider = gen.addProvider(true, new DatapackBuiltinEntriesProvider(
                 packOutput, registries, new RegistrySetBuilder()
                         .add(Registries.ENCHANTMENT, MITMEnchantments::bootstrap),
-                Set.of(MagicOfTheMind.MODID)
-        ));
+                Set.of(MagicOfTheMind.MODID)));
         registries = provider.getRegistryProvider();
 
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         MITMBlockTagsProvider blockTags = new MITMBlockTagsProvider(packOutput, registries, existingFileHelper);
         gen.addProvider(event.includeServer(), blockTags);
-        gen.addProvider(event.includeServer(), new MITMItemTagsProvider(packOutput, registries, blockTags.contentsGetter(), existingFileHelper));
+        gen.addProvider(event.includeServer(),
+                new MITMItemTagsProvider(packOutput, registries, blockTags.contentsGetter(), existingFileHelper));
 
         gen.addProvider(event.includeServer(), new MITMRecipeProvider(packOutput, registries));
         gen.addProvider(event.includeServer(), new EyeConversionProvider(packOutput));
@@ -176,14 +175,15 @@ public class MagicOfTheMind {
         gen.addProvider(event.includeServer(), new MITMBiomeTagsProvider(packOutput, registries, existingFileHelper));
         gen.addProvider(event.includeServer(), new MITMEntityTypeTagsProvider(packOutput, registries, existingFileHelper));
 
-        //gen.addProvider(event.includeServer(), new ModBlockstateProvider(gen, existingFileHelper));
+        // gen.addProvider(event.includeServer(), new ModBlockstateProvider(gen, existingFileHelper));
 
         gen.addProvider(event.includeClient(), new MITMLangProvider(packOutput, MagicOfTheMind.MODID, "en_us"));
     }
 
     @SubscribeEvent
     private void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MITMBlockEntities.POTION_DISTILLERY.get(), PotionDistilleryBlockEntity::getItemHandler);
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MITMBlockEntities.POTION_DISTILLERY.get(),
+                PotionDistilleryBlockEntity::getItemHandler);
     }
 
     @SubscribeEvent
@@ -231,10 +231,12 @@ public class MagicOfTheMind {
         if (event.getEntity().getItemInHand(event.getHand()).is(MITMTags.Items.GLASS_BOTTLES)) {
             if (event.getLevel().getBlockState(event.getHitVec().getBlockPos()).is(BlockTags.SOUL_FIRE_BASE_BLOCKS)) {
                 event.getEntity().awardStat(Stats.ITEM_USED.get(event.getEntity().getUseItem().getItem()));
-                ItemUtils.createFilledResult(event.getEntity().getUseItem(), event.getEntity(), new ItemStack(MITMItems.SOUL_BOTTLE.get()));
+                ItemUtils.createFilledResult(event.getEntity().getUseItem(), event.getEntity(),
+                        new ItemStack(MITMItems.SOUL_BOTTLE.get()));
             } else if (event.getEntity().getY() > 320 - 16) {
                 event.getEntity().awardStat(Stats.ITEM_USED.get(event.getEntity().getUseItem().getItem()));
-                ItemUtils.createFilledResult(event.getEntity().getUseItem(), event.getEntity(), new ItemStack(MITMItems.CLOUD_BOTTLE.get()));
+                ItemUtils.createFilledResult(event.getEntity().getUseItem(), event.getEntity(),
+                        new ItemStack(MITMItems.CLOUD_BOTTLE.get()));
             }
         }
     }

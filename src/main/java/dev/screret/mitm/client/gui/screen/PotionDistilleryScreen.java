@@ -1,16 +1,19 @@
 package dev.screret.mitm.client.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.common.menu.container.PotionDistilleryMenu;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.menu.container.PotionDistilleryMenu;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 
 public class PotionDistilleryScreen extends AbstractContainerScreen<PotionDistilleryMenu> {
+
     private static final ResourceLocation TEXTURE_LOCATION = MITMUtil.id("textures/gui/container/potion_distillery.png");
 
     public PotionDistilleryScreen(PotionDistilleryMenu menu, Inventory playerInventory, Component title) {
@@ -38,7 +41,8 @@ public class PotionDistilleryScreen extends AbstractContainerScreen<PotionDistil
         guiGraphics.blit(TEXTURE_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         if (this.menu.isLit()) {
             int fuelAmount = this.menu.getLitProgress();
-            guiGraphics.blit(TEXTURE_LOCATION, this.leftPos + 56 + PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, this.topPos + 44, PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, 39, fuelAmount + 1, 4);
+            guiGraphics.blit(TEXTURE_LOCATION, this.leftPos + 56 + PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount,
+                    this.topPos + 44, PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, 39, fuelAmount + 1, 4);
         }
 
         int progress = this.menu.getBurnProgress();

@@ -1,16 +1,18 @@
 package dev.screret.mitm.client.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.api.capability.mana.Mana;
+import dev.screret.mitm.config.MITMConfig;
+import dev.screret.mitm.data.MITMAttachmentTypes;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.capability.mana.Mana;
-import dev.screret.mitm.data.MITMAttachmentTypes;
-import dev.screret.mitm.config.MITMConfig;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import org.jetbrains.annotations.NotNull;
 
 public class ManaBarOverlay implements LayeredDraw.Layer {
@@ -31,10 +33,8 @@ public class ManaBarOverlay implements LayeredDraw.Layer {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
 
-
         if (minecraft.player.hasData(MITMAttachmentTypes.MANA)) {
             minecraft.getProfiler().push("manaBar");
-
 
             int left = minecraft.getWindow().getWidth() / 2 + MITMConfig.Client.manaBarX.get();
             int top = minecraft.getWindow().getHeight() - MITMConfig.Client.manaBarY.get();
@@ -51,6 +51,5 @@ public class ManaBarOverlay implements LayeredDraw.Layer {
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
     }
 }

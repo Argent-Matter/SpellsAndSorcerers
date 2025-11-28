@@ -8,6 +8,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class DistilleryResultSlot extends SlotItemHandler {
+
     private final Player player;
     private int removeCount;
 

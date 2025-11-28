@@ -1,5 +1,8 @@
 package dev.screret.mitm.common.item;
 
+import dev.screret.mitm.common.data.EyeConversionManager;
+import dev.screret.mitm.config.MITMConfig;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -13,10 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 
-import dev.screret.mitm.config.MITMConfig;
-import dev.screret.mitm.common.data.EyeConversionManager;
-
 public class CthulhuEyeItem extends Item {
+
     public CthulhuEyeItem() {
         super(new Properties());
     }
@@ -52,8 +53,7 @@ public class CthulhuEyeItem extends Item {
                     random.nextDouble(),
                     random.nextDouble(),
                     random.nextDouble(),
-                    0.5D
-            );
+                    0.5D);
             serverLevel.sendParticles(ParticleTypes.TOTEM_OF_UNDYING,
                     pos.x,
                     pos.y,
@@ -62,8 +62,7 @@ public class CthulhuEyeItem extends Item {
                     random.nextDouble(),
                     random.nextDouble(),
                     random.nextDouble(),
-                    0.5D
-            );
+                    0.5D);
             return InteractionResult.CONSUME;
         }
 

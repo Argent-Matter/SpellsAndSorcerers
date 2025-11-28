@@ -1,5 +1,10 @@
 package dev.screret.mitm.common.item;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
+import dev.screret.mitm.data.MITMEntityTypes;
+import dev.screret.mitm.mixin.accessor.ItemEntityAccessor;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.component.DataComponents;
@@ -23,12 +28,6 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
-import dev.screret.mitm.data.MITMEntityTypes;
-import dev.screret.mitm.mixin.accessor.ItemEntityAccessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -38,6 +37,9 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class OneRingItem extends Item implements ICurioItem {
@@ -46,10 +48,18 @@ public class OneRingItem extends Item implements ICurioItem {
         super(new Properties().stacksTo(1)
                 .component(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY.withTooltip(false))
                 .attributes(ItemAttributeModifiers.builder()
-                        .add(Attributes.LUCK, new AttributeModifier(MITMUtil.id("the_one_ring"), -5.0f, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
-                        .add(Attributes.MOVEMENT_SPEED, new AttributeModifier(MITMUtil.id("the_one_ring"), 1.0f, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
-                        .add(Attributes.SNEAKING_SPEED, new AttributeModifier(MITMUtil.id("the_one_ring"), 0.3f, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
-                        .add(Attributes.STEP_HEIGHT, new AttributeModifier(MITMUtil.id("the_one_ring"), 0.4f, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
+                        .add(Attributes.LUCK,
+                                new AttributeModifier(MITMUtil.id("the_one_ring"), -5.0f, AttributeModifier.Operation.ADD_VALUE),
+                                EquipmentSlotGroup.ANY)
+                        .add(Attributes.MOVEMENT_SPEED,
+                                new AttributeModifier(MITMUtil.id("the_one_ring"), 1.0f, AttributeModifier.Operation.ADD_VALUE),
+                                EquipmentSlotGroup.ANY)
+                        .add(Attributes.SNEAKING_SPEED,
+                                new AttributeModifier(MITMUtil.id("the_one_ring"), 0.3f, AttributeModifier.Operation.ADD_VALUE),
+                                EquipmentSlotGroup.ANY)
+                        .add(Attributes.STEP_HEIGHT,
+                                new AttributeModifier(MITMUtil.id("the_one_ring"), 0.4f, AttributeModifier.Operation.ADD_VALUE),
+                                EquipmentSlotGroup.ANY)
                         .build().withTooltip(false))
                 .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     }

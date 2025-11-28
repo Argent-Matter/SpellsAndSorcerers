@@ -6,6 +6,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import org.jetbrains.annotations.NotNull;
 
 public class Mana implements INBTSerializable<IntTag> {

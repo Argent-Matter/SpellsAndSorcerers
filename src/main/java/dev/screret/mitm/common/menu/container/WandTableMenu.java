@@ -1,5 +1,12 @@
 package dev.screret.mitm.common.menu.container;
 
+import dev.screret.mitm.common.menu.stackhandler.CraftOutputItemHandler;
+import dev.screret.mitm.common.menu.stackhandler.CraftResultStackHandler;
+import dev.screret.mitm.common.recipe.wand.WandRecipe;
+import dev.screret.mitm.data.MITMBlocks;
+import dev.screret.mitm.data.MITMContainers;
+import dev.screret.mitm.data.MITMRecipeTypes;
+
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -12,21 +19,18 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import dev.screret.mitm.data.MITMBlocks;
-import dev.screret.mitm.data.MITMContainers;
-import dev.screret.mitm.common.menu.stackhandler.CraftOutputItemHandler;
-import dev.screret.mitm.common.menu.stackhandler.CraftResultStackHandler;
-import dev.screret.mitm.common.recipe.wand.WandRecipe;
-import dev.screret.mitm.data.MITMRecipeTypes;
 
 import java.util.Optional;
 
 public class WandTableMenu extends AbstractContainerMenu {
+
     public static final int RESULT_SLOT = 0;
-    private static final int CRAFT_SLOT_START = 1, CRAFT_SLOT_END = 7, INV_SLOT_START = 7, INV_SLOT_END = 34, USE_ROW_SLOT_START = 34, USE_ROW_SLOT_END = 43;
+    private static final int CRAFT_SLOT_START = 1, CRAFT_SLOT_END = 7, INV_SLOT_START = 7, INV_SLOT_END = 34,
+            USE_ROW_SLOT_START = 34, USE_ROW_SLOT_END = 43;
     private static final int INPUT_X_SIZE = 3, INPUT_Y_SIZE = 2;
 
     private final CraftingContainer inputSlots = new TransientCraftingContainer(this, 3, 2) {
+
         @Override
         public void setChanged() {
             super.setChanged();
@@ -64,7 +68,6 @@ public class WandTableMenu extends AbstractContainerMenu {
         for (int l = 0; l < 9; ++l) {
             this.addSlot(new Slot(playerInventory, l, 8 + l * 18, 142));
         }
-
     }
 
     protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, Player player,
@@ -74,7 +77,6 @@ public class WandTableMenu extends AbstractContainerMenu {
         }
         CraftingInput.Positioned positionedCraftInput = inputItemHandler.asPositionedCraftInput();
         CraftingInput craftInput = positionedCraftInput.input();
-
 
         ItemStack result = ItemStack.EMPTY;
         Optional<RecipeHolder<WandRecipe>> maybeRecipe = level.getServer().getRecipeManager()
@@ -97,7 +99,6 @@ public class WandTableMenu extends AbstractContainerMenu {
             slotChangedCraftingGrid(this, level, this.player, this.inputSlots, this.resultSlot);
         });
     }
-
 
     public boolean recipeMatches(Recipe<? super CraftingInput> recipe) {
         return recipe.matches(this.inputSlots.asCraftInput(), this.player.level());
@@ -153,7 +154,6 @@ public class WandTableMenu extends AbstractContainerMenu {
         }
         return stackCopy;
     }
-
 
     @Override
     public boolean stillValid(Player player) {

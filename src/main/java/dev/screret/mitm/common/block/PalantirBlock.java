@@ -1,6 +1,8 @@
 package dev.screret.mitm.common.block;
 
-import com.mojang.serialization.MapCodec;
+import dev.screret.mitm.common.block.entity.PalantirBlockEntity;
+import dev.screret.mitm.data.MITMBlockEntities;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -12,15 +14,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import com.mojang.serialization.MapCodec;
+
 import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.common.block.entity.PalantirBlockEntity;
 
 public class PalantirBlock extends BaseEntityBlock {
+
     private static final VoxelShape BASE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 2.0D, 12.0D);
     private static final VoxelShape TOP = Block.box(5.0D, 2.0D, 5.0D, 11.0D, 8.0D, 11.0D);
     protected static final VoxelShape SHAPE = Shapes.or(BASE, TOP);
-
 
     public PalantirBlock() {
         super(Properties.ofLegacyCopy(Blocks.TINTED_GLASS).sound(SoundType.AMETHYST).lightLevel((state) -> 2).noOcclusion());
@@ -52,7 +55,10 @@ public class PalantirBlock extends BaseEntityBlock {
         return MITMBlockEntities.PALANTIR.get().create(pos, state);
     }
 
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? createTickerHelper(blockEntityType, MITMBlockEntities.PALANTIR.get(), PalantirBlockEntity::eyeAnimationTick) : null;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                                  BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ?
+                createTickerHelper(blockEntityType, MITMBlockEntities.PALANTIR.get(), PalantirBlockEntity::eyeAnimationTick) :
+                null;
     }
 }

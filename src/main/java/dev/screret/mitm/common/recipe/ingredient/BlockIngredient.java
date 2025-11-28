@@ -1,9 +1,5 @@
 package dev.screret.mitm.common.recipe.ingredient;
 
-import com.google.common.collect.Lists;
-import com.google.gson.*;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -15,10 +11,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import com.google.common.collect.Lists;
+import com.google.gson.*;
+
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import org.jetbrains.annotations.Nullable;
 
 public class BlockIngredient implements Predicate<BlockState> {
 
@@ -42,7 +43,6 @@ public class BlockIngredient implements Predicate<BlockState> {
                 return value.getBlocks().stream();
             }).distinct().toArray(BlockState[]::new);
         }
-
     }
 
     public boolean test(@Nullable BlockState block) {
@@ -63,7 +63,8 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public final void toNetwork(FriendlyByteBuf buffer) {
         this.dissolve();
-        buffer.writeCollection(Arrays.stream(this.blocks).map(BlockState::getBlock).map(BuiltInRegistries.BLOCK::getKey).toList(), FriendlyByteBuf::writeResourceLocation);
+        buffer.writeCollection(Arrays.stream(this.blocks).map(BlockState::getBlock).map(BuiltInRegistries.BLOCK::getKey).toList(),
+                FriendlyByteBuf::writeResourceLocation);
     }
 
     public JsonElement toJson() {
@@ -164,7 +165,8 @@ public class BlockIngredient implements Predicate<BlockState> {
 
     public static Block blockFromJson(JsonObject itemObject) {
         String s = GsonHelper.getAsString(itemObject, "block");
-        Block block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(s)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + s + "'"));
+        Block block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(s))
+                .orElseThrow(() -> new JsonSyntaxException("Unknown item '" + s + "'"));
         if (block == Blocks.AIR) {
             throw new JsonSyntaxException("Invalid item: " + s);
         } else {
@@ -173,6 +175,7 @@ public class BlockIngredient implements Predicate<BlockState> {
     }
 
     public static class BlockValue implements Value {
+
         private final BlockState block;
 
         public BlockValue(BlockState block) {
@@ -199,6 +202,7 @@ public class BlockIngredient implements Predicate<BlockState> {
     }
 
     public static class TagValue implements Value {
+
         private final TagKey<Block> tag;
 
         public TagValue(TagKey<Block> tag) {
@@ -226,6 +230,7 @@ public class BlockIngredient implements Predicate<BlockState> {
     }
 
     public interface Value {
+
         Collection<BlockState> getBlocks();
 
         JsonObject serialize();

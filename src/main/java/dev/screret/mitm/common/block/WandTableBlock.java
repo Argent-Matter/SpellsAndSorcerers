@@ -1,5 +1,8 @@
 package dev.screret.mitm.common.block;
 
+import dev.screret.mitm.common.menu.container.WandTableMenu;
+import dev.screret.mitm.data.MITMParticles;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,19 +28,18 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
-import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.data.MITMParticles;
-import dev.screret.mitm.common.menu.container.WandTableMenu;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WandTableBlock extends Block {
+
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.mitm.wand_table");
-
 
     public WandTableBlock() {
         super(Properties.ofLegacyCopy(Blocks.STONE).mapColor(MapColor.SAND).strength(3.0F, 36.0F).lightLevel((function) -> 7));
@@ -48,7 +50,9 @@ public class WandTableBlock extends Block {
         super.animateTick(state, level, pos, random);
 
         if (random.nextInt(16) == 0) {
-            level.addParticle(ParticleTypes.ENCHANT, pos.getX() + 0.5D, pos.getY() + 2.0D, pos.getZ() + 0.5D, pos.getX() - random.nextFloat() + 0.25D, pos.getY() - random.nextFloat() + 1.0D, pos.getZ() - random.nextFloat() + 0.25D);
+            level.addParticle(ParticleTypes.ENCHANT, pos.getX() + 0.5D, pos.getY() + 2.0D, pos.getZ() + 0.5D,
+                    pos.getX() - random.nextFloat() + 0.25D, pos.getY() - random.nextFloat() + 1.0D,
+                    pos.getZ() - random.nextFloat() + 0.25D);
         }
     }
 
@@ -81,7 +85,8 @@ public class WandTableBlock extends Block {
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider((windowId, playerInventory, player) -> new WandTableMenu(windowId, playerInventory, ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
+        return new SimpleMenuProvider((windowId, playerInventory, player) -> new WandTableMenu(windowId, playerInventory,
+                ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
     }
 
     @Override

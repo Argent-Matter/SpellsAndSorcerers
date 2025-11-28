@@ -1,17 +1,20 @@
 package dev.screret.mitm.common.data.builder.conversion;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import dev.screret.mitm.common.recipe.ingredient.BlockIngredient;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
-import dev.screret.mitm.common.recipe.ingredient.BlockIngredient;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.function.Consumer;
 
 public class EyeConversionBuilder {
+
     private final Block result;
     private BlockIngredient ingredient = BlockIngredient.EMPTY;
 
@@ -65,7 +68,6 @@ public class EyeConversionBuilder {
      * Makes sure that this recipe is valid and obtainable.
      */
     private void ensureValid(ResourceLocation id) {
-
         for (var block : ingredient.getBlocks()) {
             if (!BuiltInRegistries.BLOCK.containsValue(block.getBlock())) {
                 throw new IllegalArgumentException("Block " + block + " is not registered!");
@@ -74,6 +76,7 @@ public class EyeConversionBuilder {
     }
 
     public static class Result {
+
         private final ResourceLocation id;
         private final Block result;
         private final BlockIngredient ingredient;
@@ -108,4 +111,4 @@ public class EyeConversionBuilder {
             return this.id;
         }
     }
-}  
+}

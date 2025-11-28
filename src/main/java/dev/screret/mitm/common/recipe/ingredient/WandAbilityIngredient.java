@@ -1,27 +1,27 @@
 package dev.screret.mitm.common.recipe.ingredient;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMIngredientTypes;
+import dev.screret.mitm.data.MITMItems;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.common.item.component.WandComponent;
-import dev.screret.mitm.data.MITMDataComponents;
-import dev.screret.mitm.data.MITMIngredientTypes;
-import dev.screret.mitm.data.MITMItems;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WandAbilityIngredient implements ICustomIngredient {
 
@@ -44,7 +44,8 @@ public class WandAbilityIngredient implements ICustomIngredient {
     @Getter
     private final ItemStack stack;
 
-    public WandAbilityIngredient(WandAbilityInstance primary, @Nullable WandAbilityInstance secondary, Item item, boolean poweredUp) {
+    public WandAbilityIngredient(WandAbilityInstance primary, @Nullable WandAbilityInstance secondary, Item item,
+                                 boolean poweredUp) {
         this.ability = primary;
         this.stack = item.getDefaultInstance();
         if (item == MITMItems.WAND_CORE.get()) {
@@ -66,8 +67,9 @@ public class WandAbilityIngredient implements ICustomIngredient {
     public static WandAbilityIngredient fromStack(ItemStack stack) {
         if (stack.has(MITMDataComponents.WAND)) {
             WandComponent component = stack.get(MITMDataComponents.WAND);
-            //noinspection DataFlowIssue
-            return new WandAbilityIngredient(component.primary(), component.secondaryOrNull(), stack.getItem(), component.poweredUp());
+            // noinspection DataFlowIssue
+            return new WandAbilityIngredient(component.primary(), component.secondaryOrNull(), stack.getItem(),
+                    component.poweredUp());
         } else if (stack.has(MITMDataComponents.WAND_CORE)) {
             WandAbilityInstance component = stack.get(MITMDataComponents.WAND_CORE);
             return new WandAbilityIngredient(component, null, stack.getItem(), false);
@@ -93,7 +95,7 @@ public class WandAbilityIngredient implements ICustomIngredient {
         } else if (this.stack.has(MITMDataComponents.WAND) && input.has(MITMDataComponents.WAND)) {
             WandComponent thisWand = this.stack.get(MITMDataComponents.WAND);
             WandComponent inputWand = input.get(MITMDataComponents.WAND);
-            //noinspection DataFlowIssue
+            // noinspection DataFlowIssue
             return thisWand.poweredUp() == inputWand.poweredUp() &&
                     thisWand.primary().equals(inputWand.primary()) &&
                     thisWand.secondary().equals(inputWand.secondary());

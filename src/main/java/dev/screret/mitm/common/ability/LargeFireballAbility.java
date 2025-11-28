@@ -1,7 +1,7 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.screret.mitm.MITMUtil;
+
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
@@ -14,13 +14,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import dev.screret.mitm.MITMUtil;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class LargeFireballAbility extends ProjectileAbility<LargeFireballAbility> {
-    private static final MapCodec<LargeFireballAbility> CODEC = RecordCodecBuilder.mapCodec(instance ->
-            ProjectileAbility.projectileCodecStart(instance)
-                    .and(ExtraCodecs.POSITIVE_INT.fieldOf("explosion_power").forGetter((LargeFireballAbility val) -> val.explosionPower))
-                    .apply(instance, LargeFireballAbility::new));
+
+    private static final MapCodec<LargeFireballAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> ProjectileAbility
+            .projectileCodecStart(instance)
+            .and(ExtraCodecs.POSITIVE_INT.fieldOf("explosion_power").forGetter((LargeFireballAbility val) -> val.explosionPower))
+            .apply(instance, LargeFireballAbility::new));
     private final int explosionPower;
 
     public LargeFireballAbility() {
@@ -28,7 +30,8 @@ public class LargeFireballAbility extends ProjectileAbility<LargeFireballAbility
         this.explosionPower = 1;
     }
 
-    public LargeFireballAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particleOptions, int color, int distance, int explosionPower) {
+    public LargeFireballAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants,
+                                ParticleOptions particleOptions, int color, int distance, int explosionPower) {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particleOptions, color, distance);
         this.explosionPower = explosionPower;
     }
@@ -40,7 +43,7 @@ public class LargeFireballAbility extends ProjectileAbility<LargeFireballAbility
 
     @Override
     public Projectile spawnProjectile(Level level, LivingEntity user, ItemStack usedItem, int timeCharged) {
-        //int explosionPower = (int) (getDamagePerHit(usedItem) * timeCharged / 8);
+        // int explosionPower = (int) (getDamagePerHit(usedItem) * timeCharged / 8);
 
         int distanceSqr = distance * distance;
         BlockHitResult hitResult = MITMUtil.getHitResult(level, user, ClipContext.Fluid.NONE, distanceSqr);

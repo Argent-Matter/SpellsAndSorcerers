@@ -1,17 +1,18 @@
 package dev.screret.mitm.common.data.provider.tag;
 
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.data.MITMEntityTypes;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.EntityTypeTags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.data.MITMEntityTypes;
+import java.util.concurrent.CompletableFuture;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.concurrent.CompletableFuture;
 
 public class MITMEntityTypeTagsProvider extends EntityTypeTagsProvider {
 

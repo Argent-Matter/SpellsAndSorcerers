@@ -1,5 +1,13 @@
 package dev.screret.mitm.common.item;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.config.MITMConfig;
+import dev.screret.mitm.data.MITMAttachmentTypes;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMWandAbilities;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -15,15 +23,6 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.item.component.WandComponent;
-import dev.screret.mitm.data.MITMDataComponents;
-import dev.screret.mitm.data.MITMWandAbilities;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.data.MITMAttachmentTypes;
-import dev.screret.mitm.config.MITMConfig;
-import dev.screret.mitm.data.MITMEnchantments;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -96,7 +95,8 @@ public class WandItem extends Item {
         return reference;
     }
 
-    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, int timeCharged, WandComponent component) {
+    public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack,
+                                                      int timeCharged, WandComponent component) {
         Item currentItem = stack.getItem();
         var returnValue = InteractionResultHolder.fail(stack);
         if (currentItem instanceof WandItem) {
@@ -104,12 +104,15 @@ public class WandItem extends Item {
                 return returnValue;
 
             if (user.isCrouching() && component.secondary().isPresent()) {
-                returnValue = component.secondary().get().execute(level, user, stack, new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
+                returnValue = component.secondary().get().execute(level, user, stack,
+                        new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
                 if (user instanceof Player player) {
-                    player.getCooldowns().addCooldown(currentItem, component.secondary().get().getAbility().getCooldownDuration());
+                    player.getCooldowns().addCooldown(currentItem,
+                            component.secondary().get().getAbility().getCooldownDuration());
                 }
             } else {
-                returnValue = component.primary().execute(level, user, stack, new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
+                returnValue = component.primary().execute(level, user, stack,
+                        new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
                 if (user instanceof Player player) {
                     player.getCooldowns().addCooldown(currentItem, component.primary().getAbility().getCooldownDuration());
                 }
@@ -117,7 +120,6 @@ public class WandItem extends Item {
         }
         return returnValue;
     }
-
 
     public boolean deductManaFromUser(LivingEntity user, ItemStack stack, int timeCharged) {
         if (user instanceof Player player && player.isCreative())

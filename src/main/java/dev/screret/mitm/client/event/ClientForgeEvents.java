@@ -1,5 +1,11 @@
 package dev.screret.mitm.client.event;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.common.entity.BossWizardEntity;
+import dev.screret.mitm.data.MITMEntityTypes;
+import dev.screret.mitm.data.MITMItems;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -10,11 +16,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.data.MITMEntityTypes;
-import dev.screret.mitm.common.entity.BossWizardEntity;
-import dev.screret.mitm.data.MITMItems;
 
 @EventBusSubscriber(modid = MagicOfTheMind.MODID, value = Dist.CLIENT)
 public class ClientForgeEvents {
@@ -81,8 +82,7 @@ public class ClientForgeEvents {
                         partialTick,
                         event.getPoseStack(),
                         Minecraft.getInstance().renderBuffers().bufferSource(),
-                        renderer.getPackedLightCoords(hallucination, partialTick)
-                );
+                        renderer.getPackedLightCoords(hallucination, partialTick));
             }
 
         }
@@ -97,15 +97,10 @@ public class ClientForgeEvents {
 
     private static void playHallucinationSound(Level level) {
         switch (level.getRandom().nextInt(3)) {
-            case 0 ->
-                    hallucination.playSound(SoundEvents.WITCH_AMBIENT, 10, 1);
-            case 1 ->
-                    hallucination.playSound(SoundEvents.CREEPER_PRIMED, 10, 1);
-            case 2 ->
-                    hallucination.playSound(SoundEvents.EVOKER_AMBIENT, 10, 1);
-            case 3 ->
-                    hallucination.playSound(SoundEvents.BEACON_AMBIENT, 10, 1);
+            case 0 -> hallucination.playSound(SoundEvents.WITCH_AMBIENT, 10, 1);
+            case 1 -> hallucination.playSound(SoundEvents.CREEPER_PRIMED, 10, 1);
+            case 2 -> hallucination.playSound(SoundEvents.EVOKER_AMBIENT, 10, 1);
+            case 3 -> hallucination.playSound(SoundEvents.BEACON_AMBIENT, 10, 1);
         }
     }
-
 }

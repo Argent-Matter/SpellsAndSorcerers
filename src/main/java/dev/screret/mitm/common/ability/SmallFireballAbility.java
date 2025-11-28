@@ -1,7 +1,7 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.screret.mitm.MITMUtil;
+
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,16 +12,20 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import dev.screret.mitm.MITMUtil;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class SmallFireballAbility extends ProjectileAbility<SmallFireballAbility> {
-    private static final MapCodec<SmallFireballAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> ProjectileAbility.projectileCodecStart(instance).apply(instance, SmallFireballAbility::new));
+
+    private static final MapCodec<SmallFireballAbility> CODEC = RecordCodecBuilder
+            .mapCodec(instance -> ProjectileAbility.projectileCodecStart(instance).apply(instance, SmallFireballAbility::new));
 
     public SmallFireballAbility() {
         super(0, 10, 0, true, 0xFFffa500, 512);
     }
 
-    public SmallFireballAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants, ParticleOptions particle, int color, int distance) {
+    public SmallFireballAbility(int useDuration, int cooldownDuration, float damagePerHit, boolean applyEnchants,
+                                ParticleOptions particle, int color, int distance) {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color, distance);
     }
 
@@ -46,8 +50,7 @@ public class SmallFireballAbility extends ProjectileAbility<SmallFireballAbility
                 new Vec3(
                         level.getRandom().triangle(dirX, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf),
                         dirY,
-                        level.getRandom().triangle(dirZ, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf)
-                ));
+                        level.getRandom().triangle(dirZ, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf)));
         result.moveTo(userPos);
         return result;
     }

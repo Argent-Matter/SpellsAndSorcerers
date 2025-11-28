@@ -1,5 +1,18 @@
 package dev.screret.mitm.common.item;
 
+import dev.screret.mitm.client.renderer.armor.SoulsteelArmorRenderer;
+import dev.screret.mitm.config.MITMConfig;
+import dev.screret.mitm.data.MITMItems;
+import dev.screret.mitm.data.MITMMobEffects;
+
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
@@ -13,32 +26,23 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import dev.screret.mitm.data.MITMItems;
-import dev.screret.mitm.data.MITMMobEffects;
-import dev.screret.mitm.client.renderer.armor.SoulsteelArmorRenderer;
-import dev.screret.mitm.config.MITMConfig;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.GeoRenderProvider;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
-import software.bernie.geckolib.util.GeckoLibUtil;
-
 import java.util.function.Consumer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.jetbrains.annotations.Nullable;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class MITMArmorItem extends ArmorItem implements GeoItem {
+
     public static final MobEffectInstance SOUL_STEEL_EFFECT = new MobEffectInstance(MITMMobEffects.MANA, 200, 1);
 
     private final MobEffectInstance fullSetEffect;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public MITMArmorItem(Holder<ArmorMaterial> material, MobEffectInstance fullSetEffect, ArmorItem.Type slot, Properties builder) {
+    public MITMArmorItem(Holder<ArmorMaterial> material, MobEffectInstance fullSetEffect, ArmorItem.Type slot,
+                         Properties builder) {
         super(material, slot, builder);
         this.fullSetEffect = fullSetEffect;
     }
@@ -46,6 +50,7 @@ public class MITMArmorItem extends ArmorItem implements GeoItem {
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
+
             private GeoArmorRenderer<?> renderer;
 
             @Override
@@ -61,13 +66,15 @@ public class MITMArmorItem extends ArmorItem implements GeoItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         // only the chestplate actually applies effects, but the whole set is needed anyway so it's OK
-        if (level.isClientSide || !stack.is(MITMItems.SOULSTEEL_CHESTPLATE) || MITMConfig.Server.armorGiveEffects.getAsBoolean()) {
+        if (level.isClientSide || !stack.is(MITMItems.SOULSTEEL_CHESTPLATE) ||
+                MITMConfig.Server.armorGiveEffects.getAsBoolean()) {
             return;
         }
         if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }
-        if (slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.SLOT_OFFHAND && hasCorrectArmorOn(this.material, livingEntity)) {
+        if (slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.SLOT_OFFHAND &&
+                hasCorrectArmorOn(this.material, livingEntity)) {
             livingEntity.addEffect(new MobEffectInstance(this.fullSetEffect));
         }
     }
@@ -75,8 +82,7 @@ public class MITMArmorItem extends ArmorItem implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                DefaultAnimations.genericIdleController(this)
-        );
+                DefaultAnimations.genericIdleController(this));
     }
 
     @Override

@@ -1,5 +1,10 @@
 package dev.screret.mitm.integration.rei.wand;
 
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.data.MITMBlocks;
+
+import net.minecraft.network.chat.Component;
+
 import com.google.common.collect.Lists;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -12,15 +17,13 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.network.chat.Component;
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.data.MITMBlocks;
 
 import java.util.List;
 
 public class WandRecipeCategory implements DisplayCategory<DefaultWandDisplay> {
 
-    public static final CategoryIdentifier<DefaultWandDisplay> WANDS = CategoryIdentifier.of(MagicOfTheMind.MODID, "plugins/wands");
+    public static final CategoryIdentifier<DefaultWandDisplay> WANDS = CategoryIdentifier.of(MagicOfTheMind.MODID,
+            "plugins/wands");
 
     @Override
     public CategoryIdentifier<DefaultWandDisplay> getCategoryIdentifier() {
@@ -53,7 +56,8 @@ public class WandRecipeCategory implements DisplayCategory<DefaultWandDisplay> {
             slots.get(ingredient.getIndex()).entries(ingredient.get());
         }
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 104, startPoint.y + 19)).entries(display.getOutputEntries().get(0)).disableBackground().markOutput());
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 104, startPoint.y + 19))
+                .entries(display.getOutputEntries().get(0)).disableBackground().markOutput());
         if (display.isShapeless()) {
             widgets.add(Widgets.createShapelessIcon(bounds));
         }

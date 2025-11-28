@@ -2,6 +2,7 @@ package dev.screret.mitm.client.model.blockentity;
 
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
+
 import software.bernie.geckolib.model.DefaultedBlockGeoModel;
 
 public class SummonSignModel extends DefaultedBlockGeoModel<SummonSignBlockEntity> {

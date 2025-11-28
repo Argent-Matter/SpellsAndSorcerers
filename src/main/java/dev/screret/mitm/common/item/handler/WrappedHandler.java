@@ -3,15 +3,17 @@ package dev.screret.mitm.common.item.handler;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.NotNull;
 
 /*
  * WrappedHandler by noeppi_noeppi
  * under https://github.com/ModdingX/LibX/blob/2b2da9dae7149fb7bd44b8e5b1e8672572dc7b6f/LICENSE
  */
 public class WrappedHandler implements IItemHandlerModifiable {
+
     private final IItemHandlerModifiable handler;
     private final Predicate<Integer> extract;
     private final BiPredicate<Integer, ItemStack> insert;

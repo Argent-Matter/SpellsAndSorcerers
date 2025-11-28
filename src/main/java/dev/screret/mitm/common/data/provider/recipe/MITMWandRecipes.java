@@ -1,5 +1,15 @@
 package dev.screret.mitm.common.data.provider.recipe;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.data.builder.recipe.ShapedWandRecipeBuilder;
+import dev.screret.mitm.common.data.builder.recipe.ShapelessWandRecipeBuilder;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMItems;
+import dev.screret.mitm.data.MITMWandAbilities;
+
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -12,21 +22,13 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.item.component.WandComponent;
-import dev.screret.mitm.data.MITMDataComponents;
-import dev.screret.mitm.data.MITMWandAbilities;
-import dev.screret.mitm.api.ability.WandAbility;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.common.data.builder.recipe.ShapedWandRecipeBuilder;
-import dev.screret.mitm.common.data.builder.recipe.ShapelessWandRecipeBuilder;
-import dev.screret.mitm.data.MITMItems;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class MITMWandRecipes {
+
     protected static void buildRecipes(RecipeOutput provider) {
         MITMUtil.generateWandItems();
         addWandUpgradeRecipes(provider);
@@ -115,12 +117,14 @@ public class MITMWandRecipes {
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... items) {
-        return inventoryTrigger(Arrays.stream(items).map(ItemPredicate.Builder::build).<ItemPredicate>toArray(p_297943_ -> new ItemPredicate[p_297943_]));
+        return inventoryTrigger(Arrays.stream(items).map(ItemPredicate.Builder::build)
+                .<ItemPredicate>toArray(p_297943_ -> new ItemPredicate[p_297943_]));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... predicates) {
         return CriteriaTriggers.INVENTORY_CHANGED
-                .createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), InventoryChangeTrigger.TriggerInstance.Slots.ANY, List.of(predicates)));
+                .createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(),
+                        InventoryChangeTrigger.TriggerInstance.Slots.ANY, List.of(predicates)));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike itemLike) {

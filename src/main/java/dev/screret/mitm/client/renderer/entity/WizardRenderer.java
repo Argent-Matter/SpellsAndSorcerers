@@ -1,20 +1,23 @@
 package dev.screret.mitm.client.renderer.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.client.model.entity.WizardModel;
+import dev.screret.mitm.common.entity.WizardEntity;
+
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.client.model.entity.WizardModel;
-import dev.screret.mitm.common.entity.WizardEntity;
-import org.jetbrains.annotations.Nullable;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.joml.Vector3d;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import org.jetbrains.annotations.Nullable;
 
 public class WizardRenderer extends GeoEntityRenderer<WizardEntity> {
+
     public WizardRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WizardModel());
     }

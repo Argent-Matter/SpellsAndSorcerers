@@ -1,5 +1,9 @@
 package dev.screret.mitm.common.data.provider.recipe;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.data.MITMItems;
+import dev.screret.mitm.data.MITMTags;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -12,13 +16,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-import dev.screret.mitm.data.MITMTags;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.data.MITMItems;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MITMRecipeProvider extends RecipeProvider {
 
@@ -61,15 +63,30 @@ public class MITMRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS_TINTED))
                 .save(provider);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_BOOTS.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X X").pattern("X X").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_CHESTPLATE.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X X").pattern("XXX").pattern("XXX").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_HELMET.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XXX").pattern("X X").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_HOE.get()).define('#', MITMItems.HANDLE.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XX").pattern(" #").pattern(" #").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_LEGGINGS.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XXX").pattern("X X").pattern("X X").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_PICKAXE.get()).define('#', MITMItems.HANDLE.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XXX").pattern(" # ").pattern(" # ").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_SHOVEL.get()).define('#', MITMItems.HANDLE.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X").pattern("#").pattern("#").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_SWORD.get()).define('#', MITMItems.HANDLE.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X").pattern("X").pattern("#").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
-
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_BOOTS.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X X").pattern("X X")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_CHESTPLATE.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X X").pattern("XXX").pattern("XXX")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_HELMET.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XXX").pattern("X X")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_HOE.get()).define('#', MITMItems.HANDLE.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XX").pattern(" #").pattern(" #")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_LEGGINGS.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XXX").pattern("X X").pattern("X X")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_PICKAXE.get()).define('#', MITMItems.HANDLE.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("XXX").pattern(" # ").pattern(" # ")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_SHOVEL.get()).define('#', MITMItems.HANDLE.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X").pattern("#").pattern("#")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_SWORD.get()).define('#', MITMItems.HANDLE.get())
+                .define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X").pattern("X").pattern("#")
+                .unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
 
         nineBlockStorageRecipesWithCustomUnpacking(provider,
                 null, MITMTags.Items.SOULSTEEL_INGOTS, MITMItems.SOULSTEEL_INGOT.get(),
@@ -82,15 +99,16 @@ public class MITMRecipeProvider extends RecipeProvider {
 
         oreSmelting(Ingredient.of(MITMTags.Items.GLINT_ORES), MITMItems.GLINT.get(), 1.5F, 200);
         oreBlasting(Ingredient.of(MITMTags.Items.GLINT_ORES), MITMItems.GLINT.get(), 1.5F, 100);
-
     }
 
     protected static void nineBlockStorageRecipesWithCustomPacking(
-            RecipeOutput provider,
-            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
-            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult,
-            String packingRecipeName,  @Nullable String packingRecipeGroup
-    ) {
+                                                                   RecipeOutput provider,
+                                                                   @Nullable RecipeCategory unpackedCategory,
+                                                                   TagKey<Item> unpacked, ItemLike unpackedResult,
+                                                                   @Nullable RecipeCategory packedCategory, TagKey<Item> packed,
+                                                                   ItemLike packedResult,
+                                                                   String packingRecipeName,
+                                                                   @Nullable String packingRecipeGroup) {
         nineBlockStorageRecipes(provider,
                 unpackedCategory, unpacked, unpackedResult,
                 packedCategory, packed, packedResult,
@@ -99,11 +117,13 @@ public class MITMRecipeProvider extends RecipeProvider {
     }
 
     protected static void nineBlockStorageRecipesWithCustomUnpacking(
-            RecipeOutput provider,
-            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
-            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult,
-            String unpackingRecipeName, @Nullable String unpackingRecipeGroup
-    ) {
+                                                                     RecipeOutput provider,
+                                                                     @Nullable RecipeCategory unpackedCategory,
+                                                                     TagKey<Item> unpacked, ItemLike unpackedResult,
+                                                                     @Nullable RecipeCategory packedCategory, TagKey<Item> packed,
+                                                                     ItemLike packedResult,
+                                                                     String unpackingRecipeName,
+                                                                     @Nullable String unpackingRecipeGroup) {
         nineBlockStorageRecipes(provider, unpackedCategory, unpacked, unpackedResult,
                 packedCategory, packed, packedResult,
                 getItemId(packedResult), null,
@@ -111,22 +131,24 @@ public class MITMRecipeProvider extends RecipeProvider {
     }
 
     protected static void nineBlockStorageRecipes(
-            RecipeOutput recipeOutput,
-            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
-            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult
-    ) {
+                                                  RecipeOutput recipeOutput,
+                                                  @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked,
+                                                  ItemLike unpackedResult,
+                                                  @Nullable RecipeCategory packedCategory, TagKey<Item> packed,
+                                                  ItemLike packedResult) {
         nineBlockStorageRecipes(recipeOutput,
                 unpackedCategory, unpacked, unpackedResult, packedCategory, packed, packedResult,
                 getItemId(packedResult), null, getItemId(unpackedResult), null);
     }
 
     protected static void nineBlockStorageRecipes(
-            RecipeOutput provider,
-            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
-            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult,
-            ResourceLocation packingRecipeName, @Nullable String packingRecipeGroup,
-            ResourceLocation unpackingRecipeName, @Nullable String unpackingRecipeGroup
-    ) {
+                                                  RecipeOutput provider,
+                                                  @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked,
+                                                  ItemLike unpackedResult,
+                                                  @Nullable RecipeCategory packedCategory, TagKey<Item> packed,
+                                                  ItemLike packedResult,
+                                                  ResourceLocation packingRecipeName, @Nullable String packingRecipeGroup,
+                                                  ResourceLocation unpackingRecipeName, @Nullable String unpackingRecipeGroup) {
         if (unpackedCategory == null) unpackedCategory = RecipeCategory.MISC;
         if (packedCategory == null) packedCategory = RecipeCategory.BUILDING_BLOCKS;
 

@@ -1,12 +1,8 @@
 package dev.screret.mitm.common.item;
 
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Rarity;
-
-import dev.screret.mitm.data.MITMBlocks;
 import dev.screret.mitm.client.renderer.item.PalantirItemRenderer;
-import lombok.Getter;
+import dev.screret.mitm.data.MITMBlocks;
+
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -14,9 +10,16 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Rarity;
+
+import lombok.Getter;
+
 import java.util.function.Consumer;
 
 public class PalantirItem extends BlockItem implements GeoItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public PalantirItem() {
@@ -35,8 +38,7 @@ public class PalantirItem extends BlockItem implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                DefaultAnimations.genericIdleController(this)
-        );
+                DefaultAnimations.genericIdleController(this));
     }
 
     @Override

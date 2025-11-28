@@ -1,5 +1,7 @@
 package dev.screret.mitm.common.data.provider.lang;
 
+import dev.screret.mitm.data.MITMItems;
+
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -9,8 +11,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import com.google.gson.JsonObject;
-import dev.screret.mitm.data.MITMItems;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MITMLangProvider extends LanguageProvider {
 
@@ -118,11 +120,11 @@ public class MITMLangProvider extends LanguageProvider {
      *                 .toArray(String[]::new));</code>
      * </pre>
      *
-     * @param key      Base key of the key-value-pairs. The real key for each
-     *                 translation will be appended by ".0" for
-     *                 the first, ".1" for the second, etc. This ensures that the
-     *                 keys are unique.
-     * @param values   All translation values.
+     * @param key    Base key of the key-value-pairs. The real key for each
+     *               translation will be appended by ".0" for
+     *               the first, ".1" for the second, etc. This ensures that the
+     *               keys are unique.
+     * @param values All translation values.
      */
     protected void addMultiline(String key, String... values) {
         for (var i = 0; i < values.length; i++) {

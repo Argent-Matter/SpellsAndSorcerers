@@ -1,21 +1,24 @@
 package dev.screret.mitm.common.data.provider.tag;
 
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.data.MITMBlocks;
+import dev.screret.mitm.data.MITMTags;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.data.MITMTags;
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.data.MITMBlocks;
 
 import java.util.concurrent.CompletableFuture;
 
+import org.jetbrains.annotations.Nullable;
+
 public class MITMBlockTagsProvider extends BlockTagsProvider {
 
-    public MITMBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+    public MITMBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
+                                 @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, MagicOfTheMind.MODID, existingFileHelper);
     }
 

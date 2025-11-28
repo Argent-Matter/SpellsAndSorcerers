@@ -5,6 +5,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class MITMConfig {
 
     public static class Client {
+
         public static final ModConfigSpec clientSpec;
 
         public static ModConfigSpec.IntValue manaBarX;
@@ -34,6 +35,7 @@ public class MITMConfig {
     }
 
     public static class Server {
+
         public static final ModConfigSpec serverSpec;
         public static ModConfigSpec.BooleanValue useMana;
         public static ModConfigSpec.BooleanValue armorGiveEffects;

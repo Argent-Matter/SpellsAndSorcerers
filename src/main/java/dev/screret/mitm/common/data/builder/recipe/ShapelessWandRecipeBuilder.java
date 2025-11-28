@@ -1,5 +1,8 @@
 package dev.screret.mitm.common.data.builder.recipe;
 
+import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
+import dev.screret.mitm.common.recipe.wand.ShapelessWandRecipe;
+
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.NonNullList;
@@ -13,14 +16,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
-import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
-import dev.screret.mitm.common.recipe.wand.ShapelessWandRecipe;
-
-import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ShapelessWandRecipeBuilder implements RecipeBuilder {
+
     private final WandAbilityIngredient result;
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private final Advancement.Builder advancement = Advancement.Builder.advancement();
@@ -103,9 +105,11 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
     @Override
     public void save(RecipeOutput recipeOutput, ResourceLocation id) {
         this.ensureValid(id);
-        var advancement = recipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(AdvancementRequirements.Strategy.OR);
+        var advancement = recipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                .rewards(AdvancementRewards.Builder.recipe(id)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        recipeOutput.accept(id, new ShapelessWandRecipe(this.group, this.ingredients, this.result), advancement.build(id.withPrefix("recipes/")));
+        recipeOutput.accept(id, new ShapelessWandRecipe(this.group, this.ingredients, this.result),
+                advancement.build(id.withPrefix("recipes/")));
     }
 
     /**

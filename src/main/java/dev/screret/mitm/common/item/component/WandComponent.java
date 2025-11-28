@@ -1,19 +1,22 @@
 package dev.screret.mitm.common.item.component;
 
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
 import lombok.With;
 import lombok.experimental.Tolerate;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record WandComponent(@With WandAbilityInstance primary, @With Optional<WandAbilityInstance> secondary, @With boolean poweredUp) {
+import org.jetbrains.annotations.Nullable;
+
+public record WandComponent(@With WandAbilityInstance primary, @With Optional<WandAbilityInstance> secondary,
+                            @With boolean poweredUp) {
 
     // spotless:off
     public static final Codec<WandComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(

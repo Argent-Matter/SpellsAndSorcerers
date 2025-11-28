@@ -3,6 +3,7 @@ package dev.screret.mitm.common.menu.stackhandler;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.items.ItemStackHandler;
+
 import org.jetbrains.annotations.Nullable;
 
 public class CraftResultStackHandler extends ItemStackHandler implements RecipeCraftingHolder {

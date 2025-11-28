@@ -1,5 +1,16 @@
 package dev.screret.mitm.common.entity;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.config.MITMConfig;
+
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -33,29 +44,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.config.MITMConfig;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.jetbrains.annotations.Nullable;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WizardEntity extends SpellcasterIllager implements RangedAttackMob, GeoEntity {
-    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(WizardEntity.class, EntityDataSerializers.BOOLEAN);
+
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(WizardEntity.class,
+            EntityDataSerializers.BOOLEAN);
     private final float attackRadius = 32, attackRadiusSqr = attackRadius * attackRadius;
     private final ItemStackHandler inventory = new ItemStackHandler(1);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
 
     public WizardEntity(EntityType<WizardEntity> type, Level level) {
         super(type, level);
@@ -70,7 +74,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.5D).add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.ARMOR, 3.0D);
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.5D).add(Attributes.FOLLOW_RANGE, 16.0D)
+                .add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.ARMOR, 3.0D);
     }
 
     @Override
@@ -91,7 +96,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class).setAlertOthers());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true).setUnseenMemoryTicks(300));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(3,
+                new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false).setUnseenMemoryTicks(300));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
@@ -200,10 +206,11 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                new AnimationController<>(this, 10, state -> state.setAndContinue(this.isAttacking() ? DefaultAnimations.ATTACK_CAST : DefaultAnimations.IDLE)),
+                new AnimationController<>(this, 10,
+                        state -> state
+                                .setAndContinue(this.isAttacking() ? DefaultAnimations.ATTACK_CAST : DefaultAnimations.IDLE)),
                 DefaultAnimations.genericWalkController(this),
-                DefaultAnimations.genericIdleController(this)
-        );
+                DefaultAnimations.genericIdleController(this));
     }
 
     @Override
@@ -214,7 +221,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
         if (MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).isPresent()) {
-            MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
+            MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(),
+                    new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
         }
     }
 
@@ -238,7 +246,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         @Override
         public void start() {
             super.start();
-            WizardEntity.this.lookAt(WizardEntity.this.getTarget(), WizardEntity.this.getMaxHeadYRot(), WizardEntity.this.getMaxHeadXRot());
+            WizardEntity.this.lookAt(WizardEntity.this.getTarget(), WizardEntity.this.getMaxHeadYRot(),
+                    WizardEntity.this.getMaxHeadXRot());
             WizardEntity.this.setAttacking(true);
         }
 

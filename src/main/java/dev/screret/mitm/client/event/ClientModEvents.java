@@ -1,5 +1,22 @@
 package dev.screret.mitm.client.event;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.api.registry.MITMRegistries;
+import dev.screret.mitm.client.gui.overlay.ManaBarOverlay;
+import dev.screret.mitm.client.gui.screen.PotionDistilleryScreen;
+import dev.screret.mitm.client.gui.screen.WandTableScreen;
+import dev.screret.mitm.client.model.item.WandItemClientExtensions;
+import dev.screret.mitm.client.model.item.WandModel;
+import dev.screret.mitm.client.particle.EyeParticle;
+import dev.screret.mitm.client.renderer.blockentity.PalantirBERenderer;
+import dev.screret.mitm.client.renderer.blockentity.SummonSignBERenderer;
+import dev.screret.mitm.client.renderer.entity.BossWizardRenderer;
+import dev.screret.mitm.client.renderer.entity.WizardRenderer;
+import dev.screret.mitm.common.ability.SubAbility;
+import dev.screret.mitm.common.block.SummonSignBlock;
+import dev.screret.mitm.data.*;
+
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -11,23 +28,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.client.model.item.WandItemClientExtensions;
-import dev.screret.mitm.common.ability.SubAbility;
-import dev.screret.mitm.api.registry.MITMRegistries;
-import dev.screret.mitm.data.*;
-import dev.screret.mitm.common.block.SummonSignBlock;
-import dev.screret.mitm.client.gui.overlay.ManaBarOverlay;
-import dev.screret.mitm.client.gui.screen.PotionDistilleryScreen;
-import dev.screret.mitm.client.gui.screen.WandTableScreen;
-import dev.screret.mitm.client.model.item.WandModel;
-import dev.screret.mitm.client.particle.EyeParticle;
-import dev.screret.mitm.client.renderer.blockentity.PalantirBERenderer;
-import dev.screret.mitm.client.renderer.blockentity.SummonSignBERenderer;
-import dev.screret.mitm.client.renderer.entity.BossWizardRenderer;
-import dev.screret.mitm.client.renderer.entity.WizardRenderer;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = MagicOfTheMind.MODID, value = Dist.CLIENT)

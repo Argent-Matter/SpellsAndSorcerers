@@ -1,6 +1,8 @@
 package dev.screret.mitm.common.block;
 
-import com.mojang.serialization.MapCodec;
+import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
+import dev.screret.mitm.data.MITMBlockEntities;
+import dev.screret.mitm.data.MITMParticles;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -24,23 +26,25 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
-import dev.screret.mitm.data.MITMParticles;
+
+import com.mojang.serialization.MapCodec;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SummonSignBlock extends BaseEntityBlock {
+
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
     public SummonSignBlock() {
-        super(Properties.ofLegacyCopy(Blocks.END_PORTAL).lightLevel((state) -> state.getValue(TRIGGERED) ? 9 : 2).strength(-1.0F, 3600F).noOcclusion());
+        super(Properties.ofLegacyCopy(Blocks.END_PORTAL).lightLevel((state) -> state.getValue(TRIGGERED) ? 9 : 2)
+                .strength(-1.0F, 3600F).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(COLOR, DyeColor.RED).setValue(TRIGGERED, false));
     }
 
@@ -75,8 +79,10 @@ public class SummonSignBlock extends BaseEntityBlock {
         return MITMBlockEntities.SUMMON_SIGN.get().create(pos, state);
     }
 
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, MITMBlockEntities.SUMMON_SIGN.get(), SummonSignBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                                  BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ? null :
+                createTickerHelper(blockEntityType, MITMBlockEntities.SUMMON_SIGN.get(), SummonSignBlockEntity::serverTick);
     }
 
     @Override
@@ -87,7 +93,8 @@ public class SummonSignBlock extends BaseEntityBlock {
             Vec3 position = Vec3.atLowerCornerWithOffset(pos, 0.5, 3.0, 0.5);
             for (int i = 0; i < 10; ++i) {
                 level.addParticle(ParticleTypes.ENCHANT,
-                        position.x() + random.nextDouble(), position.y() + 2.0 + random.nextDouble(), position.z() + random.nextDouble(),
+                        position.x() + random.nextDouble(), position.y() + 2.0 + random.nextDouble(),
+                        position.z() + random.nextDouble(),
                         0.0, -3.0 - random.nextDouble(), 0.0);
             }
             if (random.nextInt(4) == 0) {

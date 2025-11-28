@@ -1,6 +1,12 @@
 package dev.screret.mitm;
 
-import com.google.common.collect.Maps;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.api.registry.MITMRegistries;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMItems;
+import dev.screret.mitm.data.MITMWandAbilities;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
@@ -18,18 +24,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import dev.screret.mitm.common.item.component.WandComponent;
-import dev.screret.mitm.data.MITMDataComponents;
-import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.data.MITMWandAbilities;
-import dev.screret.mitm.api.ability.WandAbility;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.api.registry.MITMRegistries;
-import dev.screret.mitm.data.MITMItems;
+import com.google.common.collect.Maps;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
 
 public class MITMUtil {
 
@@ -41,13 +42,18 @@ public class MITMUtil {
             return;
         }
 
-        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_RAY.get(), new WandAbilityInstance(MITMWandAbilities.DAMAGE.get())), null);
-        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_HOLD_DOWN.get(), new WandAbilityInstance(MITMWandAbilities.HEAL.get())), new WandAbilityInstance(MITMWandAbilities.HEAL_SELF.get()));
-        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_ANGRY_RAY.get(), new WandAbilityInstance(MITMWandAbilities.EXPLODE.get())), null);
+        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_RAY.get(),
+                new WandAbilityInstance(MITMWandAbilities.DAMAGE.get())), null);
+        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_HOLD_DOWN.get(),
+                new WandAbilityInstance(MITMWandAbilities.HEAL.get())),
+                new WandAbilityInstance(MITMWandAbilities.HEAL_SELF.get()));
+        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_ANGRY_RAY.get(),
+                new WandAbilityInstance(MITMWandAbilities.EXPLODE.get())), null);
 
         addWand(MITMWandAbilities.SMALL_FIREBALL.get(), null);
         addWand(MITMWandAbilities.LARGE_FIREBALL.get(), null);
-        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_LIGHTNING.get(), new WandAbilityInstance(MITMWandAbilities.LIGHTNING.get())), null);
+        addWand(new WandAbilityInstance(MITMWandAbilities.SHOOT_LIGHTNING.get(),
+                new WandAbilityInstance(MITMWandAbilities.LIGHTNING.get())), null);
 
         MITMRegistries.WAND_ABILITIES.holders().forEach(ability -> {
             addWandCore(ability.value());
@@ -101,7 +107,8 @@ public class MITMUtil {
         return ResourceLocation.fromNamespaceAndPath(MagicOfTheMind.MODID, path);
     }
 
-    public static BlockHitResult getHitResult(Level level, LivingEntity entity, ClipContext.Fluid fluidInteractionMode, double distance) {
+    public static BlockHitResult getHitResult(Level level, LivingEntity entity, ClipContext.Fluid fluidInteractionMode,
+                                              double distance) {
         Vec3 eyePos = entity.getEyePosition(0);
         Vec3 viewVector = entity.getViewVector(0);
         Vec3 result = eyePos.add(viewVector.x * distance, viewVector.y * distance, viewVector.z * distance);
@@ -112,10 +119,12 @@ public class MITMUtil {
         Vec3 eyePos = entity.getEyePosition(0);
         Vec3 viewVector = entity.getViewVector(0);
         Vec3 result = eyePos.add(viewVector.x * distance, viewVector.y * distance, viewVector.z * distance);
-        return ProjectileUtil.getEntityHitResult(entity, entity.getEyePosition(), result, AABB.ofSize(eyePos, distance, distance, distance), filter, distance);
+        return ProjectileUtil.getEntityHitResult(entity, entity.getEyePosition(), result,
+                AABB.ofSize(eyePos, distance, distance, distance), filter, distance);
     }
 
-    public static void spawnParticlesInLine(Level level, Vec3 start, Vec3 end, ParticleOptions particle, int pointsPerLine, Vec3 randomDeviation, boolean alwaysRender) {
+    public static void spawnParticlesInLine(Level level, Vec3 start, Vec3 end, ParticleOptions particle, int pointsPerLine,
+                                            Vec3 randomDeviation, boolean alwaysRender) {
         double d = start.distanceTo(end) / pointsPerLine;
         for (int i = 0; i < pointsPerLine; i++) {
             Vec3 pos = new Vec3(start.x, start.y, start.z);
@@ -124,10 +133,12 @@ public class MITMUtil {
 
             pos = pos.add(v);
             if (level.isClientSide) {
-                level.addParticle(particle, alwaysRender, pos.x, pos.y, pos.z, randomDeviation.x, randomDeviation.y, randomDeviation.z);
+                level.addParticle(particle, alwaysRender, pos.x, pos.y, pos.z, randomDeviation.x, randomDeviation.y,
+                        randomDeviation.z);
                 continue;
             }
-            ((ServerLevel) level).sendParticles(particle, pos.x, pos.y, pos.z, 1, randomDeviation.x, randomDeviation.y, randomDeviation.z, 0);
+            ((ServerLevel) level).sendParticles(particle, pos.x, pos.y, pos.z, 1, randomDeviation.x, randomDeviation.y,
+                    randomDeviation.z, 0);
         }
     }
 }

@@ -1,5 +1,19 @@
 package dev.screret.mitm.common.block.entity;
 
+import dev.screret.mitm.common.block.SummonSignBlock;
+import dev.screret.mitm.common.entity.BossWizardEntity;
+import dev.screret.mitm.data.MITMBlockEntities;
+import dev.screret.mitm.data.MITMEntityTypes;
+import dev.screret.mitm.data.MITMTags;
+
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -18,18 +32,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import dev.screret.mitm.data.MITMTags;
-import dev.screret.mitm.common.block.SummonSignBlock;
-import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.data.MITMEntityTypes;
-import dev.screret.mitm.common.entity.BossWizardEntity;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,7 +58,10 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
 
     public static Set<ItemEntity> getItemsAt(Level level, SummonSignBlockEntity blockEntity) {
         return INSIDE.toAabbs().stream()
-                .flatMap((bounds) -> level.getEntitiesOfClass(ItemEntity.class, bounds.move(blockEntity.getBlockPos().getX(), blockEntity.getBlockPos().getY(), blockEntity.getBlockPos().getZ()), EntitySelector.ENTITY_STILL_ALIVE).stream())
+                .flatMap((bounds) -> level.getEntitiesOfClass(ItemEntity.class,
+                        bounds.move(blockEntity.getBlockPos().getX(), blockEntity.getBlockPos().getY(),
+                                blockEntity.getBlockPos().getZ()),
+                        EntitySelector.ENTITY_STILL_ALIVE).stream())
                 .collect(Collectors.toSet());
     }
 
@@ -76,8 +81,8 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-            new AnimationController<>(this, 10, state -> state.setAndContinue(this.ticksToSpawn > 0 ? SUMMON : DefaultAnimations.IDLE))
-        );
+                new AnimationController<>(this, 10,
+                        state -> state.setAndContinue(this.ticksToSpawn > 0 ? SUMMON : DefaultAnimations.IDLE)));
     }
 
     @Override
@@ -86,6 +91,7 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
     }
 
     private static class RequiredCounter {
+
         int count = 0;
     }
 
@@ -125,7 +131,8 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
                 boss.setSpawningPosition(pos);
                 boss.moveTo(pos.getX() + 0.5f, pos.getY() + 1.55D, pos.getZ() + 0.5f, 0.0F, 0.0F);
                 boss.makeInvulnerable();
-                for (ServerPlayer serverplayer : level.getEntitiesOfClass(ServerPlayer.class, boss.getBoundingBox().inflate(50.0D))) {
+                for (ServerPlayer serverplayer : level.getEntitiesOfClass(ServerPlayer.class,
+                        boss.getBoundingBox().inflate(50.0D))) {
                     CriteriaTriggers.SUMMONED_ENTITY.trigger(serverplayer, boss);
                 }
                 level.addFreshEntity(boss);
@@ -133,8 +140,7 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
                 blockEntity.setChanged();
             }
 
-
-            //pLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
+            // pLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
         }
     }
 

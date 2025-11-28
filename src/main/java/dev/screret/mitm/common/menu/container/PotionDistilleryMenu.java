@@ -1,5 +1,11 @@
 package dev.screret.mitm.common.menu.container;
 
+import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.common.menu.slot.DistilleryFuelSlot;
+import dev.screret.mitm.common.menu.slot.DistilleryResultSlot;
+import dev.screret.mitm.data.MITMContainers;
+import dev.screret.mitm.data.MITMRecipeTypes;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,16 +16,13 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
-import dev.screret.mitm.data.MITMRecipeTypes;
 import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
-import dev.screret.mitm.data.MITMContainers;
-import dev.screret.mitm.common.menu.slot.DistilleryFuelSlot;
-import dev.screret.mitm.common.menu.slot.DistilleryResultSlot;
 
 public class PotionDistilleryMenu extends AbstractContainerMenu {
+
     private static final int RESULT_SLOT_START = 2, RESULT_SLOT_END = 4;
-    private static final int INPUT_SLOT = 1, FUEL_SLOT = 0, INV_SLOT_START = 5, INV_SLOT_END = 32, USE_ROW_SLOT_START = 32, USE_ROW_SLOT_END = 41;
+    private static final int INPUT_SLOT = 1, FUEL_SLOT = 0, INV_SLOT_START = 5, INV_SLOT_END = 32, USE_ROW_SLOT_START = 32,
+            USE_ROW_SLOT_END = 41;
     public static final int PROGRESS_BAR_Y_SIZE = 24, FUEL_PROGRESS_BAR_X_SIZE = 18;
 
     @Nullable
@@ -38,7 +41,6 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
         if (this.blockEntity != null) {
             checkContainerSize(this.blockEntity.getInventory(), 5);
             checkContainerDataCount(blockEntity.getDataAccess(), 4);
-
 
             this.data = blockEntity.getDataAccess();
             this.level = playerInventory.player.level();
@@ -96,9 +98,10 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(item, USE_ROW_SLOT_START, USE_ROW_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (startSlot >= INV_SLOT_END && startSlot < USE_ROW_SLOT_END && !this.moveItemStackTo(item, 3, 30, false)) {
-                    return ItemStack.EMPTY;
-                }
+                } else
+                    if (startSlot >= INV_SLOT_END && startSlot < USE_ROW_SLOT_END && !this.moveItemStackTo(item, 3, 30, false)) {
+                        return ItemStack.EMPTY;
+                    }
             } else if (!this.moveItemStackTo(item, RESULT_SLOT_END, USE_ROW_SLOT_END, false)) {
                 return ItemStack.EMPTY;
             }
@@ -121,7 +124,8 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
 
     protected boolean canSmelt(ItemStack stack) {
         return this.level.getRecipeManager()
-                .getRecipeFor(MITMRecipeTypes.POTION_DISTILLING_RECIPE.get(), new SingleRecipeInput(stack), this.level).isPresent();
+                .getRecipeFor(MITMRecipeTypes.POTION_DISTILLING_RECIPE.get(), new SingleRecipeInput(stack), this.level)
+                .isPresent();
     }
 
     public boolean isLit() {
@@ -154,7 +158,8 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
 
     protected static void checkContainerSize(IItemHandler itemHandler, int minSize) {
         if (itemHandler.getSlots() < minSize) {
-            throw new IllegalArgumentException("Container size " + itemHandler.getSlots() + " is smaller than expected: " + minSize);
+            throw new IllegalArgumentException(
+                    "Container size " + itemHandler.getSlots() + " is smaller than expected: " + minSize);
         }
     }
 }

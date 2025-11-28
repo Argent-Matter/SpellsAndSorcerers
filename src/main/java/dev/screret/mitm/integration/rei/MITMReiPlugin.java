@@ -1,7 +1,16 @@
 package dev.screret.mitm.integration.rei;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.common.recipe.wand.WandRecipe;
 import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMItems;
 import dev.screret.mitm.data.MITMRecipeTypes;
+import dev.screret.mitm.integration.rei.wand.DefaultWandDisplay;
+import dev.screret.mitm.integration.rei.wand.WandRecipeCategory;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
@@ -11,19 +20,12 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.forge.REIPluginClient;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.integration.rei.wand.DefaultWandDisplay;
-import dev.screret.mitm.integration.rei.wand.WandRecipeCategory;
-import dev.screret.mitm.data.MITMItems;
-import dev.screret.mitm.common.recipe.wand.WandRecipe;
-
 import java.util.stream.Collectors;
 
 @SuppressWarnings("UnstableApiUsage")
 @REIPluginClient
 public class MITMReiPlugin implements REIClientPlugin {
+
     @Override
     public String getPluginProviderName() {
         return "mitm_rei_plugin";

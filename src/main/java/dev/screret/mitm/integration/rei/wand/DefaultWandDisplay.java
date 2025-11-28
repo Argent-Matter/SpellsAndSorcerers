@@ -1,11 +1,12 @@
 package dev.screret.mitm.integration.rei.wand;
 
+import dev.screret.mitm.common.recipe.wand.WandRecipe;
+
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
-import net.minecraft.world.item.crafting.RecipeHolder;
-
-import dev.screret.mitm.common.recipe.wand.WandRecipe;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -16,8 +17,7 @@ public class DefaultWandDisplay extends DefaultCraftingDisplay<WandRecipe> {
         super(
                 EntryIngredients.ofIngredients(recipe.value().getIngredients()),
                 Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess()))),
-                Optional.of(recipe)
-        );
+                Optional.of(recipe));
     }
 
     @Override

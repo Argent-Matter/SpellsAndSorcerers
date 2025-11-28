@@ -1,5 +1,19 @@
 package dev.screret.mitm.common.entity;
 
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
+import dev.screret.mitm.common.entity.goal.ShootEnemyGoal;
+import dev.screret.mitm.config.MITMConfig;
+import dev.screret.mitm.data.MITMWandAbilities;
+
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -39,41 +53,33 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.data.MITMWandAbilities;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
-import dev.screret.mitm.config.MITMConfig;
-import dev.screret.mitm.common.entity.goal.ShootEnemyGoal;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.jetbrains.annotations.Nullable;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEntity {
 
-    public static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (mob) -> (!mob.getType().is(EntityTypeTags.ILLAGER_FRIENDS) && mob.attackable());
+    public static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (mob) -> (!mob.getType()
+            .is(EntityTypeTags.ILLAGER_FRIENDS) && mob.attackable());
 
-    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(BossWizardEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> INVULNERABLE_TICKS = SynchedEntityData.defineId(BossWizardEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(BossWizardEntity.class,
+            EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> INVULNERABLE_TICKS = SynchedEntityData.defineId(BossWizardEntity.class,
+            EntityDataSerializers.INT);
     private static final int MAX_INVULNERABLE_TICKS = 75;
     public static final WandAbilityInstance DUMMY_SPELL = new WandAbilityInstance(MITMWandAbilities.DUMMY.get());
-
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected int spellCastingTickCount;
     private WandAbilityInstance currentSpell = DUMMY_SPELL;
-    private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.PROGRESS);
+    private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN,
+            BossEvent.BossBarOverlay.PROGRESS);
     private BlockPos spawnPos;
 
     public BossWizardEntity(EntityType<BossWizardEntity> type, Level level) {
@@ -138,7 +144,8 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
+        this.targetSelector.addGoal(2,
+                new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
     }
 
     @Override
@@ -156,8 +163,9 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
             int ticks = this.getInvulnerableTicks() - 1;
             this.bossEvent.setProgress(1.0F - (float) ticks / MAX_INVULNERABLE_TICKS);
             if (ticks <= 0) {
-                //Explosion.BlockInteraction explosion = ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-                //this.level().explode(this, this.getX(), this.getEyeY(), this.getZ(), 7.0F, false, explosion);
+                // Explosion.BlockInteraction explosion = ForgeEventFactory.getMobGriefingEvent(this.level, this) ?
+                // Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+                // this.level().explode(this, this.getX(), this.getEyeY(), this.getZ(), 7.0F, false, explosion);
                 this.level().setBlockAndUpdate(this.spawnPos, Blocks.AIR.defaultBlockState());
                 this.setInvulnerable(false);
                 if (!this.isSilent()) {
@@ -303,11 +311,14 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                new AnimationController<>(this, 10, state -> state.setAndContinue(this.getInvulnerableTicks() > 0 ? DefaultAnimations.SPAWN : DefaultAnimations.IDLE)),
-                new AnimationController<>(this, 10, state -> state.setAndContinue(this.isAttacking() ? DefaultAnimations.ATTACK_CAST : DefaultAnimations.IDLE)),
+                new AnimationController<>(this, 10,
+                        state -> state.setAndContinue(
+                                this.getInvulnerableTicks() > 0 ? DefaultAnimations.SPAWN : DefaultAnimations.IDLE)),
+                new AnimationController<>(this, 10,
+                        state -> state
+                                .setAndContinue(this.isAttacking() ? DefaultAnimations.ATTACK_CAST : DefaultAnimations.IDLE)),
                 DefaultAnimations.genericWalkController(this),
-                DefaultAnimations.genericIdleController(this)
-        );
+                DefaultAnimations.genericIdleController(this));
     }
 
     @Override
@@ -317,7 +328,8 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
-        currentSpell.execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
+        currentSpell.execute(this.level(), this, this.getMainHandItem(),
+                new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
     }
 
     @Override
@@ -336,7 +348,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
         return false;
     }
-
 
     private ItemStack createBossWand() {
         HolderLookup.RegistryLookup<Enchantment> enchantRegistry = this.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
@@ -359,6 +370,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     class WizardDoNothingGoal extends Goal {
+
         public WizardDoNothingGoal() {
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP, Flag.LOOK));
         }

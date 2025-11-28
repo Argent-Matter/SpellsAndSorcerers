@@ -1,16 +1,19 @@
 package dev.screret.mitm.client.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.common.menu.container.WandTableMenu;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.menu.container.WandTableMenu;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 
 public class WandTableScreen extends AbstractContainerScreen<WandTableMenu> {
+
     private static final ResourceLocation WAND_TABLE_LOCATION = MITMUtil.id("textures/gui/container/wand_table.png");
 
     public WandTableScreen(WandTableMenu menu, Inventory playerInventory, Component title) {

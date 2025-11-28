@@ -1,10 +1,12 @@
 package dev.screret.mitm.common.block.entity;
 
-import com.google.common.collect.Lists;
+import dev.screret.mitm.common.block.PotionDistilleryBlock;
+import dev.screret.mitm.common.item.handler.WrappedHandler;
+import dev.screret.mitm.common.menu.container.PotionDistilleryMenu;
+import dev.screret.mitm.common.recipe.PotionDistillingRecipe;
 import dev.screret.mitm.data.MITMBlockEntities;
+import dev.screret.mitm.data.MITMBlocks;
 import dev.screret.mitm.data.MITMRecipeTypes;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -32,18 +34,18 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import dev.screret.mitm.data.MITMBlocks;
-import dev.screret.mitm.common.block.PotionDistilleryBlock;
-import dev.screret.mitm.common.menu.container.PotionDistilleryMenu;
-import dev.screret.mitm.common.item.handler.WrappedHandler;
-import dev.screret.mitm.common.recipe.PotionDistillingRecipe;
-import lombok.Getter;
 
-import org.jetbrains.annotations.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -62,6 +64,7 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
 
     @Getter
     protected final ContainerData dataAccess = new ContainerData() {
+
         public int get(int id) {
             return switch (id) {
                 case 0 -> PotionDistilleryBlockEntity.this.litTime;
@@ -86,7 +89,6 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
                 case 3:
                     PotionDistilleryBlockEntity.this.cookingTotalTime = value;
             }
-
         }
 
         public int getCount() {
@@ -200,7 +202,6 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
         if (flag1) {
             setChanged(level, pos, state);
         }
-
     }
 
     private boolean canBurn(@Nullable PotionDistillingRecipe recipe, IItemHandler stacks, int stackSize) {
@@ -214,11 +215,16 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
                     return true;
                 } else if (result.getItem() != itemstack.getItem()) {
                     return false;
-                } else if (result.getCount() + itemstack.getCount() <= stackSize && result.getCount() + itemstack.getCount() <= result.getMaxStackSize()) { // Forge fix: make furnace respect stack sizes in furnace recipes
-                    return true;
-                } else {
-                    return result.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
-                }
+                } else if (result.getCount() + itemstack.getCount() <= stackSize &&
+                        result.getCount() + itemstack.getCount() <= result.getMaxStackSize()) { // Forge fix: make furnace respect
+                                                                                                // stack sizes in furnace recipes
+                            return true;
+                        } else {
+                            return result.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Forge fix: make
+                                                                                                            // furnace respect
+                                                                                                            // stack sizes in
+                                                                                                            // furnace recipes
+                        }
             }
         } else {
             return false;
@@ -244,7 +250,8 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
     }
 
     private static int getTotalCookTime(Level level, PotionDistilleryBlockEntity blockEntity) {
-        return level.getRecipeManager().getRecipeFor(MITMRecipeTypes.POTION_DISTILLING_RECIPE.get(), blockEntity.getInventoryWrapper(), level)
+        return level.getRecipeManager()
+                .getRecipeFor(MITMRecipeTypes.POTION_DISTILLING_RECIPE.get(), blockEntity.getInventoryWrapper(), level)
                 .map(RecipeHolder::value)
                 .map(PotionDistillingRecipe::getProcessingTime)
                 .orElse(DEFAULT_PROCESS_TIME);
@@ -297,12 +304,14 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
     }
 
     private final Map<Direction, WrappedHandler> directionWrappedHandlerMap = Map.of(
-                    Direction.DOWN, new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false),
-                    Direction.NORTH, new WrappedHandler(items, (index) -> index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack)),
-                    Direction.SOUTH, new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false),
-                    Direction.EAST, new WrappedHandler(items, (i) -> i == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack)),
-                    Direction.WEST, new WrappedHandler(items, (index) -> index == SLOT_FUEL || index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_FUEL, stack) || items.isItemValid(SLOT_INPUT, stack))
-            );
+            Direction.DOWN, new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false),
+            Direction.NORTH,
+            new WrappedHandler(items, (index) -> index == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack)),
+            Direction.SOUTH, new WrappedHandler(items, (i) -> i >= SLOT_EXTRACT_MIN, (i, s) -> false),
+            Direction.EAST,
+            new WrappedHandler(items, (i) -> i == SLOT_INPUT, (index, stack) -> items.isItemValid(SLOT_INPUT, stack)),
+            Direction.WEST, new WrappedHandler(items, (index) -> index == SLOT_FUEL || index == SLOT_INPUT,
+                    (index, stack) -> items.isItemValid(SLOT_FUEL, stack) || items.isItemValid(SLOT_INPUT, stack)));
 
     public IItemHandler getItemHandler(Direction side) {
         if (directionWrappedHandlerMap.containsKey(side)) {
@@ -313,14 +322,10 @@ public class PotionDistilleryBlockEntity extends BlockEntity implements MenuProv
             }
 
             return switch (localDir) {
-                default ->
-                        directionWrappedHandlerMap.get(side.getOpposite());
-                case EAST ->
-                        directionWrappedHandlerMap.get(side.getClockWise());
-                case SOUTH ->
-                        directionWrappedHandlerMap.get(side);
-                case WEST ->
-                        directionWrappedHandlerMap.get(side.getCounterClockWise());
+                default -> directionWrappedHandlerMap.get(side.getOpposite());
+                case EAST -> directionWrappedHandlerMap.get(side.getClockWise());
+                case SOUTH -> directionWrappedHandlerMap.get(side);
+                case WEST -> directionWrappedHandlerMap.get(side.getCounterClockWise());
             };
         }
         return null;

@@ -1,7 +1,11 @@
 package dev.screret.mitm.client.model.item;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMWandAbilities;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -13,16 +17,15 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.api.ability.WandAbilityInstance;
 
-import dev.screret.mitm.common.item.component.WandComponent;
-import dev.screret.mitm.data.MITMDataComponents;
-import dev.screret.mitm.data.MITMWandAbilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WandAbilityOverrideHandler extends ItemOverrides {
 
@@ -36,7 +39,8 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
             .softValues()
             .build();
 
-    public WandAbilityOverrideHandler(WandModel model, IGeometryBakingContext owner, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
+    public WandAbilityOverrideHandler(WandModel model, IGeometryBakingContext owner, ModelBaker baker,
+                                      Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
         this.model = model;
         this.owner = owner;
         this.baker = baker;
@@ -46,7 +50,8 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
 
     @NotNull
     @Override
-    public BakedModel resolve(@NotNull BakedModel originalModel, @NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
+    public BakedModel resolve(@NotNull BakedModel originalModel, @NotNull ItemStack stack, @Nullable ClientLevel level,
+                              @Nullable LivingEntity entity, int seed) {
         BakedModel output = originalModel;
 
         ResourceLocation key = getCacheKey(stack);
@@ -58,7 +63,8 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
         return output;
     }
 
-    private BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity, ResourceLocation key) {
+    private BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world,
+                                     @Nullable LivingEntity entity, ResourceLocation key) {
         return this.model.bake(Minecraft.getInstance()
                 .getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
                 .getSprite(key.withPrefix("item/wand/")), this.owner, this.baker, this.spriteGetter, this.modelTransform, this);
