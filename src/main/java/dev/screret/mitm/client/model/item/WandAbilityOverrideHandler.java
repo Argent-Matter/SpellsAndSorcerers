@@ -16,10 +16,10 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import dev.screret.mitm.MagicOfTheMind;
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
@@ -30,24 +30,22 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
     protected final IGeometryBakingContext owner;
     protected final Function<Material, TextureAtlasSprite> spriteGetter;
     protected final ModelState modelTransform;
-    protected final ResourceLocation modelLocation;
     private final Cache<ResourceLocation, BakedModel> bakedModelCache = CacheBuilder.newBuilder()
             .maximumSize(1000)
             .softValues()
             .build();
 
-    public WandAbilityOverrideHandler(WandModel model, IGeometryBakingContext owner, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform, ResourceLocation modelLocation) {
+    public WandAbilityOverrideHandler(WandModel model, IGeometryBakingContext owner, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
         this.model = model;
         this.owner = owner;
         this.baker = baker;
         this.spriteGetter = spriteGetter;
-        this.modelLocation = modelLocation;
         this.modelTransform = modelTransform;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public BakedModel resolve(@Nonnull BakedModel originalModel, @Nonnull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int pSeed) {
+    public BakedModel resolve(@NotNull BakedModel originalModel, @NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
         BakedModel output = originalModel;
 
         ResourceLocation key = getCacheKey(stack);
@@ -56,14 +54,13 @@ public class WandAbilityOverrideHandler extends ItemOverrides {
         } catch (ExecutionException e) {
             MagicOfTheMind.LOGGER.error("Error baking model!");
         }
-
         return output;
     }
 
     protected BakedModel getBakedModel(BakedModel originalModel, ItemStack stack, @Nullable Level world, @Nullable LivingEntity entity, ResourceLocation key) {
         return this.model.bake(Minecraft.getInstance()
                 .getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)
-                .getSprite(key.withPrefix("item/wand/")), this.owner, this.baker, this.spriteGetter, this.modelTransform, this, this.modelLocation);
+                .getSprite(key.withPrefix("item/wand/")), this.owner, this.baker, this.spriteGetter, this.modelTransform, this);
     }
 
     ResourceLocation getCacheKey(ItemStack stack) {

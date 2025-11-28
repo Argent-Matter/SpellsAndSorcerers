@@ -19,7 +19,7 @@ public class MITMBlockTagsProvider extends BlockTagsProvider {
         super(output, lookupProvider, MagicOfTheMind.MODID, existingFileHelper);
     }
 
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider registries) {
         tag(MITMTags.Blocks.GLINT_ORES).add(MITMBlocks.GLINT_ORE.get());
         tag(MITMTags.Blocks.SOULSTEEL_BLOCKS).add(MITMBlocks.SOULSTEEL_BLOCK.get());
 

@@ -15,8 +15,8 @@ import net.neoforged.neoforge.common.Tags;
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.data.MITMWandAbilities;
 import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.common.data.builder.recipe.ShapedWandRecipeBuilder;
 import dev.screret.mitm.common.data.builder.recipe.ShapelessWandRecipeBuilder;
 import dev.screret.mitm.data.MITMItems;
@@ -113,17 +113,17 @@ public class MITMWandRecipes {
         return MITMUtil.CUSTOM_WAND_CORES.get(ability.getKey());
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... pItems) {
-        return inventoryTrigger(Arrays.stream(pItems).map(ItemPredicate.Builder::build).<ItemPredicate>toArray(p_297943_ -> new ItemPredicate[p_297943_]));
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... items) {
+        return inventoryTrigger(Arrays.stream(items).map(ItemPredicate.Builder::build).<ItemPredicate>toArray(p_297943_ -> new ItemPredicate[p_297943_]));
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... pPredicates) {
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... predicates) {
         return CriteriaTriggers.INVENTORY_CHANGED
-                .createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), InventoryChangeTrigger.TriggerInstance.Slots.ANY, List.of(pPredicates)));
+                .createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), InventoryChangeTrigger.TriggerInstance.Slots.ANY, List.of(predicates)));
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike pItemLike) {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(pItemLike));
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike itemLike) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(itemLike));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemStack stack) {

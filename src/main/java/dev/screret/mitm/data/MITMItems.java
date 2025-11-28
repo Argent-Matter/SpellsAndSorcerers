@@ -43,18 +43,31 @@ public class MITMItems {
     public static final DeferredItem<OneRingItem> THE_ONE_RING = ITEMS.register("the_one_ring", OneRingItem::new);
 
 
-    public static final DeferredItem<DeferredSpawnEggItem> WIZARD_SPAWN_EGG = ITEMS.register("wizard_spawn_egg", () -> new DeferredSpawnEggItem(MITMEntities.WIZARD, 0x002017, 0x959b9b, basicItemProperties()));
-    public static final DeferredItem<DeferredSpawnEggItem> BOSS_WIZARD_SPAWN_EGG = ITEMS.register("boss_wizard_spawn_egg", () -> new DeferredSpawnEggItem(MITMEntities.BOSS_WIZARD, 0x9a080f, 0x959b9b, basicItemProperties()));
+    public static final DeferredItem<DeferredSpawnEggItem> WIZARD_SPAWN_EGG = ITEMS.register("wizard_spawn_egg", () -> new DeferredSpawnEggItem(MITMEntityTypes.WIZARD, 0x002017, 0x959b9b, basicItemProperties()));
+    public static final DeferredItem<DeferredSpawnEggItem> BOSS_WIZARD_SPAWN_EGG = ITEMS.register("boss_wizard_spawn_egg", () -> new DeferredSpawnEggItem(MITMEntityTypes.BOSS_WIZARD, 0x9a080f, 0x959b9b, basicItemProperties()));
 
-    public static final DeferredItem<MITMArmorItem> SOULSTEEL_HELMET = ITEMS.register("soulsteel_helmet", () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.HELMET, basicItemProperties().fireResistant()));
-    public static final DeferredItem<MITMArmorItem> SOULSTEEL_CHESTPLATE = ITEMS.register("soulsteel_chestplate", () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.CHESTPLATE, basicItemProperties().fireResistant()));
-    public static final DeferredItem<MITMArmorItem> SOULSTEEL_LEGGINGS = ITEMS.register("soulsteel_leggings", () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.LEGGINGS, basicItemProperties().fireResistant()));
-    public static final DeferredItem<MITMArmorItem> SOULSTEEL_BOOTS = ITEMS.register("soulsteel_boots", () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.BOOTS, basicItemProperties().fireResistant()));
-    public static final DeferredItem<SwordItem> SOULSTEEL_SWORD = ITEMS.register("soulsteel_sword", () -> new SwordItem(MITMTiers.SOULSTEEL, 3, -2.4F, basicItemProperties().fireResistant()));
-    public static final DeferredItem<ShovelItem> SOULSTEEL_SHOVEL = ITEMS.register("soulsteel_shovel", () -> new ShovelItem(MITMTiers.SOULSTEEL, 1.5F, -3.0F, basicItemProperties().fireResistant()));
-    public static final DeferredItem<PickaxeItem> SOULSTEEL_PICKAXE = ITEMS.register("soulsteel_pickaxe", () -> new PickaxeItem(MITMTiers.SOULSTEEL, 1, -2.8F, basicItemProperties().fireResistant()));
-    public static final DeferredItem<AxeItem> SOULSTEEL_AXE = ITEMS.register("soulsteel_axe", () -> new AxeItem(MITMTiers.SOULSTEEL, 5.0F, -3.0F, basicItemProperties().fireResistant()));
-    public static final DeferredItem<HoeItem> SOULSTEEL_HOE = ITEMS.register("soulsteel_hoe", () -> new HoeItem(MITMTiers.SOULSTEEL, -5, 0.0F, basicItemProperties().fireResistant()));
+    public static final DeferredItem<MITMArmorItem> SOULSTEEL_HELMET = ITEMS.register("soulsteel_helmet",
+            () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.HELMET,
+                    basicItemProperties().durability(ArmorItem.Type.HELMET.getDurability(40)).fireResistant()));
+    public static final DeferredItem<MITMArmorItem> SOULSTEEL_CHESTPLATE = ITEMS.register("soulsteel_chestplate",
+            () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.CHESTPLATE,
+                    basicItemProperties().durability(ArmorItem.Type.CHESTPLATE.getDurability(40)).fireResistant()));
+    public static final DeferredItem<MITMArmorItem> SOULSTEEL_LEGGINGS = ITEMS.register("soulsteel_leggings",
+            () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.LEGGINGS,
+                    basicItemProperties().durability(ArmorItem.Type.LEGGINGS.getDurability(40)).fireResistant()));
+    public static final DeferredItem<MITMArmorItem> SOULSTEEL_BOOTS = ITEMS.register("soulsteel_boots",
+            () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.BOOTS,
+                    basicItemProperties().durability(ArmorItem.Type.BOOTS.getDurability(40)).fireResistant()));
+    public static final DeferredItem<SwordItem> SOULSTEEL_SWORD = ITEMS.register("soulsteel_sword",
+            () -> new SwordItem(MITMTiers.SOULSTEEL, basicItemProperties().fireResistant()));
+    public static final DeferredItem<ShovelItem> SOULSTEEL_SHOVEL = ITEMS.register("soulsteel_shovel",
+            () -> new ShovelItem(MITMTiers.SOULSTEEL, basicItemProperties().fireResistant()));
+    public static final DeferredItem<PickaxeItem> SOULSTEEL_PICKAXE = ITEMS.register("soulsteel_pickaxe",
+            () -> new PickaxeItem(MITMTiers.SOULSTEEL, basicItemProperties().fireResistant()));
+    public static final DeferredItem<AxeItem> SOULSTEEL_AXE = ITEMS.register("soulsteel_axe",
+            () -> new AxeItem(MITMTiers.SOULSTEEL, basicItemProperties().fireResistant()));
+    public static final DeferredItem<HoeItem> SOULSTEEL_HOE = ITEMS.register("soulsteel_hoe",
+            () -> new HoeItem(MITMTiers.SOULSTEEL, basicItemProperties().fireResistant()));
 
 
     private static Item.Properties basicItemProperties() {

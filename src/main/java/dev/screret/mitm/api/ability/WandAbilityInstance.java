@@ -1,4 +1,4 @@
-package dev.screret.mitm.api.wand.ability;
+package dev.screret.mitm.api.ability;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -8,6 +8,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,6 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import dev.screret.mitm.api.registry.MITMRegistries;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,35 +35,51 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
-    public static final Codec<WandAbilityInstance> CODEC = Codec.lazyInitialized(() ->
-            RecordCodecBuilder.create(instance -> instance.group(
-                    WandAbility.DIRECT_CODEC.fieldOf("ability").forGetter(self -> self.myAbility),
-                    WandAbilityInstance.CODEC.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(self -> self.children)
-            ).apply(instance, WandAbilityInstance::new)));
 
-    private WandAbility myAbility;
+    // spotless:off
+    public static final Codec<WandAbilityInstance> CODEC = Codec.recursive("WandAbilityInstance", wrapped ->
+            RecordCodecBuilder.create(instance -> instance.group(
+                    WandAbility.CODEC.fieldOf("ability").forGetter(self -> self.ability),
+                    wrapped.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(self -> self.children)
+            ).apply(instance, WandAbilityInstance::new))
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, WandAbilityInstance> STREAM_CODEC = StreamCodec.recursive(codec ->
+            StreamCodec.composite(
+                    ByteBufCodecs.registry(MITMRegistries.WAND_ABILITY_REGISTRY), WandAbilityInstance::getAbility,
+                    codec.apply(ByteBufCodecs.list()), WandAbilityInstance::getChildren,
+                    WandAbilityInstance::new
+            )
+    );
+    // spotless:on
+
+    @Getter
+    private WandAbility<?> ability;
+    @Getter
     private List<WandAbilityInstance> children;
 
-    public WandAbilityInstance(WandAbility ability, WandAbilityInstance @Nullable ... children) {
-        this.myAbility = ability;
+    public WandAbilityInstance(WandAbility<?> ability, WandAbilityInstance @Nullable ... children) {
+        this.ability = ability;
         this.children = children == null ? new ArrayList<>() : Arrays.stream(children).collect(Collectors.toList());
     }
 
-    public WandAbilityInstance(WandAbility ability, @Nullable List<WandAbilityInstance> children) {
-        this.myAbility = ability;
+    public WandAbilityInstance(WandAbility<?> ability, @Nullable List<WandAbilityInstance> children) {
+        this.ability = ability;
         this.children = children == null ? new ArrayList<>() : new ArrayList<>(children);
+    }
+
+    public WandAbilityInstance(CompoundTag nbt, HolderLookup.Provider registries) {
+        this.deserializeNBT(registries, nbt);
     }
 
     public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WrappedVec3 currentPos, int timeCharged) {
         var returnValue = InteractionResultHolder.fail(stack);
-        if (myAbility != null) {
-            returnValue = myAbility.execute(level, user, stack, currentPos, timeCharged);
+        if (ability != null) {
+            returnValue = ability.execute(level, user, stack, currentPos, timeCharged);
         }
-        if (this.getChildren() != null) {
-            for (var child : this.getChildren()) {
-                var val = child.execute(level, user, stack, currentPos, timeCharged).getResult();
-                if (val == InteractionResult.FAIL)
-                    return InteractionResultHolder.fail(stack);
+        for (var child : this.children) {
+            InteractionResult result = child.execute(level, user, stack, currentPos, timeCharged).getResult();
+            if (result == InteractionResult.FAIL) {
+                return InteractionResultHolder.fail(stack);
             }
         }
 
@@ -67,15 +87,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     }
 
     public ResourceLocation getId() {
-        return myAbility.getKey();
-    }
-
-    public List<WandAbilityInstance> getChildren() {
-        return this.children;
-    }
-
-    public WandAbility getAbility() {
-        return myAbility;
+        return ability.getKey();
     }
 
     public boolean isHoldable() {
@@ -85,7 +97,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
                     return true;
             }
         }
-        return myAbility.isHoldable();
+        return ability.isHoldable();
     }
 
     public boolean isChargeable() {
@@ -95,7 +107,7 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
                     return true;
             }
         }
-        return myAbility.isChargeable();
+        return ability.isChargeable();
     }
 
     public int getUseDuration() {
@@ -106,17 +118,17 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
                     total += ability.getUseDuration();
             }
         }
-        return total + myAbility.getUseDuration();
+        return total + ability.getUseDuration();
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public CompoundTag serializeNBT(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         tag.putString("ability", getId().toString());
         ListTag children = new ListTag();
         if (this.children != null) {
             for (WandAbilityInstance child : this.children) {
-                children.add(child.serializeNBT());
+                children.add(child.serializeNBT(registries));
             }
         }
         tag.put("children", children);
@@ -124,15 +136,15 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        this.myAbility = MITMRegistries.WAND_ABILITIES.get(ResourceLocation.parse(nbt.getString("ability")));
+        this.ability = MITMRegistries.WAND_ABILITIES.get(ResourceLocation.parse(nbt.getString("ability")));
         ListTag children = nbt.getList("children", Tag.TAG_COMPOUND);
         for (int i = 0; i < children.size(); ++i) {
             var child = children.getCompound(i);
-            WandAbilityInstance a = new WandAbilityInstance(child);
+            WandAbilityInstance a = new WandAbilityInstance(child, registries);
             this.children.add(a);
         }
     }
@@ -141,15 +153,15 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o instanceof WandAbilityInstance ability) {
-            return ability.getAbility() == this.getAbility() && ability.getChildren().equals(this.children);
+        if (o instanceof WandAbilityInstance other) {
+            return other.getAbility() == this.getAbility() && other.getChildren().equals(this.children);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(myAbility, children);
+        return Objects.hash(ability, children);
     }
 
     public static class WrappedVec3 {

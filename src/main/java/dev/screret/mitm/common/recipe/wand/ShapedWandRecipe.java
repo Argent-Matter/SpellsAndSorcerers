@@ -1,30 +1,37 @@
 package dev.screret.mitm.common.recipe.wand;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
+import dev.screret.mitm.data.MITMIngredientTypes;
 import dev.screret.mitm.data.MITMRecipeTypes;
+import lombok.AccessLevel;
+import lombok.Getter;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class ShapedWandRecipe implements WandRecipe {
 
-    public static final String TYPE_ID_NAME = "shaped_wand";
-    public static final int MAX_SIZE_X = 3, MAX_SIZE_Y = 2;
-
-    final String group;
-    final ShapedRecipePattern pattern;
-    final WandAbilityIngredient result;
+    @Getter(AccessLevel.PRIVATE)
+    private final String group;
+    @Getter(AccessLevel.PRIVATE)
+    private final ShapedRecipePattern pattern;
+    @Getter(AccessLevel.PRIVATE)
+    private final WandAbilityIngredient result;
 
     public ShapedWandRecipe(String group, ShapedRecipePattern pattern, WandAbilityIngredient result) {
         this.group = group;
@@ -33,12 +40,12 @@ public class ShapedWandRecipe implements WandRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer pInv, Level pLevel) {
-        return pattern.matches(pInv);
+    public boolean matches(CraftingInput inv, Level level) {
+        return pattern.matches(inv);
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(CraftingInput container, HolderLookup.Provider registries) {
         return this.result.getStack();
     }
 
@@ -48,7 +55,7 @@ public class ShapedWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return result.getStack();
     }
 
@@ -62,52 +69,35 @@ public class ShapedWandRecipe implements WandRecipe {
         return MITMRecipeTypes.SHAPED_WAND_RECIPE_SERIALIZER.get();
     }
 
-    private static String[] patternFromJson(JsonArray jsonArr) {
-        var astring = new String[jsonArr.size()];
-        for (int i = 0; i < astring.length; ++i) {
-            var s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
-
-            if (i > 0 && astring[0].length() != s.length()) {
-                throw new JsonSyntaxException("Invalid pattern: each row must be the same width");
-            }
-
-            astring[i] = s;
-        }
-
-        return astring;
-    }
-
     @Override
     public boolean isShapeless() {
         return false;
     }
 
     public static class Serializer implements RecipeSerializer<ShapedWandRecipe> {
-        public static final Codec<ShapedWandRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(val -> val.group),
-                ShapedRecipePattern.MAP_CODEC.forGetter(val -> val.pattern),
-                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(val -> val.result)
+
+        // spotless:off
+        public static final MapCodec<ShapedWandRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedWandRecipe::getGroup),
+                ShapedRecipePattern.MAP_CODEC.forGetter(ShapedWandRecipe::getPattern),
+                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(ShapedWandRecipe::getResult)
         ).apply(instance, ShapedWandRecipe::new));
+        private static final StreamCodec<RegistryFriendlyByteBuf, ShapedWandRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, ShapedWandRecipe::getGroup,
+                ShapedRecipePattern.STREAM_CODEC, ShapedWandRecipe::getPattern,
+                MITMIngredientTypes.WAND_ABILITY.get().streamCodec(), ShapedWandRecipe::getResult,
+                ShapedWandRecipe::new
+        );
+        // spotless:off
 
         @Override
-        public Codec<ShapedWandRecipe> codec() {
+        public MapCodec<ShapedWandRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public ShapedWandRecipe fromNetwork(FriendlyByteBuf buffer) {
-            String group = buffer.readUtf();
-            ShapedRecipePattern pattern = ShapedRecipePattern.fromNetwork(buffer);
-            WandAbilityIngredient result = (WandAbilityIngredient) WandAbilityIngredient.fromNetwork(buffer);
-
-            return new ShapedWandRecipe(group, pattern, result);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, ShapedWandRecipe recipe) {
-            buffer.writeUtf(recipe.group);
-            recipe.pattern.toNetwork(buffer);
-            recipe.result.toNetwork(buffer);
+        public StreamCodec<RegistryFriendlyByteBuf, ShapedWandRecipe> streamCodec() {
+                return STREAM_CODEC;
         }
     }
 }

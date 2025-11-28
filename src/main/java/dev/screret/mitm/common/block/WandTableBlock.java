@@ -1,11 +1,11 @@
 package dev.screret.mitm.common.block;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -29,6 +29,10 @@ import org.jetbrains.annotations.Nullable;
 import dev.screret.mitm.data.MITMParticles;
 import dev.screret.mitm.common.menu.container.WandTableMenu;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class WandTableBlock extends Block {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
@@ -40,38 +44,38 @@ public class WandTableBlock extends Block {
     }
 
     @Override
-    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
-        super.animateTick(pState, pLevel, pPos, pRandom);
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        super.animateTick(state, level, pos, random);
 
-        if (pRandom.nextInt(16) == 0) {
-            pLevel.addParticle(ParticleTypes.ENCHANT, pPos.getX() + 0.5D, pPos.getY() + 2.0D, pPos.getZ() + 0.5D, pPos.getX() - pRandom.nextFloat() + 0.25D, pPos.getY() - pRandom.nextFloat() + 1.0D, pPos.getZ() - pRandom.nextFloat() + 0.25D);
+        if (random.nextInt(16) == 0) {
+            level.addParticle(ParticleTypes.ENCHANT, pos.getX() + 0.5D, pos.getY() + 2.0D, pos.getZ() + 0.5D, pos.getX() - random.nextFloat() + 0.25D, pos.getY() - random.nextFloat() + 1.0D, pos.getZ() - random.nextFloat() + 0.25D);
         }
     }
 
     @Override
-    public boolean useShapeForLightOcclusion(BlockState pState) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-        pLevel.scheduleTick(pPos, this, 0);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        level.scheduleTick(pos, this, 0);
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-        pLevel.sendParticles(MITMParticles.EYE.get(), pPos.getX() + 0.5F, pPos.getY() + 1F, pPos.getZ() + 0.5F, 1, 0, 0, 0, 0);
-        pLevel.scheduleTick(pPos, this, 20, TickPriority.NORMAL);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        level.sendParticles(MITMParticles.EYE.get(), pos.getX() + 0.5F, pos.getY() + 1F, pos.getZ() + 0.5F, 1, 0, 0, 0, 0);
+        level.scheduleTick(pos, this, 20, TickPriority.NORMAL);
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState pState) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -81,17 +85,17 @@ public class WandTableBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+                                               Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
-        } else {
-            pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
-            return InteractionResult.CONSUME;
         }
+        player.openMenu(state.getMenuProvider(level, pos));
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 }

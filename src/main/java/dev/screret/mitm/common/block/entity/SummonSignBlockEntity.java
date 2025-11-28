@@ -1,7 +1,9 @@
-package dev.screret.mitm.common.blockentity;
+package dev.screret.mitm.common.block.entity;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -19,22 +21,26 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import dev.screret.mitm.data.MITMTags;
 import dev.screret.mitm.common.block.SummonSignBlock;
 import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.data.MITMEntities;
+import dev.screret.mitm.data.MITMEntityTypes;
 import dev.screret.mitm.common.entity.BossWizardEntity;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity {
-    private static final int REQUIRED_ITEMS_COUNT = 4;
+
     private static final int TICKS_TO_SPAWN = 100;
     public static final VoxelShape INSIDE = Block.box(-1D, 0.0D, -1D, 17.0D, 16.0D, 17.0D);
     public static final RawAnimation SUMMON = RawAnimation.begin().thenLoop("summon_sign.summon");
@@ -44,20 +50,20 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
     private int ticksToSpawn = -1;
     private boolean hasSpawned = false;
 
-    public SummonSignBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(MITMBlockEntities.SUMMON_SIGN.get(), pPos, pBlockState);
+    public SummonSignBlockEntity(BlockPos pos, BlockState blockState) {
+        super(MITMBlockEntities.SUMMON_SIGN.get(), pos, blockState);
     }
 
-    public static Set<ItemEntity> getItemsAt(Level pLevel, SummonSignBlockEntity blockEntity) {
+    public static Set<ItemEntity> getItemsAt(Level level, SummonSignBlockEntity blockEntity) {
         return INSIDE.toAabbs().stream()
-                .flatMap((bounds) -> pLevel.getEntitiesOfClass(ItemEntity.class, bounds.move(blockEntity.getBlockPos().getX(), blockEntity.getBlockPos().getY(), blockEntity.getBlockPos().getZ()), EntitySelector.ENTITY_STILL_ALIVE).stream())
+                .flatMap((bounds) -> level.getEntitiesOfClass(ItemEntity.class, bounds.move(blockEntity.getBlockPos().getX(), blockEntity.getBlockPos().getY(), blockEntity.getBlockPos().getZ()), EntitySelector.ENTITY_STILL_ALIVE).stream())
                 .collect(Collectors.toSet());
     }
 
-    public static boolean testForTag(Set<HolderSet.Named<Item>> tag, ItemStack pStack, RequiredCounter counter) {
-        if (pStack != null) {
+    public static boolean testForTag(Set<HolderSet.Named<Item>> tag, ItemStack stack, RequiredCounter counter) {
+        if (stack != null) {
             for (var item : tag) {
-                if (pStack.is(item)) {
+                if (stack.is(item)) {
                     tag.remove(item);
                     return true;
                 }
@@ -83,31 +89,31 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
         int count = 0;
     }
 
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, SummonSignBlockEntity pBlockEntity) {
-        if (pPos.getY() >= pLevel.getMinBuildHeight() && pLevel.getDifficulty() != Difficulty.PEACEFUL) {
-            var itemEntities = getItemsAt(pLevel, pBlockEntity);
-            if (!pBlockEntity.hasSpawned) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, SummonSignBlockEntity blockEntity) {
+        if (pos.getY() >= level.getMinBuildHeight() && level.getDifficulty() != Difficulty.PEACEFUL) {
+            var itemEntities = getItemsAt(level, blockEntity);
+            if (!blockEntity.hasSpawned) {
                 Stream<ItemStack> items = itemEntities.stream().map(ItemEntity::getItem);
                 var requiredItems = BuiltInRegistries.ITEM.getTag(MITMTags.Items.BOSS_SUMMON_ITEMS);
                 Set<HolderSet.Named<Item>> requiredSet = requiredItems.stream().collect(Collectors.toSet());
                 var counter = new RequiredCounter();
                 if (!items.allMatch(item -> testForTag(requiredSet, item, counter))) {
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(SummonSignBlock.TRIGGERED, false));
+                    level.setBlockAndUpdate(pos, state.setValue(SummonSignBlock.TRIGGERED, false));
                     return;
                 }
                 if (itemEntities.size() < requiredSet.size()) {
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(SummonSignBlock.TRIGGERED, false));
+                    level.setBlockAndUpdate(pos, state.setValue(SummonSignBlock.TRIGGERED, false));
                     return;
                 }
 
-                if (pBlockEntity.ticksToSpawn < 0) {
-                    pBlockEntity.ticksToSpawn = TICKS_TO_SPAWN;
-                    pBlockEntity.setChanged();
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(SummonSignBlock.TRIGGERED, true));
+                if (blockEntity.ticksToSpawn < 0) {
+                    blockEntity.ticksToSpawn = TICKS_TO_SPAWN;
+                    blockEntity.setChanged();
+                    level.setBlockAndUpdate(pos, state.setValue(SummonSignBlock.TRIGGERED, true));
                     return;
-                } else if (pBlockEntity.ticksToSpawn > 0) {
-                    --pBlockEntity.ticksToSpawn;
-                    pBlockEntity.setChanged();
+                } else if (blockEntity.ticksToSpawn > 0) {
+                    --blockEntity.ticksToSpawn;
+                    blockEntity.setChanged();
                     return;
                 }
 
@@ -115,35 +121,38 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
                     itemEntity.getItem().shrink(1);
                 }
 
-                BossWizardEntity boss = MITMEntities.BOSS_WIZARD.get().create(pLevel);
-                boss.setSpawningPosition(pPos);
-                boss.moveTo(pPos.getX() + 0.5f, pPos.getY() + 1.55D, pPos.getZ() + 0.5f, 0.0F, 0.0F);
+                BossWizardEntity boss = MITMEntityTypes.BOSS_WIZARD.get().create(level);
+                boss.setSpawningPosition(pos);
+                boss.moveTo(pos.getX() + 0.5f, pos.getY() + 1.55D, pos.getZ() + 0.5f, 0.0F, 0.0F);
                 boss.makeInvulnerable();
-                for (ServerPlayer serverplayer : pLevel.getEntitiesOfClass(ServerPlayer.class, boss.getBoundingBox().inflate(50.0D))) {
+                for (ServerPlayer serverplayer : level.getEntitiesOfClass(ServerPlayer.class, boss.getBoundingBox().inflate(50.0D))) {
                     CriteriaTriggers.SUMMONED_ENTITY.trigger(serverplayer, boss);
                 }
-                pLevel.addFreshEntity(boss);
-                pBlockEntity.hasSpawned = true;
-                pBlockEntity.setChanged();
+                level.addFreshEntity(boss);
+                blockEntity.hasSpawned = true;
+                blockEntity.setChanged();
             }
 
 
-            //pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 11);
+            //pLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
         }
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.putInt("TimeToSpawn", this.ticksToSpawn);
-        pTag.putBoolean("HasSpawned", this.hasSpawned);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("TimeToSpawn", this.ticksToSpawn);
+        tag.putBoolean("HasSpawned", this.hasSpawned);
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        if (pTag.contains("TimeToSpawn"))
-            this.ticksToSpawn = pTag.getInt("TimeToSpawn");
-        if (pTag.contains("HasSpawned"))
-            this.hasSpawned = pTag.getBoolean("HasSpawned");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("TimeToSpawn")) {
+            this.ticksToSpawn = tag.getInt("TimeToSpawn");
+        }
+        if (tag.contains("HasSpawned")) {
+            this.hasSpawned = tag.getBoolean("HasSpawned");
+        }
     }
 }

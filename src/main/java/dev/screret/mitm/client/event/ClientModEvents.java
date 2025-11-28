@@ -10,26 +10,24 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+
 import dev.screret.mitm.MagicOfTheMind;
 import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.client.model.item.WandItemClientExtensions;
 import dev.screret.mitm.common.ability.SubAbility;
 import dev.screret.mitm.api.registry.MITMRegistries;
-import dev.screret.mitm.data.MITMBlocks;
+import dev.screret.mitm.data.*;
 import dev.screret.mitm.common.block.SummonSignBlock;
-import dev.screret.mitm.data.MITMBlockEntities;
 import dev.screret.mitm.client.gui.overlay.ManaBarOverlay;
 import dev.screret.mitm.client.gui.screen.PotionDistilleryScreen;
 import dev.screret.mitm.client.gui.screen.WandTableScreen;
 import dev.screret.mitm.client.model.item.WandModel;
-import dev.screret.mitm.data.MITMParticles;
 import dev.screret.mitm.client.particle.EyeParticle;
 import dev.screret.mitm.client.renderer.blockentity.PalantirBERenderer;
 import dev.screret.mitm.client.renderer.blockentity.SummonSignBERenderer;
 import dev.screret.mitm.client.renderer.entity.BossWizardRenderer;
 import dev.screret.mitm.client.renderer.entity.WizardRenderer;
-import dev.screret.mitm.data.MITMContainers;
-import dev.screret.mitm.data.MITMEntities;
-import dev.screret.mitm.data.MITMItems;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = MagicOfTheMind.MODID, value = Dist.CLIENT)
@@ -48,8 +46,8 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(MITMEntities.WIZARD.get(), WizardRenderer::new);
-        event.registerEntityRenderer(MITMEntities.BOSS_WIZARD.get(), BossWizardRenderer::new);
+        event.registerEntityRenderer(MITMEntityTypes.WIZARD.get(), WizardRenderer::new);
+        event.registerEntityRenderer(MITMEntityTypes.BOSS_WIZARD.get(), BossWizardRenderer::new);
 
         event.registerBlockEntityRenderer(MITMBlockEntities.SUMMON_SIGN.get(), context -> new SummonSignBERenderer());
         event.registerBlockEntityRenderer(MITMBlockEntities.PALANTIR.get(), context -> new PalantirBERenderer());
@@ -82,30 +80,33 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public static void registerGuiOverlay(final RegisterGuiOverlaysEvent event) {
+    public static void registerGuiOverlay(final RegisterGuiLayersEvent event) {
         event.registerAbove(ResourceLocation.withDefaultNamespace("armor_level"), MITMUtil.id("mana"), new ManaBarOverlay());
     }
 
     @SubscribeEvent
     public static void registerItemColors(final RegisterColorHandlersEvent.Item event) {
-        event.register((stack, index) -> {
-            if (stack.hasTag() && stack.getTag().contains("ability") && index == 1) {
-                var colorLocation = ResourceLocation.parse(stack.getTag().getString("ability"));
-                if (MITMRegistries.WAND_ABILITIES.containsKey(colorLocation)) {
-                    return MITMRegistries.WAND_ABILITIES.get(colorLocation).getColor();
-                }
+        event.register((stack, layer) -> {
+            if (stack.has(MITMDataComponents.WAND_CORE) && layer == 1) {
+                return stack.get(MITMDataComponents.WAND_CORE).getAbility().getColor();
             }
             return 0xFFFFFFFF;
         }, MITMItems.WAND_CORE.get());
 
-        event.register((itemStack, layer) -> {
-            BlockState blockstate = ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState();
+        event.register((stack, layer) -> {
+            BlockState blockstate = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
             return event.getBlockColors().getColor(blockstate, null, null, layer);
         }, MITMItems.SUMMON_SIGN.get());
     }
 
     @SubscribeEvent
     public static void registerBlockColors(final RegisterColorHandlersEvent.Block event) {
-        event.register((pState, pLevel, pPos, pTintIndex) -> pState.getValue(SummonSignBlock.COLOR).getFireworkColor(), MITMBlocks.SUMMON_SIGN.get());
+        event.register((state, level, pos, layer) -> state.getValue(SummonSignBlock.COLOR).getTextureDiffuseColor(),
+                MITMBlocks.SUMMON_SIGN.get());
+    }
+
+    @SubscribeEvent
+    public void registerClientExtensions(final RegisterClientExtensionsEvent event) {
+        event.registerItem(new WandItemClientExtensions(), MITMItems.WAND);
     }
 }

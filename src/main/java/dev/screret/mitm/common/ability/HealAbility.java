@@ -1,18 +1,19 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import dev.screret.mitm.api.wand.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbility;
 
 import java.util.EnumSet;
 
-public class HealAbility extends SubAbility {
-    public static final Codec<HealAbility> CODEC = RecordCodecBuilder.create(instance -> WandAbility.codecStart(instance).apply(instance, HealAbility::new));
+public class HealAbility extends SubAbility<HealAbility> {
+    private static final MapCodec<HealAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> WandAbility.codecStart(instance).apply(instance, HealAbility::new));
 
     public HealAbility() {
         super(20, 40, .25f, true, ParticleTypes.HAPPY_VILLAGER, 0xFF00ae2d, EnumSet.of(HitFlags.ENTITY));
@@ -23,13 +24,14 @@ public class HealAbility extends SubAbility {
     }
 
     @Override
-    public Codec<? extends WandAbility> codec() {
+    public MapCodec<HealAbility> codec() {
         return CODEC;
     }
 
     @Override
-    public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged) {
-        hitEnt.heal(getDamagePerHit(usedItem));
+    public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity target, float timeCharged) {
+        DamageSource source = user.damageSources().magic();
+        target.heal(getDamagePerHit(usedItem, user, source));
         return true;
     }
 

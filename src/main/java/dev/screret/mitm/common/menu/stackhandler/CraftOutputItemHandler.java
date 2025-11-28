@@ -5,6 +5,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
@@ -75,11 +77,16 @@ public class CraftOutputItemHandler extends SlotItemHandler {
     }
 
     @Override
-    public void onTake(Player pPlayer, ItemStack pStack) {
-        this.checkTakeAchievements(pStack);
-        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(pPlayer);
-        NonNullList<ItemStack> ingredients = pPlayer.level().getRecipeManager().getRemainingItemsFor(MITMRecipeTypes.WAND_RECIPE.get(), this.craftSlots, pPlayer.level());
-        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(null);
+    public void onTake(Player player, ItemStack stack) {
+        this.checkTakeAchievements(stack);
+        CraftingInput.Positioned positionedCraftInput = this.craftSlots.asPositionedCraftInput();
+        CraftingInput craftInput = positionedCraftInput.input();
+
+        CommonHooks.setCraftingPlayer(player);
+        NonNullList<ItemStack> ingredients = player.level().getRecipeManager()
+                .getRemainingItemsFor(MITMRecipeTypes.WAND_RECIPE.get(), craftInput, player.level());
+        CommonHooks.setCraftingPlayer(null);
+
         for (int i = 0; i < ingredients.size(); ++i) {
             ItemStack craftSlotItem = this.craftSlots.getItem(i);
             ItemStack ingredient = ingredients.get(i);
@@ -88,17 +95,17 @@ public class CraftOutputItemHandler extends SlotItemHandler {
                 craftSlotItem = this.craftSlots.getItem(i);
             }
 
-            if (!ingredient.isEmpty()) {
-                if (craftSlotItem.isEmpty()) {
-                    this.craftSlots.setItem(i, ingredient);
-                } else if (ItemStack.isSameItemSameTags(craftSlotItem, ingredient)) {
-                    ingredient.grow(craftSlotItem.getCount());
-                    this.craftSlots.setItem(i, ingredient);
-                } else if (!this.player.getInventory().add(ingredient)) {
-                    this.player.drop(ingredient, false);
-                }
+            if (ingredient.isEmpty()) {
+                continue;
+            }
+            if (craftSlotItem.isEmpty()) {
+                this.craftSlots.setItem(i, ingredient);
+            } else if (ItemStack.isSameItemSameComponents(craftSlotItem, ingredient)) {
+                ingredient.grow(craftSlotItem.getCount());
+                this.craftSlots.setItem(i, ingredient);
+            } else if (!this.player.getInventory().add(ingredient)) {
+                this.player.drop(ingredient, false);
             }
         }
-
     }
 }

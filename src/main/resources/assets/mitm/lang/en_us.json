@@ -11,7 +11,6 @@
   "item.mitm.soul_bottle": "Bottle o' Souls",
   "item.mitm.cthulhu_eye": "Eye of Cthulhu",
   "item.mitm.handle": "Handle",
-  "item.mitm.wand": "%s Wand",
   "item.mitm.wand_core": "%s Core",
   "item.mitm.wizard_spawn_egg": "Wizard Spawn Egg",
   "item.mitm.boss_wizard_spawn_egg": "Necromantic Sorcerer Spawn Egg",
@@ -29,7 +28,7 @@
   "item.mitm.soulsteel_axe": "Soulsteel Axe",
   "item.mitm.soulsteel_hoe": "Soulsteel Hoe",
 
-  "ability.mitm.basic": "Dummy",
+  "ability.mitm.dummy": "None",
   "ability.mitm.explode": "Explosion",
   "ability.mitm.small_fireball": "Small Fireball",
   "ability.mitm.large_fireball": "Fireball",

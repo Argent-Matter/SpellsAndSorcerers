@@ -1,10 +1,13 @@
 package dev.screret.mitm.common.entity;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -32,17 +35,21 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.config.MITMConfig;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class WizardEntity extends SpellcasterIllager implements RangedAttackMob, GeoEntity {
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(WizardEntity.class, EntityDataSerializers.BOOLEAN);
     private final float attackRadius = 32, attackRadiusSqr = attackRadius * attackRadius;
@@ -50,8 +57,8 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
 
-    public WizardEntity(EntityType<WizardEntity> type, Level pLevel) {
-        super(type, pLevel);
+    public WizardEntity(EntityType<WizardEntity> type, Level level) {
+        super(type, level);
     }
 
     public boolean isAttacking() {
@@ -66,9 +73,10 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, 0.5D).add(Attributes.FOLLOW_RANGE, 16.0D).add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.ARMOR, 3.0D);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(IS_ATTACKING, false);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_ATTACKING, false);
     }
 
     @Override
@@ -88,44 +96,46 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @javax.annotation.Nullable SpawnGroupData pSpawnData, @javax.annotation.Nullable CompoundTag pDataTag) {
-        RandomSource randomsource = pLevel.getRandom();
-        this.populateDefaultEquipmentSlots(randomsource, pDifficulty);
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
+                                                  MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        this.populateDefaultEquipmentSlots(level.getRandom(), difficulty);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     public static List<ItemStack> possibleWands;
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
+    protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
         if (possibleWands == null) {
             MITMUtil.generateWandItems();
             possibleWands = MITMUtil.CUSTOM_WANDS.values().stream().toList();
         }
-        this.setItemSlot(EquipmentSlot.MAINHAND, possibleWands.get(pRandom.nextInt(possibleWands.size() - 1)));
+        this.setItemSlot(EquipmentSlot.MAINHAND, possibleWands.get(random.nextInt(possibleWands.size() - 1)));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         ListTag listtag = new ListTag();
 
         for (int i = 0; i < this.inventory.getSlots(); ++i) {
             ItemStack itemstack = this.inventory.getStackInSlot(i);
             if (!itemstack.isEmpty()) {
-                listtag.add(itemstack.save(new CompoundTag()));
+                listtag.add(itemstack.save(this.registryAccess(), new CompoundTag()));
             }
         }
 
-        pCompound.put("Inventory", listtag);
+        compound.put("Inventory", listtag);
     }
 
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        ListTag listtag = pCompound.getList("Inventory", 10);
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        ListTag listtag = compound.getList("Inventory", 10);
 
         for (int i = 0; i < listtag.size(); ++i) {
-            ItemStack itemstack = ItemStack.of(listtag.getCompound(i));
+            ItemStack itemstack = ItemStack.CODEC
+                    .parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), listtag.getCompound(i))
+                    .getOrThrow();
             if (!itemstack.isEmpty()) {
                 this.inventory.insertItem(i, itemstack, true);
             }
@@ -135,9 +145,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     }
 
     @Override
-    public void applyRaidBuffs(int pWave, boolean pUnusedFalse) {
-
-    }
+    public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {}
 
     @Override
     public boolean hasPatrolTarget() {
@@ -145,25 +153,25 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     }
 
     @Override
-    protected float getEquipmentDropChance(EquipmentSlot pSlot) {
-        if (pSlot == EquipmentSlot.MAINHAND || pSlot == EquipmentSlot.OFFHAND) {
+    protected float getEquipmentDropChance(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) {
             return 0.025f;
         }
         return 0.0f;
     }
 
     @Override
-    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
-        if (MITMConfig.Server.dropWandCores.get()) {
-            var toDrop = MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get();
-            while (toDrop.getChildren() != null && toDrop.getChildren().size() > 0) {
-                toDrop = toDrop.getChildren().get(0);
-            }
-            ItemEntity itementity = this.spawnAtLocation(MITMUtil.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
-            if (itementity != null) {
-                itementity.setExtendedLifetime();
-            }
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        if (!MITMConfig.Server.dropWandCores.get()) {
+            return;
+        }
+        var toDrop = MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get();
+        while (!toDrop.getChildren().isEmpty()) {
+            toDrop = toDrop.getChildren().getFirst();
+        }
+        ItemEntity itemEntity = this.spawnAtLocation(MITMUtil.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
+        if (itemEntity != null) {
+            itemEntity.setExtendedLifetime();
         }
     }
 
@@ -180,7 +188,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         return SoundEvents.EVOKER_DEATH;
     }
 
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.EVOKER_HURT;
     }
 
@@ -204,7 +212,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     }
 
     @Override
-    public void performRangedAttack(LivingEntity pTarget, float pVelocity) {
+    public void performRangedAttack(LivingEntity target, float velocity) {
         if (MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).isPresent()) {
             MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
         }

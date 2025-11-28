@@ -13,8 +13,8 @@ import dev.screret.mitm.common.menu.container.PotionDistilleryMenu;
 public class PotionDistilleryScreen extends AbstractContainerScreen<PotionDistilleryMenu> {
     private static final ResourceLocation TEXTURE_LOCATION = MITMUtil.id("textures/gui/container/potion_distillery.png");
 
-    public PotionDistilleryScreen(PotionDistilleryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public PotionDistilleryScreen(PotionDistilleryMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
     }
 
     public void init() {
@@ -22,26 +22,26 @@ public class PotionDistilleryScreen extends AbstractContainerScreen<PotionDistil
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pX, int pY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int x, int y) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
 
-        pGuiGraphics.blit(TEXTURE_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(TEXTURE_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         if (this.menu.isLit()) {
             int fuelAmount = this.menu.getLitProgress();
-            pGuiGraphics.blit(TEXTURE_LOCATION, this.leftPos + 56 + PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, this.topPos + 44, PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, 39, fuelAmount + 1, 4);
+            guiGraphics.blit(TEXTURE_LOCATION, this.leftPos + 56 + PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, this.topPos + 44, PotionDistilleryMenu.FUEL_PROGRESS_BAR_X_SIZE - 1 - fuelAmount, 39, fuelAmount + 1, 4);
         }
 
         int progress = this.menu.getBurnProgress();
-        pGuiGraphics.blit(TEXTURE_LOCATION, this.leftPos + 97, this.topPos + 16, 176, 0, 9, progress + 1);
+        guiGraphics.blit(TEXTURE_LOCATION, this.leftPos + 97, this.topPos + 16, 176, 0, 9, progress + 1);
     }
 }

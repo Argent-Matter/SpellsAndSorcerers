@@ -1,6 +1,7 @@
 package dev.screret.mitm.common.ability;
 
 import com.mojang.datafixers.Products;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
@@ -12,10 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import dev.screret.mitm.api.wand.ability.WandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 
-public abstract class ProjectileAbility extends WandAbility {
+public abstract class ProjectileAbility<T extends ProjectileAbility<T>> extends WandAbility<T> {
 
     protected final int distance;
 
@@ -31,7 +32,10 @@ public abstract class ProjectileAbility extends WandAbility {
         this.distance = distance;
     }
 
-    public static <W extends ProjectileAbility> Products.P7<RecordCodecBuilder.Mu<W>, Integer, Integer, Float, Boolean, ParticleOptions, Integer, Integer> projectileCodecStart(RecordCodecBuilder.Instance<W> instance) {
+    @Override
+    public abstract MapCodec<T> codec();
+
+    public static <W extends ProjectileAbility<W>> Products.P7<RecordCodecBuilder.Mu<W>, Integer, Integer, Float, Boolean, ParticleOptions, Integer, Integer> projectileCodecStart(RecordCodecBuilder.Instance<W> instance) {
         return WandAbility.codecStart(instance)
                 .and(ExtraCodecs.POSITIVE_INT.fieldOf("distance").forGetter((W val) -> val.distance));
     }

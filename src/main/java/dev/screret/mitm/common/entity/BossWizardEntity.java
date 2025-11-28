@@ -1,14 +1,19 @@
 package dev.screret.mitm.common.entity;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
@@ -28,6 +33,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -35,22 +41,29 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.data.MITMWandAbilities;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
-import dev.screret.mitm.common.blockentity.SummonSignBlockEntity;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
 import dev.screret.mitm.config.MITMConfig;
 import dev.screret.mitm.common.entity.goal.ShootEnemyGoal;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEntity {
-    private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (mob) -> mob.getMobType() != MobType.ILLAGER && mob.attackable();
+
+    public static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (mob) -> (!mob.getType().is(EntityTypeTags.ILLAGER_FRIENDS) && mob.attackable());
+
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(BossWizardEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> INVULNERABLE_TICKS = SynchedEntityData.defineId(BossWizardEntity.class, EntityDataSerializers.INT);
     private static final int MAX_INVULNERABLE_TICKS = 75;
@@ -63,16 +76,16 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.PROGRESS);
     private BlockPos spawnPos;
 
-    public BossWizardEntity(EntityType<BossWizardEntity> type, Level pLevel) {
-        super(type, pLevel);
+    public BossWizardEntity(EntityType<BossWizardEntity> type, Level level) {
+        super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, true);
         this.setHealth(this.getMaxHealth());
         this.setItemSlot(EquipmentSlot.MAINHAND, createBossWand());
     }
 
     @Override
-    protected PathNavigation createNavigation(Level pLevel) {
-        FlyingPathNavigation navigation = new FlyingPathNavigation(this, pLevel);
+    protected PathNavigation createNavigation(Level level) {
+        FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
         navigation.setCanOpenDoors(true);
         navigation.setCanFloat(true);
         navigation.setCanPassDoors(true);
@@ -110,10 +123,10 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(IS_ATTACKING, false);
-        this.entityData.define(INVULNERABLE_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_ATTACKING, false);
+        builder.define(INVULNERABLE_TICKS, 0);
     }
 
     @Override
@@ -168,31 +181,34 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         }
     }
 
+    @SuppressWarnings("deprecation") // override-only
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, SpawnGroupData pSpawnData, CompoundTag pDataTag) {
-        RandomSource randomsource = pLevel.getRandom();
-        this.populateDefaultEquipmentSlots(randomsource, pDifficulty);
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
+                                                  MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        this.populateDefaultEquipmentSlots(level.getRandom(), difficulty);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
+    protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
         this.setItemSlot(EquipmentSlot.MAINHAND, createBossWand());
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        if (this.isInvulnerableTo(pSource)) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
             return false;
-        } else if (pSource != damageSources().drown() && !(pSource.getEntity() instanceof BossWizardEntity)) {
-            if (this.getInvulnerableTicks() > 0 && pSource != damageSources().fellOutOfWorld()) {
+        } else if (source != damageSources().drown() && !(source.getEntity() instanceof BossWizardEntity)) {
+            if (this.getInvulnerableTicks() > 0 && source != damageSources().fellOutOfWorld()) {
                 return false;
             } else {
-                Entity entity1 = pSource.getEntity();
-                if (!(entity1 instanceof Player) && entity1 instanceof LivingEntity living && living.getMobType() == this.getMobType()) {
+                Entity sourceEntity = source.getEntity();
+                if (!(sourceEntity instanceof Player) &&
+                        sourceEntity instanceof LivingEntity living &&
+                        living.getType().is(EntityTypeTags.ILLAGER_FRIENDS)) {
                     return false;
                 } else {
-                    return super.hurt(pSource, pAmount);
+                    return super.hurt(source, amount);
                 }
             }
         } else {
@@ -201,45 +217,42 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     @Override
-    public MobType getMobType() {
-        return MobType.ILLAGER;
-    }
-
-    @Override
-    protected float getEquipmentDropChance(EquipmentSlot pSlot) {
+    protected float getEquipmentDropChance(EquipmentSlot slot) {
         return 0.0F;
     }
 
-    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
-        if (MITMConfig.Server.dropWandCores.get()) {
-            var toDrop = MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get();
-            while (toDrop.getChildren() != null && toDrop.getChildren().size() > 0) {
-                toDrop = toDrop.getChildren().get(0);
-            }
-            ItemEntity itementity = this.spawnAtLocation(MITMUtil.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
-            if (itementity != null) {
-                itementity.setExtendedLifetime();
-            }
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        if (!MITMConfig.Server.dropWandCores.get()) {
+            return;
+        }
+        var toDrop = MITMUtil.getMainAbilityFromStack(this.getMainHandItem()).get();
+        while (!toDrop.getChildren().isEmpty()) {
+            toDrop = toDrop.getChildren().getFirst();
+        }
+        ItemEntity itemEntity = this.spawnAtLocation(MITMUtil.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
+        if (itemEntity != null) {
+            itemEntity.setExtendedLifetime();
         }
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("InvulTime", this.getInvulnerableTicks());
-        pCompound.put("CurrentSpell", this.currentSpell.serializeNBT());
-        pCompound.put("SpawnPos", this.newIntList(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()));
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("InvulTime", this.getInvulnerableTicks());
+        compound.put("CurrentSpell", this.currentSpell.serializeNBT(this.registryAccess()));
+        compound.put("SpawnPos", this.newIntList(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.setInvulnerableTicks(pCompound.getInt("InvulTime"));
-        currentSpell = new WandAbilityInstance(pCompound.getCompound("CurrentSpell"));
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.setInvulnerableTicks(compound.getInt("InvulTime"));
+        currentSpell = new WandAbilityInstance(compound.getCompound("CurrentSpell"), this.registryAccess());
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
-        var spawnPosTag = pCompound.getList("SpawnPos", Tag.TAG_INT);
+        var spawnPosTag = compound.getList("SpawnPos", Tag.TAG_INT);
         this.spawnPos = new BlockPos(spawnPosTag.getInt(0), spawnPosTag.getInt(1), spawnPosTag.getInt(2));
     }
 
@@ -247,8 +260,8 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         return this.entityData.get(INVULNERABLE_TICKS);
     }
 
-    public void setInvulnerableTicks(int pInvulnerableTicks) {
-        this.entityData.set(INVULNERABLE_TICKS, pInvulnerableTicks);
+    public void setInvulnerableTicks(int invulnerableTicks) {
+        this.entityData.set(INVULNERABLE_TICKS, invulnerableTicks);
     }
 
     public void makeInvulnerable() {
@@ -266,8 +279,8 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         }
     }
 
-    public void setCastingSpell(WandAbilityInstance pCurrentSpell) {
-        this.currentSpell = pCurrentSpell;
+    public void setCastingSpell(WandAbilityInstance currentSpell) {
+        this.currentSpell = currentSpell;
         this.setIsAttacking(true);
     }
 
@@ -283,7 +296,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         return SoundEvents.GHAST_DEATH;
     }
 
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.EVOKER_HURT;
     }
 
@@ -303,39 +316,42 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     @Override
-    public void performRangedAttack(LivingEntity pTarget, float pVelocity) {
+    public void performRangedAttack(LivingEntity target, float velocity) {
         currentSpell.execute(this.level(), this, this.getMainHandItem(), new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
     }
 
     @Override
-    public void startSeenByPlayer(ServerPlayer pPlayer) {
-        super.startSeenByPlayer(pPlayer);
-        this.bossEvent.addPlayer(pPlayer);
+    public void startSeenByPlayer(ServerPlayer player) {
+        super.startSeenByPlayer(player);
+        this.bossEvent.addPlayer(player);
     }
 
     @Override
-    public void stopSeenByPlayer(ServerPlayer pPlayer) {
-        super.stopSeenByPlayer(pPlayer);
-        this.bossEvent.removePlayer(pPlayer);
+    public void stopSeenByPlayer(ServerPlayer player) {
+        super.stopSeenByPlayer(player);
+        this.bossEvent.removePlayer(player);
     }
 
     @Override
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
+    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
         return false;
     }
 
 
-    private static ItemStack createBossWand() {
+    private ItemStack createBossWand() {
+        HolderLookup.RegistryLookup<Enchantment> enchantRegistry = this.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+
         var wandItem = MITMUtil.createWand(MITMWandAbilities.LARGE_FIREBALL.get(), MITMWandAbilities.HEAL_SELF.get());
-        wandItem.enchant(Enchantments.POWER_ARROWS, 1);
-        wandItem.enchant(Enchantments.QUICK_CHARGE, 3);
+        enchantRegistry.get(Enchantments.POWER).ifPresent(holder -> wandItem.enchant(holder, 1));
+        enchantRegistry.get(Enchantments.QUICK_CHARGE).ifPresent(holder -> wandItem.enchant(holder, 3));
+
         return wandItem;
     }
 
-    protected ListTag newIntList(int... pNumbers) {
+    protected ListTag newIntList(int... numbers) {
         ListTag listtag = new ListTag();
 
-        for (int number : pNumbers) {
+        for (int number : numbers) {
             listtag.add(IntTag.valueOf(number));
         }
 

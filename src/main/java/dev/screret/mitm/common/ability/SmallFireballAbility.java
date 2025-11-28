@@ -1,6 +1,6 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
@@ -10,11 +10,12 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.wand.ability.WandAbility;
+import net.minecraft.world.phys.Vec3;
 
-public class SmallFireballAbility extends ProjectileAbility {
-    public static final Codec<SmallFireballAbility> CODEC = RecordCodecBuilder.create(instance -> ProjectileAbility.projectileCodecStart(instance).apply(instance, SmallFireballAbility::new));
+import dev.screret.mitm.MITMUtil;
+
+public class SmallFireballAbility extends ProjectileAbility<SmallFireballAbility> {
+    private static final MapCodec<SmallFireballAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> ProjectileAbility.projectileCodecStart(instance).apply(instance, SmallFireballAbility::new));
 
     public SmallFireballAbility() {
         super(0, 10, 0, true, 0xFFffa500, 512);
@@ -25,7 +26,7 @@ public class SmallFireballAbility extends ProjectileAbility {
     }
 
     @Override
-    public Codec<? extends WandAbility> codec() {
+    public MapCodec<SmallFireballAbility> codec() {
         return CODEC;
     }
 
@@ -41,7 +42,12 @@ public class SmallFireballAbility extends ProjectileAbility {
 
         var distanceToEndSqrtHalf = Math.sqrt(userPos.distanceTo(hitResult.getLocation())) * 0.25D;
 
-        var result = new SmallFireball(level, user, level.getRandom().triangle(dirX, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf), dirY, level.getRandom().triangle(dirZ, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf));
+        var result = new SmallFireball(level, user,
+                new Vec3(
+                        level.getRandom().triangle(dirX, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf),
+                        dirY,
+                        level.getRandom().triangle(dirZ, RandomSource.GAUSSIAN_SPREAD_FACTOR * distanceToEndSqrtHalf)
+                ));
         result.moveTo(userPos);
         return result;
     }

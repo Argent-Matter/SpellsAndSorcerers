@@ -32,7 +32,7 @@ public class EyeConversionManager extends SimpleJsonResourceReloadListener {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> resourceList, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> resourceList, ResourceManager resourceManager, ProfilerFiller profiler) {
         ImmutableMap.Builder<Block, BlockIngredient> builder = ImmutableMap.builder();
 
         for (Map.Entry<ResourceLocation, JsonElement> entry : resourceList.entrySet()) {
@@ -56,9 +56,9 @@ public class EyeConversionManager extends SimpleJsonResourceReloadListener {
         LOGGER.info("Loaded {} recipes", registeredConversions.size());
     }
 
-    public static Map.Entry<Block, BlockIngredient> fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
-        Block result = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(pJson.getAsJsonPrimitive("result").getAsString()));
-        BlockIngredient ingredient = BlockIngredient.fromJson(GsonHelper.getAsJsonObject(pJson, "ingredient"));
+    public static Map.Entry<Block, BlockIngredient> fromJson(ResourceLocation recipeId, JsonObject json) {
+        Block result = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(json.getAsJsonPrimitive("result").getAsString()));
+        BlockIngredient ingredient = BlockIngredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
         if (ingredient == null)
             return null;
         return new AbstractMap.SimpleImmutableEntry<>(result, ingredient);

@@ -4,9 +4,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.common.blockentity.PalantirBlockEntity;
-import dev.screret.mitm.common.blockentity.PotionDistilleryBlockEntity;
-import dev.screret.mitm.common.blockentity.SummonSignBlockEntity;
+import dev.screret.mitm.common.block.entity.PalantirBlockEntity;
+import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
 
 import java.util.function.Supplier;
 

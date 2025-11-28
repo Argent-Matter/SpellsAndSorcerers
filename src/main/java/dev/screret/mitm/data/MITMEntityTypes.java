@@ -12,7 +12,7 @@ import dev.screret.mitm.common.entity.boss.cthulhu.CthulhuEntity;
 import dev.screret.mitm.common.entity.WizardEntity;
 import dev.screret.mitm.common.item.OneRingItem;
 
-public class MITMEntities {
+public class MITMEntityTypes {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MagicOfTheMind.MODID);
 

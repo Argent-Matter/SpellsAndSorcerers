@@ -15,10 +15,10 @@ import net.neoforged.neoforge.common.Tags;
 import dev.screret.mitm.data.MITMTags;
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.data.MITMItems;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.Nullable;
 
 public class MITMRecipeProvider extends RecipeProvider {
 
@@ -27,7 +27,7 @@ public class MITMRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput provider) {
+    protected void buildRecipes(@NotNull RecipeOutput provider) {
         MITMWandRecipes.buildRecipes(provider);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.WAND_TABLE.get())
@@ -71,47 +71,90 @@ public class MITMRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MITMItems.SOULSTEEL_SWORD.get()).define('#', MITMItems.HANDLE.get()).define('X', MITMTags.Items.SOULSTEEL_INGOTS).pattern("X").pattern("X").pattern("#").unlockedBy("has_diamond", has(MITMTags.Items.SOULSTEEL_INGOTS)).save(provider);
 
 
-        nineBlockStorageRecipesRecipesWithCustomUnpacking(provider, MITMTags.Items.SOULSTEEL_INGOTS, MITMItems.SOULSTEEL_INGOT.get(), MITMTags.Items.SOULSTEEL_BLOCKS, MITMItems.SOULSTEEL_BLOCK.get(), MITMUtil.id("soulsteel_ingot_from_soulsteel_block"), "soulsteel_ingot");
-        nineBlockStorageRecipesWithCustomPacking(provider, MITMTags.Items.SOULSTEEL_NUGGETS, MITMItems.SOULSTEEL_NUGGET.get(), MITMTags.Items.SOULSTEEL_INGOTS, MITMItems.SOULSTEEL_INGOT.get(), MITMUtil.id("soulsteel_ingot_from_nuggets"), "soulsteel_ingot");
+        nineBlockStorageRecipesWithCustomUnpacking(provider,
+                null, MITMTags.Items.SOULSTEEL_INGOTS, MITMItems.SOULSTEEL_INGOT.get(),
+                null, MITMTags.Items.SOULSTEEL_BLOCKS, MITMItems.SOULSTEEL_BLOCK.get(),
+                "soulsteel_ingot_from_soulsteel_block", "soulsteel_ingot");
+        nineBlockStorageRecipesWithCustomPacking(provider,
+                null, MITMTags.Items.SOULSTEEL_NUGGETS, MITMItems.SOULSTEEL_NUGGET.get(),
+                RecipeCategory.MISC, MITMTags.Items.SOULSTEEL_INGOTS, MITMItems.SOULSTEEL_INGOT.get(),
+                "soulsteel_ingot_from_nuggets", "soulsteel_ingot");
+
         oreSmelting(Ingredient.of(MITMTags.Items.GLINT_ORES), MITMItems.GLINT.get(), 1.5F, 200);
         oreBlasting(Ingredient.of(MITMTags.Items.GLINT_ORES), MITMItems.GLINT.get(), 1.5F, 100);
 
     }
 
-    protected static void nineBlockStorageRecipesWithCustomPacking(RecipeOutput provider, TagKey<Item> pUnpacked, ItemLike unpackedResult, TagKey<Item> pPacked, ItemLike packedResult, ResourceLocation pPackingRecipeName, String pPackingRecipeGroup) {
-        nineBlockStorageRecipes(provider, pUnpacked, unpackedResult, pPacked, packedResult, pPackingRecipeName, pPackingRecipeGroup, getItemLocation(unpackedResult), null);
+    protected static void nineBlockStorageRecipesWithCustomPacking(
+            RecipeOutput provider,
+            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
+            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult,
+            String packingRecipeName,  @Nullable String packingRecipeGroup
+    ) {
+        nineBlockStorageRecipes(provider,
+                unpackedCategory, unpacked, unpackedResult,
+                packedCategory, packed, packedResult,
+                MITMUtil.id(packingRecipeName), packingRecipeGroup,
+                getItemId(unpackedResult), null);
     }
 
-    protected static void nineBlockStorageRecipesRecipesWithCustomUnpacking(RecipeOutput provider, TagKey<Item> pUnpacked, ItemLike unpackedResult, TagKey<Item> pPacked, ItemLike packedResult, ResourceLocation pUnpackingRecipeName, String pUnpackingRecipeGroup) {
-        nineBlockStorageRecipes(provider, pUnpacked, unpackedResult, pPacked, packedResult, getItemLocation(packedResult), null, pUnpackingRecipeName, pUnpackingRecipeGroup);
+    protected static void nineBlockStorageRecipesWithCustomUnpacking(
+            RecipeOutput provider,
+            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
+            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult,
+            String unpackingRecipeName, @Nullable String unpackingRecipeGroup
+    ) {
+        nineBlockStorageRecipes(provider, unpackedCategory, unpacked, unpackedResult,
+                packedCategory, packed, packedResult,
+                getItemId(packedResult), null,
+                MITMUtil.id(unpackingRecipeName), unpackingRecipeGroup);
     }
 
-    protected static void nineBlockStorageRecipes(RecipeOutput provider, TagKey<Item> pUnpacked, ItemLike unpackedResult, TagKey<Item> pPacked, ItemLike packedResult, ResourceLocation pPackingRecipeName, @Nullable String pPackingRecipeGroup, ResourceLocation pUnpackingRecipeName, @Nullable String pUnpackingRecipeGroup) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, unpackedResult, 9)
-                .requires(pPacked)
-                .group(pUnpackingRecipeGroup)
-                .unlockedBy(getHasName(pPacked), has(pPacked))
-                .save(provider, pUnpackingRecipeName);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, packedResult)
-                .define('#', pUnpacked)
+    protected static void nineBlockStorageRecipes(
+            RecipeOutput recipeOutput,
+            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
+            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult
+    ) {
+        nineBlockStorageRecipes(recipeOutput,
+                unpackedCategory, unpacked, unpackedResult, packedCategory, packed, packedResult,
+                getItemId(packedResult), null, getItemId(unpackedResult), null);
+    }
+
+    protected static void nineBlockStorageRecipes(
+            RecipeOutput provider,
+            @Nullable RecipeCategory unpackedCategory, TagKey<Item> unpacked, ItemLike unpackedResult,
+            @Nullable RecipeCategory packedCategory, TagKey<Item> packed, ItemLike packedResult,
+            ResourceLocation packingRecipeName, @Nullable String packingRecipeGroup,
+            ResourceLocation unpackingRecipeName, @Nullable String unpackingRecipeGroup
+    ) {
+        if (unpackedCategory == null) unpackedCategory = RecipeCategory.MISC;
+        if (packedCategory == null) packedCategory = RecipeCategory.BUILDING_BLOCKS;
+
+        ShapelessRecipeBuilder.shapeless(unpackedCategory, unpackedResult, 9)
+                .requires(packed)
+                .group(unpackingRecipeGroup)
+                .unlockedBy(getHasName(packed), has(packed))
+                .save(provider, unpackingRecipeName);
+        ShapedRecipeBuilder.shaped(packedCategory, packedResult)
+                .define('#', unpacked)
                 .pattern("###")
                 .pattern("###")
                 .pattern("###")
-                .group(pPackingRecipeGroup)
-                .unlockedBy(getHasName(pUnpacked), has(pUnpacked))
-                .save(provider, pPackingRecipeName);
+                .group(packingRecipeGroup)
+                .unlockedBy(getHasName(unpacked), has(unpacked))
+                .save(provider, packingRecipeName);
     }
 
-    protected static void oreSmelting(Ingredient ingredient, ItemLike pResult, float pExperience, int pCookingTime) {
-        SimpleCookingRecipeBuilder.smelting(ingredient, RecipeCategory.MISC, pResult, pExperience, pCookingTime);
+    protected static void oreSmelting(Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        SimpleCookingRecipeBuilder.smelting(ingredient, RecipeCategory.MISC, result, experience, cookingTime);
     }
 
-    protected static void oreBlasting(Ingredient ingredient, ItemLike pResult, float pExperience, int pCookingTime) {
-        SimpleCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC, pResult, pExperience, pCookingTime);
+    protected static void oreBlasting(Ingredient ingredient, ItemLike result, float experience, int cookingTime) {
+        SimpleCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC, result, experience, cookingTime);
     }
 
-    protected static ResourceLocation getItemLocation(ItemLike item) {
-        return BuiltInRegistries.ITEM.getKey(item.asItem());
+    protected static ResourceLocation getItemId(ItemLike itemLike) {
+        return BuiltInRegistries.ITEM.getKey(itemLike.asItem());
     }
 
     protected static String getHasName(TagKey<Item> tag) {

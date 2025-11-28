@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MobEffectAccessor {
 
     @Invoker("<init>")
-    static MobEffect callInit(MobEffectCategory pCategory, int pColor) {
+    static MobEffect callInit(MobEffectCategory category, int color) {
         throw new AssertionError();
     }
 }

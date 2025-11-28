@@ -1,5 +1,6 @@
 package dev.screret.mitm.integration.rei;
 
+import dev.screret.mitm.data.MITMDataComponents;
 import dev.screret.mitm.data.MITMRecipeTypes;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
@@ -9,11 +10,10 @@ import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.forge.REIPluginClient;
-import net.minecraft.nbt.Tag;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
 import dev.screret.mitm.integration.rei.wand.DefaultWandDisplay;
 import dev.screret.mitm.integration.rei.wand.WandRecipeCategory;
 import dev.screret.mitm.data.MITMItems;
@@ -49,20 +49,15 @@ public class MITMReiPlugin implements REIClientPlugin {
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
         registry.group(MITMUtil.id("wands"), Component.translatable("group.mitm.wands"), entryStack -> {
             if (entryStack.getType() == VanillaEntryTypes.ITEM) {
-                ItemStack itemStack = entryStack.castValue();
-                if (itemStack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
-                    CapabilityWandAbility cap = itemStack.getCapability(CapabilityWandAbility.WAND_ABILITY);
-                    return cap.getMainAbility() != null;
-                }
+                ItemStack stack = entryStack.castValue();
+                return !stack.is(MITMItems.WAND_CORE) && stack.has(MITMDataComponents.WAND);
             }
             return false;
         });
         registry.group(MITMUtil.id("wand_cores"), Component.translatable("group.mitm.wand_cores"), entryStack -> {
             if (entryStack.getType() == VanillaEntryTypes.ITEM) {
-                ItemStack itemStack = entryStack.castValue();
-                if (itemStack.getItem() == MITMItems.WAND_CORE.get()) {
-                    return itemStack.hasTag() && itemStack.getTag().contains("ability", Tag.TAG_STRING);
-                }
+                ItemStack stack = entryStack.castValue();
+                return stack.is(MITMItems.WAND_CORE) && stack.has(MITMDataComponents.WAND_CORE);
             }
             return false;
         });

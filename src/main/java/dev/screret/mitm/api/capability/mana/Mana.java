@@ -1,13 +1,17 @@
 package dev.screret.mitm.api.capability.mana;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 public class Mana implements INBTSerializable<IntTag> {
 
+    @Getter
+    @Setter
     protected int mana;
     protected int capacity;
     protected int maxReceive;
@@ -52,20 +56,12 @@ public class Mana implements INBTSerializable<IntTag> {
         return manaExtracted;
     }
 
-    public int getMaxManaStored() {
+    public int getMaxMana() {
         return capacity;
     }
 
     public void setMaxManaStored(int max) {
         this.capacity = max;
-    }
-
-    public int getManaStored() {
-        return mana;
-    }
-
-    public void setManaStored(int mana) {
-        this.mana = mana;
     }
 
     public boolean canExtract() {
@@ -77,12 +73,12 @@ public class Mana implements INBTSerializable<IntTag> {
     }
 
     @Override
-    public IntTag serializeNBT(HolderLookup.Provider provider) {
-        return IntTag.valueOf(this.getManaStored());
+    public IntTag serializeNBT(HolderLookup.@NotNull Provider registries) {
+        return IntTag.valueOf(this.getMana());
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, IntTag tag) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider registries, IntTag tag) {
         this.mana = tag.getAsInt();
     }
 }

@@ -1,13 +1,13 @@
 package dev.screret.mitm.common.block;
 
 import com.mojang.serialization.MapCodec;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -21,12 +21,19 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+
+import dev.screret.mitm.api.util.ItemHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.common.blockentity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class PotionDistilleryBlock extends BaseEntityBlock {
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -36,76 +43,59 @@ public class PotionDistilleryBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
-            return InteractionResult.SUCCESS;
-        } else {
-            pPlayer.openMenu(this.getMenuProvider(pState, pLevel, pPos));
-            return InteractionResult.CONSUME;
-        }
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, LIT);
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, LIT);
-    }
-
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MITMBlockEntities.POTION_DISTILLERY.get().create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return MITMBlockEntities.POTION_DISTILLERY.get().create(pos, state);
     }
 
     @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (!pState.is(pNewState.getBlock())) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof PotionDistilleryBlockEntity distilleryBE) {
-                if (pLevel instanceof ServerLevel) {
-                    Containers.dropContents(pLevel, pPos, distilleryBE.getInventoryWrapper());
-                    distilleryBE.getRecipesToAwardAndPopExperience((ServerLevel) pLevel, Vec3.atCenterOf(pPos));
-                }
-
-                pLevel.updateNeighbourForOutputSignal(pPos, this);
-            }
-
-            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+    protected InteractionResult useWithoutItem(BlockState state, Level level,BlockPos pos,
+                                               Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
+        player.openMenu(this.getMenuProvider(state, level, pos));
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState pState) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.hasBlockEntity() || state.is(newState.getBlock())) {
+            return;
+        }
+        BlockEntity blockentity = level.getBlockEntity(pos);
+        if (!(blockentity instanceof PotionDistilleryBlockEntity distilleryBE)) {
+            return;
+        }
+        if (level instanceof ServerLevel serverLevel) {
+            ItemHandlerUtil.dropContents(level, pos, distilleryBE.getInventory());
+            distilleryBE.getRecipesToAwardAndPopExperience(serverLevel, Vec3.atCenterOf(pos));
+        }
+
+        level.updateNeighbourForOutputSignal(pos, this);
+
+        super.onRemove(state, level, pos, newState, isMoving);
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState pBlockState, Level pLevel, BlockPos pPos) {
-        var be = pLevel.getBlockEntity(pPos, MITMBlockEntities.POTION_DISTILLERY.get());
-        return be.map(distilleryBE -> getRedstoneSignalFromItemHandler(distilleryBE.getInventory())).orElse(0);
-    }
-
-    public static int getRedstoneSignalFromItemHandler(ItemStackHandler handler) {
-        if (handler == null) {
-            return 0;
-        } else {
-            int power = 0;
-            float slotCount = 0.0F;
-
-            for (int j = 0; j < handler.getSlots(); ++j) {
-                ItemStack itemstack = handler.getStackInSlot(j);
-                if (!itemstack.isEmpty()) {
-                    slotCount += (float) itemstack.getCount() / (float) Math.min(handler.getSlotLimit(j), itemstack.getMaxStackSize());
-                    ++power;
-                }
-            }
-
-            slotCount /= (float) handler.getSlots();
-            return Mth.floor(slotCount * 14.0F) + (power > 0 ? 1 : 0);
-        }
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
+        var be = level.getBlockEntity(pos, MITMBlockEntities.POTION_DISTILLERY.get());
+        return be.map(blockEntity -> ItemHandlerHelper.calcRedstoneFromInventory(blockEntity.getInventory()))
+                .orElse(0);
     }
 
     @Override
@@ -114,24 +104,24 @@ public class PotionDistilleryBlock extends BaseEntityBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState pState) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    public BlockState rotate(BlockState pState, Rotation pRotation) {
-        return pState.setValue(FACING, pRotation.rotate(pState.getValue(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, MITMBlockEntities.POTION_DISTILLERY.get(), PotionDistilleryBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, MITMBlockEntities.POTION_DISTILLERY.get(), PotionDistilleryBlockEntity::serverTick);
     }
 
 }

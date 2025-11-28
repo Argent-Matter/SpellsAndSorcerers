@@ -1,19 +1,18 @@
 package dev.screret.mitm.common.menu.container;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 import dev.screret.mitm.data.MITMRecipeTypes;
 import org.jetbrains.annotations.Nullable;
-import dev.screret.mitm.common.blockentity.PotionDistilleryBlockEntity;
+import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
 import dev.screret.mitm.data.MITMContainers;
 import dev.screret.mitm.common.menu.slot.DistilleryFuelSlot;
 import dev.screret.mitm.common.menu.slot.DistilleryResultSlot;
@@ -23,61 +22,60 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
     private static final int INPUT_SLOT = 1, FUEL_SLOT = 0, INV_SLOT_START = 5, INV_SLOT_END = 32, USE_ROW_SLOT_START = 32, USE_ROW_SLOT_END = 41;
     public static final int PROGRESS_BAR_Y_SIZE = 24, FUEL_PROGRESS_BAR_X_SIZE = 18;
 
-    private final Player player;
     @Nullable
     private final PotionDistilleryBlockEntity blockEntity;
-    private final ItemStackHandler items;
     private final ContainerData data;
     private final Level level;
 
-    public PotionDistilleryMenu(int pContainerId, Inventory pPlayerInventory) {
-        this(pContainerId, pPlayerInventory, null);
+    public PotionDistilleryMenu(int containerId, Inventory playerInventory) {
+        this(containerId, playerInventory, null);
     }
 
-    public PotionDistilleryMenu(int pContainerId, Inventory pPlayerInventory, PotionDistilleryBlockEntity blockEntity) {
-        super(MITMContainers.POTION_DISTILLERY.get(), pContainerId);
-        this.player = pPlayerInventory.player;
+    public PotionDistilleryMenu(int containerId, Inventory playerInventory, PotionDistilleryBlockEntity blockEntity) {
+        super(MITMContainers.POTION_DISTILLERY.get(), containerId);
         this.blockEntity = blockEntity;
 
         if (this.blockEntity != null) {
-            checkContainerSize(this.blockEntity.getInventoryWrapper(), 5);
+            checkContainerSize(this.blockEntity.getInventory(), 5);
             checkContainerDataCount(blockEntity.getDataAccess(), 4);
-            this.items = this.blockEntity.getInventory();
+
+
             this.data = blockEntity.getDataAccess();
-            this.level = pPlayerInventory.player.level();
-            this.addSlot(new DistilleryFuelSlot(this, this.items, 0, 17, 17));
+            this.level = playerInventory.player.level();
+
+            IItemHandler items = this.blockEntity.getInventory();
+            this.addSlot(new DistilleryFuelSlot(this, items, 0, 17, 17));
             this.addSlot(new SlotItemHandler(items, 1, 79, 17));
 
-            this.addSlot(new DistilleryResultSlot(pPlayerInventory.player, this.items, 2, 56, 51));
-            this.addSlot(new DistilleryResultSlot(pPlayerInventory.player, this.items, 3, 79, 58));
-            this.addSlot(new DistilleryResultSlot(pPlayerInventory.player, this.items, 4, 102, 51));
+            this.addSlot(new DistilleryResultSlot(playerInventory.player, items, 2, 56, 51));
+            this.addSlot(new DistilleryResultSlot(playerInventory.player, items, 3, 79, 58));
+            this.addSlot(new DistilleryResultSlot(playerInventory.player, items, 4, 102, 51));
 
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
-                    this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                    this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
                 }
             }
 
             for (int k = 0; k < 9; ++k) {
-                this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
+                this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
             }
 
             this.addDataSlots(this.data);
         } else {
-            this.items = null;
             this.data = null;
             this.level = null;
         }
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int startSlot) {
         ItemStack copy = ItemStack.EMPTY;
-        Slot slot = this.slots.get(pIndex);
+        Slot slot = this.slots.get(startSlot);
         if (slot != null && slot.hasItem()) {
             ItemStack item = slot.getItem();
             copy = item.copy();
-            if (pIndex >= RESULT_SLOT_START && pIndex <= RESULT_SLOT_END) {
+            if (startSlot >= RESULT_SLOT_START && startSlot <= RESULT_SLOT_END) {
                 for (int index = RESULT_SLOT_START; index <= RESULT_SLOT_END; ++index) {
                     if (!this.moveItemStackTo(item, index, USE_ROW_SLOT_END, true)) {
                         return ItemStack.EMPTY;
@@ -85,20 +83,20 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
                 }
 
                 slot.onQuickCraft(item, copy);
-            } else if (pIndex != FUEL_SLOT && pIndex != INPUT_SLOT) {
+            } else if (startSlot != FUEL_SLOT && startSlot != INPUT_SLOT) {
                 if (this.canSmelt(item)) {
                     if (!this.moveItemStackTo(item, INPUT_SLOT, FUEL_SLOT, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.isFuel(item)) {
+                } else if (PotionDistilleryBlockEntity.isFuel(item)) {
                     if (!this.moveItemStackTo(item, FUEL_SLOT, RESULT_SLOT_START, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (pIndex >= INV_SLOT_START && pIndex < INV_SLOT_END) {
+                } else if (startSlot >= INV_SLOT_START && startSlot < INV_SLOT_END) {
                     if (!this.moveItemStackTo(item, USE_ROW_SLOT_START, USE_ROW_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (pIndex >= INV_SLOT_END && pIndex < USE_ROW_SLOT_END && !this.moveItemStackTo(item, 3, 30, false)) {
+                } else if (startSlot >= INV_SLOT_END && startSlot < USE_ROW_SLOT_END && !this.moveItemStackTo(item, 3, 30, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(item, RESULT_SLOT_END, USE_ROW_SLOT_END, false)) {
@@ -115,18 +113,15 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(pPlayer, item);
+            slot.onTake(player, item);
         }
 
         return copy;
     }
 
-    protected boolean canSmelt(ItemStack pStack) {
-        return this.level.getRecipeManager().getRecipeFor(MITMRecipeTypes.POTION_DISTILLING_RECIPE.get(), new SimpleContainer(pStack), this.level).isPresent();
-    }
-
-    public boolean isFuel(ItemStack pStack) {
-        return CommonHooks.getBurnTime(pStack, MITMRecipeTypes.POTION_DISTILLING_RECIPE.get()) > 0;
+    protected boolean canSmelt(ItemStack stack) {
+        return this.level.getRecipeManager()
+                .getRecipeFor(MITMRecipeTypes.POTION_DISTILLING_RECIPE.get(), new SingleRecipeInput(stack), this.level).isPresent();
     }
 
     public boolean isLit() {
@@ -149,11 +144,17 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(Player player) {
         if (blockEntity == null) {
             return false;
         }
         BlockPos pos = blockEntity.getBlockPos();
-        return pPlayer.distanceToSqr(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D) > 8 * 8;
+        return player.distanceToSqr(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D) > 8 * 8;
+    }
+
+    protected static void checkContainerSize(IItemHandler itemHandler, int minSize) {
+        if (itemHandler.getSlots() < minSize) {
+            throw new IllegalArgumentException("Container size " + itemHandler.getSlots() + " is smaller than expected: " + minSize);
+        }
     }
 }

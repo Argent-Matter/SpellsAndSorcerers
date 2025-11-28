@@ -17,7 +17,7 @@ public class MITMCreativeTabs {
     public static final Supplier<CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("spellsandsorcerers", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + MagicOfTheMind.MODID))
             .icon(() -> MITMItems.WAND.get().getDefaultInstance())
-            .displayItems((pParameters, output) -> {
+            .displayItems((parameters, output) -> {
                 output.acceptAll(MITMUtil.CUSTOM_WANDS.values());
                 output.acceptAll(MITMUtil.CUSTOM_WAND_CORES.values());
                 for (DeferredHolder<Item, ? extends Item> item : MITMItems.ITEMS.getEntries()) {

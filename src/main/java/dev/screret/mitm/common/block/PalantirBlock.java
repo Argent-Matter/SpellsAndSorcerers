@@ -14,7 +14,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.common.blockentity.PalantirBlockEntity;
+import dev.screret.mitm.common.block.entity.PalantirBlockEntity;
 
 public class PalantirBlock extends BaseEntityBlock {
     private static final VoxelShape BASE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 2.0D, 12.0D);
@@ -27,12 +27,12 @@ public class PalantirBlock extends BaseEntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public boolean useShapeForLightOcclusion(BlockState pState) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
@@ -48,11 +48,11 @@ public class PalantirBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MITMBlockEntities.PALANTIR.get().create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return MITMBlockEntities.PALANTIR.get().create(pos, state);
     }
 
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? createTickerHelper(pBlockEntityType, MITMBlockEntities.PALANTIR.get(), PalantirBlockEntity::eyeAnimationTick) : null;
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ? createTickerHelper(blockEntityType, MITMBlockEntities.PALANTIR.get(), PalantirBlockEntity::eyeAnimationTick) : null;
     }
 }

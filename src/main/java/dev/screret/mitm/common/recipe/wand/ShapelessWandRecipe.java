@@ -1,31 +1,40 @@
 package dev.screret.mitm.common.recipe.wand;
 
-import com.google.gson.JsonArray;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
-import dev.screret.mitm.data.MITMRecipeTypes;
 
+import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
+import dev.screret.mitm.data.MITMIngredientTypes;
+import dev.screret.mitm.data.MITMRecipeTypes;
+import lombok.AccessLevel;
+import lombok.Getter;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class ShapelessWandRecipe implements WandRecipe {
 
-    public static final String TYPE_ID_NAME = "shapeless_wand";
-    public static final ResourceLocation TYPE_ID = MITMUtil.id(TYPE_ID_NAME);
     public static final int MAX_SIZE_X = 3, MAX_SIZE_Y = 2;
 
-    final String group;
-    final WandAbilityIngredient result;
-    final NonNullList<Ingredient> ingredients;
+    @Getter(AccessLevel.PRIVATE)
+    private final String group;
+    @Getter
+    private final NonNullList<Ingredient> ingredients;
+    @Getter(AccessLevel.PRIVATE)
+    private final WandAbilityIngredient result;
 
     public ShapelessWandRecipe(String group, NonNullList<Ingredient> ingredients, WandAbilityIngredient result) {
         this.group = group;
@@ -34,14 +43,14 @@ public class ShapelessWandRecipe implements WandRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer pInv, Level pLevel) {
-        for (int i = 0; i <= pInv.getWidth() - MAX_SIZE_X; ++i) {
-            for (int j = 0; j <= pInv.getHeight() - MAX_SIZE_Y; ++j) {
-                if (this.matches(pInv, i, j, true)) {
+    public boolean matches(CraftingInput inv, Level level) {
+        for (int i = 0; i <= inv.width() - MAX_SIZE_X; ++i) {
+            for (int j = 0; j <= inv.height() - MAX_SIZE_Y; ++j) {
+                if (this.matches(inv, i, j, true)) {
                     return true;
                 }
 
-                if (this.matches(pInv, i, j, false)) {
+                if (this.matches(inv, i, j, false)) {
                     return true;
                 }
             }
@@ -50,21 +59,21 @@ public class ShapelessWandRecipe implements WandRecipe {
         return false;
     }
 
-    private boolean matches(CraftingContainer pCraftingInventory, int pWidth, int pHeight, boolean pMirrored) {
-        for (int i = 0; i < pCraftingInventory.getWidth(); ++i) {
-            for (int j = 0; j < pCraftingInventory.getHeight(); ++j) {
-                int k = i - pWidth;
-                int l = j - pHeight;
+    private boolean matches(CraftingInput craftingInventory, int width, int height, boolean mirrored) {
+        for (int i = 0; i < craftingInventory.width(); ++i) {
+            for (int j = 0; j < craftingInventory.height(); ++j) {
+                int k = i - width;
+                int l = j - height;
                 Ingredient ingredient = Ingredient.EMPTY;
                 if (k >= 0 && l >= 0 && k < MAX_SIZE_X && l < MAX_SIZE_Y) {
-                    if (pMirrored) {
+                    if (mirrored) {
                         ingredient = this.ingredients.get(MAX_SIZE_X - k - 1 + l * MAX_SIZE_X);
                     } else {
                         ingredient = this.ingredients.get(k + l * MAX_SIZE_X);
                     }
                 }
 
-                if (!ingredient.test(pCraftingInventory.getItem(i + j * pCraftingInventory.getWidth()))) {
+                if (!ingredient.test(craftingInventory.getItem(i + j * craftingInventory.width()))) {
                     return false;
                 }
             }
@@ -74,7 +83,7 @@ public class ShapelessWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer container, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(CraftingInput container, HolderLookup.Provider registries) {
         return this.result.getStack();
     }
 
@@ -84,29 +93,13 @@ public class ShapelessWandRecipe implements WandRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return result.getStack();
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return ingredients;
     }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
         return MITMRecipeTypes.SHAPELESS_WAND_RECIPE_SERIALIZER.get();
-    }
-
-    private static NonNullList<Ingredient> itemsFromJson(JsonArray pIngredientArray) {
-        NonNullList<Ingredient> ingredients = NonNullList.create();
-
-        for (int i = 0; i < pIngredientArray.size(); ++i) {
-            Ingredient ingredient = Ingredient.fromJson(pIngredientArray.get(i), false);
-            ingredients.add(ingredient);
-        }
-
-        return ingredients;
     }
 
     @Override
@@ -115,55 +108,44 @@ public class ShapelessWandRecipe implements WandRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<ShapelessWandRecipe> {
-        public static final Codec<ShapelessWandRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(val -> val.group),
-                Ingredient.CODEC_NONEMPTY
-                        .listOf()
-                        .fieldOf("ingredients")
-                        .flatXmap(
-                                ingredients -> {
-                                    Ingredient[] aingredient = ingredients
-                                            .toArray(Ingredient[]::new); //Forge skip the empty check and immediately create the array.
-                                    if (aingredient.length == 0) {
-                                        return DataResult.error(() -> "No ingredients for shapeless recipe");
-                                    } else {
-                                        return aingredient.length > MAX_SIZE_Y * MAX_SIZE_X
-                                                ? DataResult.error(() -> "Too many ingredients for shapeless wand recipe. The maximum is: %s".formatted(MAX_SIZE_Y * MAX_SIZE_X))
-                                                : DataResult.success(NonNullList.of(Ingredient.EMPTY, aingredient));
-                                    }
-                                },
-                                DataResult::success
-                        )
-                        .forGetter(val -> val.ingredients),
-                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(val -> val.result)
 
+        // spotless:off
+        private static final MapCodec<ShapelessWandRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessWandRecipe::getGroup),
+                Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients")
+                        .flatXmap(ingredients -> {
+                            // Neo: skip the empty check and immediately create the array.
+                            Ingredient[] array = ingredients.toArray(Ingredient[]::new);
+                            if (array.length == 0) {
+                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                            } else {
+                                return array.length > MAX_SIZE_Y * MAX_SIZE_X
+                                        ? DataResult.error(() -> "Too many ingredients for shapeless wand recipe. The maximum is: %s".formatted(MAX_SIZE_Y * MAX_SIZE_X))
+                                        : DataResult.success(NonNullList.of(Ingredient.EMPTY, array));
+                            }
+                            }, DataResult::success
+                        ).forGetter(ShapelessWandRecipe::getIngredients),
+                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(ShapelessWandRecipe::getResult)
         ).apply(instance, ShapelessWandRecipe::new));
 
+        private static final StreamCodec<RegistryFriendlyByteBuf, NonNullList<Ingredient>> INGREDIENT_STREAM_CODEC = ByteBufCodecs.collection(
+                size -> NonNullList.withSize(size, Ingredient.EMPTY), Ingredient.CONTENTS_STREAM_CODEC, MAX_SIZE_Y * MAX_SIZE_X);
+        private static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWandRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, ShapelessWandRecipe::getGroup,
+                INGREDIENT_STREAM_CODEC, ShapelessWandRecipe::getIngredients,
+                MITMIngredientTypes.WAND_ABILITY.get().streamCodec(), ShapelessWandRecipe::getResult,
+                ShapelessWandRecipe::new
+        );
+        // spotless:on
+
         @Override
-        public Codec<ShapelessWandRecipe> codec() {
+        public MapCodec<ShapelessWandRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public ShapelessWandRecipe fromNetwork(FriendlyByteBuf buffer) {
-            String group = buffer.readUtf();
-            int count = buffer.readVarInt();
-            NonNullList<Ingredient> ingredients = NonNullList.withSize(count, Ingredient.EMPTY);
-            ingredients.replaceAll(ignored -> Ingredient.fromNetwork(buffer));
-
-            WandAbilityIngredient result = (WandAbilityIngredient) WandAbilityIngredient.fromNetwork(buffer);
-            return new ShapelessWandRecipe(group, ingredients, result);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, ShapelessWandRecipe recipe) {
-            buffer.writeUtf(recipe.group);
-            buffer.writeVarInt(recipe.ingredients.size());
-            for (Ingredient ingredient : recipe.ingredients) {
-                ingredient.toNetwork(buffer);
-            }
-
-            recipe.result.toNetwork(buffer);
+        public StreamCodec<RegistryFriendlyByteBuf, ShapelessWandRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

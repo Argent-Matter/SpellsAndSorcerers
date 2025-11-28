@@ -1,59 +1,77 @@
 package dev.screret.mitm.common.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.screret.mitm.data.MITMRecipeTypes;
+import lombok.AccessLevel;
+import lombok.Getter;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public class PotionDistillingRecipe implements Recipe<Container> {
-    public static String TYPE_ID_NAME = "potion_distilling";
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class PotionDistillingRecipe implements Recipe<RecipeInput> {
+
+    /**
+     *  Recipes with equal group are combined into one button in the recipe book
+     */
+    @Getter
     protected final String group;
+    @Getter(AccessLevel.PRIVATE)
     protected final Ingredient ingredient;
+    @Getter(AccessLevel.PRIVATE)
     protected final ItemStack result;
+    /**
+     *  Gets the experience of this recipe
+     */
+    @Getter
     protected final float experience;
+    /**
+     *  Gets the processing time in ticks
+     */
+    @Getter
     protected final int processingTime;
 
-    public PotionDistillingRecipe(String pGroup, Ingredient pIngredient, ItemStack pResult, float pExperience, int pCookingTime) {
-        this.group = pGroup;
-        this.ingredient = pIngredient;
-        this.result = pResult;
-        this.experience = pExperience;
-        this.processingTime = pCookingTime;
+    public PotionDistillingRecipe(String group, Ingredient ingredient, ItemStack result, float experience, int cookingTime) {
+        this.group = group;
+        this.ingredient = ingredient;
+        this.result = result;
+        this.experience = experience;
+        this.processingTime = cookingTime;
     }
 
     /**
      * Used to check if a recipe matches current crafting inventory
      */
-    public boolean matches(Container pInv, Level pLevel) {
-        return this.ingredient.test(pInv.getItem(0));
+    public boolean matches(RecipeInput inv, Level level) {
+        return this.ingredient.test(inv.getItem(0));
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(RecipeInput container, HolderLookup.Provider registries) {
         return this.result.copy();
     }
 
     /**
      * Used to determine if this recipe can fit in a grid of the given width/height
      */
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return this.result.copy();
     }
 
@@ -61,27 +79,6 @@ public class PotionDistillingRecipe implements Recipe<Container> {
         NonNullList<Ingredient> nonnulllist = NonNullList.create();
         nonnulllist.add(this.ingredient);
         return nonnulllist;
-    }
-
-    /**
-     * Gets the experience of this recipe
-     */
-    public float getExperience() {
-        return this.experience;
-    }
-
-    /**
-     * Recipes with equal group are combined into one button in the recipe book
-     */
-    public String getGroup() {
-        return this.group;
-    }
-
-    /**
-     * Gets the cook time in ticks
-     */
-    public int getProcessingTime() {
-        return this.processingTime;
     }
 
     @Override
@@ -94,35 +91,34 @@ public class PotionDistillingRecipe implements Recipe<Container> {
     }
 
     public static class Serializer implements RecipeSerializer<PotionDistillingRecipe> {
+
+        // spotless:off
         private static final int PROCESSING_TIME = 400;
-        public static final Codec<PotionDistillingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(val -> val.group),
+        private static final MapCodec<PotionDistillingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(val -> val.group),
                 Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(val -> val.ingredient),
-                ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(val -> val.result),
+                ItemStack.CODEC.fieldOf("result").forGetter(val -> val.result),
                 Codec.FLOAT.fieldOf("experience").orElse(0.0F).forGetter(val -> val.experience),
                 Codec.INT.fieldOf("processing_time").orElse(PROCESSING_TIME).forGetter(val -> val.processingTime)
         ).apply(instance, PotionDistillingRecipe::new));
+        private static final StreamCodec<RegistryFriendlyByteBuf, PotionDistillingRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, PotionDistillingRecipe::getGroup,
+                Ingredient.CONTENTS_STREAM_CODEC, PotionDistillingRecipe::getIngredient,
+                ItemStack.STREAM_CODEC, PotionDistillingRecipe::getResult,
+                ByteBufCodecs.FLOAT, PotionDistillingRecipe::getExperience,
+                ByteBufCodecs.VAR_INT, PotionDistillingRecipe::getProcessingTime,
+                PotionDistillingRecipe::new
+        );
+        // spotless:on
 
         @Override
-        public Codec<PotionDistillingRecipe> codec() {
+        public MapCodec<PotionDistillingRecipe> codec() {
             return CODEC;
         }
 
-        public PotionDistillingRecipe fromNetwork(FriendlyByteBuf pBuffer) {
-            String group = pBuffer.readUtf();
-            Ingredient ingredient = Ingredient.fromNetwork(pBuffer);
-            ItemStack result = pBuffer.readItem();
-            float experience = pBuffer.readFloat();
-            int processing_time = pBuffer.readVarInt();
-            return new PotionDistillingRecipe(group, ingredient, result, experience, processing_time);
-        }
-
-        public void toNetwork(FriendlyByteBuf pBuffer, PotionDistillingRecipe pRecipe) {
-            pBuffer.writeUtf(pRecipe.group);
-            pRecipe.ingredient.toNetwork(pBuffer);
-            pBuffer.writeItem(pRecipe.result);
-            pBuffer.writeFloat(pRecipe.experience);
-            pBuffer.writeVarInt(pRecipe.processingTime);
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, PotionDistillingRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 

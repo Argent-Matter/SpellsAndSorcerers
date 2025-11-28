@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
 
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
-import dev.screret.mitm.data.MITMEntities;
+import dev.screret.mitm.data.MITMEntityTypes;
 import dev.screret.mitm.mixin.accessor.ItemEntityAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -160,7 +160,7 @@ public class OneRingItem extends Item implements ICurioItem {
 
         public static @Nullable RingItemEntity fromDroppedItem(Level level, ItemEntity original, ItemStack stack) {
             // copy the original item entity's info over
-            RingItemEntity newEntity = MITMEntities.RING_ITEM.get().create(level);
+            RingItemEntity newEntity = MITMEntityTypes.RING_ITEM.get().create(level);
             if (newEntity == null) {
                 return null;
             }

@@ -16,7 +16,7 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.mitm.common.recipe.wand.ShapelessWandRecipe;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,38 +28,38 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
-    public ShapelessWandRecipeBuilder(ItemStack pResult) {
-        this.result = WandAbilityIngredient.fromStack(pResult);
+    public ShapelessWandRecipeBuilder(ItemStack result) {
+        this.result = WandAbilityIngredient.fromStack(result);
     }
 
     /**
      * Adds an ingredient that can be any item in the given tag.
      */
-    public ShapelessWandRecipeBuilder requires(TagKey<Item> pTag) {
-        return this.requires(Ingredient.of(pTag));
+    public ShapelessWandRecipeBuilder requires(TagKey<Item> tag) {
+        return this.requires(Ingredient.of(tag));
     }
 
     /**
      * Adds an ingredient of the given item.
      */
-    public ShapelessWandRecipeBuilder requires(ItemLike pItem) {
-        return this.requires(pItem, 1);
+    public ShapelessWandRecipeBuilder requires(ItemLike item) {
+        return this.requires(item, 1);
     }
 
-    public ShapelessWandRecipeBuilder requires(ItemStack pItem) {
-        return this.requires(DataComponentIngredient.of(true, pItem), 1);
+    public ShapelessWandRecipeBuilder requires(ItemStack item) {
+        return this.requires(DataComponentIngredient.of(true, item), 1);
     }
 
-    public ShapelessWandRecipeBuilder requires(ItemStack pItem, int count) {
-        return this.requires(DataComponentIngredient.of(true, pItem), count);
+    public ShapelessWandRecipeBuilder requires(ItemStack item, int count) {
+        return this.requires(DataComponentIngredient.of(true, item), count);
     }
 
     /**
      * Adds the given ingredient multiple times.
      */
-    public ShapelessWandRecipeBuilder requires(ItemLike pItem, int pQuantity) {
-        for (int i = 0; i < pQuantity; ++i) {
-            this.requires(Ingredient.of(pItem));
+    public ShapelessWandRecipeBuilder requires(ItemLike item, int quantity) {
+        for (int i = 0; i < quantity; ++i) {
+            this.requires(Ingredient.of(item));
         }
 
         return this;
@@ -68,30 +68,30 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
     /**
      * Adds an ingredient.
      */
-    public ShapelessWandRecipeBuilder requires(Ingredient pIngredient) {
-        return this.requires(pIngredient, 1);
+    public ShapelessWandRecipeBuilder requires(Ingredient ingredient) {
+        return this.requires(ingredient, 1);
     }
 
     /**
      * Adds an ingredient multiple times.
      */
-    public ShapelessWandRecipeBuilder requires(Ingredient pIngredient, int pQuantity) {
-        for (int i = 0; i < pQuantity; ++i) {
-            this.ingredients.add(pIngredient);
+    public ShapelessWandRecipeBuilder requires(Ingredient ingredient, int quantity) {
+        for (int i = 0; i < quantity; ++i) {
+            this.ingredients.add(ingredient);
         }
 
         return this;
     }
 
     @Override
-    public RecipeBuilder unlockedBy(String pName, Criterion<?> pCriterion) {
-        this.criteria.put(pName, pCriterion);
+    public RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+        this.criteria.put(name, criterion);
         return this;
     }
 
     @Override
-    public ShapelessWandRecipeBuilder group(@Nullable String pGroupName) {
-        this.group = pGroupName;
+    public ShapelessWandRecipeBuilder group(@Nullable String groupName) {
+        this.group = groupName;
         return this;
     }
 
@@ -101,19 +101,19 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput pRecipeOutput, ResourceLocation pId) {
-        this.ensureValid(pId);
-        var advancement = pRecipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pId)).rewards(AdvancementRewards.Builder.recipe(pId)).requirements(AdvancementRequirements.Strategy.OR);
+    public void save(RecipeOutput recipeOutput, ResourceLocation id) {
+        this.ensureValid(id);
+        var advancement = recipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        pRecipeOutput.accept(pId, new ShapelessWandRecipe(this.group, this.ingredients, this.result), advancement.build(pId.withPrefix("recipes/")));
+        recipeOutput.accept(id, new ShapelessWandRecipe(this.group, this.ingredients, this.result), advancement.build(id.withPrefix("recipes/")));
     }
 
     /**
      * Makes sure that this recipe is valid and obtainable.
      */
-    private void ensureValid(ResourceLocation pId) {
+    private void ensureValid(ResourceLocation id) {
         if (this.criteria.isEmpty()) {
-            throw new IllegalStateException("No way of obtaining recipe " + pId);
+            throw new IllegalStateException("No way of obtaining recipe " + id);
         }
     }
 }

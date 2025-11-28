@@ -1,10 +1,10 @@
 package dev.screret.mitm.client.renderer.blockentity;
 
 import dev.screret.mitm.common.block.SummonSignBlock;
-import dev.screret.mitm.common.blockentity.SummonSignBlockEntity;
+import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
 import dev.screret.mitm.client.model.blockentity.SummonSignModel;
-import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
+import software.bernie.geckolib.util.Color;
 
 public class SummonSignBERenderer extends GeoBlockRenderer<SummonSignBlockEntity> {
     public SummonSignBERenderer() {
@@ -13,7 +13,7 @@ public class SummonSignBERenderer extends GeoBlockRenderer<SummonSignBlockEntity
 
     @Override
     public Color getRenderColor(SummonSignBlockEntity animatable, float partialTick, int packedLight) {
-        var colors = animatable.getBlockState().getValue(SummonSignBlock.COLOR).getTextureDiffuseColors();
-        return Color.ofRGB(colors[0], colors[1], colors[2]);
+        int value = animatable.getBlockState().getValue(SummonSignBlock.COLOR).getTextureDiffuseColor();
+        return new Color(value);
     }
 }

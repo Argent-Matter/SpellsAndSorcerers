@@ -1,70 +1,76 @@
 package dev.screret.mitm.common.recipe.ingredient;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.capability.ability.CapabilityWandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
-import dev.screret.mitm.api.registry.MITMRegistries;
-import dev.screret.mitm.data.MITMItems;
-import dev.screret.mitm.common.item.WandCoreItem;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
+import net.neoforged.neoforge.common.crafting.IngredientType;
 
-import javax.annotation.Nullable;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import dev.screret.mitm.common.item.component.WandComponent;
+import dev.screret.mitm.data.MITMDataComponents;
+import dev.screret.mitm.data.MITMIngredientTypes;
+import dev.screret.mitm.data.MITMItems;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class WandAbilityIngredient extends Ingredient {
-    public static final Codec<WandAbilityIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+public class WandAbilityIngredient implements ICustomIngredient {
+
+    // spotless:off
+    public static final MapCodec<WandAbilityIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             WandAbilityInstance.CODEC.fieldOf("main_ability").forGetter(val -> val.ability),
             WandAbilityInstance.CODEC.optionalFieldOf("crouch_ability").forGetter(val -> Optional.ofNullable(val.crouchAbility)),
-            BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(val -> val.item),
-            Codec.BOOL.optionalFieldOf("powered_up", false).forGetter(val -> val.isPoweredUp)
-    ).apply(instance, (main, crouchOptional, item, poweredUp) -> new WandAbilityIngredient(main, crouchOptional.orElse(null), item, poweredUp)));
+            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("item").forGetter(val -> val.stack.getItemHolder()),
+            Codec.BOOL.optionalFieldOf("powered_up", false).forGetter(val -> val.poweredUp)
+    ).apply(instance, (main, crouchOptional, item, poweredUp) ->
+            new WandAbilityIngredient(main, crouchOptional.orElse(null), item.value(), poweredUp)));
+    // spotless:on
 
     private final WandAbilityInstance ability;
     @Nullable
     private final WandAbilityInstance crouchAbility;
 
-    private final boolean isPoweredUp;
-    private final Item item;
+    @Getter
+    private final boolean poweredUp;
+    @Getter
+    private final ItemStack stack;
 
-    public WandAbilityIngredient(WandAbilityInstance ability, Item item, boolean isPoweredUp) {
-        super(Stream.of(new ItemValue(item.getDefaultInstance())));
-        this.ability = ability;
-        this.crouchAbility = null;
-        this.item = item;
-        this.isPoweredUp = isPoweredUp;
+    public WandAbilityIngredient(WandAbilityInstance primary, @Nullable WandAbilityInstance secondary, Item item, boolean poweredUp) {
+        this.ability = primary;
+        this.stack = item.getDefaultInstance();
+        if (item == MITMItems.WAND_CORE.get()) {
+            this.stack.set(MITMDataComponents.WAND_CORE, primary);
+        } else {
+            this.stack.set(MITMDataComponents.WAND, new WandComponent(primary, Optional.ofNullable(secondary), poweredUp));
+        }
+
+        this.crouchAbility = secondary;
+        this.poweredUp = poweredUp;
     }
 
-    public WandAbilityIngredient(WandAbilityInstance ability, @Nullable WandAbilityInstance crouchAbility, Item item, boolean isPoweredUp) {
-        super(Stream.of(new ItemValue(item.getDefaultInstance())));
-        this.ability = ability;
-        this.item = item;
-        this.crouchAbility = crouchAbility;
-        this.isPoweredUp = isPoweredUp;
-    }
-
-    public static WandAbilityIngredient fromCapability(CapabilityWandAbility cap, Item item) {
-        return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), item, cap.getPoweredUp());
+    @Override
+    public @NotNull Stream<ItemStack> getItems() {
+        return Stream.of(stack);
     }
 
     @Nullable
     public static WandAbilityIngredient fromStack(ItemStack stack) {
-        if (stack.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
-            var cap = stack.getCapability(CapabilityWandAbility.WAND_ABILITY);
-            return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
-        } else if (stack.getTag().contains("wand_ability")) {
-            // For datagen as capabilities are not loaded for some reason.
-            var cap = CapabilityWandAbility.wandAbility(stack);
-            return new WandAbilityIngredient(cap.getMainAbility(), cap.getCrouchAbility(), stack.getItem(), cap.getPoweredUp());
-        } else if (stack.is(MITMItems.WAND_CORE.get())) {
-            return new WandAbilityIngredient(new WandAbilityInstance(MITMRegistries.WAND_ABILITIES.get(ResourceLocation.parse(stack.getTag().getString(WandCoreItem.ABILITY_KEY)))), null, stack.getItem(), false);
+        if (stack.has(MITMDataComponents.WAND)) {
+            WandComponent component = stack.get(MITMDataComponents.WAND);
+            //noinspection DataFlowIssue
+            return new WandAbilityIngredient(component.primary(), component.secondaryOrNull(), stack.getItem(), component.poweredUp());
+        } else if (stack.has(MITMDataComponents.WAND_CORE)) {
+            WandAbilityInstance component = stack.get(MITMDataComponents.WAND_CORE);
+            return new WandAbilityIngredient(component, null, stack.getItem(), false);
         }
         return null;
     }
@@ -74,27 +80,23 @@ public class WandAbilityIngredient extends Ingredient {
         return false;
     }
 
-    public ItemStack getStack() {
-        return MITMUtil.createWand(this.item, this.ability, this.crouchAbility);
+    @Override
+    public @NotNull IngredientType<?> getType() {
+        return MITMIngredientTypes.WAND_ABILITY.get();
     }
 
     public boolean test(@Nullable ItemStack input) {
-        if (input == null)
-            return false;
-        boolean isCorrectItem = this.item == input.getItem();
-        if (this.item == MITMItems.WAND.get()) {
-            boolean hasCorrectAbility;
-            if (input.getCapability(CapabilityWandAbility.WAND_ABILITY) != null) {
-                var cap = input.getCapability(CapabilityWandAbility.WAND_ABILITY);
-                hasCorrectAbility = cap.getMainAbility().equals(this.ability) && cap.getCrouchAbility().equals(this.crouchAbility) && cap.getPoweredUp() == this.isPoweredUp;
-            } else {
-                return false;
-            }
-            return isCorrectItem && hasCorrectAbility;
-        } else if (this.item == MITMItems.WAND_CORE.get()) {
-            if (input.getTag().contains(WandCoreItem.ABILITY_KEY, Tag.TAG_COMPOUND)) {
-                return new WandAbilityInstance(input.getTag().getCompound(WandCoreItem.ABILITY_KEY)).equals(ability);
-            }
+        if (input == null || !ItemStack.isSameItem(this.stack, input)) return false;
+
+        if (this.stack.has(MITMDataComponents.WAND_CORE)) {
+            return Objects.equals(this.stack.get(MITMDataComponents.WAND_CORE), input.get(MITMDataComponents.WAND_CORE));
+        } else if (this.stack.has(MITMDataComponents.WAND) && input.has(MITMDataComponents.WAND)) {
+            WandComponent thisWand = this.stack.get(MITMDataComponents.WAND);
+            WandComponent inputWand = input.get(MITMDataComponents.WAND);
+            //noinspection DataFlowIssue
+            return thisWand.poweredUp() == inputWand.poweredUp() &&
+                    thisWand.primary().equals(inputWand.primary()) &&
+                    thisWand.secondary().equals(inputWand.secondary());
         }
         return false;
     }

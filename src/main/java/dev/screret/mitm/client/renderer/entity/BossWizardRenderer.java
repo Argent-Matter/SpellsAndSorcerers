@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.client.model.entity.BossWizardModel;
 import dev.screret.mitm.common.entity.BossWizardEntity;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -17,8 +18,9 @@ public class BossWizardRenderer extends GeoEntityRenderer<BossWizardEntity> {
     }
 
     @Override
-    public void postRender(PoseStack poseStack, BossWizardEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight,
-                           int packedOverlay, float red, float green, float blue, float alpha) {
+    public void postRender(PoseStack poseStack, BossWizardEntity animatable, BakedGeoModel model,
+                           MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
+                           int packedLight, int packedOverlay, int colour) {
         if (model.getBone("rightArm").isPresent() && MITMUtil.getMainAbilityFromStack(animatable.getMainHandItem()).isPresent()) {
             var handWorldPos = model.getBone("rightArm").get().getWorldPosition();
             if (animatable.isCastingSpell()) {
@@ -31,6 +33,6 @@ public class BossWizardRenderer extends GeoEntityRenderer<BossWizardEntity> {
             }
         }
         super.postRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
-                packedOverlay, red, green, blue, alpha);
+                packedOverlay, colour);
     }
 }

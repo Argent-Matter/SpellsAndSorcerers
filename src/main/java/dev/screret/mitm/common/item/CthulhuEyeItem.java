@@ -20,11 +20,11 @@ public class CthulhuEyeItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
+    public InteractionResult useOn(UseOnContext context) {
         if (MITMConfig.Server.enableQthulhuEyeConversion.get()) {
-            var player = pContext.getPlayer();
-            var level = pContext.getLevel();
-            BlockPos blockpos = pContext.getClickedPos();
+            var player = context.getPlayer();
+            var level = context.getLevel();
+            BlockPos blockpos = context.getClickedPos();
             if (!level.mayInteract(player, blockpos)) {
                 return InteractionResult.PASS;
             }
@@ -63,7 +63,7 @@ public class CthulhuEyeItem extends Item {
             }
 
         }
-        return super.useOn(pContext);
+        return super.useOn(context);
     }
 
     private static void copyProperties(Level level, BlockPos pos, BlockState toPlace, BlockState originalState) {

@@ -24,6 +24,10 @@ public class MITMTags {
         public static final TagKey<Item> BOSS_SUMMON_ITEMS = tag("boss_summon_items");
 
 
+        public static final TagKey<Item> ENCHANTABLE_WITH_QUICK_CHARGE = tag("enchantable_with/quick_charge");
+        public static final TagKey<Item> ENCHANTABLE_WITH_POWER = tag("enchantable_with/power");
+
+
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(MITMUtil.id(name));
         }
@@ -56,8 +60,8 @@ public class MITMTags {
             return create(MITMUtil.id(name));
         }
 
-        private static TagKey<Biome> create(ResourceLocation pName) {
-            return TagKey.create(Registries.BIOME, pName);
+        private static TagKey<Biome> create(ResourceLocation name) {
+            return TagKey.create(Registries.BIOME, name);
         }
     }
 }

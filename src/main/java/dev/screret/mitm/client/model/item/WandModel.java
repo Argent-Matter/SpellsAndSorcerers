@@ -2,6 +2,9 @@ package dev.screret.mitm.client.model.item;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+import dev.screret.mitm.MITMUtil;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -19,25 +22,39 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import net.neoforged.neoforge.client.model.geometry.UnbakedGeometryHelper;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import java.util.function.Function;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class WandModel implements IUnbakedGeometry<WandModel> {
 
     private static final RenderTypeGroup RENDER_TYPE_GROUP = new RenderTypeGroup(RenderType.translucent(), NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
+    private static final ResourceLocation DEFAULT_TEXTURE_LOC = MITMUtil.id("item/wand/error");
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation) {
-        return CompositeModel.Baked.builder(context, spriteGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, modelLocation)), new WandAbilityOverrideHandler(this, context, baker, spriteGetter, modelState, modelLocation), context.getTransforms()).addQuads(new RenderTypeGroup(RenderType.translucent(), NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get())).build();
+    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
+                           Function<Material, TextureAtlasSprite> spriteGetter,
+                           ModelState modelState, ItemOverrides overrides) {
+        return CompositeModel.Baked.builder(context,
+                spriteGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, DEFAULT_TEXTURE_LOC)),
+                new WandAbilityOverrideHandler(this, context, baker, spriteGetter, modelState),
+                context.getTransforms())
+                .addQuads(new RenderTypeGroup(RenderType.translucent(), NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get()))
+                .build();
     }
 
-    public BakedModel bake(TextureAtlasSprite sprite, IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation) {
+    public BakedModel bake(TextureAtlasSprite sprite, IGeometryBakingContext context, ModelBaker baker,
+                           Function<Material, TextureAtlasSprite> spriteGetter,
+                           ModelState modelState, ItemOverrides overrides) {
         var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, sprite);
-        var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, modelState, modelLocation);
+        var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, modelState);
 
-        var builder = CompositeModel.Baked.builder(context, sprite, new WandAbilityOverrideHandler(this, context, baker, spriteGetter, modelState, modelLocation), context.getTransforms());
-
-
+        var builder = CompositeModel.Baked.builder(context, sprite,
+                new WandAbilityOverrideHandler(this, context, baker, spriteGetter, modelState),
+                context.getTransforms());
         builder.addQuads(RENDER_TYPE_GROUP, quads);
 
         return builder.build();
@@ -46,7 +63,7 @@ public class WandModel implements IUnbakedGeometry<WandModel> {
     public static final class Loader implements IGeometryLoader<WandModel> {
         public static final Loader INSTANCE = new Loader();
 
-        @Nonnull
+        @NotNull
         @Override
         public WandModel read(JsonObject jsonObject, JsonDeserializationContext deserializationContext) {
             return new WandModel();

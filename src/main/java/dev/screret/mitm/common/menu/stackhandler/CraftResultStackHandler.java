@@ -15,8 +15,8 @@ public class CraftResultStackHandler extends ItemStackHandler implements RecipeC
     }
 
     @Override
-    public void setRecipeUsed(@Nullable RecipeHolder<?> pRecipe) {
-        this.recipeUsed = pRecipe;
+    public void setRecipeUsed(@Nullable RecipeHolder<?> recipe) {
+        this.recipeUsed = recipe;
     }
 
     @Nullable

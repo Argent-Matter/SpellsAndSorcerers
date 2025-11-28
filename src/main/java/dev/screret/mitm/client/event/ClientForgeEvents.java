@@ -12,7 +12,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import dev.screret.mitm.MagicOfTheMind;
 import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.data.MITMEntities;
+import dev.screret.mitm.data.MITMEntityTypes;
 import dev.screret.mitm.common.entity.BossWizardEntity;
 import dev.screret.mitm.data.MITMItems;
 
@@ -31,7 +31,7 @@ public class ClientForgeEvents {
                 var camEntPos = clientPlayer.position();
 
                 if (hallucination == null) {
-                    hallucination = MITMEntities.BOSS_WIZARD.get().create(level);
+                    hallucination = MITMEntityTypes.BOSS_WIZARD.get().create(level);
                     hallucination.setSilent(false);
                     hallucination.moveTo(camEntPos);
                     hallucination.setInvulnerable(true);
@@ -61,14 +61,16 @@ public class ClientForgeEvents {
                 double zPos = hallucination.getZ() - camEntPos.z;
                 hallucination.setYRot((float) ((Mth.atan2(xPos, zPos) * Mth.RAD_TO_DEG) - 90.0F));
 
-                double x = Mth.lerp(event.getPartialTick(), hallucination.xOld, hallucination.getX());
-                double y = Mth.lerp(event.getPartialTick(), hallucination.yOld, hallucination.getY());
-                double z = Mth.lerp(event.getPartialTick(), hallucination.zOld, hallucination.getZ());
-                float headYRot = Mth.lerp(event.getPartialTick(), hallucination.yRotO, hallucination.getYRot());
+                float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
 
-                double playerX = Mth.lerp(event.getPartialTick(), clientPlayer.xOld, camEntPos.x);
-                double playerY = Mth.lerp(event.getPartialTick(), clientPlayer.yOld, camEntPos.y);
-                double playerZ = Mth.lerp(event.getPartialTick(), clientPlayer.zOld, camEntPos.z);
+                double x = Mth.lerp(partialTick, hallucination.xOld, hallucination.getX());
+                double y = Mth.lerp(partialTick, hallucination.yOld, hallucination.getY());
+                double z = Mth.lerp(partialTick, hallucination.zOld, hallucination.getZ());
+                float headYRot = Mth.lerp(partialTick, hallucination.yRotO, hallucination.getYRot());
+
+                double playerX = Mth.lerp(partialTick, clientPlayer.xOld, camEntPos.x);
+                double playerY = Mth.lerp(partialTick, clientPlayer.yOld, camEntPos.y);
+                double playerZ = Mth.lerp(partialTick, clientPlayer.zOld, camEntPos.z);
 
                 renderer.render(
                         hallucination,
@@ -76,10 +78,10 @@ public class ClientForgeEvents {
                         y - playerY,
                         z - playerZ,
                         headYRot,
-                        event.getPartialTick(),
+                        partialTick,
                         event.getPoseStack(),
                         Minecraft.getInstance().renderBuffers().bufferSource(),
-                        renderer.getPackedLightCoords(hallucination, event.getPartialTick())
+                        renderer.getPackedLightCoords(hallucination, partialTick)
                 );
             }
 

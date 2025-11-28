@@ -9,6 +9,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import com.google.gson.JsonObject;
+import dev.screret.mitm.data.MITMItems;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class MITMLangProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        addItem(MITMItems.WAND, "Wand of ");
+        add("tooltip.mitm.joiner", ", ");
+
         addMultiline("item.mitm.the_one_ring.tooltip", """
                 One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them.
                 You might find it hard to take off.

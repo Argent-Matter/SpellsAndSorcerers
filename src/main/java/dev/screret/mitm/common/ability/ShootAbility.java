@@ -1,6 +1,6 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ExtraCodecs;
@@ -12,16 +12,17 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.wand.ability.WandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 
-public class ShootAbility extends WandAbility {
+public class ShootAbility extends WandAbility<ShootAbility> {
 
-    public static final Codec<ShootAbility> CODEC = RecordCodecBuilder.create(instance ->
-            WandAbility.codecStart(instance).and(instance.group(
-                    ExtraCodecs.POSITIVE_INT.fieldOf("distance").forGetter((ShootAbility val) -> val.distance),
-                    Vec3.CODEC.fieldOf("particle_deviation").forGetter((ShootAbility val) -> val.randomDeviation)
-            )).apply(instance, ShootAbility::new));
+    // spotless:off
+    private static final MapCodec<ShootAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> WandAbility.codecStart(instance).and(instance.group(
+            ExtraCodecs.POSITIVE_INT.fieldOf("distance").forGetter((ShootAbility val) -> val.distance),
+            Vec3.CODEC.fieldOf("particle_deviation").forGetter((ShootAbility val) -> val.randomDeviation)
+    )).apply(instance, ShootAbility::new));
+    // spotless:on
 
     private final int distance;
 
@@ -31,6 +32,11 @@ public class ShootAbility extends WandAbility {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color);
         this.distance = distance;
         this.randomDeviation = randomDeviation;
+    }
+
+    @Override
+    public MapCodec<ShootAbility> codec() {
+        return CODEC;
     }
 
     @Override

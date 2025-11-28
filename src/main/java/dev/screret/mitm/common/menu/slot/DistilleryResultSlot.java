@@ -11,54 +11,54 @@ public class DistilleryResultSlot extends SlotItemHandler {
     private final Player player;
     private int removeCount;
 
-    public DistilleryResultSlot(Player pPlayer, IItemHandler pContainer, int pSlot, int pXPosition, int pYPosition) {
-        super(pContainer, pSlot, pXPosition, pYPosition);
-        this.player = pPlayer;
+    public DistilleryResultSlot(Player player, IItemHandler container, int slot, int xPosition, int yPosition) {
+        super(container, slot, xPosition, yPosition);
+        this.player = player;
     }
 
     /**
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
-    public boolean mayPlace(ItemStack pStack) {
+    public boolean mayPlace(ItemStack stack) {
         return false;
     }
 
     /**
      * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new stack.
      */
-    public ItemStack remove(int pAmount) {
+    public ItemStack remove(int amount) {
         if (this.hasItem()) {
-            this.removeCount += Math.min(pAmount, this.getItem().getCount());
+            this.removeCount += Math.min(amount, this.getItem().getCount());
         }
 
-        return super.remove(pAmount);
+        return super.remove(amount);
     }
 
-    public void onTake(Player pPlayer, ItemStack pStack) {
-        this.checkTakeAchievements(pStack);
-        super.onTake(pPlayer, pStack);
+    public void onTake(Player player, ItemStack stack) {
+        this.checkTakeAchievements(stack);
+        super.onTake(player, stack);
     }
 
     /**
      * Typically increases an internal count, then calls {@code onCrafting(item)}.
      *
-     * @param pStack the output - ie, iron ingots, and pickaxes, not ore and wood.
+     * @param stack the output - ie, iron ingots, and pickaxes, not ore and wood.
      */
-    protected void onQuickCraft(ItemStack pStack, int pAmount) {
-        this.removeCount += pAmount;
-        this.checkTakeAchievements(pStack);
+    protected void onQuickCraft(ItemStack stack, int amount) {
+        this.removeCount += amount;
+        this.checkTakeAchievements(stack);
     }
 
     /**
-     * @param pStack the output - ie, iron ingots, and pickaxes, not ore and wood.
+     * @param stack the output - ie, iron ingots, and pickaxes, not ore and wood.
      */
-    protected void checkTakeAchievements(ItemStack pStack) {
-        pStack.onCraftedBy(this.player.level(), this.player, this.removeCount);
+    protected void checkTakeAchievements(ItemStack stack) {
+        stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
         if (this.player instanceof ServerPlayer && this.container instanceof AbstractFurnaceBlockEntity) {
             ((AbstractFurnaceBlockEntity) this.container).awardUsedRecipesAndPopExperience((ServerPlayer) this.player);
         }
 
         this.removeCount = 0;
-        net.neoforged.neoforge.event.EventHooks.firePlayerSmeltedEvent(this.player, pStack);
+        net.neoforged.neoforge.event.EventHooks.firePlayerSmeltedEvent(this.player, stack);
     }
 }

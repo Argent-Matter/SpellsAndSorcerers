@@ -1,19 +1,20 @@
 package dev.screret.mitm.common.ability;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import dev.screret.mitm.api.wand.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbility;
 
 import java.util.EnumSet;
 
-public class DamageAbility extends SubAbility {
+public class DamageAbility extends SubAbility<DamageAbility> {
 
-    public static final Codec<DamageAbility> CODEC = RecordCodecBuilder.create(instance -> WandAbility.codecStart(instance).apply(instance, DamageAbility::new));
+    private static final MapCodec<DamageAbility> CODEC = RecordCodecBuilder.mapCodec(instance -> WandAbility.codecStart(instance).apply(instance, DamageAbility::new));
 
     public DamageAbility() {
         super(0, 10, 3, true, ParticleTypes.SOUL_FIRE_FLAME, 0x54cbcfFF, EnumSet.of(HitFlags.ENTITY));
@@ -24,13 +25,14 @@ public class DamageAbility extends SubAbility {
     }
 
     @Override
-    public Codec<? extends WandAbility> codec() {
+    public MapCodec<DamageAbility> codec() {
         return CODEC;
     }
 
     @Override
-    public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged) {
-        hitEnt.hurt(user.damageSources().indirectMagic(user, user), getDamagePerHit(usedItem));
+    public boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity target, float timeCharged) {
+        DamageSource source = user.damageSources().indirectMagic(user, user);
+        target.hurt(source, getDamagePerHit(usedItem, user, source));
         return true;
     }
 

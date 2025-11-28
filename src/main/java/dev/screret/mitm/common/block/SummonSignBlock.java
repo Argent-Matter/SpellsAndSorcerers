@@ -1,6 +1,8 @@
 package dev.screret.mitm.common.block;
 
 import com.mojang.serialization.MapCodec;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
@@ -24,9 +26,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import dev.screret.mitm.data.MITMBlockEntities;
-import dev.screret.mitm.common.blockentity.SummonSignBlockEntity;
+import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
 import dev.screret.mitm.data.MITMParticles;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class SummonSignBlock extends BaseEntityBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
@@ -39,18 +45,18 @@ public class SummonSignBlock extends BaseEntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public boolean useShapeForLightOcclusion(BlockState pState) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(COLOR, TRIGGERED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(COLOR, TRIGGERED);
     }
 
     @Override
@@ -65,28 +71,30 @@ public class SummonSignBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MITMBlockEntities.SUMMON_SIGN.get().create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return MITMBlockEntities.SUMMON_SIGN.get().create(pos, state);
     }
 
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : createTickerHelper(pBlockEntityType, MITMBlockEntities.SUMMON_SIGN.get(), SummonSignBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, MITMBlockEntities.SUMMON_SIGN.get(), SummonSignBlockEntity::serverTick);
     }
 
     @Override
-    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
-        super.animateTick(pState, pLevel, pPos, pRandom);
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        super.animateTick(state, level, pos, random);
 
-        if (pState.getValue(SummonSignBlock.TRIGGERED)) {
-            Vec3 pos = new Vec3(pPos.getX() + 0.5D, pPos.getY() + 1.0D, pPos.getZ() + 0.5D);
+        if (state.getValue(SummonSignBlock.TRIGGERED)) {
+            Vec3 position = Vec3.atLowerCornerWithOffset(pos, 0.5, 3.0, 0.5);
             for (int i = 0; i < 10; ++i) {
-                pLevel.addParticle(ParticleTypes.ENCHANT, pPos.getX() + pRandom.nextDouble(), pPos.getY() + 2D + pRandom.nextDouble(), pPos.getZ() + pRandom.nextDouble(), 0D, -3D - pRandom.nextDouble(), 0D);
+                level.addParticle(ParticleTypes.ENCHANT,
+                        position.x() + random.nextDouble(), position.y() + 2.0 + random.nextDouble(), position.z() + random.nextDouble(),
+                        0.0, -3.0 - random.nextDouble(), 0.0);
             }
-            if (pRandom.nextInt(4) == 0) {
-                pLevel.addParticle(MITMParticles.EYE.get(), true, pos.x, pos.y, pos.z, 0, 1D, 0);
+            if (random.nextInt(4) == 0) {
+                level.addParticle(MITMParticles.EYE.get(), true,
+                        position.x, position.y - 2.0, position.z,
+                        0.0, 1.0, 0.0);
             }
         }
-
-
     }
 }

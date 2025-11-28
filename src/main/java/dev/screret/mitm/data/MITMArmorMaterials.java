@@ -1,83 +1,54 @@
 package dev.screret.mitm.data;
 
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import dev.screret.mitm.MagicOfTheMind;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Supplier;
 
-import static net.minecraft.world.item.ArmorMaterials.HEALTH_FUNCTION_FOR_TYPE;
+public class MITMArmorMaterials {
 
-public enum MITMArmorMaterials implements ArmorMaterial {
-    SOULSTEEL("soulsteel", 40, Util.make(new EnumMap<>(ArmorItem.Type.class), p_266651_ -> {
-        p_266651_.put(ArmorItem.Type.BOOTS, 4);
-        p_266651_.put(ArmorItem.Type.LEGGINGS, 7);
-        p_266651_.put(ArmorItem.Type.CHESTPLATE, 9);
-        p_266651_.put(ArmorItem.Type.HELMET, 4);
-    }), 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 3.0F, 0.2F, () -> Ingredient.of(MITMTags.Items.SOULSTEEL_INGOTS));
+    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MagicOfTheMind.MODID);
 
-    private final String name;
-    private final int durabilityMultiplier;
-    private final EnumMap<ArmorItem.Type, Integer> protectionFunctionForType;
-    private final int enchantmentValue;
-    private final SoundEvent sound;
-    private final float toughness;
-    private final float knockbackResistance;
-    private final LazyLoadedValue<Ingredient> repairIngredient;
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> SOULSTEEL = register("soulsteel",
+            Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                map.put(ArmorItem.Type.BOOTS, 4);
+                map.put(ArmorItem.Type.LEGGINGS, 7);
+                map.put(ArmorItem.Type.CHESTPLATE, 9);
+                map.put(ArmorItem.Type.HELMET, 4);
+            }), 15, SoundEvents.ARMOR_EQUIP_NETHERITE, () -> Ingredient.of(MITMTags.Items.SOULSTEEL_INGOTS), 3.0F, 0.2F);
 
-    MITMArmorMaterials(String pName, int pDurabilityMultiplier, EnumMap<ArmorItem.Type, Integer> protectionFunctionForType, int pEnchantmentValue, SoundEvent pSound, float pToughness, float pKnockbackResistance, Supplier<Ingredient> pRepairIngredient) {
-        this.name = pName;
-        this.durabilityMultiplier = pDurabilityMultiplier;
-        this.protectionFunctionForType = protectionFunctionForType;
-        this.enchantmentValue = pEnchantmentValue;
-        this.sound = pSound;
-        this.toughness = pToughness;
-        this.knockbackResistance = pKnockbackResistance;
-        this.repairIngredient = new LazyLoadedValue<>(pRepairIngredient);
+    private static DeferredHolder<ArmorMaterial, ArmorMaterial> register(String name,
+                                                                         EnumMap<ArmorItem.Type, Integer> defense,
+                                                                         int enchantmentValue,
+                                                                         Holder<SoundEvent> equipSound,
+                                                                         Supplier<Ingredient> repairIngredient,
+                                                                         float toughness, float knockbackResistance) {
+        List<ArmorMaterial.Layer> layers = List.of(new ArmorMaterial.Layer(ResourceLocation.withDefaultNamespace(name)));
+        return register(name, defense, enchantmentValue, equipSound, repairIngredient, toughness, knockbackResistance, layers);
     }
 
-    @Override
-    public int getDurabilityForType(ArmorItem.Type pType) {
-        return HEALTH_FUNCTION_FOR_TYPE.get(pType) * this.durabilityMultiplier;
-    }
-
-    @Override
-    public int getDefenseForType(ArmorItem.Type pType) {
-        return this.protectionFunctionForType.get(pType);
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return this.enchantmentValue;
-    }
-
-    @Override
-    public SoundEvent getEquipSound() {
-        return this.sound;
-    }
-
-    @Override
-    public Ingredient getRepairIngredient() {
-        return this.repairIngredient.get();
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public float getToughness() {
-        return this.toughness;
-    }
-
-    @Override
-    public float getKnockbackResistance() {
-        return this.knockbackResistance;
+    private static DeferredHolder<ArmorMaterial, ArmorMaterial> register(String name,
+                                                                         EnumMap<ArmorItem.Type, Integer> defense,
+                                                                         int enchantmentValue,
+                                                                         Holder<SoundEvent> equipSound,
+                                                                         Supplier<Ingredient> repairIngredient,
+                                                                         float toughness, float knockbackResistance,
+                                                                         List<ArmorMaterial.Layer> layers) {
+        return ARMOR_MATERIALS.register(name,
+                () -> new ArmorMaterial(defense, enchantmentValue, equipSound,
+                        repairIngredient, layers, toughness, knockbackResistance));
     }
 }

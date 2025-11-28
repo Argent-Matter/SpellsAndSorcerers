@@ -59,14 +59,14 @@ public class EyeConversionProvider implements DataProvider {
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput pOutput) {
+    public CompletableFuture<?> run(CachedOutput output) {
         Set<ResourceLocation> set = Sets.newHashSet();
         List<CompletableFuture<?>> futures = new ArrayList<>();
         buildCraftingRecipes((result) -> {
             if (!set.add(result.getId())) {
                 throw new IllegalStateException("Duplicate recipe " + result.getId());
             } else {
-                futures.add(DataProvider.saveStable(pOutput, result.serializeRecipe(), this.pathProvider.json(result.getId())));
+                futures.add(DataProvider.saveStable(output, result.serializeRecipe(), this.pathProvider.json(result.getId())));
             }
         });
 

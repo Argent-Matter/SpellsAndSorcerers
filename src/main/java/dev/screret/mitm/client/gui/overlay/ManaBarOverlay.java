@@ -1,46 +1,56 @@
 package dev.screret.mitm.client.gui.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
-import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 import dev.screret.mitm.MITMUtil;
+import dev.screret.mitm.api.capability.mana.Mana;
 import dev.screret.mitm.data.MITMAttachmentTypes;
 import dev.screret.mitm.config.MITMConfig;
+import org.jetbrains.annotations.NotNull;
 
-public class ManaBarOverlay implements IGuiOverlay {
+public class ManaBarOverlay implements LayeredDraw.Layer {
 
     public static final ResourceLocation MANA_BAR_LOCATION = MITMUtil.id("textures/gui/mana_bar.png");
 
     @Override
-    public void render(ExtendedGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
-        if (MITMConfig.Server.useMana.get()) {
-            RenderSystem.setShaderTexture(0, MANA_BAR_LOCATION);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.disableBlend();
-
-            if (gui.shouldDrawSurvivalElements() && gui.getMinecraft().player != null) {
-                gui.getMinecraft().getProfiler().push("manaBar");
-
-                if (gui.getMinecraft().player.hasData(MITMAttachmentTypes.MANA)) {
-                    var capability = gui.getMinecraft().player.getData(MITMAttachmentTypes.MANA);
-                    int left = screenWidth / 2 + MITMConfig.Client.manaBarX.get();
-                    int top = screenHeight - MITMConfig.Client.manaBarY.get();
-
-                    int progress = (int) ((capability.getManaStored() / (float) capability.getMaxManaStored()) * 80);
-                    guiGraphics.blitSprite(MANA_BAR_LOCATION, left, top, 0, 80, 5);
-                    if (progress > 0) {
-                        guiGraphics.blitSprite(MANA_BAR_LOCATION, left, top, 0, progress, 5);
-                    }
-
-                    gui.getMinecraft().getProfiler().pop();
-                }
-
-            }
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public void render(@NotNull GuiGraphics guiGraphics, @NotNull DeltaTracker deltaTracker) {
+        if (!MITMConfig.Server.useMana.get()) {
+            return;
         }
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!minecraft.gameMode.canHurtPlayer() || minecraft.player == null) {
+            return;
+        }
+
+        RenderSystem.setShaderTexture(0, MANA_BAR_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableBlend();
+
+
+        if (minecraft.player.hasData(MITMAttachmentTypes.MANA)) {
+            minecraft.getProfiler().push("manaBar");
+
+
+            int left = minecraft.getWindow().getWidth() / 2 + MITMConfig.Client.manaBarX.get();
+            int top = minecraft.getWindow().getHeight() - MITMConfig.Client.manaBarY.get();
+
+            Mana mana = minecraft.player.getData(MITMAttachmentTypes.MANA);
+            int progress = (int) ((mana.getMana() / (float) mana.getMaxMana()) * 80);
+            guiGraphics.blitSprite(MANA_BAR_LOCATION, left, top, 0, 80, 5);
+            if (progress > 0) {
+                guiGraphics.blitSprite(MANA_BAR_LOCATION, left, top, 0, progress, 5);
+            }
+
+            minecraft.getProfiler().pop();
+        }
+
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 }

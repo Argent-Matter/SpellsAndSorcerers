@@ -6,6 +6,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
+import dev.screret.mitm.data.MITMDataComponents;
+
 public class WandCoreItem extends Item {
     public static final String ABILITY_KEY = "ability";
 
@@ -15,9 +17,9 @@ public class WandCoreItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
-        String name = "item.mitm.basic";
-        if (stack.hasTag() && stack.getTag().contains(ABILITY_KEY)) {
-            name = ResourceLocation.parse(stack.getTag().getString(ABILITY_KEY)).toLanguageKey(ABILITY_KEY);
+        String name = "ability.mitm.dummy";
+        if (stack.has(MITMDataComponents.WAND_CORE)) {
+            name = stack.get(MITMDataComponents.WAND_CORE).getId().toLanguageKey(ABILITY_KEY);
         }
         return Component.translatable(super.getDescriptionId(stack), Component.translatable(name));
     }

@@ -15,22 +15,22 @@ public class EyeConversionBuilder {
     private final Block result;
     private BlockIngredient ingredient = BlockIngredient.EMPTY;
 
-    public EyeConversionBuilder(Block pResult) {
-        this.result = pResult;
+    public EyeConversionBuilder(Block result) {
+        this.result = result;
     }
 
     /**
      * Creates a new builder for a shaped recipe.
      */
-    public static EyeConversionBuilder conversion(Block pResult) {
-        return new EyeConversionBuilder(pResult);
+    public static EyeConversionBuilder conversion(Block result) {
+        return new EyeConversionBuilder(result);
     }
 
     /**
      * Adds a key to the recipe pattern.
      */
-    public EyeConversionBuilder requires(TagKey<Block> pTag) {
-        return this.requires(BlockIngredient.of(pTag));
+    public EyeConversionBuilder requires(TagKey<Block> tag) {
+        return this.requires(BlockIngredient.of(tag));
     }
 
     /**
@@ -43,8 +43,8 @@ public class EyeConversionBuilder {
     /**
      * Adds a key to the recipe pattern.
      */
-    public EyeConversionBuilder requires(BlockIngredient pIngredient) {
-        this.ingredient = pIngredient;
+    public EyeConversionBuilder requires(BlockIngredient ingredient) {
+        this.ingredient = ingredient;
         return this;
     }
 
@@ -52,19 +52,19 @@ public class EyeConversionBuilder {
         return this.result;
     }
 
-    public void save(Consumer<Result> pFinishedRecipeConsumer) {
-        this.save(pFinishedRecipeConsumer, BuiltInRegistries.BLOCK.getKey(this.result));
+    public void save(Consumer<Result> finishedRecipeConsumer) {
+        this.save(finishedRecipeConsumer, BuiltInRegistries.BLOCK.getKey(this.result));
     }
 
-    public void save(Consumer<Result> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-        this.ensureValid(pRecipeId);
-        pFinishedRecipeConsumer.accept(new EyeConversionBuilder.Result(pRecipeId, this.result, this.ingredient));
+    public void save(Consumer<Result> finishedRecipeConsumer, ResourceLocation recipeId) {
+        this.ensureValid(recipeId);
+        finishedRecipeConsumer.accept(new EyeConversionBuilder.Result(recipeId, this.result, this.ingredient));
     }
 
     /**
      * Makes sure that this recipe is valid and obtainable.
      */
-    private void ensureValid(ResourceLocation pId) {
+    private void ensureValid(ResourceLocation id) {
 
         for (var block : ingredient.getBlocks()) {
             if (!BuiltInRegistries.BLOCK.containsValue(block.getBlock())) {
@@ -78,17 +78,17 @@ public class EyeConversionBuilder {
         private final Block result;
         private final BlockIngredient ingredient;
 
-        public Result(ResourceLocation id, Block result, BlockIngredient pKey) {
+        public Result(ResourceLocation id, Block result, BlockIngredient key) {
             this.id = id;
             this.result = result;
-            this.ingredient = pKey;
+            this.ingredient = key;
         }
 
-        public void serializeRecipeData(JsonObject pJson) {
+        public void serializeRecipeData(JsonObject json) {
             JsonPrimitive result = new JsonPrimitive(BuiltInRegistries.BLOCK.getKey(this.result).toString());
 
-            pJson.add("result", result);
-            pJson.add("ingredient", this.ingredient.toJson());
+            json.add("result", result);
+            json.add("ingredient", this.ingredient.toJson());
         }
 
         public JsonObject serializeRecipe() {

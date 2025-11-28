@@ -2,6 +2,8 @@ package dev.screret.mitm.common.recipe.ingredient;
 
 import com.google.common.collect.Lists;
 import com.google.gson.*;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -13,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -26,8 +27,8 @@ public class BlockIngredient implements Predicate<BlockState> {
     @Nullable
     private BlockState[] blocks;
 
-    protected BlockIngredient(Stream<? extends Value> pValues) {
-        this.values = pValues.toArray(Value[]::new);
+    protected BlockIngredient(Stream<? extends Value> values) {
+        this.values = values.toArray(Value[]::new);
     }
 
     public BlockState[] getBlocks() {
@@ -60,9 +61,9 @@ public class BlockIngredient implements Predicate<BlockState> {
         return false;
     }
 
-    public final void toNetwork(FriendlyByteBuf pBuffer) {
+    public final void toNetwork(FriendlyByteBuf buffer) {
         this.dissolve();
-        pBuffer.writeCollection(Arrays.stream(this.blocks).map(BlockState::getBlock).map(BuiltInRegistries.BLOCK::getKey).toList(), FriendlyByteBuf::writeResourceLocation);
+        buffer.writeCollection(Arrays.stream(this.blocks).map(BlockState::getBlock).map(BuiltInRegistries.BLOCK::getKey).toList(), FriendlyByteBuf::writeResourceLocation);
     }
 
     public JsonElement toJson() {
@@ -91,8 +92,8 @@ public class BlockIngredient implements Predicate<BlockState> {
         return BlockIngredientSerializer.INSTANCE;
     }
 
-    public static BlockIngredient fromValues(Stream<? extends Value> pStream) {
-        BlockIngredient BlockIngredient = new BlockIngredient(pStream);
+    public static BlockIngredient fromValues(Stream<? extends Value> stream) {
+        BlockIngredient BlockIngredient = new BlockIngredient(stream);
         return BlockIngredient.values.length == 0 ? EMPTY : BlockIngredient;
     }
 
@@ -100,38 +101,38 @@ public class BlockIngredient implements Predicate<BlockState> {
         return EMPTY;
     }
 
-    public static BlockIngredient of(Block... pStacks) {
-        return of(Arrays.stream(pStacks).map(Block::defaultBlockState));
+    public static BlockIngredient of(Block... stacks) {
+        return of(Arrays.stream(stacks).map(Block::defaultBlockState));
     }
 
-    public static BlockIngredient of(BlockState... pStacks) {
-        return of(Arrays.stream(pStacks));
+    public static BlockIngredient of(BlockState... stacks) {
+        return of(Arrays.stream(stacks));
     }
 
-    public static BlockIngredient of(Stream<BlockState> pStacks) {
-        return fromValues(pStacks.filter((p_43944_) -> !p_43944_.isAir()).map(BlockValue::new));
+    public static BlockIngredient of(Stream<BlockState> stacks) {
+        return fromValues(stacks.filter((p_43944_) -> !p_43944_.isAir()).map(BlockValue::new));
     }
 
-    public static BlockIngredient of(TagKey<Block> pTag) {
-        return fromValues(Stream.of(new TagValue(pTag)));
+    public static BlockIngredient of(TagKey<Block> tag) {
+        return fromValues(Stream.of(new TagValue(tag)));
     }
 
-    public static BlockIngredient fromNetwork(FriendlyByteBuf pBuffer) {
-        var size = pBuffer.readVarInt();
+    public static BlockIngredient fromNetwork(FriendlyByteBuf buffer) {
+        var size = buffer.readVarInt();
         if (size == -1)
-            return BlockIngredientSerializer.INSTANCE.parse(pBuffer);
-        return fromValues(Stream.generate(() -> new BlockValue(pBuffer.readResourceLocation())).limit(size));
+            return BlockIngredientSerializer.INSTANCE.parse(buffer);
+        return fromValues(Stream.generate(() -> new BlockValue(buffer.readResourceLocation())).limit(size));
     }
 
-    public static BlockIngredient fromJson(@Nullable JsonElement pJson) {
-        if (pJson != null && !pJson.isJsonNull()) {
-            BlockIngredient ret = BlockIngredientSerializer.INSTANCE.parse(pJson.getAsJsonObject());
+    public static BlockIngredient fromJson(@Nullable JsonElement json) {
+        if (json != null && !json.isJsonNull()) {
+            BlockIngredient ret = BlockIngredientSerializer.INSTANCE.parse(json.getAsJsonObject());
             if (ret != null)
                 return ret;
-            if (pJson.isJsonObject()) {
-                return fromValues(Stream.of(valueFromJson(pJson.getAsJsonObject())));
-            } else if (pJson.isJsonArray()) {
-                JsonArray jsonarray = pJson.getAsJsonArray();
+            if (json.isJsonObject()) {
+                return fromValues(Stream.of(valueFromJson(json.getAsJsonObject())));
+            } else if (json.isJsonArray()) {
+                JsonArray jsonarray = json.getAsJsonArray();
                 if (jsonarray.size() == 0) {
                     throw new JsonSyntaxException("Item array cannot be empty, at least one item must be defined");
                 } else {
@@ -147,13 +148,13 @@ public class BlockIngredient implements Predicate<BlockState> {
         }
     }
 
-    public static Value valueFromJson(JsonObject pJson) {
-        if (pJson.has("block") && pJson.has("tag")) {
+    public static Value valueFromJson(JsonObject json) {
+        if (json.has("block") && json.has("tag")) {
             throw new JsonParseException("An BlockIngredient entry is either a tag or an item, not both");
-        } else if (pJson.has("block")) {
-            return new BlockValue(blockFromJson(pJson));
-        } else if (pJson.has("tag")) {
-            ResourceLocation resourcelocation = ResourceLocation.parse(GsonHelper.getAsString(pJson, "tag"));
+        } else if (json.has("block")) {
+            return new BlockValue(blockFromJson(json));
+        } else if (json.has("tag")) {
+            ResourceLocation resourcelocation = ResourceLocation.parse(GsonHelper.getAsString(json, "tag"));
             TagKey<Block> key = TagKey.create(Registries.BLOCK, resourcelocation);
             return new TagValue(key);
         } else {
@@ -161,8 +162,8 @@ public class BlockIngredient implements Predicate<BlockState> {
         }
     }
 
-    public static Block blockFromJson(JsonObject pItemObject) {
-        String s = GsonHelper.getAsString(pItemObject, "block");
+    public static Block blockFromJson(JsonObject itemObject) {
+        String s = GsonHelper.getAsString(itemObject, "block");
         Block block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(s)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + s + "'"));
         if (block == Blocks.AIR) {
             throw new JsonSyntaxException("Invalid item: " + s);
@@ -200,8 +201,8 @@ public class BlockIngredient implements Predicate<BlockState> {
     public static class TagValue implements Value {
         private final TagKey<Block> tag;
 
-        public TagValue(TagKey<Block> pTag) {
-            this.tag = pTag;
+        public TagValue(TagKey<Block> tag) {
+            this.tag = tag;
         }
 
         public Collection<BlockState> getBlocks() {

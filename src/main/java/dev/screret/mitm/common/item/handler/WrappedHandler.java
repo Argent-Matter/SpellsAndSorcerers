@@ -3,13 +3,13 @@ package dev.screret.mitm.common.item.handler;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 /*
  * WrappedHandler by noeppi_noeppi
- * under https://github.com/ModdingX/LibX/blob/1.19/LICENSE
+ * under https://github.com/ModdingX/LibX/blob/2b2da9dae7149fb7bd44b8e5b1e8672572dc7b6f/LICENSE
  */
 public class WrappedHandler implements IItemHandlerModifiable {
     private final IItemHandlerModifiable handler;
@@ -24,7 +24,7 @@ public class WrappedHandler implements IItemHandlerModifiable {
     }
 
     @Override
-    public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
+    public void setStackInSlot(int slot, @NotNull ItemStack stack) {
         this.handler.setStackInSlot(slot, stack);
     }
 
@@ -33,19 +33,19 @@ public class WrappedHandler implements IItemHandlerModifiable {
         return this.handler.getSlots();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getStackInSlot(int slot) {
         return this.handler.getStackInSlot(slot);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         return this.insert.test(slot, stack) ? this.handler.insertItem(slot, stack, simulate) : stack;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         return this.extract.test(slot) ? this.handler.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
@@ -57,7 +57,7 @@ public class WrappedHandler implements IItemHandlerModifiable {
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         return this.insert.test(slot, stack) && this.handler.isItemValid(slot, stack);
     }
 }

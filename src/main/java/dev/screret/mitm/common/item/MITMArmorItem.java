@@ -1,68 +1,74 @@
 package dev.screret.mitm.common.item;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
+
+import dev.screret.mitm.data.MITMItems;
 import dev.screret.mitm.data.MITMMobEffects;
 import dev.screret.mitm.client.renderer.armor.SoulsteelArmorRenderer;
 import dev.screret.mitm.config.MITMConfig;
-import software.bernie.example.client.renderer.armor.GeckoArmorRenderer;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class MITMArmorItem extends ArmorItem implements GeoItem {
-    public static final MobEffectInstance SOUL_STEEL_EFFECT = new MobEffectInstance(MITMMobEffects.MANA.get(), 200, 1);
+    public static final MobEffectInstance SOUL_STEEL_EFFECT = new MobEffectInstance(MITMMobEffects.MANA, 200, 1);
 
     private final MobEffectInstance fullSetEffect;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public MITMArmorItem(ArmorMaterial material, MobEffectInstance fullSetEffect, ArmorItem.Type slot, Properties builder) {
+    public MITMArmorItem(Holder<ArmorMaterial> material, MobEffectInstance fullSetEffect, ArmorItem.Type slot, Properties builder) {
         super(material, slot, builder);
         this.fullSetEffect = fullSetEffect;
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
             private GeoArmorRenderer<?> renderer;
 
             @Override
-            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-                if (this.renderer == null)
-                    this.renderer = new SoulsteelArmorRenderer();
-
-                // This prepares our GeoArmorRenderer for the current render frame.
-                // These parameters may be null however, so we don't do anything further with them
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-
+            public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T entity, ItemStack stack,
+                                                                                 @Nullable EquipmentSlot slot,
+                                                                                 @Nullable HumanoidModel<T> original) {
+                if (this.renderer == null) this.renderer = new SoulsteelArmorRenderer();
                 return this.renderer;
             }
         });
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, Level world, Player player) {
-        if (!world.isClientSide()) {
-            if (MITMConfig.Server.armorGiveEffects.get()) {
-                if (hasFullSuitOfArmorOn(player)) {
-                    evaluateArmorEffects(player);
-                }
-            }
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        // only the chestplate actually applies effects, but the whole set is needed anyway so it's OK
+        if (level.isClientSide || !stack.is(MITMItems.SOULSTEEL_CHESTPLATE) || MITMConfig.Server.armorGiveEffects.getAsBoolean()) {
+            return;
+        }
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            return;
+        }
+        if (slotId >= Inventory.INVENTORY_SIZE && slotId < Inventory.SLOT_OFFHAND && hasCorrectArmorOn(this.material, livingEntity)) {
+            livingEntity.addEffect(new MobEffectInstance(this.fullSetEffect));
         }
     }
 
@@ -78,38 +84,12 @@ public class MITMArmorItem extends ArmorItem implements GeoItem {
         return cache;
     }
 
-    private void evaluateArmorEffects(Player player) {
-        if (hasCorrectArmorOn(this.material, player)) {
-            addStatusEffectForMaterial(player, this.material, this.fullSetEffect);
+    private boolean hasCorrectArmorOn(Holder<ArmorMaterial> material, LivingEntity entity) {
+        for (ItemStack stack : entity.getArmorSlots()) {
+            if (stack.isEmpty() || !(stack.getItem() instanceof ArmorItem armor) || armor.getMaterial() != material) {
+                return false;
+            }
         }
-    }
-
-    private void addStatusEffectForMaterial(Player player, ArmorMaterial mapArmorMaterial, MobEffectInstance mapStatusEffect) {
-        boolean hasPlayerEffect = player.hasEffect(mapStatusEffect.getEffect());
-
-        if (hasCorrectArmorOn(mapArmorMaterial, player) && !hasPlayerEffect) {
-            player.addEffect(new MobEffectInstance(mapStatusEffect.getEffect(),
-                    mapStatusEffect.getDuration(), mapStatusEffect.getAmplifier()));
-        }
-    }
-
-    private boolean hasFullSuitOfArmorOn(Player player) {
-        ItemStack boots = player.getInventory().getArmor(0);
-        ItemStack leggings = player.getInventory().getArmor(1);
-        ItemStack breastplate = player.getInventory().getArmor(2);
-        ItemStack helmet = player.getInventory().getArmor(3);
-
-        return !helmet.isEmpty() && !breastplate.isEmpty()
-                && !leggings.isEmpty() && !boots.isEmpty();
-    }
-
-    private boolean hasCorrectArmorOn(ArmorMaterial material, Player player) {
-        ArmorItem boots = (ArmorItem) player.getInventory().getArmor(0).getItem();
-        ArmorItem leggings = (ArmorItem) player.getInventory().getArmor(1).getItem();
-        ArmorItem breastplate = (ArmorItem) player.getInventory().getArmor(2).getItem();
-        ArmorItem helmet = (ArmorItem) player.getInventory().getArmor(3).getItem();
-
-        return helmet.getMaterial() == material && breastplate.getMaterial() == material &&
-                leggings.getMaterial() == material && boots.getMaterial() == material;
+        return true;
     }
 }

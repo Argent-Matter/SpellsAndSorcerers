@@ -12,20 +12,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import dev.screret.mitm.api.wand.ability.WandAbility;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+
+import com.mojang.serialization.MapCodec;
+import dev.screret.mitm.api.ability.WandAbility;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class SubAbility extends WandAbility {
+public abstract class SubAbility<T extends SubAbility<T>> extends WandAbility<T> {
     private static final EntityTypeTest<Entity, LivingEntity> ANY_LIVING_ENTITY_TYPE = new EntityTypeTest<>() {
-        public LivingEntity tryCast(Entity entity) {
+        public LivingEntity tryCast(@NotNull Entity entity) {
             return entity instanceof LivingEntity living ? living : null;
         }
 
-        public Class<LivingEntity> getBaseClass() {
+        public @NotNull Class<LivingEntity> getBaseClass() {
             return LivingEntity.class;
         }
     };
@@ -36,6 +39,9 @@ public abstract class SubAbility extends WandAbility {
         super(useDuration, cooldownDuration, damagePerHit, applyEnchants, particle, color);
         this.hitFlags = hitFlags;
     }
+
+    @Override
+    public abstract MapCodec<T> codec();
 
     @Override
     public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WandAbilityInstance.WrappedVec3 currentPosition, int timeCharged) {
@@ -61,7 +67,7 @@ public abstract class SubAbility extends WandAbility {
         return InteractionResultHolder.pass(stack);
     }
 
-    public abstract boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity hitEnt, float timeCharged);
+    public abstract boolean doHit(ItemStack usedItem, LivingEntity user, LivingEntity target, float timeCharged);
 
     public abstract boolean doHit(ItemStack usedItem, LivingEntity user, Vec3 hitPoint, float timeCharged);
 

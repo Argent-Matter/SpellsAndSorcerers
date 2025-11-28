@@ -5,11 +5,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.api.wand.ability.WandAbilityInstance;
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.common.entity.BossWizardEntity;
 import dev.screret.mitm.common.entity.WizardEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 
 public class ShootEnemyGoal extends Goal {
@@ -24,17 +24,17 @@ public class ShootEnemyGoal extends Goal {
     private final float attackRadius;
     private final float attackRadiusSqr;
 
-    public ShootEnemyGoal(BossWizardEntity pRangedAttackMob, double pSpeedModifier, int pAttackInterval, float pAttackRadius) {
-        this(pRangedAttackMob, pSpeedModifier, pAttackInterval, pAttackInterval, pAttackRadius);
+    public ShootEnemyGoal(BossWizardEntity rangedAttackMob, double speedModifier, int attackInterval, float attackRadius) {
+        this(rangedAttackMob, speedModifier, attackInterval, attackInterval, attackRadius);
     }
 
-    public ShootEnemyGoal(BossWizardEntity pRangedAttackMob, double pSpeedModifier, int pAttackIntervalMin, int pAttackIntervalMax, float pAttackRadius) {
-        this.mob = pRangedAttackMob;
-        this.speedModifier = pSpeedModifier;
-        this.attackIntervalMin = pAttackIntervalMin;
-        this.attackIntervalMax = pAttackIntervalMax;
-        this.attackRadius = pAttackRadius;
-        this.attackRadiusSqr = pAttackRadius * pAttackRadius;
+    public ShootEnemyGoal(BossWizardEntity rangedAttackMob, double speedModifier, int attackIntervalMin, int attackIntervalMax, float attackRadius) {
+        this.mob = rangedAttackMob;
+        this.speedModifier = speedModifier;
+        this.attackIntervalMin = attackIntervalMin;
+        this.attackIntervalMax = attackIntervalMax;
+        this.attackRadius = attackRadius;
+        this.attackRadiusSqr = attackRadius * attackRadius;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
