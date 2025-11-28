@@ -124,7 +124,7 @@ public class WandItem extends Item {
             return true;
         if (user.hasData(MITMAttachmentTypes.MANA) && MITMConfig.Server.useMana.get()) {
             var manaCap = user.getData(MITMAttachmentTypes.MANA);
-            var manaToDeduct = 1 + timeCharged / 4 * (6 - stack.getEnchantmentLevel(MITMEnchantments.MANA_EFFICIENCY));
+            var manaToDeduct = 1 + timeCharged / 4 * (6 - 0 /* stack.getEnchantmentLevel(MITMEnchantments.MANA_EFFICIENCY) */);
             if (manaCap.getMana() < manaToDeduct) {
                 return false;
             }

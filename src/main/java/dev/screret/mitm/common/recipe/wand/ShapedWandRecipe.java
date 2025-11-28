@@ -1,8 +1,8 @@
 package dev.screret.mitm.common.recipe.wand;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
+import dev.screret.mitm.data.MITMIngredientTypes;
+import dev.screret.mitm.data.MITMRecipeTypes;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
-import dev.screret.mitm.data.MITMIngredientTypes;
-import dev.screret.mitm.data.MITMRecipeTypes;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class ShapedWandRecipe implements WandRecipe {
 
-    @Getter(AccessLevel.PRIVATE)
+    @Getter
     private final String group;
     @Getter(AccessLevel.PRIVATE)
     private final ShapedRecipePattern pattern;
