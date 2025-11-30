@@ -106,7 +106,7 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public void registerClientExtensions(final RegisterClientExtensionsEvent event) {
+    public static void registerClientExtensions(final RegisterClientExtensionsEvent event) {
         event.registerItem(new WandItemClientExtensions(), MITMItems.WAND);
     }
 }

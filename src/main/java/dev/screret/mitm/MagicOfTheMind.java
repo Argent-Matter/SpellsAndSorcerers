@@ -68,12 +68,6 @@ public class MagicOfTheMind {
 
     public MagicOfTheMind(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
-        modEventBus.addListener(this::registerRegistries);
-        modEventBus.addListener(this::addItemsVanillaTabs);
-        modEventBus.addListener(this::gatherData);
-        modEventBus.addListener(this::registerCapabilities);
-        modEventBus.addListener(this::registerEntityAttributes);
-        modEventBus.addListener(this::registerVanillaEntityAttributes);
 
         MITMWandAbilities.WAND_ABILITIES.register(modEventBus);
         MITMArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
@@ -110,12 +104,12 @@ public class MagicOfTheMind {
     // region mod bus events
 
     @SubscribeEvent
-    private void registerRegistries(final NewRegistryEvent event) {
+    private static void registerRegistries(final NewRegistryEvent event) {
         event.register(MITMRegistries.WAND_ABILITIES);
     }
 
     @SubscribeEvent
-    public void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
+    public static void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
         MITMUtil.generateWandItems();
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.accept(MITMItems.SOULSTEEL_AXE.get());
@@ -152,7 +146,7 @@ public class MagicOfTheMind {
     }
 
     @SubscribeEvent
-    public void gatherData(GatherDataEvent event) {
+    public static void gatherData(final GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
         PackOutput packOutput = gen.getPackOutput();
         CompletableFuture<HolderLookup.Provider> registries = event.getLookupProvider();
@@ -181,13 +175,13 @@ public class MagicOfTheMind {
     }
 
     @SubscribeEvent
-    private void registerCapabilities(final RegisterCapabilitiesEvent event) {
+    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MITMBlockEntities.POTION_DISTILLERY.get(),
                 PotionDistilleryBlockEntity::getItemHandler);
     }
 
     @SubscribeEvent
-    public void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
         event.put(MITMEntityTypes.WIZARD.get(), WizardEntity.createAttributes().build());
         event.put(MITMEntityTypes.BOSS_WIZARD.get(), BossWizardEntity.createAttributes().build());
     }
@@ -197,7 +191,7 @@ public class MagicOfTheMind {
     // region forge bus events
 
     @SubscribeEvent
-    public void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {
+    public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {
         if (!event.has(EntityType.PLAYER, MITMAttributes.MANA)) {
             event.add(EntityType.PLAYER, MITMAttributes.MANA);
         }
