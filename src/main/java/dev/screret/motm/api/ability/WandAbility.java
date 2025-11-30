@@ -22,12 +22,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 
-import java.util.function.Function;
-
 public abstract class WandAbility<T extends WandAbility<T>> {
 
-    public static final Codec<WandAbility<?>> CODEC = MOTMRegistries.WAND_ABILITIES.byNameCodec()
-            .dispatchStable(Function.identity(), WandAbility::codec);
+    public static final Codec<WandAbility<?>> CODEC = MOTMRegistries.WAND_ABILITIES.byNameCodec();
 
     @Getter
     private final int useDuration, cooldownDuration;
