@@ -42,11 +42,11 @@ public class WandItem extends Item {
     @Override
     public Component getName(ItemStack stack) {
         MutableComponent name = Component.translatable(getDescriptionId());
-        if (!stack.has(MITMDataComponents.WAND)) {
-            return name.append(Component.translatable("ability.mitm.dummy"));
-        }
 
         WandComponent component = stack.get(MITMDataComponents.WAND);
+        if (component == null) {
+            return name.append(Component.translatable("ability.mitm.dummy"));
+        }
 
         var current = component.primary();
         name = name.append(Component.translatable(current.getId().toLanguageKey("ability")));
@@ -71,11 +71,11 @@ public class WandItem extends Item {
         ItemStack itemstack = player.getItemInHand(hand);
         InteractionResultHolder<ItemStack> reference = InteractionResultHolder.fail(itemstack);
 
-        if (!itemstack.has(MITMDataComponents.WAND)) {
+        WandComponent component = itemstack.get(MITMDataComponents.WAND);
+        if (component == null) {
             return reference;
         }
-        WandComponent component = itemstack.get(MITMDataComponents.WAND);
-        if (player.isCrouching() && component.secondary().isPresent()) {
+        if (player.isSecondaryUseActive() && component.secondary().isPresent()) {
             var crouchAbility = component.secondary().get();
             if ((crouchAbility.isChargeable() || crouchAbility.isHoldable()) && !player.isUsingItem()) {
                 player.startUsingItem(hand);
@@ -103,7 +103,7 @@ public class WandItem extends Item {
             if (!deductManaFromUser(user, stack, timeCharged))
                 return returnValue;
 
-            if (user.isCrouching() && component.secondary().isPresent()) {
+            if (user.isShiftKeyDown() && component.secondary().isPresent()) {
                 returnValue = component.secondary().get().execute(level, user, stack,
                         new WandAbilityInstance.WrappedVec3(user.getEyePosition()), timeCharged);
                 if (user instanceof Player player) {
@@ -140,25 +140,29 @@ public class WandItem extends Item {
         if (level.isClientSide) {
             return;
         }
-        if (!stack.has(MITMDataComponents.WAND)) {
+        WandComponent component = stack.get(MITMDataComponents.WAND);
+        if (component == null) {
             return;
         }
-        WandComponent cap = stack.get(MITMDataComponents.WAND);
-        if (cap.primary().isHoldable() || (cap.secondary().isPresent() && cap.secondary().get().isHoldable())) {
-            this.execute(level, user, stack, usageTicks, cap);
+        if (component.primary().isHoldable() || (component.secondary().isPresent() && component.secondary().get().isHoldable())) {
+            this.execute(level, user, stack, usageTicks, component);
         }
     }
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
-        if (!stack.has(MITMDataComponents.WAND)) {
+        WandComponent component = stack.get(MITMDataComponents.WAND);
+        if (component == null) {
             return;
         }
-        WandComponent cap = stack.get(MITMDataComponents.WAND);
-        int useDuration = cap.primary().getUseDuration();
-        if (useDuration > 0) {
-            if (cap.primary().isChargeable() || (cap.secondary().isPresent() && cap.secondary().get().isChargeable()))
-                this.execute(level, entity, stack, useDuration - timeLeft, cap);
+        WandAbilityInstance ability = component.primary();
+        if (ability.isChargeable() && ability.getUseDuration() > 0) {
+            this.execute(level, entity, stack, ability.getUseDuration() - timeLeft, component);
+        } else {
+            ability = component.secondaryOrNull();
+            if (ability != null && ability.isChargeable() && ability.getUseDuration() > 0) {
+                this.execute(level, entity, stack, ability.getUseDuration() - timeLeft, component);
+            }
         }
     }
 
@@ -169,8 +173,9 @@ public class WandItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        if (stack.has(MITMDataComponents.WAND)) {
-            return stack.get(MITMDataComponents.WAND).primary().getUseDuration();
+        WandComponent component = stack.get(MITMDataComponents.WAND);
+        if (component != null) {
+            return component.primary().getUseDuration();
         }
         return 0;
     }

@@ -1,6 +1,7 @@
 package dev.screret.mitm.api.ability;
 
 import dev.screret.mitm.api.registry.MITMRegistries;
+import dev.screret.mitm.common.item.component.WandComponent;
 import dev.screret.mitm.data.MITMDataComponents;
 
 import net.minecraft.core.particles.ParticleOptions;
@@ -87,9 +88,9 @@ public abstract class WandAbility<T extends WandAbility<T>> {
         return damage;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public boolean getPoweredUpMultiplier(ItemStack stack) {
-        return stack.has(MITMDataComponents.WAND) && stack.get(MITMDataComponents.WAND).poweredUp();
+        WandComponent component = stack.get(MITMDataComponents.WAND);
+        return component != null && component.poweredUp();
     }
 
     public ResourceLocation getKey() {

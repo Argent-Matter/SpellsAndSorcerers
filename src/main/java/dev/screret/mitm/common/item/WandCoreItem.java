@@ -1,6 +1,8 @@
 package dev.screret.mitm.common.item;
 
+import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.data.MITMDataComponents;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -16,10 +18,11 @@ public class WandCoreItem extends Item {
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public @NotNull Component getName(ItemStack stack) {
         String name = "ability.mitm.dummy";
-        if (stack.has(MITMDataComponents.WAND_CORE)) {
-            name = stack.get(MITMDataComponents.WAND_CORE).getId().toLanguageKey(ABILITY_KEY);
+        WandAbilityInstance component = stack.get(MITMDataComponents.WAND_CORE);
+        if (component != null) {
+            name = component.getId().toLanguageKey(ABILITY_KEY);
         }
         return Component.translatable(super.getDescriptionId(stack), Component.translatable(name));
     }

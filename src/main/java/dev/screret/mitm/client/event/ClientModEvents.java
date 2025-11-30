@@ -87,8 +87,9 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerItemColors(final RegisterColorHandlersEvent.Item event) {
         event.register((stack, layer) -> {
-            if (stack.has(MITMDataComponents.WAND_CORE) && layer == 1) {
-                return stack.get(MITMDataComponents.WAND_CORE).getAbility().getColor();
+            var component = stack.get(MITMDataComponents.WAND_CORE);
+            if (component != null && layer == 1) {
+                return component.getAbility().getColor();
             }
             return 0xFFFFFFFF;
         }, MITMItems.WAND_CORE.get());

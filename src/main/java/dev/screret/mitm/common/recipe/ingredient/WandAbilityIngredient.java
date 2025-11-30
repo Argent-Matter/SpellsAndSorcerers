@@ -91,14 +91,13 @@ public class WandAbilityIngredient implements ICustomIngredient {
 
     @Nullable
     public static WandAbilityIngredient fromStack(ItemStack stack) {
-        if (stack.has(MITMDataComponents.WAND)) {
-            WandComponent component = stack.get(MITMDataComponents.WAND);
-            // noinspection DataFlowIssue
-            return new WandAbilityIngredient(component.primary(), component.secondaryOrNull(), stack.getItem(),
-                    component.poweredUp());
+        WandComponent wand = stack.get(MITMDataComponents.WAND);
+        if (wand != null) {
+            return new WandAbilityIngredient(wand.primary(), wand.secondaryOrNull(), stack.getItem(),
+                    wand.poweredUp());
         } else if (stack.has(MITMDataComponents.WAND_CORE)) {
-            WandAbilityInstance component = stack.get(MITMDataComponents.WAND_CORE);
-            return new WandAbilityIngredient(component, null, stack.getItem(), false);
+            WandAbilityInstance wandCore = stack.get(MITMDataComponents.WAND_CORE);
+            return new WandAbilityIngredient(wandCore, null, stack.getItem(), false);
         }
         return null;
     }
