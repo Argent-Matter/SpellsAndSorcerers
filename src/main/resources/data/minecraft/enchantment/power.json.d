@@ -36,6 +36,6 @@
   "slots": [
     "mainhand"
   ],
-  "supported_items": "#mitm:enchantable_with/power",
+  "supported_items": "#motm:enchantable_with/power",
   "weight": 10
 }

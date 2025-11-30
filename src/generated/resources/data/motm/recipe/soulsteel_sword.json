@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "#": {
+            "item": "motm:handle"
+        },
+        "X": {
+            "tag": "forge:ingots/soulsteel"
+        }
+    },
+    "pattern": [
+        "X",
+        "X",
+        "#"
+    ],
+    "result": {
+        "count": 1,
+        "id": "motm:soulsteel_sword"
+    }
+}

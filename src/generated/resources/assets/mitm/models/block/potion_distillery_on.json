@@ -1,7 +1,0 @@
-{
-    "parent": "mitm:block/potion_distillery",
-    "textures": {
-        "side": "mitm:block/potion_distillery_side_on",
-        "top": "mitm:block/potion_distillery_top_on"
-    }
-}

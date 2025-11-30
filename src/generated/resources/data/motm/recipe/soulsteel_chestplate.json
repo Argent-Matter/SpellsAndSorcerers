@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "X": {
+            "tag": "forge:ingots/soulsteel"
+        }
+    },
+    "pattern": [
+        "X X",
+        "XXX",
+        "XXX"
+    ],
+    "result": {
+        "count": 1,
+        "id": "motm:soulsteel_chestplate"
+    }
+}

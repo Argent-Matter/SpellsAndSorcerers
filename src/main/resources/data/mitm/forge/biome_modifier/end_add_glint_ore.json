@@ -1,9 +1,0 @@
-{
-  "type": "forge:add_features",
-  "biomes": "#minecraft:is_end",
-  "features": [
-    "mitm:ore_glint_small",
-    "mitm:ore_glint_large"
-  ],
-  "step": "underground_ores"
-}

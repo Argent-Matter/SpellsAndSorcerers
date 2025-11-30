@@ -1,0 +1,34 @@
+{
+    "variants": {
+        "active=false,facing=east": {
+            "model": "motm:block/potion_distillery",
+            "y": 270
+        },
+        "active=false,facing=north": {
+            "model": "motm:block/potion_distillery",
+            "y": 180
+        },
+        "active=false,facing=south": {
+            "model": "motm:block/potion_distillery"
+        },
+        "active=false,facing=west": {
+            "model": "motm:block/potion_distillery",
+            "y": 90
+        },
+        "active=true,facing=east": {
+            "model": "motm:block/potion_distillery_on",
+            "y": 270
+        },
+        "active=true,facing=north": {
+            "model": "motm:block/potion_distillery_on",
+            "y": 180
+        },
+        "active=true,facing=south": {
+            "model": "motm:block/potion_distillery_on"
+        },
+        "active=true,facing=west": {
+            "model": "motm:block/potion_distillery_on",
+            "y": 90
+        }
+    }
+}

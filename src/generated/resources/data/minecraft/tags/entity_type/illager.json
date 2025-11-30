@@ -1,6 +1,6 @@
 {
     "values": [
-        "mitm:wizard",
-        "mitm:boss_wizard"
+        "motm:wizard",
+        "motm:boss_wizard"
     ]
 }

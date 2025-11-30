@@ -1,7 +1,0 @@
-{
-  "loader": "mitm:wand",
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "mitm:item/wand/small_fireball"
-  }
-}

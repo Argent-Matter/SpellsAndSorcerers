@@ -1,7 +1,7 @@
 <p style="text-align: center;"><img src="https://raw.githubusercontent.com/Argent-Matter/MagicOfTheMind/refs/heads/1.21.1/src/main/resources/logo_assets/logo.png" alt="Logo"></p>
 <h1 style="text-align: center;">
     <a href="https://www.curseforge.com/minecraft/mc-mods/magic-of-the-mind"><img src="https://img.shields.io/badge/Available%20for-MC%201.21.1%20-informational?style=for-the-badge" alt="Supported Versions"></a>
-    <a href="https://github.com/Argent-Matter/gcyr/blob/1.21.1/LICENSE.md"><img src="https://img.shields.io/github/license/Argent-Matter/MagicOfTheMind?style=for-the-badge&logo=github" alt="License"></a>
+    <a href="https://github.com/Argent-Matter/MagicOfTheMind/blob/1.21.1/LICENSE.md"><img src="https://img.shields.io/github/license/Argent-Matter/MagicOfTheMind?style=for-the-badge&logo=github" alt="License"></a>
     <a href="https://discord.gg/bmsXZGHQUx"><img alt="Discord" src="https://img.shields.io/discord/1070331567349714954?style=for-the-badge&label=Discord&color=5865f2"></a>
     <br>
     <a href="https://www.curseforge.com/minecraft/mc-mods/magic-of-the-mind"><img src="https://img.shields.io/curseforge/dt/994123?style=for-the-badge&logo=curseforge&logoColor=1c1c1c&logoSize=auto&label=%20&labelColor=f16436&color=2d2d2d" alt="CurseForge"></a>
@@ -11,7 +11,7 @@
 
 
 ## Magic of the Mind
-Magic of the Mind ('mitm' for short) is a magic mod about discovery, powerful telepathy and the dangers of touching unknown substances.
+Magic of the Mind ('motm' for short) is a magic mod about discovery, powerful telepathy and the dangers of touching unknown substances.
 It also has **highly** customizable staffs with abilities that chain together in a multitude of ways!
 
 You can find mysterious obelisks scattered around in long gone civilizations' ruins! Where might they take you?  

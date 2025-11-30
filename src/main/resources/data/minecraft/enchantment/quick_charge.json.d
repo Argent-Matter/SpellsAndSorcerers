@@ -40,6 +40,6 @@
     "mainhand",
     "offhand"
   ],
-  "supported_items": "#mitm:enchantable_with/quick_charge",
+  "supported_items": "#motm:enchantable_with/quick_charge",
   "weight": 5
 }

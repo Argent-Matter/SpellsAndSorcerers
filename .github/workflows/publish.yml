@@ -105,8 +105,8 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           files: |
-            ./mitm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
-            ./!(mitm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
+            ./motm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+            ./!(motm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
           name: 'Spells & Sorcerers ${{ needs.build.outputs.ver }}'
           version: '${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
