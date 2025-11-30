@@ -10,19 +10,17 @@ import dev.screret.mitm.client.model.item.WandItemClientExtensions;
 import dev.screret.mitm.client.model.item.WandModel;
 import dev.screret.mitm.client.particle.EyeParticle;
 import dev.screret.mitm.client.renderer.blockentity.PalantirBERenderer;
-import dev.screret.mitm.client.renderer.blockentity.SummonSignBERenderer;
+import dev.screret.mitm.client.renderer.blockentity.SummoningCircleBERenderer;
 import dev.screret.mitm.client.renderer.entity.BossWizardRenderer;
 import dev.screret.mitm.client.renderer.entity.WizardRenderer;
 import dev.screret.mitm.common.ability.SubAbility;
-import dev.screret.mitm.common.block.SummonSignBlock;
+import dev.screret.mitm.common.block.SummoningCircleBlock;
 import dev.screret.mitm.data.*;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -50,7 +48,7 @@ public class ClientEventListeners {
         event.registerEntityRenderer(MITMEntityTypes.WIZARD.get(), WizardRenderer::new);
         event.registerEntityRenderer(MITMEntityTypes.BOSS_WIZARD.get(), BossWizardRenderer::new);
 
-        event.registerBlockEntityRenderer(MITMBlockEntities.SUMMON_SIGN.get(), context -> new SummonSignBERenderer());
+        event.registerBlockEntityRenderer(MITMBlockEntities.SUMMONING_CIRCLE.get(), context -> new SummoningCircleBERenderer());
         event.registerBlockEntityRenderer(MITMBlockEntities.PALANTIR.get(), context -> new PalantirBERenderer());
     }
 
@@ -94,17 +92,12 @@ public class ClientEventListeners {
             }
             return 0xFFFFFFFF;
         }, MITMItems.WAND_CORE.get());
-
-        event.register((stack, layer) -> {
-            BlockState blockstate = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
-            return event.getBlockColors().getColor(blockstate, null, null, layer);
-        }, MITMItems.SUMMON_SIGN.get());
     }
 
     @SubscribeEvent
     public static void registerBlockColors(final RegisterColorHandlersEvent.Block event) {
-        event.register((state, level, pos, layer) -> state.getValue(SummonSignBlock.COLOR).getTextureDiffuseColor(),
-                MITMBlocks.SUMMON_SIGN.get());
+        event.register((state, level, pos, layer) -> state.getValue(SummoningCircleBlock.COLOR).getTextureDiffuseColor(),
+                MITMBlocks.SUMMONING_CIRCLE.get());
     }
 
     @SubscribeEvent

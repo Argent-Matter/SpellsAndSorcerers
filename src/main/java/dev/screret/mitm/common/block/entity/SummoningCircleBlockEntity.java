@@ -1,6 +1,6 @@
 package dev.screret.mitm.common.block.entity;
 
-import dev.screret.mitm.common.block.SummonSignBlock;
+import dev.screret.mitm.common.block.SummoningCircleBlock;
 import dev.screret.mitm.common.entity.BossWizardEntity;
 import dev.screret.mitm.data.MITMBlockEntities;
 import dev.screret.mitm.data.MITMEntityTypes;
@@ -41,22 +41,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity {
+public class SummoningCircleBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     private static final int TICKS_TO_SPAWN = 100;
     public static final VoxelShape INSIDE = Block.box(-1D, 0.0D, -1D, 17.0D, 16.0D, 17.0D);
-    public static final RawAnimation SUMMON = RawAnimation.begin().thenLoop("summon_sign.summon");
+    public static final RawAnimation SUMMON = RawAnimation.begin().thenLoop("summoning_circle.summon");
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private int ticksToSpawn = -1;
     private boolean hasSpawned = false;
 
-    public SummonSignBlockEntity(BlockPos pos, BlockState blockState) {
-        super(MITMBlockEntities.SUMMON_SIGN.get(), pos, blockState);
+    public SummoningCircleBlockEntity(BlockPos pos, BlockState blockState) {
+        super(MITMBlockEntities.SUMMONING_CIRCLE.get(), pos, blockState);
     }
 
-    public static Set<ItemEntity> getItemsAt(Level level, SummonSignBlockEntity blockEntity) {
+    public static Set<ItemEntity> getItemsAt(Level level, SummoningCircleBlockEntity blockEntity) {
         return INSIDE.toAabbs().stream()
                 .flatMap((bounds) -> level.getEntitiesOfClass(ItemEntity.class,
                         bounds.move(blockEntity.getBlockPos().getX(), blockEntity.getBlockPos().getY(),
@@ -95,7 +95,7 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
         int count = 0;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, SummonSignBlockEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, SummoningCircleBlockEntity blockEntity) {
         if (pos.getY() >= level.getMinBuildHeight() && level.getDifficulty() != Difficulty.PEACEFUL) {
             var itemEntities = getItemsAt(level, blockEntity);
             if (!blockEntity.hasSpawned) {
@@ -104,18 +104,18 @@ public class SummonSignBlockEntity extends BlockEntity implements GeoBlockEntity
                 Set<HolderSet.Named<Item>> requiredSet = requiredItems.stream().collect(Collectors.toSet());
                 var counter = new RequiredCounter();
                 if (!items.allMatch(item -> testForTag(requiredSet, item, counter))) {
-                    level.setBlockAndUpdate(pos, state.setValue(SummonSignBlock.TRIGGERED, false));
+                    level.setBlockAndUpdate(pos, state.setValue(SummoningCircleBlock.TRIGGERED, false));
                     return;
                 }
                 if (itemEntities.size() < requiredSet.size()) {
-                    level.setBlockAndUpdate(pos, state.setValue(SummonSignBlock.TRIGGERED, false));
+                    level.setBlockAndUpdate(pos, state.setValue(SummoningCircleBlock.TRIGGERED, false));
                     return;
                 }
 
                 if (blockEntity.ticksToSpawn < 0) {
                     blockEntity.ticksToSpawn = TICKS_TO_SPAWN;
                     blockEntity.setChanged();
-                    level.setBlockAndUpdate(pos, state.setValue(SummonSignBlock.TRIGGERED, true));
+                    level.setBlockAndUpdate(pos, state.setValue(SummoningCircleBlock.TRIGGERED, true));
                     return;
                 } else if (blockEntity.ticksToSpawn > 0) {
                     --blockEntity.ticksToSpawn;

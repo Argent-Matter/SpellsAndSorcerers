@@ -17,7 +17,7 @@ public class MITMCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister
             .create(BuiltInRegistries.CREATIVE_MODE_TAB, MagicOfTheMind.MODID);
 
-    public static final Supplier<CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("spellsandsorcerers",
+    public static final Supplier<CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("mitm",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + MagicOfTheMind.MODID))
                     .icon(() -> MITMItems.WAND.get().getDefaultInstance())

@@ -1,6 +1,6 @@
 package dev.screret.mitm.common.block;
 
-import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
+import dev.screret.mitm.common.block.entity.SummoningCircleBlockEntity;
 import dev.screret.mitm.data.MITMBlockEntities;
 import dev.screret.mitm.data.MITMParticles;
 
@@ -35,14 +35,14 @@ import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SummonSignBlock extends BaseEntityBlock {
+public class SummoningCircleBlock extends BaseEntityBlock {
 
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
-    public SummonSignBlock() {
+    public SummoningCircleBlock() {
         super(Properties.ofLegacyCopy(Blocks.END_PORTAL).lightLevel((state) -> state.getValue(TRIGGERED) ? 9 : 2)
                 .strength(-1.0F, 3600F).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(COLOR, DyeColor.RED).setValue(TRIGGERED, false));
@@ -65,7 +65,7 @@ public class SummonSignBlock extends BaseEntityBlock {
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
-        return MapCodec.unit(SummonSignBlock::new);
+        return MapCodec.unit(SummoningCircleBlock::new);
     }
 
     @Override
@@ -76,20 +76,20 @@ public class SummonSignBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return MITMBlockEntities.SUMMON_SIGN.get().create(pos, state);
+        return MITMBlockEntities.SUMMONING_CIRCLE.get().create(pos, state);
     }
 
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
                                                                   BlockEntityType<T> blockEntityType) {
         return level.isClientSide ? null :
-                createTickerHelper(blockEntityType, MITMBlockEntities.SUMMON_SIGN.get(), SummonSignBlockEntity::serverTick);
+                createTickerHelper(blockEntityType, MITMBlockEntities.SUMMONING_CIRCLE.get(), SummoningCircleBlockEntity::serverTick);
     }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         super.animateTick(state, level, pos, random);
 
-        if (state.getValue(SummonSignBlock.TRIGGERED)) {
+        if (state.getValue(SummoningCircleBlock.TRIGGERED)) {
             Vec3 position = Vec3.atLowerCornerWithOffset(pos, 0.5, 3.0, 0.5);
             for (int i = 0; i < 10; ++i) {
                 level.addParticle(ParticleTypes.ENCHANT,

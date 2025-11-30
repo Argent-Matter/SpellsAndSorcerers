@@ -19,7 +19,6 @@ public class MITMItems {
 
     // BLOCK ITEMS
     public static final DeferredItem<BlockItem> WAND_TABLE = ITEMS.register("wand_table", blockItem(MITMBlocks.WAND_TABLE));
-    public static final DeferredItem<BlockItem> SUMMON_SIGN = ITEMS.register("summon_sign", blockItem(MITMBlocks.SUMMON_SIGN));
     public static final DeferredItem<BlockItem> PALANTIR = ITEMS.register("palantir",
             () -> new BlockItem(MITMBlocks.PALANTIR.get(), new Item.Properties().fireResistant().rarity(Rarity.UNCOMMON)));
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.register("soulsteel_block",

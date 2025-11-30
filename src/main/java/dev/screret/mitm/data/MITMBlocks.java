@@ -3,7 +3,7 @@ package dev.screret.mitm.data;
 import dev.screret.mitm.MagicOfTheMind;
 import dev.screret.mitm.common.block.PalantirBlock;
 import dev.screret.mitm.common.block.PotionDistilleryBlock;
-import dev.screret.mitm.common.block.SummonSignBlock;
+import dev.screret.mitm.common.block.SummoningCircleBlock;
 import dev.screret.mitm.common.block.WandTableBlock;
 
 import net.minecraft.util.valueproviders.UniformInt;
@@ -19,7 +19,7 @@ public class MITMBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.Blocks.createBlocks(MagicOfTheMind.MODID);
 
     public static final DeferredBlock<WandTableBlock> WAND_TABLE = BLOCKS.register("wand_table", WandTableBlock::new);
-    public static final DeferredBlock<Block> SUMMON_SIGN = BLOCKS.register("summon_sign", SummonSignBlock::new);
+    public static final DeferredBlock<Block> SUMMONING_CIRCLE = BLOCKS.register("summoning_circle", SummoningCircleBlock::new);
     public static final DeferredBlock<Block> PALANTIR = BLOCKS.register("palantir", PalantirBlock::new);
     public static final DeferredBlock<Block> POTION_DISTILLERY = BLOCKS.register("potion_distillery", PotionDistilleryBlock::new);
 

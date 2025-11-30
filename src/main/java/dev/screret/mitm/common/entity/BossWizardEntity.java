@@ -2,7 +2,7 @@ package dev.screret.mitm.common.entity;
 
 import dev.screret.mitm.MITMUtil;
 import dev.screret.mitm.api.ability.WandAbilityInstance;
-import dev.screret.mitm.common.block.entity.SummonSignBlockEntity;
+import dev.screret.mitm.common.block.entity.SummoningCircleBlockEntity;
 import dev.screret.mitm.common.entity.goal.ShootEnemyGoal;
 import dev.screret.mitm.config.MITMConfig;
 import dev.screret.mitm.data.MITMWandAbilities;
@@ -151,7 +151,7 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     @Override
     protected void customServerAiStep() {
         if (this.getInvulnerableTicks() > 0) {
-            if (!(this.level().getBlockEntity(this.spawnPos) instanceof SummonSignBlockEntity)) {
+            if (!(this.level().getBlockEntity(this.spawnPos) instanceof SummoningCircleBlockEntity)) {
                 this.discard();
             }
             if (this.level().getBlockState(this.spawnPos.above(2)) != Blocks.AIR.defaultBlockState()) {
