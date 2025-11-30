@@ -17,7 +17,7 @@ public class MITMItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         handheldItem(MITMItems.HANDLE.get());
         basicItem(MITMItems.SOUL_BOTTLE.get());
-        basicItem(MITMItems.CLOUD_BOTTLE.get());
+        // basicItem(MITMItems.CLOUD_BOTTLE.get());
 
         basicItem(MITMItems.SOULSTEEL_INGOT.get());
         basicItem(MITMItems.SOULSTEEL_NUGGET.get());

@@ -32,7 +32,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class WandItem extends Item {
 
-    public static final Component JOINER = Component.translatable("tooltip.mitm.joiner");
+    public static final Component JOINER = Component.literal(", ");
     public static final Component JOINER_LAST = Component.translatable("tooltip.mitm.joiner.last");
 
     public WandItem() {
@@ -68,7 +68,7 @@ public class WandItem extends Item {
                 name.append(CommonComponents.SPACE).append(addNamePart(children.getFirst()));
             } else if (children.size() == 2) {
                 name.append(addNamePart(children.getFirst()))
-                        .append(JOINER_LAST)
+                        .append(CommonComponents.SPACE).append(JOINER_LAST)
                         .append(addNamePart(children.getLast()));
             } else {
                 int lastIdx = children.size() - 1;

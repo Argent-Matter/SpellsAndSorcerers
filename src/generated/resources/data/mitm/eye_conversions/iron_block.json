@@ -1,6 +1,6 @@
 {
-  "ingredient": {
-    "tag": "forge:storage_blocks/gold"
-  },
-  "result": "minecraft:iron_block"
+    "ingredient": {
+        "tag": "c:storage_blocks/gold"
+    },
+    "result": "minecraft:iron_block"
 }

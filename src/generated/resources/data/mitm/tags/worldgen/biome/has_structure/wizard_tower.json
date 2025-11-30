@@ -1,8 +1,8 @@
 {
-  "values": [
-    "minecraft:dark_forest",
-    "minecraft:sparse_jungle",
-    "minecraft:meadow",
-    "minecraft:ice_spikes"
-  ]
+    "values": [
+        "minecraft:dark_forest",
+        "minecraft:sparse_jungle",
+        "minecraft:meadow",
+        "minecraft:ice_spikes"
+    ]
 }

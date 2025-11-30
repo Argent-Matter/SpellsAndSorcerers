@@ -22,6 +22,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
@@ -148,6 +149,8 @@ public class MagicOfTheMind {
 
     @SubscribeEvent
     public static void gatherData(final GatherDataEvent event) {
+        DataProvider.INDENT_WIDTH.set(4);
+
         DataGenerator gen = event.getGenerator();
         PackOutput packOutput = gen.getPackOutput();
         CompletableFuture<HolderLookup.Provider> registries = event.getLookupProvider();

@@ -77,8 +77,7 @@ public class MITMLangProvider extends LanguageProvider {
         addItem(MITMItems.SOULSTEEL_HOE, "Soulsteel Hoe");
 
         addItem(MITMItems.WAND, "Wand of %s");
-        add("tooltip.mitm.joiner", ", ");
-        add("tooltip.mitm.joiner.last", " and ");
+        add("tooltip.mitm.joiner.last", "and ");
         addItem(MITMItems.WAND_CORE, "%s Core");
 
         addItem(MITMItems.THE_ONE_RING, "The One Ring");

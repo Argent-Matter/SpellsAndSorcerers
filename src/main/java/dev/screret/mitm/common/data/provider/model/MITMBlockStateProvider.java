@@ -7,6 +7,7 @@ import dev.screret.mitm.data.MITMBlocks;
 
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
@@ -61,18 +62,20 @@ public class MITMBlockStateProvider extends BlockStateProvider {
     }
 
     private void createPotionDistillery() {
+        Block block = MITMBlocks.POTION_DISTILLERY.get();
+
         var offModel = models().withExistingParent("potion_distillery", "orientable_with_bottom")
-                .texture("front", "potion_distillery_front")
-                .texture("side", "potion_distillery_side")
-                .texture("top", "potion_distillery_top")
-                .texture("bottom", "potion_distillery_bottom");
+                .texture("front", ModelLocationUtils.getModelLocation(block, "_front"))
+                .texture("side", ModelLocationUtils.getModelLocation(block, "_side"))
+                .texture("top", ModelLocationUtils.getModelLocation(block, "_top"))
+                .texture("bottom", ModelLocationUtils.getModelLocation(block, "_bottom"));
         var onModel = models().getBuilder("potion_distillery_on").parent(offModel)
-                .texture("side", "potion_distillery_side_on")
-                .texture("top", "potion_distillery_top_on");
+                .texture("side", ModelLocationUtils.getModelLocation(block, "_side_on"))
+                .texture("top", ModelLocationUtils.getModelLocation(block, "_top_on"));
 
-        simpleBlockItem(MITMBlocks.POTION_DISTILLERY.get(), offModel);
+        simpleBlockItem(block, offModel);
 
-        getVariantBuilder(MITMBlocks.POTION_DISTILLERY.get())
+        getVariantBuilder(block)
                 .forAllStates(state -> {
                     Direction facing = state.getValue(PotionDistilleryBlock.FACING);
                     boolean active = state.getValue(PotionDistilleryBlock.ACTIVE);

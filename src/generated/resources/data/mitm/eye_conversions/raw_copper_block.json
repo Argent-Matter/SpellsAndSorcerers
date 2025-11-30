@@ -1,6 +1,6 @@
 {
-  "ingredient": {
-    "tag": "forge:storage_blocks/coal"
-  },
-  "result": "minecraft:raw_copper_block"
+    "ingredient": {
+        "tag": "c:storage_blocks/coal"
+    },
+    "result": "minecraft:raw_copper_block"
 }

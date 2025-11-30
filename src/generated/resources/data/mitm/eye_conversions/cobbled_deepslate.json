@@ -1,6 +1,6 @@
 {
-  "ingredient": {
-    "tag": "forge:cobblestone/normal"
-  },
-  "result": "minecraft:cobbled_deepslate"
+    "ingredient": {
+        "tag": "c:cobblestones/normal"
+    },
+    "result": "minecraft:cobbled_deepslate"
 }
