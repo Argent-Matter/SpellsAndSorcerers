@@ -4,9 +4,9 @@ import dev.screret.mitm.api.capability.mana.Mana;
 import dev.screret.mitm.api.registry.MITMRegistries;
 import dev.screret.mitm.common.block.entity.PotionDistilleryBlockEntity;
 import dev.screret.mitm.common.data.EyeConversionManager;
-import dev.screret.mitm.common.data.provider.model.MITMBlockStateProvider;
 import dev.screret.mitm.common.data.provider.conversion.EyeConversionProvider;
 import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
+import dev.screret.mitm.common.data.provider.model.*;
 import dev.screret.mitm.common.data.provider.recipe.MITMRecipeProvider;
 import dev.screret.mitm.common.data.provider.tag.MITMBiomeTagsProvider;
 import dev.screret.mitm.common.data.provider.tag.MITMBlockTagsProvider;
@@ -174,6 +174,7 @@ public class MagicOfTheMind {
 
         gen.addProvider(event.includeClient(), new MITMLangProvider(packOutput, MagicOfTheMind.MODID, "en_us"));
         gen.addProvider(event.includeClient(), new MITMBlockStateProvider(packOutput, existingFileHelper));
+        gen.addProvider(event.includeClient(), new MITMItemModelProvider(packOutput, existingFileHelper));
     }
 
     @SubscribeEvent

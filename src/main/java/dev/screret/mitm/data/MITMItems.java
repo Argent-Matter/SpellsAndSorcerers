@@ -61,6 +61,7 @@ public class MITMItems {
     public static final DeferredItem<MITMArmorItem> SOULSTEEL_BOOTS = ITEMS.register("soulsteel_boots",
             () -> new MITMArmorItem(MITMArmorMaterials.SOULSTEEL, MITMArmorItem.SOUL_STEEL_EFFECT, ArmorItem.Type.BOOTS,
                     basicItemProperties().durability(ArmorItem.Type.BOOTS.getDurability(40)).fireResistant()));
+
     public static final DeferredItem<SwordItem> SOULSTEEL_SWORD = ITEMS.register("soulsteel_sword",
             () -> new SwordItem(MITMTiers.SOULSTEEL, basicItemProperties().fireResistant()));
     public static final DeferredItem<ShovelItem> SOULSTEEL_SHOVEL = ITEMS.register("soulsteel_shovel",

@@ -70,6 +70,7 @@ public class MITMBlockStateProvider extends BlockStateProvider {
                 .texture("side", "potion_distillery_side_on")
                 .texture("top", "potion_distillery_top_on");
 
+        simpleBlockItem(MITMBlocks.POTION_DISTILLERY.get(), offModel);
 
         getVariantBuilder(MITMBlocks.POTION_DISTILLERY.get())
                 .forAllStates(state -> {
