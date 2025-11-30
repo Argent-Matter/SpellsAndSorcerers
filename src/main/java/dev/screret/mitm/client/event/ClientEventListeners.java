@@ -29,9 +29,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
-@SuppressWarnings("unused")
 @EventBusSubscriber(modid = MagicOfTheMind.MODID, value = Dist.CLIENT)
-public class ClientModEvents {
+public class ClientEventListeners {
+
+    // region mod bus events
 
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {
@@ -110,4 +111,12 @@ public class ClientModEvents {
     public static void registerClientExtensions(final RegisterClientExtensionsEvent event) {
         event.registerItem(new WandItemClientExtensions(), MITMItems.WAND);
     }
+
+    // endregion
+
+    // region forge bus events
+
+
+
+    // endregion
 }
