@@ -39,7 +39,7 @@ public class WandTableBlock extends Block {
 
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
-    private static final Component CONTAINER_TITLE = Component.translatable("container.mitm.wand_table");
+    public static final Component CONTAINER_TITLE = Component.translatable("container.mitm.wand_table");
 
     public WandTableBlock() {
         super(Properties.ofLegacyCopy(Blocks.STONE)

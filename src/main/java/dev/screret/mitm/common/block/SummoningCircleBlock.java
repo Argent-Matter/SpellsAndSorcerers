@@ -82,7 +82,8 @@ public class SummoningCircleBlock extends BaseEntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
                                                                   BlockEntityType<T> blockEntityType) {
         return level.isClientSide ? null :
-                createTickerHelper(blockEntityType, MITMBlockEntities.SUMMONING_CIRCLE.get(), SummoningCircleBlockEntity::serverTick);
+                createTickerHelper(blockEntityType, MITMBlockEntities.SUMMONING_CIRCLE.get(),
+                        SummoningCircleBlockEntity::serverTick);
     }
 
     @Override

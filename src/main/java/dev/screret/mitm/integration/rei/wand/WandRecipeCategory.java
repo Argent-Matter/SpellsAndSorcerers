@@ -1,6 +1,7 @@
 package dev.screret.mitm.integration.rei.wand;
 
 import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.common.block.WandTableBlock;
 import dev.screret.mitm.data.MITMBlocks;
 
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,7 @@ public class WandRecipeCategory implements DisplayCategory<DefaultWandDisplay> {
 
     @Override
     public Component getTitle() {
-        return Component.translatable("container.mitm.wand_table");
+        return WandTableBlock.CONTAINER_TITLE;
     }
 
     @Override

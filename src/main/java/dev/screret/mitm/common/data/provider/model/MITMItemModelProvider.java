@@ -1,11 +1,11 @@
 package dev.screret.mitm.common.data.provider.model;
 
+import dev.screret.mitm.MagicOfTheMind;
+import dev.screret.mitm.data.MITMItems;
+
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-
-import dev.screret.mitm.MagicOfTheMind;
-import dev.screret.mitm.data.MITMItems;
 
 public class MITMItemModelProvider extends ItemModelProvider {
 

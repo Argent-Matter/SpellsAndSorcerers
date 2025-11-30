@@ -19,9 +19,11 @@ public class MITMBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.Blocks.createBlocks(MagicOfTheMind.MODID);
 
     public static final DeferredBlock<WandTableBlock> WAND_TABLE = BLOCKS.register("wand_table", WandTableBlock::new);
-    public static final DeferredBlock<SummoningCircleBlock> SUMMONING_CIRCLE = BLOCKS.register("summoning_circle", SummoningCircleBlock::new);
+    public static final DeferredBlock<SummoningCircleBlock> SUMMONING_CIRCLE = BLOCKS.register("summoning_circle",
+            SummoningCircleBlock::new);
     public static final DeferredBlock<PalantirBlock> PALANTIR = BLOCKS.register("palantir", PalantirBlock::new);
-    public static final DeferredBlock<PotionDistilleryBlock> POTION_DISTILLERY = BLOCKS.register("potion_distillery", PotionDistilleryBlock::new);
+    public static final DeferredBlock<PotionDistilleryBlock> POTION_DISTILLERY = BLOCKS.register("potion_distillery",
+            PotionDistilleryBlock::new);
 
     public static final DeferredBlock<Block> SOULSTEEL_BLOCK = BLOCKS.register("soulsteel_block",
             () -> new Block(BlockBehaviour.Properties.of().strength(5.0F)));

@@ -25,6 +25,6 @@ public class WandCoreItem extends Item {
         if (component != null) {
             name = component.getId().toLanguageKey(ABILITY_KEY);
         }
-        return Component.translatable(super.getDescriptionId(stack), Component.translatable(name));
+        return Component.translatable(this.getDescriptionId(stack), Component.translatable(name));
     }
 }

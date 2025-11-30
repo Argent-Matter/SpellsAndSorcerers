@@ -16,7 +16,8 @@ public class MITMBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister
             .create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MagicOfTheMind.MODID);
 
-    public static final Supplier<BlockEntityType<SummoningCircleBlockEntity>> SUMMONING_CIRCLE = BLOCK_ENTITIES.register("summoning_circle",
+    public static final Supplier<BlockEntityType<SummoningCircleBlockEntity>> SUMMONING_CIRCLE = BLOCK_ENTITIES.register(
+            "summoning_circle",
             () -> BlockEntityType.Builder.of(SummoningCircleBlockEntity::new, MITMBlocks.SUMMONING_CIRCLE.get()).build(null));
 
     public static final Supplier<BlockEntityType<PalantirBlockEntity>> PALANTIR = BLOCK_ENTITIES.register("palantir",

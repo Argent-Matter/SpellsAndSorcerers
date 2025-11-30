@@ -10,6 +10,8 @@ import dev.screret.mitm.data.MITMWandAbilities;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
@@ -30,6 +32,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class WandItem extends Item {
 
+    public static final Component JOINER = Component.translatable("tooltip.mitm.joiner");
+    public static final Component JOINER_LAST = Component.translatable("tooltip.mitm.joiner.last");
+
     public WandItem() {
         super(new Properties().durability(320).rarity(Rarity.UNCOMMON));
     }
@@ -41,21 +46,41 @@ public class WandItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
-        MutableComponent name = Component.translatable(getDescriptionId());
-
         WandComponent component = stack.get(MITMDataComponents.WAND);
         if (component == null) {
-            return name.append(Component.translatable("ability.mitm.dummy"));
+            return super.getName(stack).copy().append(Component.translatable("ability.mitm.dummy"));
+        }
+        Component abilityTranslation = addNamePart(component.primary());
+        return Component.translatable(this.getDescriptionId(stack), abilityTranslation);
+    }
+
+    protected Component addNamePart(WandAbilityInstance ability) {
+        MutableComponent name = Component.empty();
+
+        String langKey = ability.getId().toLanguageKey("ability");
+        if (Language.getInstance().has(langKey)) {
+            name = Component.translatable(langKey);
         }
 
-        var current = component.primary();
-        name = name.append(Component.translatable(current.getId().toLanguageKey("ability")));
+        var children = ability.getChildren();
+        if (!children.isEmpty()) {
+            if (children.size() == 1) {
+                name.append(CommonComponents.SPACE).append(addNamePart(children.getFirst()));
+            } else if (children.size() == 2) {
+                name.append(addNamePart(children.getFirst()))
+                        .append(JOINER_LAST)
+                        .append(addNamePart(children.getLast()));
+            } else {
+                int lastIdx = children.size() - 1;
+                for (int i = 0; i < children.size(); i++) {
+                    if (i > 0 && i < lastIdx) name.append(JOINER);
+                    if (i == lastIdx) name.append(JOINER_LAST);
 
-        while (!current.getChildren().isEmpty()) {
-            current = current.getChildren().getFirst();
-            name = name.append(Component.translatable("tooltip.mitm.joiner"))
-                    .append(Component.translatable(current.getId().toLanguageKey("ability")));
+                    name.append(addNamePart(children.get(i)));
+                }
+            }
         }
+
         return name;
     }
 
