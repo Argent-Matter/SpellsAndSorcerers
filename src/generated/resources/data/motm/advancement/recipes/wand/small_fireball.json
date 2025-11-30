@@ -17,24 +17,7 @@
                             "minecraft:rarity": "uncommon",
                             "minecraft:repair_cost": 0,
                             "motm:wand_core": {
-                                "ability": {
-                                    "type": "motm:small_fireball",
-                                    "apply_enchants": true,
-                                    "color": -23296,
-                                    "cooldown_duration": 10,
-                                    "damage_per_hit": 0.0,
-                                    "distance": 512,
-                                    "particle": {
-                                        "type": "minecraft:dust",
-                                        "color": [
-                                            1.0,
-                                            0.64705884,
-                                            0.0
-                                        ],
-                                        "scale": 2.0
-                                    },
-                                    "use_duration": 0
-                                }
+                                "ability": "motm:small_fireball"
                             }
                         },
                         "items": "motm:wand_core"

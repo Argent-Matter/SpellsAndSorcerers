@@ -17,23 +17,7 @@
                             "minecraft:rarity": "uncommon",
                             "minecraft:repair_cost": 0,
                             "motm:wand_core": {
-                                "ability": {
-                                    "type": "motm:explode",
-                                    "apply_enchants": true,
-                                    "color": 11141120,
-                                    "cooldown_duration": 60,
-                                    "damage_per_hit": 1.0,
-                                    "particle": {
-                                        "type": "minecraft:dust",
-                                        "color": [
-                                            0.6666667,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "scale": 2.0
-                                    },
-                                    "use_duration": 100
-                                }
+                                "ability": "motm:explode"
                             }
                         },
                         "items": "motm:wand_core"

@@ -6,7 +6,7 @@
             "item": "motm:handle"
         },
         "X": {
-            "tag": "forge:ingots/soulsteel"
+            "tag": "c:ingots/soulsteel"
         }
     },
     "pattern": [

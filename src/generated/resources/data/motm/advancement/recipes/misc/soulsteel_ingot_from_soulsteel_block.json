@@ -1,11 +1,11 @@
 {
     "parent": "minecraft:recipes/root",
     "criteria": {
-        "has_forge:storage_blocks/soulsteel": {
+        "has_c:storage_blocks/soulsteel": {
             "conditions": {
                 "items": [
                     {
-                        "items": "#forge:storage_blocks/soulsteel"
+                        "items": "#c:storage_blocks/soulsteel"
                     }
                 ]
             },
@@ -21,7 +21,7 @@
     "requirements": [
         [
             "has_the_recipe",
-            "has_forge:storage_blocks/soulsteel"
+            "has_c:storage_blocks/soulsteel"
         ]
     ],
     "rewards": {

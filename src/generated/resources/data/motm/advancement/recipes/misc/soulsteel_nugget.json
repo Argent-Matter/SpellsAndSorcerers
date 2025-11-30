@@ -1,11 +1,11 @@
 {
     "parent": "minecraft:recipes/root",
     "criteria": {
-        "has_forge:ingots/soulsteel": {
+        "has_c:ingots/soulsteel": {
             "conditions": {
                 "items": [
                     {
-                        "items": "#forge:ingots/soulsteel"
+                        "items": "#c:ingots/soulsteel"
                     }
                 ]
             },
@@ -21,7 +21,7 @@
     "requirements": [
         [
             "has_the_recipe",
-            "has_forge:ingots/soulsteel"
+            "has_c:ingots/soulsteel"
         ]
     ],
     "rewards": {

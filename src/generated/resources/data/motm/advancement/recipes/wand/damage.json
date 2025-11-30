@@ -17,17 +17,7 @@
                             "minecraft:rarity": "uncommon",
                             "minecraft:repair_cost": 0,
                             "motm:wand_core": {
-                                "ability": {
-                                    "type": "motm:damage",
-                                    "apply_enchants": true,
-                                    "color": 1422643199,
-                                    "cooldown_duration": 10,
-                                    "damage_per_hit": 3.0,
-                                    "particle": {
-                                        "type": "minecraft:soul_fire_flame"
-                                    },
-                                    "use_duration": 0
-                                }
+                                "ability": "motm:damage"
                             }
                         },
                         "items": "motm:wand_core"

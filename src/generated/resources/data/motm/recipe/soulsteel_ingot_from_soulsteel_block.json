@@ -4,7 +4,7 @@
     "group": "soulsteel_ingot",
     "ingredients": [
         {
-            "tag": "forge:storage_blocks/soulsteel"
+            "tag": "c:storage_blocks/soulsteel"
         }
     ],
     "result": {

@@ -17,17 +17,7 @@
                             "minecraft:rarity": "uncommon",
                             "minecraft:repair_cost": 0,
                             "motm:wand_core": {
-                                "ability": {
-                                    "type": "motm:heal",
-                                    "apply_enchants": true,
-                                    "color": -16732627,
-                                    "cooldown_duration": 40,
-                                    "damage_per_hit": 0.25,
-                                    "particle": {
-                                        "type": "minecraft:happy_villager"
-                                    },
-                                    "use_duration": 20
-                                }
+                                "ability": "motm:heal"
                             }
                         },
                         "items": "motm:wand_core"

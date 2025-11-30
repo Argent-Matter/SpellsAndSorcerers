@@ -15,12 +15,12 @@ public class MOTMTags {
 
     public static final class Items {
 
-        public static final TagKey<Item> GLASS_BOTTLES = forgeTag("glass_bottles");
-        public static final TagKey<Item> GLINT_ORES = forgeTag("ores/glint");
-        public static final TagKey<Item> GLINT_GEMS = forgeTag("gems/glint");
-        public static final TagKey<Item> SOULSTEEL_INGOTS = forgeTag("ingots/soulsteel");
-        public static final TagKey<Item> SOULSTEEL_NUGGETS = forgeTag("nuggets/soulsteel");
-        public static final TagKey<Item> SOULSTEEL_BLOCKS = forgeTag("storage_blocks/soulsteel");
+        public static final TagKey<Item> GLASS_BOTTLES = commonTag("glass_bottles");
+        public static final TagKey<Item> GLINT_ORES = commonTag("ores/glint");
+        public static final TagKey<Item> GLINT_GEMS = commonTag("gems/glint");
+        public static final TagKey<Item> SOULSTEEL_INGOTS = commonTag("ingots/soulsteel");
+        public static final TagKey<Item> SOULSTEEL_NUGGETS = commonTag("nuggets/soulsteel");
+        public static final TagKey<Item> SOULSTEEL_BLOCKS = commonTag("storage_blocks/soulsteel");
 
         public static final TagKey<Item> BOSS_SUMMON_ITEMS = tag("boss_summon_items");
 
@@ -31,8 +31,8 @@ public class MOTMTags {
             return ItemTags.create(MOTMUtil.id(name));
         }
 
-        private static TagKey<Item> forgeTag(String name) {
-            return ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", name));
+        private static TagKey<Item> commonTag(String name) {
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
@@ -46,7 +46,7 @@ public class MOTMTags {
         }
 
         private static TagKey<Block> forgeTag(String name) {
-            return BlockTags.create(ResourceLocation.fromNamespaceAndPath("forge", name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }
 
