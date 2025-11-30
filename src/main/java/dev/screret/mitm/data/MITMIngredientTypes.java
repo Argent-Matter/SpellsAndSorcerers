@@ -15,5 +15,5 @@ public class MITMIngredientTypes {
             .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, MagicOfTheMind.MODID);
 
     public static final Supplier<IngredientType<WandAbilityIngredient>> WAND_ABILITY = INGREDIENT_TYPES.register("wand_ability",
-            () -> new IngredientType<>(WandAbilityIngredient.CODEC));
+            () -> new IngredientType<>(WandAbilityIngredient.CODEC, WandAbilityIngredient.STREAM_CODEC));
 }

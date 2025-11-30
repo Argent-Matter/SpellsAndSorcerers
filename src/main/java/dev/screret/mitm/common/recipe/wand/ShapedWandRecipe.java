@@ -1,7 +1,6 @@
 package dev.screret.mitm.common.recipe.wand;
 
 import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
-import dev.screret.mitm.data.MITMIngredientTypes;
 import dev.screret.mitm.data.MITMRecipeTypes;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -85,7 +84,7 @@ public class ShapedWandRecipe implements WandRecipe {
         private static final StreamCodec<RegistryFriendlyByteBuf, ShapedWandRecipe> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, ShapedWandRecipe::getGroup,
                 ShapedRecipePattern.STREAM_CODEC, ShapedWandRecipe::getPattern,
-                MITMIngredientTypes.WAND_ABILITY.get().streamCodec(), ShapedWandRecipe::getResult,
+                WandAbilityIngredient.STREAM_CODEC, ShapedWandRecipe::getResult,
                 ShapedWandRecipe::new
         );
         // spotless:off

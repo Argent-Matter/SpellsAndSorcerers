@@ -1,7 +1,6 @@
 package dev.screret.mitm.common.recipe.wand;
 
 import dev.screret.mitm.common.recipe.ingredient.WandAbilityIngredient;
-import dev.screret.mitm.data.MITMIngredientTypes;
 import dev.screret.mitm.data.MITMRecipeTypes;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -133,7 +132,7 @@ public class ShapelessWandRecipe implements WandRecipe {
         private static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWandRecipe> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, ShapelessWandRecipe::getGroup,
                 INGREDIENT_STREAM_CODEC, ShapelessWandRecipe::getIngredients,
-                MITMIngredientTypes.WAND_ABILITY.get().streamCodec(), ShapelessWandRecipe::getResult,
+                WandAbilityIngredient.STREAM_CODEC, ShapelessWandRecipe::getResult,
                 ShapelessWandRecipe::new
         );
         // spotless:on

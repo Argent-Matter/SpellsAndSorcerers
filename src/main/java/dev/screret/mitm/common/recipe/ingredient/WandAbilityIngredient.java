@@ -6,6 +6,11 @@ import dev.screret.mitm.data.MITMDataComponents;
 import dev.screret.mitm.data.MITMIngredientTypes;
 import dev.screret.mitm.data.MITMItems;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
@@ -14,6 +19,7 @@ import net.neoforged.neoforge.common.crafting.IngredientType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -27,17 +33,24 @@ public class WandAbilityIngredient implements ICustomIngredient {
 
     // spotless:off
     public static final MapCodec<WandAbilityIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            WandAbilityInstance.CODEC.fieldOf("main_ability").forGetter(val -> val.ability),
-            WandAbilityInstance.CODEC.optionalFieldOf("crouch_ability").forGetter(val -> Optional.ofNullable(val.crouchAbility)),
-            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("item").forGetter(val -> val.stack.getItemHolder()),
-            Codec.BOOL.optionalFieldOf("powered_up", false).forGetter(val -> val.poweredUp)
-    ).apply(instance, (main, crouchOptional, item, poweredUp) ->
-            new WandAbilityIngredient(main, crouchOptional.orElse(null), item.value(), poweredUp)));
+            WandAbilityInstance.CODEC.fieldOf("primary").forGetter(WandAbilityIngredient::getPrimary),
+            WandAbilityInstance.CODEC.optionalFieldOf("secondary").forGetter(WandAbilityIngredient::getSecondaryOptional),
+            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("item").forGetter(WandAbilityIngredient::getItemHolder),
+            Codec.BOOL.optionalFieldOf("powered_up", false).forGetter(WandAbilityIngredient::isPoweredUp)
+    ).apply(instance, WandAbilityIngredient::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, WandAbilityIngredient> STREAM_CODEC = StreamCodec.composite(
+            WandAbilityInstance.STREAM_CODEC, WandAbilityIngredient::getPrimary,
+            ByteBufCodecs.optional(WandAbilityInstance.STREAM_CODEC), WandAbilityIngredient::getSecondaryOptional,
+            ByteBufCodecs.holderRegistry(Registries.ITEM), WandAbilityIngredient::getItemHolder,
+            ByteBufCodecs.BOOL, WandAbilityIngredient::isPoweredUp,
+            WandAbilityIngredient::new
+    );
     // spotless:on
 
-    private final WandAbilityInstance ability;
+    @Getter(AccessLevel.PRIVATE)
+    private final WandAbilityInstance primary;
     @Nullable
-    private final WandAbilityInstance crouchAbility;
+    private final WandAbilityInstance secondary;
 
     @Getter
     private final boolean poweredUp;
@@ -46,7 +59,7 @@ public class WandAbilityIngredient implements ICustomIngredient {
 
     public WandAbilityIngredient(WandAbilityInstance primary, @Nullable WandAbilityInstance secondary, Item item,
                                  boolean poweredUp) {
-        this.ability = primary;
+        this.primary = primary;
         this.stack = item.getDefaultInstance();
         if (item == MITMItems.WAND_CORE.get()) {
             this.stack.set(MITMDataComponents.WAND_CORE, primary);
@@ -54,8 +67,21 @@ public class WandAbilityIngredient implements ICustomIngredient {
             this.stack.set(MITMDataComponents.WAND, new WandComponent(primary, Optional.ofNullable(secondary), poweredUp));
         }
 
-        this.crouchAbility = secondary;
+        this.secondary = secondary;
         this.poweredUp = poweredUp;
+    }
+
+    private WandAbilityIngredient(WandAbilityInstance primary, Optional<WandAbilityInstance> secondary, Holder<Item> item,
+                                 boolean poweredUp) {
+        this(primary, secondary.orElse(null), item.value(), poweredUp);
+    }
+
+    private Optional<WandAbilityInstance> getSecondaryOptional() {
+        return Optional.ofNullable(this.secondary);
+    }
+
+    private Holder<Item> getItemHolder() {
+        return this.stack.getItemHolder();
     }
 
     @Override
