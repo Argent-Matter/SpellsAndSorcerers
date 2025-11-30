@@ -23,49 +23,9 @@
                 "motm:wand": {
                     "powered_up": false,
                     "primary": {
-                        "ability": {
-                            "type": "motm:shoot_angry_ray",
-                            "apply_enchants": true,
-                            "color": -5636096,
-                            "cooldown_duration": 200,
-                            "damage_per_hit": 0.0,
-                            "distance": 8,
-                            "particle": {
-                                "type": "minecraft:dust",
-                                "color": [
-                                    0.6666667,
-                                    0.0,
-                                    0.0
-                                ],
-                                "scale": 2.0
-                            },
-                            "particle_deviation": [
-                                0.125,
-                                0.125,
-                                0.125
-                            ],
-                            "use_duration": 100
-                        },
+                        "ability": "motm:shoot_angry_ray",
                         "children": [
-                            {
-                                "ability": {
-                                    "type": "motm:explode",
-                                    "apply_enchants": true,
-                                    "color": 11141120,
-                                    "cooldown_duration": 60,
-                                    "damage_per_hit": 1.0,
-                                    "particle": {
-                                        "type": "minecraft:dust",
-                                        "color": [
-                                            0.6666667,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "scale": 2.0
-                                    },
-                                    "use_duration": 100
-                                }
-                            }
+                            "motm:explode"
                         ]
                     }
                 }
@@ -77,49 +37,9 @@
     "result": {
         "item": "motm:wand",
         "primary": {
-            "ability": {
-                "type": "motm:shoot_angry_ray",
-                "apply_enchants": true,
-                "color": -5636096,
-                "cooldown_duration": 200,
-                "damage_per_hit": 0.0,
-                "distance": 8,
-                "particle": {
-                    "type": "minecraft:dust",
-                    "color": [
-                        0.6666667,
-                        0.0,
-                        0.0
-                    ],
-                    "scale": 2.0
-                },
-                "particle_deviation": [
-                    0.125,
-                    0.125,
-                    0.125
-                ],
-                "use_duration": 100
-            },
+            "ability": "motm:shoot_angry_ray",
             "children": [
-                {
-                    "ability": {
-                        "type": "motm:explode",
-                        "apply_enchants": true,
-                        "color": 11141120,
-                        "cooldown_duration": 60,
-                        "damage_per_hit": 1.0,
-                        "particle": {
-                            "type": "minecraft:dust",
-                            "color": [
-                                0.6666667,
-                                0.0,
-                                0.0
-                            ],
-                            "scale": 2.0
-                        },
-                        "use_duration": 100
-                    }
-                }
+                "motm:explode"
             ]
         }
     }

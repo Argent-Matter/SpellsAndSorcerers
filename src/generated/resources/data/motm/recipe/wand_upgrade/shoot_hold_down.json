@@ -23,51 +23,13 @@
                 "motm:wand": {
                     "powered_up": false,
                     "primary": {
-                        "ability": {
-                            "type": "motm:shoot_hold_down",
-                            "apply_enchants": true,
-                            "color": -16732627,
-                            "cooldown_duration": 20,
-                            "damage_per_hit": 0.0,
-                            "distance": 16,
-                            "particle": {
-                                "type": "minecraft:happy_villager"
-                            },
-                            "particle_deviation": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "use_duration": 20
-                        },
+                        "ability": "motm:shoot_hold_down",
                         "children": [
-                            {
-                                "ability": {
-                                    "type": "motm:heal",
-                                    "apply_enchants": true,
-                                    "color": -16732627,
-                                    "cooldown_duration": 40,
-                                    "damage_per_hit": 0.25,
-                                    "particle": {
-                                        "type": "minecraft:happy_villager"
-                                    },
-                                    "use_duration": 20
-                                }
-                            }
+                            "motm:heal"
                         ]
                     },
                     "secondary": {
-                        "ability": {
-                            "type": "motm:heal_self",
-                            "apply_enchants": true,
-                            "color": -16732627,
-                            "cooldown_duration": 10,
-                            "damage_per_hit": 0.25,
-                            "particle": {
-                                "type": "minecraft:happy_villager"
-                            },
-                            "use_duration": 10
-                        }
+                        "ability": "motm:heal_self"
                     }
                 }
             },
@@ -78,51 +40,13 @@
     "result": {
         "item": "motm:wand",
         "primary": {
-            "ability": {
-                "type": "motm:shoot_hold_down",
-                "apply_enchants": true,
-                "color": -16732627,
-                "cooldown_duration": 20,
-                "damage_per_hit": 0.0,
-                "distance": 16,
-                "particle": {
-                    "type": "minecraft:happy_villager"
-                },
-                "particle_deviation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "use_duration": 20
-            },
+            "ability": "motm:shoot_hold_down",
             "children": [
-                {
-                    "ability": {
-                        "type": "motm:heal",
-                        "apply_enchants": true,
-                        "color": -16732627,
-                        "cooldown_duration": 40,
-                        "damage_per_hit": 0.25,
-                        "particle": {
-                            "type": "minecraft:happy_villager"
-                        },
-                        "use_duration": 20
-                    }
-                }
+                "motm:heal"
             ]
         },
         "secondary": {
-            "ability": {
-                "type": "motm:heal_self",
-                "apply_enchants": true,
-                "color": -16732627,
-                "cooldown_duration": 10,
-                "damage_per_hit": 0.25,
-                "particle": {
-                    "type": "minecraft:happy_villager"
-                },
-                "use_duration": 10
-            }
+            "ability": "motm:heal_self"
         }
     }
 }

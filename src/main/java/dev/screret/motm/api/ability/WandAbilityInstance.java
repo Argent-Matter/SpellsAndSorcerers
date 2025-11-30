@@ -1,5 +1,6 @@
 package dev.screret.motm.api.ability;
 
+import com.mojang.datafixers.util.Either;
 import dev.screret.motm.api.registry.MOTMRegistries;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,12 +40,16 @@ import org.jetbrains.annotations.Nullable;
 public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
 
     // spotless:off
-    public static final Codec<WandAbilityInstance> CODEC = Codec.recursive("WandAbilityInstance", wrapped ->
-            RecordCodecBuilder.create(instance -> instance.group(
-                    WandAbility.CODEC.fieldOf("ability").forGetter(self -> self.ability),
-                    wrapped.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(self -> self.children)
-            ).apply(instance, WandAbilityInstance::new))
-    );
+    public static final Codec<WandAbilityInstance> CODEC = Codec.recursive("WandAbilityInstance", wrapped -> {
+        Codec<WandAbilityInstance> childCodec = Codec.either(wrapped, WandAbility.CODEC.xmap(WandAbilityInstance::new, WandAbilityInstance::getAbility))
+                .xmap(either -> either.map(Function.identity(), Function.identity()),
+                        inst -> !inst.getChildren().isEmpty() ? Either.left(inst) : Either.right(inst));
+
+        return RecordCodecBuilder.create(instance -> instance.group(
+                        WandAbility.CODEC.fieldOf("ability").forGetter(WandAbilityInstance::getAbility),
+                childCodec.listOf().optionalFieldOf("children", new ArrayList<>()).forGetter(WandAbilityInstance::getChildren)
+        ).apply(instance, WandAbilityInstance::new));
+    });
     public static final StreamCodec<RegistryFriendlyByteBuf, WandAbilityInstance> STREAM_CODEC = StreamCodec.recursive(codec ->
             StreamCodec.composite(
                     ByteBufCodecs.registry(MOTMRegistries.WAND_ABILITY_REGISTRY), WandAbilityInstance::getAbility,

@@ -23,37 +23,9 @@
                 "motm:wand": {
                     "powered_up": false,
                     "primary": {
-                        "ability": {
-                            "type": "motm:shoot_lightning",
-                            "apply_enchants": true,
-                            "color": -5592406,
-                            "cooldown_duration": 25,
-                            "damage_per_hit": 0.0,
-                            "distance": 32,
-                            "particle": {
-                                "type": "minecraft:electric_spark"
-                            },
-                            "particle_deviation": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "use_duration": 0
-                        },
+                        "ability": "motm:shoot_lightning",
                         "children": [
-                            {
-                                "ability": {
-                                    "type": "motm:lightning",
-                                    "apply_enchants": true,
-                                    "color": -5592406,
-                                    "cooldown_duration": 25,
-                                    "damage_per_hit": 2.0,
-                                    "particle": {
-                                        "type": "minecraft:electric_spark"
-                                    },
-                                    "use_duration": 0
-                                }
-                            }
+                            "motm:lightning"
                         ]
                     }
                 }
@@ -65,37 +37,9 @@
     "result": {
         "item": "motm:wand",
         "primary": {
-            "ability": {
-                "type": "motm:shoot_lightning",
-                "apply_enchants": true,
-                "color": -5592406,
-                "cooldown_duration": 25,
-                "damage_per_hit": 0.0,
-                "distance": 32,
-                "particle": {
-                    "type": "minecraft:electric_spark"
-                },
-                "particle_deviation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "use_duration": 0
-            },
+            "ability": "motm:shoot_lightning",
             "children": [
-                {
-                    "ability": {
-                        "type": "motm:lightning",
-                        "apply_enchants": true,
-                        "color": -5592406,
-                        "cooldown_duration": 25,
-                        "damage_per_hit": 2.0,
-                        "particle": {
-                            "type": "minecraft:electric_spark"
-                        },
-                        "use_duration": 0
-                    }
-                }
+                "motm:lightning"
             ]
         }
     }
