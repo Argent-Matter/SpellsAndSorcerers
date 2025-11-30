@@ -42,7 +42,10 @@ public class WandTableBlock extends Block {
     private static final Component CONTAINER_TITLE = Component.translatable("container.mitm.wand_table");
 
     public WandTableBlock() {
-        super(Properties.ofLegacyCopy(Blocks.STONE).mapColor(MapColor.SAND).strength(3.0F, 36.0F).lightLevel((function) -> 7));
+        super(Properties.ofLegacyCopy(Blocks.STONE)
+                .mapColor(MapColor.SAND)
+                .strength(3.0F, 36.0F)
+                .lightLevel(state -> 7));
     }
 
     @Override

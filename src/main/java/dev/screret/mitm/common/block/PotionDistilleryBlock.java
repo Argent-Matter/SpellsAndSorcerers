@@ -36,16 +36,20 @@ import org.jetbrains.annotations.Nullable;
 public class PotionDistilleryBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     public PotionDistilleryBlock() {
-        super(Properties.ofLegacyCopy(Blocks.CRIMSON_STEM).strength(3.0F, 4.0F).sound(SoundType.WOOD));
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
+        super(Properties.ofLegacyCopy(Blocks.CRIMSON_STEM)
+                .strength(3.0F, 4.0F)
+                .sound(SoundType.WOOD));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(ACTIVE, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LIT);
+        builder.add(FACING, ACTIVE);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
