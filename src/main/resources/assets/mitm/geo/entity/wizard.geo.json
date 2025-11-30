@@ -62,7 +62,7 @@
 				{
 					"name": "leftArm",
 					"parent": "body",
-					"pivot": [4, 22, 0],
+					"pivot": [4, 24, 0],
 					"cubes": [
 						{"origin": [4, 12, -2], "size": [4, 12, 4], "uv": [40, 46]}
 					]
@@ -70,7 +70,7 @@
 				{
 					"name": "rightArm",
 					"parent": "body",
-					"pivot": [-6, 24, 0],
+					"pivot": [-4, 24, 0],
 					"cubes": [
 						{"origin": [-8, 12, -2], "size": [4, 12, 4], "uv": [40, 46]}
 					]
