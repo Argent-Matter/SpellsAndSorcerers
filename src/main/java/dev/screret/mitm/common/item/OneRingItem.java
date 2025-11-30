@@ -1,7 +1,7 @@
 package dev.screret.mitm.common.item;
 
 import dev.screret.mitm.MITMUtil;
-import dev.screret.mitm.common.data.provider.lang.MITMLangProvider;
+import dev.screret.mitm.common.data.util.LangUtil;
 import dev.screret.mitm.data.MITMEntityTypes;
 import dev.screret.mitm.mixin.accessor.ItemEntityAccessor;
 
@@ -84,9 +84,9 @@ public class OneRingItem extends Item implements ICurioItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context,
                                 List<Component> tooltip, TooltipFlag tooltipFlag) {
-        tooltip.add(MITMLangProvider.getFromMultiline("item.mitm.the_one_ring.tooltip", 0)
+        tooltip.add(LangUtil.getFromMultiline("item.mitm.the_one_ring.tooltip", 0)
                 .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
-        tooltip.add(MITMLangProvider.getFromMultiline("item.mitm.the_one_ring.tooltip", 1)
+        tooltip.add(LangUtil.getFromMultiline("item.mitm.the_one_ring.tooltip", 1)
                 .withStyle(ChatFormatting.DARK_RED));
     }
 

@@ -1,23 +1,18 @@
 package dev.screret.mitm.common.data.provider.lang;
 
+import dev.screret.mitm.common.data.util.LangUtil;
 import dev.screret.mitm.data.MITMItems;
 
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,29 +64,6 @@ public class MITMLangProvider extends LanguageProvider {
     }
 
     /**
-     * Returns the sub-key consisting of the given key plus the given index.<br>
-     * E.g.,<br>
-     *
-     * <pre>
-     * <code>getSubKey("terminal.fluid_prospector.tier", 0)</code>
-     * </pre>
-     *
-     * returns the <code>String</code>:
-     *
-     * <pre>
-     * <code>
-     * "terminal.fluid_prospector.tier.0"</code>
-     * </pre>
-     *
-     * @param key   Base key of the sub-key.
-     * @param index Index of the sub-key.
-     * @return Sub-key consisting of key and index.
-     */
-    protected static String getSubKey(String key, int index) {
-        return key + "." + index;
-    }
-
-    /**
      * Registers multiple values under the same key with a given provider.<br>
      * <br>
      * For example, a cumbersome way to add translations would be the following:<br>
@@ -128,7 +100,7 @@ public class MITMLangProvider extends LanguageProvider {
      */
     protected void addMultiline(String key, String... values) {
         for (var i = 0; i < values.length; i++) {
-            add(getSubKey(key, i), values[i]);
+            add(LangUtil.subKey(key, i), values[i]);
         }
     }
 
@@ -156,125 +128,7 @@ public class MITMLangProvider extends LanguageProvider {
      * @param multiline The multiline string. It is a multiline because it contains
      *                  at least one newline character '\n'.
      */
-    public void addMultiline(String key, String multiline) {
+    protected void addMultiline(String key, String multiline) {
         this.addMultiline(key, multiline.split("\n"));
-    }
-
-    /**
-     * Gets all translation components from a multi lang's sub-keys.<br>
-     * E.g., given a multi lang:
-     *
-     * <pre>
-     * <code>addMultiline(provider, "terminal.fluid_prospector.tier", "radius size 1", "radius size 2", "radius size 3");</code>
-     * </pre>
-     *
-     * The following code can be used to print out the translations:
-     *
-     * <pre>
-     * <code>for (var component : getMultiline("terminal.fluid_prospector.tier")) {
-     *     System.out.println(component.getString());
-     * }</code>
-     * </pre>
-     *
-     * Result:
-     *
-     * <pre>
-     * <code>radius size 1
-     * radius size 2
-     * radius size 3</code>
-     * </pre>
-     *
-     * @param key Base key of the multi lang. E.g. "terminal.fluid_prospector.tier".
-     * @return Returns all translation components from a multi lang's sub-keys
-     */
-    public static List<MutableComponent> getMultiline(String key) {
-        var outputKeys = new ArrayList<String>();
-        var i = 0;
-        var next = getSubKey(key, i);
-        while (Language.getInstance().has(next)) {
-            outputKeys.add(next);
-            next = getSubKey(key, ++i);
-        }
-        return outputKeys.stream().map(Component::translatable).collect(Collectors.toList());
-    }
-
-    /**
-     * Gets all translation components from a multi lang's sub-keys. Supports
-     * additional arguments for the translation
-     * components.<br>
-     * E.g., given a multi lang:
-     *
-     * <pre>
-     * <code>addMultiline(provider, "terminal.fluid_prospector.tier", "radius size 1", "radius size 2", "radius size 3");</code>
-     * </pre>
-     *
-     * The following code can be used to print out the translations:
-     *
-     * <pre>
-     * <code>for (var component : getMultiline("terminal.fluid_prospector.tier")) {
-     *     System.out.println(component.getString());
-     * }</code>
-     * </pre>
-     *
-     * Result:
-     *
-     * <pre>
-     * <code>radius size 1
-     * radius size 2
-     * radius size 3</code>
-     * </pre>
-     *
-     * @param key Base key of the multi lang. E.g. "terminal.fluid_prospector.tier".
-     * @return Returns all translation components from a multi lang's sub-keys.
-     */
-    public static List<MutableComponent> getMultiline(String key, Object... args) {
-        var outputKeys = new ArrayList<String>();
-        var i = 0;
-        var next = getSubKey(key, i);
-        while (Language.getInstance().has(next)) {
-            outputKeys.add(next);
-            next = getSubKey(key, ++i);
-        }
-        return outputKeys.stream().map(k -> Component.translatable(k, args)).collect(Collectors.toList());
-    }
-
-    /**
-     * See {@link #getMultiline(String)}. If no multiline key is available, get
-     * single instead.
-     *
-     * @param key Base key of the multi lang. E.g. "terminal.fluid_prospector.tier".
-     * @return Returns all translation components from a multi lang's sub-keys.
-     */
-    public static List<MutableComponent> getSingleOrMultiline(String key) {
-        List<MutableComponent> multiLang = getMultiline(key);
-        if (!multiLang.isEmpty()) {
-            return multiLang;
-        }
-        return List.of(Component.translatable(key));
-    }
-
-    /**
-     * Gets a single translation from a multi lang.
-     *
-     * @param key   Base key of the multi lang. E.g. "gtceu.gui.overclock.enabled".
-     * @param index Index of the single translation. E.g. 3 would return
-     *              "gtceu.gui.overclock.enabled.3".
-     * @return Returns a single translation from a multi lang.
-     */
-    public static MutableComponent getFromMultiline(String key, int index) {
-        return Component.translatable(getSubKey(key, index));
-    }
-
-    /**
-     * Gets a single translation from a multi lang. Supports additional arguments
-     * for the translation component.
-     *
-     * @param key   Base key of the multi lang. E.g. "gtceu.gui.overclock.enabled".
-     * @param index Index of the single translation. E.g. 3 would return
-     *              "gtceu.gui.overclock.enabled.3".
-     * @return Returns a single translation from a multi lang.
-     */
-    public static MutableComponent getFromMultiline(String key, int index, Object... args) {
-        return Component.translatable(getSubKey(key, index), args);
     }
 }
