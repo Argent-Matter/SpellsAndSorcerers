@@ -62,7 +62,7 @@ public class ClientModEvents {
     public static void registerModels(final ModelEvent.RegisterAdditional event) {
         MITMRegistries.WAND_ABILITIES.holders().forEach(ability -> {
             if (ability.value() instanceof SubAbility) {
-                event.register(ModelResourceLocation.inventory(ability.key().location().withPrefix("item/wand/")));
+                event.register(ModelResourceLocation.standalone(ability.key().location().withPrefix("item/wand/")));
             }
 
         });
