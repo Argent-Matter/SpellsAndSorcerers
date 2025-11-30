@@ -1,6 +1,4 @@
 dependencies {
-    compileOnly(libs.jetbrains.annotations)
-
     // JIJ dependencies
     if (enableJarJarDependencies) {
         jarJar(api(deps.geckoLib.get()))
@@ -13,14 +11,14 @@ dependencies {
     // Recipe Viewers
     compileOnly(deps.bundles.jei)
     compileOnly(deps.bundles.rei)
-    compileOnly(deps.emi)
+    compileOnly(variantOf(deps.emi) { classifier("api") })
+
+    // Curios
+    compileOnly(variantOf(deps.curios) { classifier("api") })
 
     // WAILA-likes
     compileOnly(deps.theOneProbe)
     compileOnly(deps.jade)
-
-    // Curios
-    compileOnly(variantOf(deps.curios) { classifier("api") })
 
     // KJS
     compileOnly(deps.bundles.kjs)
@@ -71,7 +69,7 @@ dependencies {
     extraLocalRuntime(deps.ftbQuests)
 
 //    extraLocalRuntime(deps.heracles)
-    extraLocalRuntime(deps.resourcefulLib)
+//    extraLocalRuntime(deps.resourcefulLib)
 
 //    extraLocalRuntime(deps.xaerosminimap)
 //    extraLocalRuntime(deps.xaerosworldmap)

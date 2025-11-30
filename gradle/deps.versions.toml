@@ -1,27 +1,26 @@
 [versions]
 # JIJ dependencies
 geckoLib = "4.8.2"
-mcLib = "20"
 smartBrainLib = "1.16.11"
 
 # Recipe viewers
-emi = "1.1.21+1.21.1"
+emi = "1.1.22+1.21.1"
 jei = "19.21.0.247"
 
 rei = "16.0.799"
 architectury = "13.0.8"
 clothConfig = "15.0.140"
 
+# Curios
+curios = "9.4.2+1.21.1"
+
 # KJS
-kubejs = "2101.7.2-build.334"
+kubejs = "2101.7.2-build.344"
 rhino = "2101.2.7-build.81"
 
 # WAILA-likes
 theOneProbe = "1.21_neo-12.0.4-6"
 jade = "15.10.0+neoforge" # modrinth maven
-
-# Curios
-curios = "9.4.2+1.21.1"
 
 # Maps
 journeyMapApi = "2.0.0-1.21.1-SNAPSHOT"
@@ -52,7 +51,6 @@ kotlinForForge = "5.7.0"
 [libraries]
 # JIJ dependencies
 geckoLib            = { module = "software.bernie.geckolib:geckolib-neoforge-1.21.1", version.ref = "geckoLib" }
-mcLib               = { module = "com.eliotlash.mclib:mclib", version.ref = "mcLib" }
 smartBrainLib       = { module = "net.tslat.smartbrainlib:SmartBrainLib-neoforge-1.21.1", version.ref = "smartBrainLib" }
 
 # Recipe viewers
@@ -106,8 +104,7 @@ observable          = { module = "curse.maven:observable-509575", version.ref = 
 kotlinForForge      = { module = "thedarkcolour:kotlinforforge", version.ref = "kotlinForForge" }
 
 [bundles]
-geckoLib = ["geckoLib", "mcLib"]
-jei = ["jei-common-api", "jei-neoforge-api", "jei-neoforge-impl"]
+jei = ["jei-common-api", "jei-neoforge-api"]
 rei = ["rei-plugin", "rei-neoforge"]
 rei-runtime = ["rei-neoforge", "architectury", "clothConfig"]
 kjs = ["kubejs", "rhino"]
