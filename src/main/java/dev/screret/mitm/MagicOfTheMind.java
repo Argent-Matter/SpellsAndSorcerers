@@ -56,7 +56,7 @@ import org.slf4j.Logger;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-// The value here should match an entry in the META-INF/mods.toml file
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(MagicOfTheMind.MODID)
 @EventBusSubscriber(modid = MagicOfTheMind.MODID)
 public class MagicOfTheMind {
