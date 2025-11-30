@@ -2,9 +2,13 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
 
     // JIJ dependencies
-    jarJar(api(deps.geckoLib.get()))
-    jarJar(api(deps.mcLib.get()))
-    jarJar(api(deps.smartBrainLib.get()))
+    if (enableJarJarDependencies) {
+        jarJar(api(deps.geckoLib.get()))
+        jarJar(api(deps.smartBrainLib.get()))
+    } else {
+        api(deps.geckoLib)
+        api(deps.smartBrainLib)
+    }
 
     // Recipe Viewers
     compileOnly(deps.bundles.jei)
