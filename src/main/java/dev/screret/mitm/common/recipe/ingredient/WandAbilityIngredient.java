@@ -72,7 +72,7 @@ public class WandAbilityIngredient implements ICustomIngredient {
     }
 
     private WandAbilityIngredient(WandAbilityInstance primary, Optional<WandAbilityInstance> secondary, Holder<Item> item,
-                                 boolean poweredUp) {
+                                  boolean poweredUp) {
         this(primary, secondary.orElse(null), item.value(), poweredUp);
     }
 

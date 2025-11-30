@@ -2,12 +2,13 @@ package dev.screret.mitm.common.item;
 
 import dev.screret.mitm.api.ability.WandAbilityInstance;
 import dev.screret.mitm.data.MITMDataComponents;
-import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+
+import org.jetbrains.annotations.NotNull;
 
 public class WandCoreItem extends Item {
 
