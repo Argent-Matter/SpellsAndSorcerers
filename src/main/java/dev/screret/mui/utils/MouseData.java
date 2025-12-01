@@ -3,8 +3,8 @@ package dev.screret.mui.utils;
 import dev.screret.mui.api.widget.Interactable;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public record MouseData(Dist side, int mouseButton, boolean shift, boolean ctrl, boolean alt) {
 

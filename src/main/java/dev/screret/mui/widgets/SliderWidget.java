@@ -5,6 +5,7 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.value.IDoubleValue;
 import dev.screret.mui.api.widget.IGuiAction;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.drawable.Rectangle;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
@@ -15,7 +16,6 @@ import dev.screret.mui.widget.Widget;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widget.sizer.Unit;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.common.mui.GTGuiTextures;
 
 import net.minecraft.util.Mth;
 
@@ -30,7 +30,7 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
 
     private IDoubleValue<?> doubleValue;
     private IDrawable stopperDrawable = new Rectangle().setColor(Color.withAlpha(Color.WHITE.main, 0.4f));
-    private IDrawable handleDrawable = GTGuiTextures.BUTTON;
+    private IDrawable handleDrawable = GuiTextures.MC_BUTTON;
     private GuiAxis axis = GuiAxis.X;
     private DoubleList stopper;
     private int stopperWidth = 2, stopperHeight = 4;

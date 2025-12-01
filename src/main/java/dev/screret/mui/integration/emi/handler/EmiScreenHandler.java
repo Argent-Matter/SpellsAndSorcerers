@@ -1,11 +1,5 @@
 package dev.screret.mui.integration.emi.handler;
 
-import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
-import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
-import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
-import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
-
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
@@ -18,6 +12,11 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.screen.EmiScreenManager;
+import dev.screret.mui.api.IMuiScreen;
+import dev.screret.mui.api.widget.IGuiElement;
+import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.mui.integration.xei.handlers.IngredientProvider;
+import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +91,7 @@ public class EmiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
             if (converter == null) {
                 return EmiStackInteraction.EMPTY;
             }
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings({ "rawtypes" })
             var converted = ((EmiStackConverter.Converter) converter).convertTo(provider);
             return new EmiStackInteraction(converted, null, false);
         }

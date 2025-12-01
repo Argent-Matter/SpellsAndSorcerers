@@ -1,6 +1,7 @@
 package dev.screret.mui.client.screen;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.motm.MagicOfTheMind;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IMuiScreen;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
@@ -30,8 +31,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
@@ -119,7 +120,7 @@ public class ModularScreen implements GuiEventListener, Renderable, LayoutElemen
      * @param mainPanel main panel of this screen
      */
     public ModularScreen(@NotNull ModularPanel mainPanel) {
-        this(GTCEu.MOD_ID, mainPanel);
+        this(ModularUI.MOD_ID, mainPanel);
     }
 
     /**
@@ -521,22 +522,23 @@ public class ModularScreen implements GuiEventListener, Renderable, LayoutElemen
 
     /**
      * Called when a mouse button is released. Tries to invoke
-     * {@link dev.screret.mui.api.widget.Interactable#onMouseScrolled(double, double, double)
+     * {@link dev.screret.mui.api.widget.Interactable#onMouseScrolled(double, double, double, double)
      * Interactable#onMouseScrolled(double, double, double)} on every widget under
      * the mouse after gui action listeners have been called.
      *
      * @param mouseX current mouse X coordinate relative to the screen
      * @param mouseY current mouse Y coordinate relative to the screen
-     * @param delta  the direction and speed of the scroll
+     * @param scrollX  amount scrolled by on the X axis (usually irrelevant)
+     * @param scrollY  the direction and speed of the scroll
      * @return true if the action was consumed and further processing should be canceled
      */
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         for (IGuiAction.MouseScroll action : getGuiActionListeners(IGuiAction.MouseScroll.class)) {
-            action.scroll(mouseX, mouseY, delta);
+            action.scroll(mouseX, mouseY, scrollX, scrollY);
         }
         for (ModularPanel panel : this.panelManager.getOpenPanels()) {
-            if (panel.onMouseScrolled(mouseX, mouseY, delta)) {
+            if (panel.onMouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
                 return true;
             }
             if (panel.disablePanelsBelow()) {
@@ -613,7 +615,7 @@ public class ModularScreen implements GuiEventListener, Renderable, LayoutElemen
      * @see #getName()
      */
     public ResourceLocation getResourceLocation() {
-        return new ResourceLocation(this.owner, this.name);
+        return ResourceLocation.fromNamespaceAndPath(this.owner, this.name);
     }
 
     public ModularSyncManager getSyncManager() {

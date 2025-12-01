@@ -12,8 +12,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -48,9 +48,10 @@ public interface IMuiScreen {
      *                     {@code guiGraphics} as the parameter
      */
     @ApiStatus.NonExtendable
-    default void handleDrawBackground(GuiGraphics guiGraphics, Consumer<GuiGraphics> drawFunction) {
+    default void handleDrawBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick,
+                                      RenderFunction drawFunction) {
         if (ClientScreenHandler.shouldDrawWorldBackground()) {
-            drawFunction.accept(guiGraphics);
+            drawFunction.render(guiGraphics, mouseX, mouseY, partialTick);
         }
         ClientScreenHandler.drawDarkBackground(getWrappedScreen(), guiGraphics);
     }
@@ -101,5 +102,11 @@ public interface IMuiScreen {
      */
     default Screen getWrappedScreen() {
         return (Screen) this;
+    }
+
+    @FunctionalInterface
+    interface RenderFunction {
+
+        void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
     }
 }

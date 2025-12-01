@@ -1,25 +1,18 @@
 package dev.screret.mui.core.mixins.client;
 
-import com.gregtechceu.gtceu.api.mui.drawable.text.FontRenderHelper;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
-import com.gregtechceu.gtceu.client.util.RenderUtil;
-import com.gregtechceu.gtceu.config.ConfigHolder;
-
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
-import org.jetbrains.annotations.Nullable;
+import dev.screret.mui.ModularUIConfig;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.drawable.text.FontRenderHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -36,16 +29,6 @@ public abstract class GuiGraphicsMixin {
 
     @Shadow(remap = false)
     private ItemStack tooltipStack;
-
-    @WrapMethod(method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;IIII)V")
-    private void gtceu$renderResearchItemContent(@Nullable LivingEntity entity, @Nullable Level level,
-                                                 ItemStack stack, int x, int y, int seed, int z,
-                                                 Operation<Void> original) {
-        if (!RenderUtil.renderResearchItemContent((GuiGraphics) (Object) this, original,
-                entity, level, stack, x, y, z, seed)) {
-            original.call(entity, level, stack, x, y, seed, z);
-        }
-    }
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V",
             at = @At(value = "HEAD"),
@@ -81,7 +64,7 @@ public abstract class GuiGraphicsMixin {
     @Inject(method = "renderComponentTooltip*",
             at = @At(
                      value = "INVOKE",
-                     target = "Lnet/minecraftforge/client/ForgeHooksClient;gatherTooltipComponents(Lnet/minecraft/world/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/gui/Font;)Ljava/util/List;",
+                     target = "Lnet/neoforged/neoforge/client/ClientHooks;gatherTooltipComponents(Lnet/minecraft/world/item/ItemStack;Ljava/util/List;IIILnet/minecraft/client/gui/Font;)Ljava/util/List;",
                      remap = false),
             cancellable = true)
     private void gtceu$replaceWithRichTooltip2(CallbackInfo ci,
@@ -96,14 +79,14 @@ public abstract class GuiGraphicsMixin {
     private void gtceu$drawRichTooltip(Font font, List<FormattedText> textLines,
                                        Optional<TooltipComponent> tooltipComponent, int mouseX, int mouseY,
                                        CallbackInfo ci) {
-        if (!ConfigHolder.INSTANCE.client.ui.replaceVanillaTooltips || textLines.isEmpty()) {
+        if (!ModularUIConfig.replaceVanillaTooltips() || textLines.isEmpty()) {
             return;
         }
 
         RichTooltip tooltip = new RichTooltip();
         tooltip.parent(area -> RichTooltip.findIngredientArea(area, mouseX, mouseY));
         // Other positions don't really work due to the lack of GuiContext in non-modular uis
-        tooltip.add(textLines.get(0)).newLine();
+        tooltip.add(textLines.getFirst()).newLine();
         // vanilla inserts the bundle tooltip here so we need to do it as the 2nd item too
         tooltipComponent.ifPresent(tooltip::addLine);
 

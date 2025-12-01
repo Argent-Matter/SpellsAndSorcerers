@@ -3,11 +3,12 @@ package dev.screret.mui.widgets.slot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -68,15 +69,15 @@ public class ModularCraftingSlot extends ModularSlot {
     protected void checkTakeAchievements(@NotNull ItemStack stack) {
         if (this.amountCrafted > 0) {
             stack.onCraftedBy(getPlayer().level(), getPlayer(), this.amountCrafted);
-            net.minecraftforge.event.ForgeEventFactory.firePlayerCraftingEvent(getPlayer(), stack, this.craftSlots);
+            EventHooks.firePlayerCraftingEvent(getPlayer(), stack, this.craftSlots);
         }
 
         this.amountCrafted = 0;
 
-        if (this.container instanceof RecipeHolder recipeHolder) {
+        if (this.container instanceof RecipeCraftingHolder recipeHolder) {
             recipeHolder.awardUsedRecipes(getPlayer(), this.craftSlots.getItems());
         }
-        if (this.getItemHandler() instanceof RecipeHolder recipeHolder) {
+        if (this.getItemHandler() instanceof RecipeCraftingHolder recipeHolder) {
             recipeHolder.awardUsedRecipes(getPlayer(), this.craftSlots.getItems());
         }
     }
@@ -91,10 +92,12 @@ public class ModularCraftingSlot extends ModularSlot {
     @Override
     public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
         this.checkTakeAchievements(stack);
-        ForgeHooks.setCraftingPlayer(player);
+
+        CommonHooks.setCraftingPlayer(player);
         NonNullList<ItemStack> nonnulllist = player.level().getRecipeManager().getRemainingItemsFor(RecipeType.CRAFTING,
-                this.craftSlots, player.level());
-        ForgeHooks.setCraftingPlayer(null);
+                this.craftSlots.asCraftInput(), player.level());
+        CommonHooks.setCraftingPlayer(null);
+
         for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack itemstack = this.craftSlots.getItem(i);
             ItemStack itemstack1 = nonnulllist.get(i);
@@ -107,7 +110,7 @@ public class ModularCraftingSlot extends ModularSlot {
             if (!itemstack1.isEmpty()) {
                 if (itemstack.isEmpty()) {
                     this.craftSlots.setItem(i, itemstack1);
-                } else if (ItemStack.isSameItemSameTags(itemstack, itemstack1)) {
+                } else if (ItemStack.isSameItemSameComponents(itemstack, itemstack1)) {
                     itemstack1.grow(itemstack.getCount());
                     this.craftSlots.setItem(i, itemstack1);
                 } else if (!getPlayer().getInventory().add(itemstack1)) {

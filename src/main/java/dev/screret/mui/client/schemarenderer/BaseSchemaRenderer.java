@@ -1,17 +1,17 @@
 package dev.screret.mui.client.schemarenderer;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.drawable.Icon;
+import dev.screret.mui.integration.embeddium.SodiumCompat;
 import dev.screret.mui.schema.ISchema;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Color;
+import dev.screret.mui.utils.MatrixUtils;
+import dev.screret.mui.utils.RenderUtil;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widgets.SchemaWidget;
 import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.client.util.RenderUtil;
-import dev.screret.mui.integration.embeddium.GTEmbeddiumCompat;
-import dev.screret.mui.utils.GTMatrixUtils;
 
 import net.minecraft.CrashReport;
 import net.minecraft.Util;
@@ -35,8 +35,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.model.data.ModelData;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -48,13 +49,13 @@ import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
@@ -85,7 +86,7 @@ public class BaseSchemaRenderer implements IDrawable {
     @Getter
     private @Nullable BlockHitResult lastRayTrace = null;
 
-    private final ChunkBufferBuilderPack chunkBufferBuilders;
+    private final SectionBufferBuilderPack sectionBufferBuilders;
 
     private final AtomicReference<RenderCompileResults> compileResults = new AtomicReference<>();
     private final AtomicReference<CompileStatus> compileStatus = new AtomicReference<>(CompileStatus.CANCELED);
@@ -94,7 +95,7 @@ public class BaseSchemaRenderer implements IDrawable {
     public BaseSchemaRenderer(ISchema schema) {
         this.schema = schema;
         this.renderLevel = new RenderLevel(schema);
-        this.chunkBufferBuilders = new ChunkBufferBuilderPack();
+        this.sectionBufferBuilders = new SectionBufferBuilderPack();
     }
 
     protected @NotNull Map<RenderType, VertexBuffer> getOrCreateChunkBuffers() {
@@ -134,9 +135,9 @@ public class BaseSchemaRenderer implements IDrawable {
                         Minecraft.getInstance().delayCrash(CrashReport.forThrowable(error, "Batching chunks"));
                     } else {
                         if (result != CompileStatus.CANCELED && result != CompileStatus.DISABLED) {
-                            this.chunkBufferBuilders.clearAll();
+                            this.sectionBufferBuilders.clearAll();
                         } else {
-                            this.chunkBufferBuilders.discardAll();
+                            this.sectionBufferBuilders.discardAll();
                         }
                         this.compileStatus.set(result);
                     }
@@ -146,7 +147,7 @@ public class BaseSchemaRenderer implements IDrawable {
     public void dispose() {
         clearChunkBuffers();
 
-        this.chunkBufferBuilders.discardAll();
+        this.sectionBufferBuilders.discardAll();
         this.compileStatus.set(CompileStatus.DISABLED);
     }
 
@@ -224,7 +225,7 @@ public class BaseSchemaRenderer implements IDrawable {
             lightEngine.runLightUpdates();
         }
 
-        Lighting.setupLevel(RenderSystem.getModelViewMatrix());
+        Lighting.setupLevel();
 
         RenderSystem.disableDepthTest();
         RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
@@ -287,10 +288,6 @@ public class BaseSchemaRenderer implements IDrawable {
             shader.PROJECTION_MATRIX.set(RenderSystem.getProjectionMatrix());
         }
 
-        if (shader.INVERSE_VIEW_ROTATION_MATRIX != null) {
-            shader.INVERSE_VIEW_ROTATION_MATRIX.set(RenderSystem.getInverseViewRotationMatrix());
-        }
-
         if (shader.COLOR_MODULATOR != null) {
             shader.COLOR_MODULATOR.set(RenderSystem.getShaderColor());
         }
@@ -338,8 +335,8 @@ public class BaseSchemaRenderer implements IDrawable {
         // actually draw the chunk
         RenderCompileResults compileResults = this.compileResults.get();
         if (compileResults != null && !compileResults.isEmpty(renderType)) {
-            if (GTCEu.Mods.isSodiumRubidiumEmbeddiumLoaded()) {
-                GTEmbeddiumCompat.markSpritesAsActive(compileResults.activeFluidSprites);
+            if (ModularUI.Mods.SODIUM.isLoaded()) {
+                SodiumCompat.markSpritesAsActive(compileResults.activeFluidSprites);
             }
 
             VertexBuffer vertexBuffer = getOrCreateChunkBuffers().get(renderType);
@@ -412,15 +409,15 @@ public class BaseSchemaRenderer implements IDrawable {
         }
 
         // set up model view matrix
-        PoseStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.setIdentity();
+        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushMatrix();
+        modelViewStack.identity();
         if (isIsometric()) {
             // see GameRenderer:935
             // Vanilla uses a -2000 z translation for isometric rendering
             modelViewStack.translate(0.0f, 0.0f, -2000.0f);
         }
-        GTMatrixUtils.lookAt(modelViewStack, this.camera.pos(), this.camera.lookAt());
+        MatrixUtils.lookAt(modelViewStack, this.camera.pos(), this.camera.lookAt());
 
         RenderSystem.applyModelViewMatrix();
     }
@@ -434,7 +431,7 @@ public class BaseSchemaRenderer implements IDrawable {
         RenderSystem.restoreProjectionMatrix();
 
         // restore model view matrix
-        RenderSystem.getModelViewStack().popPose();
+        RenderSystem.getModelViewStack().popMatrix();
         RenderSystem.applyModelViewMatrix();
     }
 
@@ -452,7 +449,7 @@ public class BaseSchemaRenderer implements IDrawable {
         Vector3f worldPos = screenToWorldPos((float) mouseX / width, (float) mouseY / height);
         Vector3f target = this.camera.getLookVec().mul(20).add(worldPos);
         ClipContext context = new ClipContext(new Vec3(worldPos), new Vec3(target), ClipContext.Block.OUTLINE,
-                ClipContext.Fluid.ANY, null);
+                ClipContext.Fluid.ANY, CollisionContext.empty());
         return this.renderLevel.clip(context);
     }
 
@@ -467,7 +464,7 @@ public class BaseSchemaRenderer implements IDrawable {
         // convert relative pos to framebuffer pos
         int wx = (int) (x * this.viewport[2]);
         int wy = (int) (y * this.viewport[3]);
-        return GTMatrixUtils.projectScreenToWorld(wx, wy, this.viewport, true);
+        return MatrixUtils.projectScreenToWorld(wx, wy, this.viewport, true);
     }
 
     @ApiStatus.OverrideOnly
@@ -513,18 +510,29 @@ public class BaseSchemaRenderer implements IDrawable {
             this.isCanceled.set(true);
         }
 
+        protected BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers, SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType) {
+            BufferBuilder builder = bufferLayers.get(renderType);
+            if (builder == null) {
+                ByteBufferBuilder bytebufferbuilder = sectionBufferBuilderPack.buffer(renderType);
+                builder = new BufferBuilder(bytebufferbuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+                bufferLayers.put(renderType, builder);
+            }
+
+            return builder;
+        }
+
         protected CompletableFuture<CompileStatus> compileBlockBuffers() {
             if (this.isCanceled.get()) {
                 return CompletableFuture.completedFuture(CompileStatus.CANCELED);
             }
 
             var blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
-            ChunkBufferBuilderPack chunkBufferBuilders = BaseSchemaRenderer.this.chunkBufferBuilders;
+            SectionBufferBuilderPack sectionBufferBuilders = BaseSchemaRenderer.this.sectionBufferBuilders;
 
             RenderCompileResults compileResults = new RenderCompileResults();
             RandomSource randomSource = RandomSource.create();
             PoseStack poseStack = new PoseStack();
-            Set<RenderType> startedBuffers = new ReferenceArraySet<>(RenderType.chunkBufferLayers().size());
+            Map<RenderType, BufferBuilder> bufferLayers = new Reference2ObjectArrayMap<>(RenderType.chunkBufferLayers().size());
 
             ModelBlockRenderer.enableCaching();
             for (var blockEntry : BaseSchemaRenderer.this.schema) {
@@ -541,10 +549,7 @@ public class BaseSchemaRenderer implements IDrawable {
 
                 if (!fluidState.isEmpty()) {
                     RenderType renderType = ItemBlockRenderTypes.getRenderLayer(fluidState);
-                    BufferBuilder builder = chunkBufferBuilders.builder(renderType);
-                    if (startedBuffers.add(renderType)) {
-                        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-                    }
+                    BufferBuilder builder = getOrBeginLayer(bufferLayers, sectionBufferBuilders, renderType);
 
                     SectionPos sectionPos = SectionPos.of(pos);
                     VertexConsumer vertexConsumer = new LiquidVertexConsumer(builder, sectionPos);
@@ -567,10 +572,7 @@ public class BaseSchemaRenderer implements IDrawable {
                     randomSource.setSeed(blockState.getSeed(pos));
 
                     for (RenderType renderType : model.getRenderTypes(blockState, randomSource, modelData)) {
-                        BufferBuilder builder = chunkBufferBuilders.builder(renderType);
-                        if (startedBuffers.add(renderType)) {
-                            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-                        }
+                        BufferBuilder builder = getOrBeginLayer(bufferLayers, sectionBufferBuilders, renderType);
 
                         poseStack.pushPose();
                         poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -581,24 +583,22 @@ public class BaseSchemaRenderer implements IDrawable {
                 }
             }
 
-            if (startedBuffers.contains(RenderType.translucent())) {
-                BufferBuilder bufferBuilder = chunkBufferBuilders.builder(RenderType.translucent());
-                if (!bufferBuilder.isCurrentBatchEmpty()) {
-                    bufferBuilder.setQuadSorting(VertexSorting.byDistance(camera.pos()));
-                }
-            }
+            for (var entry : bufferLayers.entrySet()) {
+                RenderType renderType = entry.getKey();
+                MeshData meshData = entry.getValue().build();
 
-            for (RenderType rendertype : startedBuffers) {
-                BufferBuilder.RenderedBuffer renderedBuffer = chunkBufferBuilders.builder(rendertype)
-                        .endOrDiscardIfEmpty();
-                if (renderedBuffer != null) {
-                    compileResults.renderedLayers.put(rendertype, renderedBuffer);
+                if (meshData != null) {
+                    if (renderType == RenderType.translucent()) {
+                        meshData.sortQuads(sectionBufferBuilders.buffer(RenderType.translucent()),
+                                VertexSorting.byDistance(camera.pos()));
+                    }
+                    compileResults.renderedLayers.put(renderType, meshData);
                 }
             }
             ModelBlockRenderer.clearCache();
 
             if (this.isCanceled.get()) {
-                compileResults.renderedLayers.values().forEach(BufferBuilder.RenderedBuffer::release);
+                compileResults.renderedLayers.values().forEach(MeshData::close);
                 return CompletableFuture.completedFuture(CompileStatus.CANCELED);
             }
 
@@ -622,13 +622,12 @@ public class BaseSchemaRenderer implements IDrawable {
             });
         }
 
-        protected CompletableFuture<Void> uploadChunkLayer(BufferBuilder.RenderedBuffer builder,
-                                                           RenderType renderType) {
+        protected CompletableFuture<Void> uploadChunkLayer(MeshData meshData, RenderType renderType) {
             return CompletableFuture.runAsync(() -> {
                 VertexBuffer buffer = getOrCreateChunkBuffers().get(renderType);
                 if (!buffer.isInvalid()) {
                     buffer.bind();
-                    buffer.upload(builder);
+                    buffer.upload(meshData);
                     VertexBuffer.unbind();
                 }
             }, runnable -> RenderSystem.recordRenderCall(runnable::run));
@@ -646,7 +645,7 @@ public class BaseSchemaRenderer implements IDrawable {
     protected static class RenderCompileResults {
 
         protected final List<BlockEntity> blockEntities = new ArrayList<>();
-        protected final Map<RenderType, BufferBuilder.RenderedBuffer> renderedLayers = new Reference2ObjectArrayMap<>();
+        protected final Map<RenderType, MeshData> renderedLayers = new Reference2ObjectArrayMap<>();
         protected final Set<TextureAtlasSprite> activeFluidSprites = new HashSet<>();
 
         protected final Set<RenderType> hasBlocks = new ObjectArraySet<>(RenderType.chunkBufferLayers().size());

@@ -1,20 +1,24 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.ISyncedAction;
+import dev.screret.mui.network.packets.SyncHandlerPacket;
 import dev.screret.mui.widgets.slot.ModularSlot;
 import dev.screret.mui.widgets.slot.SlotGroup;
 import dev.screret.mui.client.screen.ModularContainerMenu;
-import dev.screret.mui.common.network.GTNetwork;
-import dev.screret.mui.common.network.packets.ui.SyncHandlerPacket;
 
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.connection.ConnectionType;
 
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
@@ -118,14 +122,14 @@ public class PanelSyncManager {
     }
 
     @ApiStatus.Internal
-    public void receiveWidgetUpdate(String mapKey, boolean action, int id, FriendlyByteBuf buf) {
+    public void receiveWidgetUpdate(String mapKey, boolean action, int id, RegistryFriendlyByteBuf buf) {
         if (action) {
             invokeSyncedAction(mapKey, buf);
             return;
         }
 
         if (!this.syncHandlers.containsKey(mapKey)) {
-            GTCEu.LOGGER.warn("SyncHandler '{}' does not exist for panel '{}'! ID was {}.", mapKey, panelName, id);
+            ModularUI.LOGGER.warn("SyncHandler '{}' does not exist for panel '{}'! ID was {}.", mapKey, panelName, id);
             return;
         }
         SyncHandler syncHandler = this.syncHandlers.get(mapKey);
@@ -136,10 +140,10 @@ public class PanelSyncManager {
         }
     }
 
-    private boolean invokeSyncedAction(String mapKey, FriendlyByteBuf buf) {
+    private boolean invokeSyncedAction(String mapKey, RegistryFriendlyByteBuf buf) {
         SyncedAction syncedAction = this.syncedActions.get(mapKey);
         if (syncedAction == null) {
-            GTCEu.LOGGER.warn("SyncAction '{}' does not exist for panel '{}'!.", mapKey, panelName);
+            ModularUI.LOGGER.warn("SyncAction '{}' does not exist for panel '{}'!.", mapKey, panelName);
             return false;
         }
         if (this.allowSyncHandlerRegistration || !syncedAction.isExecuteClient() || !syncedAction.isExecuteServer()) {
@@ -341,8 +345,8 @@ public class PanelSyncManager {
         return registerSyncedAction(mapKey, true, true, action);
     }
 
-    public PanelSyncManager registerSyncedAction(String mapKey, Side side, ISyncedAction action) {
-        return registerSyncedAction(mapKey, side.isClient(), side.isServer(), action);
+    public PanelSyncManager registerSyncedAction(String mapKey, Dist side, ISyncedAction action) {
+        return registerSyncedAction(mapKey, side.isClient(), side.isDedicatedServer(), action);
     }
 
     public PanelSyncManager registerClientSyncedAction(String mapKey, ISyncedAction action) {
@@ -361,19 +365,20 @@ public class PanelSyncManager {
         return this;
     }
 
-    public void callSyncedAction(String mapKey, FriendlyByteBuf packet) {
+    public void callSyncedAction(String mapKey, RegistryFriendlyByteBuf packet) {
         if (invokeSyncedAction(mapKey, packet)) {
             SyncHandlerPacket packetSyncHandler = new SyncHandlerPacket(this.panelName, mapKey, true, packet);
             if (isClient()) {
-                GTNetwork.sendToServer(packetSyncHandler);
+                PacketDistributor.sendToServer(packetSyncHandler);
             } else {
-                GTNetwork.sendToPlayer((ServerPlayer) getPlayer(), packetSyncHandler);
+                PacketDistributor.sendToPlayer((ServerPlayer) getPlayer(), packetSyncHandler);
             }
         }
     }
 
-    public void callSyncedAction(String mapKey, Consumer<FriendlyByteBuf> packetBuilder) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+    public void callSyncedAction(String mapKey, Consumer<RegistryFriendlyByteBuf> packetBuilder) {
+        RegistryFriendlyByteBuf packet = new RegistryFriendlyByteBuf(Unpooled.buffer(),
+                RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY), ConnectionType.NEOFORGE);
         packetBuilder.accept(packet);
         callSyncedAction(mapKey, packet);
     }

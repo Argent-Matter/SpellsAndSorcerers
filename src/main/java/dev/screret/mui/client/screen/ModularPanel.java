@@ -21,7 +21,6 @@ import dev.screret.mui.widgets.SlotGroupWidget;
 import dev.screret.mui.client.screen.viewport.GuiViewportStack;
 import dev.screret.mui.client.screen.viewport.LocatedWidget;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.config.ConfigHolder;
 
 import net.minecraft.Util;
 
@@ -584,16 +583,16 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         });
     }
 
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return doSafeBool(() -> {
-            if (interactFocused(widget -> widget.onMouseScrolled(mouseX, mouseY, delta), false)) {
+            if (interactFocused(widget -> widget.onMouseScrolled(mouseX, mouseY, scrollX, scrollY), false)) {
                 return true;
             }
             if (this.hovering.isEmpty()) return false;
             for (LocatedWidget widget : this.hovering) {
                 if (widget.getElement() instanceof Interactable interactable) {
                     widget.applyMatrix(getContext());
-                    boolean result = interactable.onMouseScrolled(mouseX, mouseY, delta);
+                    boolean result = interactable.onMouseScrolled(mouseX, mouseY, scrollX, scrollY);
                     widget.unapplyMatrix(getContext());
                     if (result) return true;
                 }
@@ -740,7 +739,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     }
 
     public float getScale() {
-        if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
+        //if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
         // 0.9 is default nea value
         return Interpolations.lerp(0.9f, 1f, getAnimator().getValue());
         // TODO NEA
@@ -749,7 +748,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     }
 
     public float getAlpha() {
-        if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
+        //if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
         return getAnimator().getValue();
         // if (!ModularUI.Mods.NEA.isLoaded() || NEAConfig.openingAnimationTime == 0) return 1f;
         // return getAnimator().getValue();
@@ -774,7 +773,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         if (this.animator == null) {
             this.animator = new Animator()
                     .bounds(0f, 1f)
-                    .duration(ConfigHolder.INSTANCE.client.ui.animationTime)
+                    //.duration(ConfigHolder.INSTANCE.client.ui.animationTime)
                     .curve(Interpolation.SINE_OUT); // TODO: NEA config values
             this.animator.reset(true);
         }

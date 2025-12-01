@@ -9,8 +9,8 @@ import dev.screret.mui.utils.Interpolations;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
 import lombok.Setter;

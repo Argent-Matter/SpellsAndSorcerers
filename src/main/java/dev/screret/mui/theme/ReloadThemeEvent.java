@@ -1,6 +1,6 @@
 package dev.screret.mui.theme;
 
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public class ReloadThemeEvent extends Event {
 

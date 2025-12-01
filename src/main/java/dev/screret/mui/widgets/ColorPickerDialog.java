@@ -1,10 +1,11 @@
 package dev.screret.mui.widgets;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.drawable.HueBar;
 import dev.screret.mui.drawable.Rectangle;
 import dev.screret.mui.utils.Alignment;
@@ -14,7 +15,6 @@ import dev.screret.mui.value.StringValue;
 import dev.screret.mui.widgets.layout.Column;
 import dev.screret.mui.widgets.layout.Row;
 import dev.screret.mui.widgets.textfield.TextFieldWidget;
-import dev.screret.mui.common.mui.GTGuiTextures;
 
 import java.util.function.Consumer;
 
@@ -51,7 +51,7 @@ public class ColorPickerDialog extends Dialog<Integer> {
         this.controlAlpha = controlAlpha;
         this.alpha = Color.getAlpha(startColor);
         updateAll(startColor);
-        size(140, controlAlpha ? 106 : 94).background(GTGuiTextures.BACKGROUND);
+        size(140, controlAlpha ? 106 : 94).background(GuiTextures.MC_BACKGROUND);
 
         PagedWidget.Controller controller = new PagedWidget.Controller();
         child(new Column()
@@ -79,10 +79,10 @@ public class ColorPickerDialog extends Dialog<Integer> {
                                     try {
                                         updateAll((int) (long) Long.decode(val));
                                     } catch (NumberFormatException ignored) {
-                                        GTCEu.LOGGER.error("Illegal color string '{}'", val);
+                                        ModularUI.LOGGER.error("Illegal color string '{}'", val);
                                     }
                                 })))
-                        .child(this.preview.asWidget().background(GTGuiTextures.CHECKBOARD).size(10, 10).margin(1)))
+                        .child(this.preview.asWidget().background(GuiTextures.CHECKBOARD).size(10, 10).margin(1)))
                 .child(new PagedWidget<>()
                         .left(5).right(5)
                         .expanded()

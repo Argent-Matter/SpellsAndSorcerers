@@ -1,5 +1,6 @@
 package dev.screret.mui.widgets.textfield;
 
+import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.widget.IFocusedWidget;
 import dev.screret.mui.api.widget.IWidget;
@@ -12,7 +13,6 @@ import dev.screret.mui.widget.scroll.HorizontalScrollData;
 import dev.screret.mui.widget.scroll.ScrollData;
 import dev.screret.mui.widgets.VoidWidget;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.config.ConfigHolder;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -244,7 +244,7 @@ public class BaseTextFieldWidget<W extends BaseTextFieldWidget<W>> extends Abstr
                 }
                 return Result.SUCCESS;
             case InputConstants.KEY_ESCAPE:
-                if (ConfigHolder.INSTANCE.client.ui.escRestoresLastText) {
+                if (ModularUIConfig.escRestoresLastText()) {
                     this.handler.clear();
                     this.handler.insert(this.lastText, canScrollHorizontally());
                 }

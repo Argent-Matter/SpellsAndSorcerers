@@ -1,13 +1,12 @@
 package dev.screret.mui.integration.xei.entry.item;
 
 import net.minecraft.core.HolderSet;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +17,9 @@ public final class ItemHolderSetList implements ItemEntryList {
     @Getter
     private final List<ItemHolderSetEntry> entries = new ArrayList<>();
 
-    public static ItemHolderSetList of(@NotNull HolderSet<Item> set, int amount, @Nullable CompoundTag nbt) {
+    public static ItemHolderSetList of(@NotNull HolderSet<Item> set, int amount, @NotNull DataComponentPatch componentPatch) {
         var list = new ItemHolderSetList();
-        list.add(set, amount, nbt);
+        list.add(set, amount, componentPatch);
         return list;
     }
 
@@ -28,8 +27,8 @@ public final class ItemHolderSetList implements ItemEntryList {
         entries.add(entry);
     }
 
-    public void add(@NotNull HolderSet<Item> set, int amount, @Nullable CompoundTag nbt) {
-        add(new ItemHolderSetEntry(set, amount, nbt));
+    public void add(@NotNull HolderSet<Item> set, int amount, @NotNull DataComponentPatch componentPatch) {
+        add(new ItemHolderSetEntry(set, amount, componentPatch));
     }
 
     @Override
@@ -44,10 +43,10 @@ public final class ItemHolderSetList implements ItemEntryList {
                 .toList();
     }
 
-    public record ItemHolderSetEntry(@NotNull HolderSet<Item> set, int amount, @Nullable CompoundTag nbt) {
+    public record ItemHolderSetEntry(@NotNull HolderSet<Item> set, int amount, @NotNull DataComponentPatch componentPatch) {
 
         public Stream<ItemStack> stacks() {
-            return set.stream().map(holder -> ItemTagList.stackWithTag(holder, amount, nbt));
+            return set.stream().map(holder -> ItemTagList.stackWithComponents(holder, amount, componentPatch));
         }
     }
 }

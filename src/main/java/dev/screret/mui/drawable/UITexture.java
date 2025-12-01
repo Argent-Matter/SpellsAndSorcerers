@@ -1,6 +1,7 @@
 package dev.screret.mui.drawable;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.motm.MagicOfTheMind;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IJsonSerializable;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.theme.WidgetTheme;
@@ -10,8 +11,8 @@ import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -24,7 +25,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
 
     public static final UITexture DEFAULT = fullImage("gui/options_background", ColorType.DEFAULT);
 
-    private static final ResourceLocation ICONS_LOCATION = GTCEu.id("textures/gui/icons.png");
+    private static final ResourceLocation ICONS_LOCATION = ModularUI.id("textures/gui/icons.png");
 
     // only for usage in GuiTextures
     static UITexture icon(String name, int x, int y, int w, int h) {
@@ -83,9 +84,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         boolean png = !location.getPath().endsWith(".png");
         boolean textures = !location.getPath().startsWith("textures/");
         if (png || textures) {
-            String path = location.getPath();
-            path = png ? (textures ? TEXTURES_PREFIX + path + PNG_SUFFIX : path + PNG_SUFFIX) : TEXTURES_PREFIX + path;
-            location = new ResourceLocation(location.getNamespace(), path);
+            location = location.withPath(path -> png ? (textures ? TEXTURES_PREFIX + path + PNG_SUFFIX : path + PNG_SUFFIX) : TEXTURES_PREFIX + path);
         }
         this.location = location;
         this.u0 = u0;
@@ -104,11 +103,11 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
     }
 
     public static UITexture fullImage(String location) {
-        return fullImage(new ResourceLocation(location), null);
+        return fullImage(ResourceLocation.parse(location), null);
     }
 
     public static UITexture fullImage(String mod, String location) {
-        return fullImage(new ResourceLocation(mod, location), null);
+        return fullImage(ResourceLocation.fromNamespaceAndPath(mod, location), null);
     }
 
     public static UITexture fullImage(ResourceLocation location, ColorType colorType) {
@@ -116,11 +115,11 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
     }
 
     public static UITexture fullImage(String location, ColorType colorType) {
-        return fullImage(new ResourceLocation(location), colorType);
+        return fullImage(ResourceLocation.parse(location), colorType);
     }
 
     public static UITexture fullImage(String mod, String location, ColorType colorType) {
-        return fullImage(new ResourceLocation(mod, location), colorType);
+        return fullImage(ResourceLocation.fromNamespaceAndPath(mod, location), colorType);
     }
 
     public UITexture getSubArea(Area bounds) {
@@ -178,7 +177,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
             if (drawable != null) return drawable;
         }
         Builder builder = builder();
-        builder.location(JsonHelper.getString(json, GTCEu.MOD_ID + ":gui/widgets/error", "location"))
+        builder.location(JsonHelper.getString(json, MagicOfTheMind.MODID + ":gui/widgets/error", "location"))
                 .imageSize(JsonHelper.getInt(json, defaultImageWidth, "imageWidth", "iw"),
                         JsonHelper.getInt(json, defaultImageHeight, "imageHeight", "ih"));
         boolean mode1 = json.has("x") || json.has("y") || json.has("w") || json.has("h") || json.has("width") ||
@@ -269,7 +268,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
          * @param path path of the image to draw
          */
         public Builder location(String mod, String path) {
-            this.location = new ResourceLocation(mod, path);
+            this.location = ResourceLocation.fromNamespaceAndPath(mod, path);
             return this;
         }
 
@@ -277,7 +276,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
          * @param path path of the image to draw in minecraft asset folder
          */
         public Builder location(String path) {
-            this.location = new ResourceLocation(path);
+            this.location = ResourceLocation.parse(path);
             return this;
         }
 
@@ -499,7 +498,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
             if (this.name == null) {
                 String[] p = texture.location.getPath().split("/");
                 p = p[p.length - 1].split("\\.");
-                this.name = texture.location.getNamespace().equals(GTCEu.MOD_ID) ? p[0] :
+                this.name = texture.location.getNamespace().equals(MagicOfTheMind.MODID) ? p[0] :
                         texture.location.getNamespace() + ":" + p[0];
                 if (DrawableSerialization.getTexture(this.name) != null) {
                     return texture;

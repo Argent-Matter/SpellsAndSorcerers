@@ -1,11 +1,14 @@
 package dev.screret.mui.value.sync;
 
 import dev.screret.mui.utils.ICopy;
-import dev.screret.mui.utils.serialization.network.IByteBufDeserializer;
-import dev.screret.mui.utils.serialization.network.IByteBufSerializer;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
 
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,13 +18,13 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class GenericSetSyncHandler<T> extends GenericCollectionSyncHandler<T, Set<T>> {
+public class GenericSetSyncHandler<B extends ByteBuf, T> extends GenericCollectionSyncHandler<B, T, Set<T>> {
 
-    private final Set<T> cache = new ObjectOpenHashSet<T>();
+    private final Set<T> cache = new ObjectOpenHashSet<>();
 
     public GenericSetSyncHandler(@NotNull Supplier<Set<T>> getter, @Nullable Consumer<Set<T>> setter,
-                                 @NotNull IByteBufDeserializer<T> deserializer,
-                                 @NotNull IByteBufSerializer<T> serializer,
+                                 @NotNull StreamDecoder<B, T> deserializer,
+                                 @NotNull StreamEncoder<B, T> serializer,
                                  @Nullable ICopy<T> copy) {
         super(getter, setter, deserializer, serializer, null, copy);
         setCache(getter.get());
@@ -47,27 +50,31 @@ public class GenericSetSyncHandler<T> extends GenericCollectionSyncHandler<T, Se
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(B buffer) {
         this.cache.clear();
-        int size = buffer.readVarInt();
+        int size = VarInt.read(buffer);
         for (int i = 0; i < size; i++) {
             this.cache.add(deserializeValue(buffer));
         }
         onSetCache(getValue(), true, false);
     }
 
-    public static <T> Builder<T> builder() {
+    public static <B extends ByteBuf, T> Builder<B, T> builder() {
         return new Builder<>();
     }
 
-    public static class Builder<T> extends GenericCollectionSyncHandler.Builder<T, Set<T>, Builder<T>> {
+    public static class Builder<B extends ByteBuf, T> extends GenericCollectionSyncHandler.Builder<B, T, Set<T>, Builder<B, T>> {
 
-        public GenericSetSyncHandler<T> build() {
-            if (this.getter == null) throw new NullPointerException("Getter in GenericSetSyncHandler must not be null");
-            if (this.deserializer == null)
+        public GenericSetSyncHandler<B, T> build() {
+            if (this.getter == null) {
+                throw new NullPointerException("Getter in GenericSetSyncHandler must not be null");
+            }
+            if (this.deserializer == null) {
                 throw new NullPointerException("Deserializer in GenericSetSyncHandler must not be null");
-            if (this.serializer == null)
+            }
+            if (this.serializer == null) {
                 throw new NullPointerException("Serializer in GenericSetSyncHandler must not be null");
+            }
             return new GenericSetSyncHandler<>(this.getter, this.setter, this.deserializer, this.serializer, this.copy);
         }
     }

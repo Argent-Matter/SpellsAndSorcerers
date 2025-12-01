@@ -1,8 +1,8 @@
 package dev.screret.mui.theme;
 
+import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
-import dev.screret.mui.config.ConfigHolder;
 import dev.screret.mui.utils.serialization.json.JsonBuilder;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -65,7 +65,7 @@ public class ThemeAPI implements IThemeApi {
         String theme = getThemeIdForScreen(owner, name);
         if (theme != null) return getTheme(theme);
         if (defaultTheme != null) return getTheme(defaultTheme);
-        return getTheme(ConfigHolder.INSTANCE.client.ui.useDarkThemeByDefault ? "vanilla_dark" : "vanilla");
+        return getTheme(ModularUIConfig.useDarkThemeByDefault() ? "vanilla_dark" : "vanilla");
     }
 
     private String getThemeIdForScreen(String mod, String name) {

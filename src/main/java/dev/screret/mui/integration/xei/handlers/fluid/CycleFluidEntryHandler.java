@@ -1,19 +1,23 @@
 package dev.screret.mui.integration.xei.handlers.fluid;
 
-import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidEntryList;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidStackList;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-import net.minecraftforge.fluids.FluidStack;
-
+import dev.screret.mui.integration.xei.entry.fluid.FluidEntryList;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CycleFluidEntryHandler implements IFluidHandlerModifiable {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class CycleFluidEntryHandler implements IFluidHandler {
 
     @Getter
     private final List<FluidEntryList> entries;
@@ -33,7 +37,7 @@ public class CycleFluidEntryHandler implements IFluidHandlerModifiable {
         return unwrapped;
     }
 
-    private static List<FluidStack> getStacksNullable(FluidEntryList list) {
+    private static @Nullable List<FluidStack> getStacksNullable(@Nullable FluidEntryList list) {
         if (list == null) return null;
         return list.getStacks();
     }
@@ -55,6 +59,7 @@ public class CycleFluidEntryHandler implements IFluidHandlerModifiable {
                 stackList.get(Math.abs((int) (System.currentTimeMillis() / 1000) % stackList.size()));
     }
 
+    /*
     @Override
     public void setFluidInTank(int tank, @NotNull FluidStack fluidStack) {
         if (tank >= 0 && tank < entries.size()) {
@@ -62,6 +67,7 @@ public class CycleFluidEntryHandler implements IFluidHandlerModifiable {
             unwrapped = null;
         }
     }
+    */
 
     @Override
     public int getTankCapacity(int tank) {
@@ -78,11 +84,6 @@ public class CycleFluidEntryHandler implements IFluidHandlerModifiable {
         return 0;
     }
 
-    @Override
-    public boolean supportsFill(int tank) {
-        return false;
-    }
-
     @NotNull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
@@ -92,10 +93,5 @@ public class CycleFluidEntryHandler implements IFluidHandlerModifiable {
     @Override
     public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
         return FluidStack.EMPTY;
-    }
-
-    @Override
-    public boolean supportsDrain(int tank) {
-        return false;
     }
 }

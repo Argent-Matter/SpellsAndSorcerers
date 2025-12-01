@@ -8,10 +8,14 @@ dependencies {
         api(deps.smartBrainLib)
     }
 
+    // Math Parser
+    jarJar(implementation(libs.mxparser.get()))
+    additionalRuntimeClasspath(libs.mxparser.get())
+
     // Recipe Viewers
     compileOnly(deps.bundles.jei)
     compileOnly(deps.bundles.rei)
-    compileOnly(variantOf(deps.emi) { classifier("api") })
+    compileOnly(deps.emi)
 
     // Curios
     compileOnly(variantOf(deps.curios) { classifier("api") })

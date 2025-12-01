@@ -4,10 +4,10 @@ import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.widget.Interactable;
 import dev.screret.mui.schema.ISchema;
 import dev.screret.mui.theme.WidgetThemeEntry;
+import dev.screret.mui.utils.math.MathHelper;
 import dev.screret.mui.widget.Widget;
 import dev.screret.mui.client.schemarenderer.BaseSchemaRenderer;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.utils.GTMath;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -24,7 +24,7 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
     private boolean enableTranslation = true;
     private boolean enableScaling = true;
     private float scale = 10f;
-    private float pitch = GTMath.QUART_PI;
+    private float pitch = MathHelper.QUART_PI;
     private float yaw = 0;
     private final Vector3f offset = new Vector3f();
 
@@ -51,9 +51,9 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (this.enableScaling) {
-            incrementScale((float) (-delta / 12.0f));
+            incrementScale((float) (-scrollY / 12.0f));
             return true;
         }
         return false;
@@ -75,7 +75,7 @@ public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
         } else if (button == InputConstants.MOUSE_BUTTON_MIDDLE && this.enableTranslation) {
             float moveScale = 0.09f;
             Vector3f look = this.schemaRenderer.camera().getLookVec().normalize(); // direction camera is looking
-            Vector3f right = look.cross(GTMath.UNIT_Y, new Vector3f()).normalize(); // right relative to screen
+            Vector3f right = look.cross(MathHelper.UNIT_Y, new Vector3f()).normalize(); // right relative to screen
             Vector3f up = right.cross(look, new Vector3f()); // up relative to screen
             this.offset.sub(right.mul(dx * moveScale)).add(up.mul(dy * moveScale));
         }

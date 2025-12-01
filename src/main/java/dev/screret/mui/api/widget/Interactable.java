@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import org.jetbrains.annotations.NotNull;
@@ -126,10 +126,11 @@ public interface Interactable {
      *
      * @param mouseX the X coordinate of the mouse.
      * @param mouseY the Y coordinate of the mouse.
-     * @param delta  amount scrolled by (usually irrelevant)
+     * @param scrollX  amount scrolled by on the X axis (usually irrelevant)
+     * @param scrollY  amount scrolled by on the Y axis (usually irrelevant)
      * @return true if this widget can be scrolled at all
      */
-    default boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+    default boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return false;
     }
 

@@ -1,5 +1,6 @@
 package dev.screret.mui.utils;
 
+import com.mojang.blaze3d.vertex.*;
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.viewport.GuiContext;
@@ -10,10 +11,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -134,14 +131,15 @@ public class Stencil {
         RenderSystem.setShader(GameRenderer::getPositionShader);
         Matrix4f pose = graphics.pose().last().pose();
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tesselator.getBuilder();
         float x0 = x, x1 = x + w, y0 = y, y1 = y + h;
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        bufferbuilder.vertex(pose, x0, y0, 0.0f).endVertex();
-        bufferbuilder.vertex(pose, x0, y1, 0.0f).endVertex();
-        bufferbuilder.vertex(pose, x1, y1, 0.0f).endVertex();
-        bufferbuilder.vertex(pose, x1, y0, 0.0f).endVertex();
-        tesselator.end();
+
+        BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        bufferbuilder.addVertex(pose, x0, y0, 0.0f);
+        bufferbuilder.addVertex(pose, x0, y1, 0.0f);
+        bufferbuilder.addVertex(pose, x1, y1, 0.0f);
+        bufferbuilder.addVertex(pose, x1, y0, 0.0f);
+
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
         RenderSystem.setShader(() -> lastShader);
     }
 

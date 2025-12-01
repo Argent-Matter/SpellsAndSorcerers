@@ -2,8 +2,8 @@ package dev.screret.mui.theme;
 
 import dev.screret.mui.api.IThemeApi;
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.utils.Color;
-import dev.screret.mui.common.mui.GTGuiTextures;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ public class TextFieldTheme extends WidgetTheme {
     private final int hintColor;
 
     public TextFieldTheme(int markedColor, int hintColor) {
-        this(56, 18, GTGuiTextures.MUI_DISPLAY_SMALL, Color.WHITE.main, Color.WHITE.main,
+        this(56, 18, GuiTextures.DISPLAY, Color.WHITE.main, Color.WHITE.main,
                 false, Color.WHITE.main, markedColor, hintColor);
     }
 

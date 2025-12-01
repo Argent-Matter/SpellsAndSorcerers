@@ -1,11 +1,13 @@
 package dev.screret.mui.drawable;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IJsonSerializable;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
+import dev.screret.mui.utils.RegistryAccessContainer;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -90,7 +92,7 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
             return DrawableStack.parseJson(element.getAsJsonArray());
         }
         if (!element.isJsonObject()) {
-            GTCEu.LOGGER.throwing(new JsonParseException("Drawable json should be an object or an array."));
+            ModularUI.LOGGER.throwing(new JsonParseException("Drawable json should be an object or an array."));
             return IDrawable.EMPTY;
         }
         JsonObject json = element.getAsJsonObject();
@@ -104,7 +106,7 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
             return key;
         }
         if (!DRAWABLE_TYPES.containsKey(type)) {
-            GTCEu.LOGGER
+            ModularUI.LOGGER
                     .throwing(new JsonParseException("Drawable type '" + type + "' is not json serializable!"));
             return IDrawable.EMPTY;
         }
@@ -128,7 +130,7 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
         if (src instanceof IKey key) {
             json.addProperty("type", "text");
             // TODO serialize text properly
-            json.addProperty("text", Component.Serializer.toJson(key.getFormatted()));
+            json.addProperty("text", Component.Serializer.toJson(key.getFormatted(), RegistryAccessContainer.current()));
         } else if (!(src instanceof IJsonSerializable<?> serializable)) {
             throw new IllegalArgumentException("Can't serialize IDrawable which doesn't implement IJsonSerializable!");
         } else {
@@ -139,14 +141,14 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
                 key = REVERSE_DRAWABLE_TYPES.get(type);
             }
             if (key == null) {
-                GTCEu.LOGGER.error(
+                ModularUI.LOGGER.error(
                         "Serialization of drawable {} failed, because a key for the type could not be found!",
                         src.getClass().getSimpleName());
                 return JsonNull.INSTANCE;
             }
             json.addProperty("type", key);
             if (!serializable.saveToJson(json)) {
-                GTCEu.LOGGER.error("Serialization of drawable {} failed!", src.getClass().getSimpleName());
+                ModularUI.LOGGER.error("Serialization of drawable {} failed!", src.getClass().getSimpleName());
             }
         }
         return json;
@@ -155,7 +157,7 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
     private static IKey parseText(JsonObject json) throws JsonParseException {
         JsonParseException exception = new JsonParseException("Could not parse IKey from %s".formatted(json));
         try {
-            MutableComponent component = Component.Serializer.fromJson(json);
+            MutableComponent component = Component.Serializer.fromJson(json, RegistryAccessContainer.current());
             if (component != null) {
                 return unpackSiblings(component);
             }
@@ -185,7 +187,7 @@ public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDes
     private static IKey parseText(JsonElement element) throws JsonParseException {
         JsonParseException exception = new JsonParseException("Could not parse IKey from %s".formatted(element));
         try {
-            MutableComponent component = Component.Serializer.fromJson(element);
+            MutableComponent component = Component.Serializer.fromJson(element, RegistryAccessContainer.current());
             if (component != null) {
                 return IKey.lang(component);
             }

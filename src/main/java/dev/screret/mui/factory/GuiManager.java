@@ -1,16 +1,16 @@
 package dev.screret.mui.factory;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IMuiScreen;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.UIFactory;
 import dev.screret.mui.api.XeiSettings;
+import dev.screret.mui.core.mixins.ServerPlayerAccessor;
+import dev.screret.mui.network.packets.OpenGuiPacket;
 import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.client.screen.*;
-import dev.screret.mui.common.network.GTNetwork;
-import dev.screret.mui.common.network.packets.ui.OpenGuiPacket;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -19,14 +19,15 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = ModularUI.MOD_ID)
 public class GuiManager {
 
     private static final Object2ObjectMap<ResourceLocation, UIFactory<?>> FACTORIES = new Object2ObjectOpenHashMap<>(
@@ -78,11 +79,11 @@ public class GuiManager {
         WidgetTree.collectSyncValues(syncManager, panel);
 
         // create the menu
-        player.nextContainerCounter();
+        ((ServerPlayerAccessor) player).invokeNextContainerCounter();
         if (player.containerMenu != player.inventoryMenu) {
             player.closeContainer();
         }
-        int windowId = player.containerCounter;
+        int windowId = ((ServerPlayerAccessor) player).getContainerCounter();
         ModularContainerMenu menu = settings.hasContainer() ? settings.createContainer(windowId) :
                 factory.createContainer(windowId);
         menu.construct(player, syncManager, settings, panel.getName(), guiData);
@@ -90,18 +91,18 @@ public class GuiManager {
         // sync to client
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         factory.writeGuiData(guiData, buffer);
-        GTNetwork.sendToPlayer(player, new OpenGuiPacket<>(windowId, factory, buffer));
+        PacketDistributor.sendToPlayer(player, new OpenGuiPacket<>(windowId, factory, buffer));
         // open the menu // this mimics forge behaviour
-        player.initMenu(menu);
+        ((ServerPlayerAccessor) player).invokeInitMenu(menu);
         player.containerMenu = menu;
         // finally invoke event
-        MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, menu));
+        NeoForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, menu));
     }
 
     @ApiStatus.Internal
     @OnlyIn(Dist.CLIENT)
     public static <T extends GuiData> void openFromClient(int windowId, @NotNull UIFactory<T> factory,
-                                                          @NotNull FriendlyByteBuf data, @NotNull LocalPlayer player) {
+                                                          @NotNull FriendlyByteBuf data, @NotNull Player player) {
         T guiData = factory.readGuiData(player, data);
         UISettings settings = new UISettings();
         settings.defaultCanInteractWith(factory, guiData);
@@ -127,7 +128,7 @@ public class GuiManager {
     public static <T extends GuiData> void openFromClient(@NotNull UIFactory<T> factory, @NotNull T guiData) {
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         factory.writeGuiData(guiData, buffer);
-        GTNetwork.sendToServer(new OpenGuiPacket<>(0, factory, buffer));
+        PacketDistributor.sendToServer(new OpenGuiPacket<>(0, factory, buffer));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -150,10 +151,8 @@ public class GuiManager {
     }
 
     @SubscribeEvent
-    public static void onTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            openedContainers.clear();
-        }
+    public static void onTick(ServerTickEvent.Post event) {
+        openedContainers.clear();
     }
 
     @SubscribeEvent

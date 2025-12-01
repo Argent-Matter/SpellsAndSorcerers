@@ -1,5 +1,7 @@
 package dev.screret.mui.drawable;
 
+import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
 import dev.screret.mui.api.IJsonSerializable;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.theme.WidgetTheme;
@@ -7,15 +9,17 @@ import dev.screret.mui.widget.Widget;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -25,8 +29,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> {
+
+    public static final Codec<ItemDrawable> CODEC = ExtraCodecs.optionalEmptyMap(ItemStack.SINGLE_ITEM_CODEC)
+            .xmap(stack -> stack.map(ItemDrawable::new).orElseGet(ItemDrawable::new),
+                    stack -> stack.item.isEmpty() ? Optional.empty() : Optional.of(stack.item));
 
     @Getter
     private ItemStack item = ItemStack.EMPTY;
@@ -45,8 +54,8 @@ public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> 
         setItem(item, amount);
     }
 
-    public ItemDrawable(@NotNull Item item, int amount, @Nullable CompoundTag nbt) {
-        setItem(item, amount, nbt);
+    public ItemDrawable(@NotNull Item item, int amount, @NotNull DataComponentPatch componentPatch) {
+        setItem(item, amount, componentPatch);
     }
 
     public ItemDrawable(@NotNull Block item) {
@@ -85,17 +94,17 @@ public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> 
     }
 
     public ItemDrawable setItem(@NotNull Item item) {
-        return setItem(item, 1, null);
+        return setItem(item, 1, DataComponentPatch.EMPTY);
     }
 
     public ItemDrawable setItem(@NotNull Item item, int amount) {
-        return setItem(item, amount, null);
+        return setItem(item, amount, DataComponentPatch.EMPTY);
     }
 
-    public ItemDrawable setItem(@NotNull Item item, int amount, @Nullable CompoundTag nbt) {
-        ItemStack itemStack = new ItemStack(item, amount);
-        itemStack.setTag(nbt);
-        return setItem(itemStack);
+    public ItemDrawable setItem(@NotNull Item item, int amount, @NotNull DataComponentPatch componentPatch) {
+        ItemStack stack = new ItemStack(item, amount);
+        stack.applyComponents(componentPatch);
+        return setItem(stack);
     }
 
     public ItemDrawable setItem(@NotNull Block item) {
@@ -106,34 +115,23 @@ public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> 
         return setItem(new ItemStack(item, amount));
     }
 
+    @Override
+    public Codec<ItemDrawable> getCodec() {
+        return CODEC;
+    }
+
     public static ItemDrawable ofJson(JsonObject json) {
-        String itemName = JsonHelper.getString(json, null, "item");
-        if (itemName == null) throw new JsonParseException("Item property not found!");
-        if (itemName.isEmpty()) return new ItemDrawable();
-        ItemStack stack;
-        try {
-            ResourceLocation id = new ResourceLocation(itemName);
-            stack = new ItemStack(BuiltInRegistries.ITEM.get(id));
-        } catch (NoSuchElementException e) {
-            throw new JsonParseException(e);
-        }
-        if (json.has("nbt")) {
-            CompoundTag nbt = (CompoundTag) JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE,
-                    JsonHelper.getObject(json, new JsonObject(), o -> o, "nbt"));
-            stack.setTag(nbt);
-        }
-        return new ItemDrawable(stack);
+        return CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(JsonParseException::new);
     }
 
     @Override
     public boolean saveToJson(JsonObject json) {
         if (this.item == null || this.item.isEmpty()) {
-            json.addProperty("item", "");
             return true;
         }
-        json.addProperty("item", this.item.getItemHolder().unwrapKey().get().location().toString());
-        if (this.item.hasTag()) {
-            json.addProperty("nbt", this.item.getTag().toString());
+        JsonElement saved = CODEC.encodeStart(JsonOps.INSTANCE, this).getOrThrow(JsonParseException::new);
+        if (saved.isJsonObject()) {
+            saved.getAsJsonObject().asMap().forEach(json::add);
         }
         return true;
     }

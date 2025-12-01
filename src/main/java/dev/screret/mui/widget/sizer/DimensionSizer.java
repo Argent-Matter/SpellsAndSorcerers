@@ -1,11 +1,11 @@
 package dev.screret.mui.widget.sizer;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.GuiError;
+import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.layout.IResizeable;
 import dev.screret.mui.api.widget.IGuiElement;
-import dev.screret.mui.config.ConfigHolder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -365,9 +365,9 @@ public class DimensionSizer {
             if (ret == this.start) this.start = null;
             if (ret == this.end) this.end = null;
             if (ret == this.size) this.size = null;
-            if (ConfigHolder.INSTANCE.dev.debugUI && GTCEu.isClientThread()) {
+            if (ModularUIConfig.isGuiDebugMode() && ModularUI.isClientThread()) {
                 // only log on client in debug mode since its sometimes intentional
-                GTCEu.LOGGER.info("unit {} of widget {} was already used and will be overwritten with unit {}",
+                ModularUI.LOGGER.info("unit {} of widget {} was already used and will be overwritten with unit {}",
                         ret.state.getText(this.axis), widget, newState.getText(this.axis));
             }
         }

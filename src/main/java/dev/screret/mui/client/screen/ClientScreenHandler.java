@@ -1,7 +1,8 @@
 package dev.screret.mui.client.screen;
 
-import dev.screret.mui.GTCEu;
 import dev.screret.mui.GuiErrorHandler;
+import dev.screret.mui.ModularUI;
+import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.IMuiScreen;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.widget.IGuiElement;
@@ -22,7 +23,6 @@ import dev.screret.mui.widgets.slot.SlotGroup;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.client.screen.viewport.LocatedWidget;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.config.ConfigHolder;
 import dev.screret.mui.core.mixins.client.AbstractContainerScreenAccessor;
 import dev.screret.mui.core.mixins.client.ScreenAccessor;
 import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
@@ -38,15 +38,16 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ContainerScreenEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.ContainerScreenEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.common.NeoForge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
@@ -64,7 +65,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @ApiStatus.Internal
-@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ModularUI.MOD_ID, value = Dist.CLIENT)
 public class ClientScreenHandler {
 
     @Getter
@@ -191,12 +192,12 @@ public class ClientScreenHandler {
     // before JEI
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onScreenMouseScrolled(ScreenEvent.MouseScrolled.Pre event) {
-        double w = event.getScrollDelta();
-        if (w == 0) return;
-        defaultContext.updateMouseWheel(w);
-        if (validateGui(event.getScreen())) currentScreen.getContext().updateMouseWheel(w);
+        double wx = event.getScrollDeltaX(), wy = event.getScrollDeltaY();
+        if (wx == 0) return;
+        defaultContext.updateMouseWheel(wx, wy);
+        if (validateGui(event.getScreen())) currentScreen.getContext().updateMouseWheel(wx, wy);
 
-        if (doAction(currentScreen, ms -> ms.mouseScrolled(event.getMouseX(), event.getMouseY(), w))) {
+        if (doAction(currentScreen, ms -> ms.mouseScrolled(event.getMouseX(), event.getMouseY(), wx, wy))) {
             event.setCanceled(true);
         }
     }
@@ -232,22 +233,23 @@ public class ClientScreenHandler {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            OverlayStack.onTick();
-            defaultContext.tick();
-            if (validateGui()) {
-                currentScreen.onUpdate();
-            }
-            ticks++;
+    public static void onClientTick(ClientTickEvent.Post event) {
+        OverlayStack.onTick();
+        defaultContext.tick();
+        if (validateGui()) {
+            currentScreen.onUpdate();
         }
+        ticks++;
     }
 
     @SubscribeEvent
-    public static void onRenderTick(TickEvent.RenderTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            GL11.glEnable(GL11.GL_STENCIL_TEST);
-        }
+    public static void onRenderTickPre(RenderFrameEvent.Pre event) {
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+        Stencil.reset();
+    }
+
+    @SubscribeEvent
+    public static void onRenderTickPost(RenderFrameEvent.Post event) {
         Stencil.reset();
     }
 
@@ -332,7 +334,7 @@ public class ClientScreenHandler {
         if (keyCode == 'C' && Interactable.isControl(modifiers) && Interactable.isShift(modifiers) &&
                 Interactable.isAlt(modifiers)) {
             if (!debugToggleActive) {
-                ConfigHolder.INSTANCE.dev.debugUI = !ConfigHolder.INSTANCE.dev.debugUI;
+                ModularUIConfig.GUI_DEBUG_MODE.set(!ModularUIConfig.GUI_DEBUG_MODE.getAsBoolean());
                 debugToggleActive = true;
             }
             return true;
@@ -407,7 +409,8 @@ public class ClientScreenHandler {
             guiGraphics.fillGradient(0, 0, screen.width, screen.height,
                     Color.withAlpha(color, (int) (startAlpha * alpha)),
                     Color.withAlpha(color, (int) (endAlpha * alpha)));
-            MinecraftForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(screen, guiGraphics));
+            //noinspection removal,UnstableApiUsage
+            NeoForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(screen, guiGraphics));
         }
     }
 
@@ -441,7 +444,7 @@ public class ClientScreenHandler {
 
         Stencil.reset();
         muiScreen.getContext().getStencil().push(muiScreen.getScreenArea());
-        mcScreen.renderBackground(graphics);
+        mcScreen.renderBackground(graphics, mouseX, mouseY, partialTicks);
         int x = mcScreen.getGuiLeft();
         int y = mcScreen.getGuiTop();
 
@@ -465,7 +468,8 @@ public class ClientScreenHandler {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.pose().pushPose();
         graphics.pose().translate(x, y, 0);
-        MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(mcScreen, graphics, mouseX, mouseY));
+        //noinspection UnstableApiUsage
+        NeoForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(mcScreen, graphics, mouseX, mouseY));
 
         AbstractContainerMenu menu = mcScreen.getMenu();
         ItemStack draggingItem = acc.getDraggingItem().isEmpty() ? menu.getCarried() : acc.getDraggingItem();
@@ -532,7 +536,7 @@ public class ClientScreenHandler {
     public static void drawDebugScreen(GuiGraphics graphics, @Nullable ModularScreen muiScreen,
                                        @Nullable ModularScreen fallback) {
         fpsCounter.onDraw();
-        if (!ConfigHolder.INSTANCE.dev.debugUI) return;
+        if (!ModularUIConfig.isGuiDebugMode()) return;
         if (muiScreen == null) {
             if (validateGui()) {
                 muiScreen = currentScreen;

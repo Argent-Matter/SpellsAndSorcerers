@@ -10,8 +10,8 @@ import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.Nullable;
 

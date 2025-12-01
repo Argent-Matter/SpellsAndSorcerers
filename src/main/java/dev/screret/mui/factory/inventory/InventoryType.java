@@ -1,12 +1,11 @@
 package dev.screret.mui.factory.inventory;
 
-import dev.screret.mui.utils.NetworkUtils;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
+import dev.screret.mui.network.NetworkUtils;
 import lombok.Getter;
 
 /**
@@ -89,7 +88,7 @@ public abstract class InventoryType<T> {
     public boolean visitAllStackable(Player player, ItemStack stack, InventoryVisitor<T> visitor) {
         visitAll(player, (type, context, index, stackInSlot) -> {
             if ((stackInSlot.isEmpty() && stack.isEmpty()) ||
-                    ItemHandlerHelper.canItemStacksStack(stackInSlot, stack)) {
+                    ItemStack.isSameItemSameComponents(stackInSlot, stack)) {
                 return visitor.visit(type, context, index, stack);
             }
             return false;

@@ -1,11 +1,10 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IStringSyncValue;
-import dev.screret.mui.utils.NetworkUtils;
 
-import net.minecraft.network.FriendlyByteBuf;
-
+import dev.screret.mui.network.NetworkUtils;
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +13,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class StringSyncValue extends ValueSyncHandler<String> implements IStringSyncValue<String> {
+public class StringSyncValue extends ValueSyncHandler<ByteBuf, String> implements IStringSyncValue<ByteBuf, String> {
 
     private final Supplier<String> getter;
     private final Consumer<String> setter;
@@ -42,7 +41,7 @@ public class StringSyncValue extends ValueSyncHandler<String> implements IString
         if (clientGetter == null && serverGetter == null) {
             throw new NullPointerException("Client or server getter must not be null!");
         }
-        if (GTCEu.isClientThread()) {
+        if (ModularUI.isClientThread()) {
             this.getter = clientGetter != null ? clientGetter : serverGetter;
             this.setter = clientSetter != null ? clientSetter : serverSetter;
         } else {
@@ -93,12 +92,12 @@ public class StringSyncValue extends ValueSyncHandler<String> implements IString
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(ByteBuf buffer) {
         NetworkUtils.writeStringSafe(buffer, getValue(), Short.MAX_VALUE - 74);
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(ByteBuf buffer) {
         setValue(NetworkUtils.readStringSafe(buffer), true, false);
     }
 }

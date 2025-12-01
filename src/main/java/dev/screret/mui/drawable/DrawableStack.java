@@ -1,14 +1,14 @@
 package dev.screret.mui.drawable;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IJsonSerializable;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -57,7 +57,7 @@ public class DrawableStack implements IDrawable, IJsonSerializable<DrawableStack
         if (drawables != null && drawables.isJsonArray()) {
             return parseJson(drawables.getAsJsonArray());
         }
-        GTCEu.LOGGER.throwing(
+        ModularUI.LOGGER.throwing(
                 new JsonParseException("DrawableStack json should have an array named 'drawables' or 'children'."));
         return IDrawable.EMPTY;
     }

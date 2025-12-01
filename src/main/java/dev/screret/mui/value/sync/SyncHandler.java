@@ -1,15 +1,13 @@
 package dev.screret.mui.value.sync;
 
 import dev.screret.mui.api.IPacketWriter;
-import dev.screret.mui.common.network.GTNetwork;
-import dev.screret.mui.common.network.packets.ui.SyncHandlerPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.VarInt;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-import io.netty.buffer.Unpooled;
+import dev.screret.mui.network.packets.SyncHandlerPacket;
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
@@ -51,11 +49,12 @@ public abstract class SyncHandler {
      * @param id             an internal denominator to identify this package
      * @param bufferConsumer the package builder
      */
-    public final void syncToClient(int id, @NotNull IPacketWriter bufferConsumer) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-        buffer.writeVarInt(id);
-        bufferConsumer.write(buffer);
-        sendToClient(getSyncManager().getPanelName(), buffer, this);
+    public final void syncToClient(int id, @NotNull IPacketWriter<? super RegistryFriendlyByteBuf> bufferConsumer) {
+        IPacketWriter<? super RegistryFriendlyByteBuf> writer = buffer -> {
+            VarInt.write(buffer, id);
+            bufferConsumer.write(buffer);
+        };
+        sendToClient(getSyncManager().getPanelName(), writer, this);
     }
 
     /**
@@ -64,12 +63,12 @@ public abstract class SyncHandler {
      * @param id             an internal denominator to identify this package
      * @param bufferConsumer the package builder
      */
-    @OnlyIn(Dist.CLIENT)
-    public final void syncToServer(int id, @NotNull IPacketWriter bufferConsumer) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-        buffer.writeVarInt(id);
-        bufferConsumer.write(buffer);
-        sendToServer(getSyncManager().getPanelName(), buffer, this);
+    public final void syncToServer(int id, @NotNull IPacketWriter<? super RegistryFriendlyByteBuf> bufferConsumer) {
+        IPacketWriter<? super RegistryFriendlyByteBuf> writer = buffer -> {
+            VarInt.write(buffer, id);
+            bufferConsumer.write(buffer);
+        };
+        sendToServer(getSyncManager().getPanelName(), writer, this);
     }
 
     /**
@@ -78,14 +77,15 @@ public abstract class SyncHandler {
      * @param id             an internal denominator to identify this package
      * @param bufferConsumer the package builder
      */
-    public final void sync(int id, @NotNull IPacketWriter bufferConsumer) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-        buffer.writeVarInt(id);
-        bufferConsumer.write(buffer);
+    public final void sync(int id, @NotNull IPacketWriter<? super RegistryFriendlyByteBuf> bufferConsumer) {
+        IPacketWriter<? super RegistryFriendlyByteBuf> writer = buffer -> {
+            VarInt.write(buffer, id);
+            bufferConsumer.write(buffer);
+        };
         if (getSyncManager().isClient()) {
-            sendToServer(getSyncManager().getPanelName(), buffer, this);
+            sendToServer(getSyncManager().getPanelName(), writer, this);
         } else {
-            sendToClient(getSyncManager().getPanelName(), buffer, this);
+            sendToClient(getSyncManager().getPanelName(), writer, this);
         }
     }
 
@@ -123,8 +123,7 @@ public abstract class SyncHandler {
      * @param buf package
      */
     @ApiStatus.OverrideOnly
-    @OnlyIn(Dist.CLIENT)
-    public abstract void readOnClient(int id, FriendlyByteBuf buf);
+    public abstract void readOnClient(int id, RegistryFriendlyByteBuf buf);
 
     /**
      * Called when this sync handler receives a packet on server.
@@ -133,7 +132,7 @@ public abstract class SyncHandler {
      * @param buf package
      */
     @ApiStatus.OverrideOnly
-    public abstract void readOnServer(int id, FriendlyByteBuf buf);
+    public abstract void readOnServer(int id, RegistryFriendlyByteBuf buf);
 
     /**
      * Called at least every tick. Use it to compare a cached value to its original and sync it.
@@ -160,22 +159,22 @@ public abstract class SyncHandler {
         return this.syncManager;
     }
 
-    public static void sendToClient(String panel, FriendlyByteBuf buffer, SyncHandler syncHandler) {
-        Objects.requireNonNull(buffer);
+    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+        Objects.requireNonNull(writer);
         Objects.requireNonNull(syncHandler);
         if (!syncHandler.isValid()) {
             throw new IllegalStateException();
         }
-        GTNetwork.sendToPlayer((ServerPlayer) syncHandler.syncManager.getPlayer(),
-                new SyncHandlerPacket(panel, syncHandler.getKey(), false, buffer));
+        PacketDistributor.sendToPlayer((ServerPlayer) syncHandler.syncManager.getPlayer(),
+                new SyncHandlerPacket(panel, syncHandler.getKey(), false, writer));
     }
 
-    public static void sendToServer(String panel, FriendlyByteBuf buffer, SyncHandler syncHandler) {
-        Objects.requireNonNull(buffer);
+    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+        Objects.requireNonNull(writer);
         Objects.requireNonNull(syncHandler);
         if (!syncHandler.isValid()) {
             throw new IllegalStateException();
         }
-        GTNetwork.sendToServer(new SyncHandlerPacket(panel, syncHandler.getKey(), false, buffer));
+        PacketDistributor.sendToServer(new SyncHandlerPacket(panel, syncHandler.getKey(), false, writer));
     }
 }

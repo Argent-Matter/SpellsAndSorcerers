@@ -1,13 +1,13 @@
 package dev.screret.mui.client.screen;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
 import dev.screret.mui.api.XeiSettings;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.integration.xei.XeiState;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.UnmodifiableView;

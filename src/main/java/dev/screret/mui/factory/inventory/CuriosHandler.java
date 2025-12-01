@@ -1,12 +1,12 @@
 package dev.screret.mui.factory.inventory;
 
-import dev.screret.mui.GTCEu;
-import dev.screret.mui.utils.NetworkUtils;
+import dev.screret.mui.ModularUI;
+import dev.screret.mui.network.NetworkUtils;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -29,7 +29,7 @@ public class CuriosHandler extends InventoryType<String> {
 
     @Override
     public boolean isActive() {
-        return GTCEu.Mods.isCuriosLoaded();
+        return ModularUI.Mods.CURIOS.isLoaded();
     }
 
     @Override

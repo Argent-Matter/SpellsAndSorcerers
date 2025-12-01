@@ -4,12 +4,12 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.layout.ILayoutWidget;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.widget.AbstractParentWidget;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.common.mui.GTGuiTextures;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -127,10 +127,10 @@ public class CategoryList extends AbstractParentWidget<IWidget, CategoryList> im
 
         private final List<CategoryList> categories = new ArrayList<>();
 
-        private IDrawable expandedOverlay = GTGuiTextures.MOVE_DOWN.asIcon().size(16, 8)
+        private IDrawable expandedOverlay = GuiTextures.MOVE_DOWN.asIcon().size(16, 8)
                 .alignment(Alignment.CenterRight)
                 .marginRight(4);
-        private IDrawable collapsedOverlay = GTGuiTextures.MOVE_RIGHT.asIcon().size(8, 16)
+        private IDrawable collapsedOverlay = GuiTextures.MOVE_RIGHT.asIcon().size(8, 16)
                 .alignment(Alignment.CenterRight).marginRight(8);
 
         @Override

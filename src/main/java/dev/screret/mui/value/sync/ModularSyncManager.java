@@ -1,18 +1,18 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.widgets.slot.SlotGroup;
 import dev.screret.mui.client.screen.ModularContainerMenu;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -108,12 +108,12 @@ public class ModularSyncManager {
         return this.panelSyncManagerMap.containsKey(panelName);
     }
 
-    public void receiveWidgetUpdate(String panelName, String mapKey, boolean action, int id, FriendlyByteBuf buf) {
+    public void receiveWidgetUpdate(String panelName, String mapKey, boolean action, int id, RegistryFriendlyByteBuf buf) {
         PanelSyncManager psm = this.panelSyncManagerMap.get(panelName);
         if (psm != null) {
             psm.receiveWidgetUpdate(mapKey, action, id, buf);
         } else if (!this.panelHistory.contains(panelName)) {
-            GTCEu.LOGGER.throwing(new IllegalStateException(
+            ModularUI.LOGGER.throwing(new IllegalStateException(
                     "A packet was send to panel '\" + panelName + \"' which was not opened yet!"));
         }
         // else the panel was open at some point
@@ -134,8 +134,8 @@ public class ModularSyncManager {
             return slot.getSlotIndex() >= 0 && slot.getSlotIndex() < 36;
         }
         if (slot instanceof SlotItemHandler slotItemHandler) {
-            IItemHandler iItemHandler = slotItemHandler.getItemHandler();
-            if (iItemHandler instanceof PlayerMainInvWrapper || iItemHandler instanceof PlayerInvWrapper) {
+            IItemHandler itemHandler = slotItemHandler.getItemHandler();
+            if (itemHandler instanceof PlayerMainInvWrapper || itemHandler instanceof PlayerInvWrapper) {
                 return slot.getSlotIndex() >= 0 && slot.getSlotIndex() < 36;
             }
         }

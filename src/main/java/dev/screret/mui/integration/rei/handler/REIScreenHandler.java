@@ -1,11 +1,11 @@
 package dev.screret.mui.integration.rei.handler;
 
-import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
-import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
-import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
-import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
-import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.mui.api.IMuiScreen;
+import dev.screret.mui.api.widget.IGuiElement;
+import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.mui.integration.xei.handlers.IngredientProvider;
+import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.mui.utils.Rectangle;
 
 import net.minecraft.client.gui.screens.Screen;
 
@@ -106,7 +106,7 @@ public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
                 @Override
                 public EntryStack<?> getStack() {
                     if (converted.isEmpty()) return EntryStack.empty();
-                    return converted.get(0);
+                    return converted.getFirst();
                 }
 
                 @Override

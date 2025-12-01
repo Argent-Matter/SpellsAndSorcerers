@@ -1,14 +1,14 @@
 package dev.screret.mui.widgets;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.animation.Animator;
 import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.api.widget.IValueWidget;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.widget.DraggableWidget;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.common.mui.GTGuiTextures;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -98,7 +98,7 @@ public class SortableListWidget<T> extends ListValueWidget<T, SortableListWidget
     public void moveTo(int from, int to) {
         if (this.timeSinceLastMove < 3) return;
         if (from < 0 || to < 0 || from == to) {
-            GTCEu.LOGGER.error("Failed to move element from {} to {}", from, to);
+            ModularUI.LOGGER.error("Failed to move element from {} to {}", from, to);
             return;
         }
         Item<?> child = getTypeChildren().remove(from);
@@ -174,7 +174,7 @@ public class SortableListWidget<T> extends ListValueWidget<T, SortableListWidget
         public Item(T value) {
             this.value = value;
             flex().widthRel(1f).height(18);
-            background(GTGuiTextures.BUTTON);
+            background(GuiTextures.MC_BUTTON);
         }
 
         @Override

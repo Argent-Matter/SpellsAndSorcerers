@@ -1,14 +1,14 @@
 package dev.screret.mui.overlay;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.client.screen.ModularScreen;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 
 import org.jetbrains.annotations.ApiStatus;
 
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @ApiStatus.Experimental
-@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ModularUI.MOD_ID, value = Dist.CLIENT)
 public class OverlayManager {
 
     public static final List<OverlayHandler> overlays = new ArrayList<>();

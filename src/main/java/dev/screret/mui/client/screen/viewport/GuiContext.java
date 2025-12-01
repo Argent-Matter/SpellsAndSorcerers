@@ -11,8 +11,8 @@ import dev.screret.mui.client.screen.ClientScreenHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
@@ -49,7 +49,9 @@ public class GuiContext extends GuiViewportStack {
     @Getter
     private int mouseButton;
     @Getter
-    private double mouseScrollDelta;
+    private double mouseScrollDeltaX;
+    @Getter
+    private double mouseScrollDeltaY;
 
     /* Keyboard states */
     @Getter
@@ -100,8 +102,9 @@ public class GuiContext extends GuiViewportStack {
     }
 
     @ApiStatus.Internal
-    public void updateMouseWheel(double scrollDelta) {
-        this.mouseScrollDelta = scrollDelta;
+    public void updateMouseWheel(double scrollDeltaX, double scrollDeltaY) {
+        this.mouseScrollDeltaX = scrollDeltaX;
+        this.mouseScrollDeltaY = scrollDeltaY;
     }
 
     @ApiStatus.Internal

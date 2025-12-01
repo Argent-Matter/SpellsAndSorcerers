@@ -1,18 +1,24 @@
 package dev.screret.mui.integration.xei.handlers.item;
 
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemEntryList;
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
+import dev.screret.mui.integration.xei.entry.item.ItemEntryList;
+import dev.screret.mui.integration.xei.entry.item.ItemStackList;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class CycleItemEntryHandler implements IItemHandlerModifiable {
 
     @Getter
@@ -32,7 +38,7 @@ public class CycleItemEntryHandler implements IItemHandlerModifiable {
         return unwrapped;
     }
 
-    private static List<ItemStack> getStacksNullable(ItemEntryList list) {
+    private static @Nullable List<ItemStack> getStacksNullable(@Nullable ItemEntryList list) {
         if (list == null) return null;
         return list.getStacks();
     }

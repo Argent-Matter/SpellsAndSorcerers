@@ -229,7 +229,7 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
             throw new IllegalStateException("SyncHandler of type " + type + " is not valid for " +
                     getClass().getName() + ", with key " + this.syncKey);
         }
-        if (this.syncHandler instanceof ValueSyncHandler<?> valueSyncHandler &&
+        if (this.syncHandler instanceof ValueSyncHandler<?, ?> valueSyncHandler &&
                 valueSyncHandler.getChangeListener() == null) {
             valueSyncHandler.setChangeListener(this::markTooltipDirty);
         }

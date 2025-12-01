@@ -10,8 +10,8 @@ import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -92,14 +92,15 @@ public class ScrollArea extends Area {
 
     @OnlyIn(Dist.CLIENT)
     public boolean mouseScroll(GuiContext context) {
-        return this.mouseScroll(context.getMouseX(), context.getMouseY(), context.getMouseScrollDelta(),
+        return this.mouseScroll(context.getMouseX(), context.getMouseY(),
+                context.getMouseScrollDeltaX(), context.getMouseScrollDeltaY(),
                 Screen.hasShiftDown());
     }
 
     /**
      * This method should be invoked when mouse wheel is scrolling
      */
-    public boolean mouseScroll(int x, int y, double scroll, boolean shift) {
+    public boolean mouseScroll(int x, int y, double scrollX, double scrollY, boolean shift) {
         ScrollData data;
         if (this.scrollX != null) {
             data = this.scrollY == null || shift ? this.scrollX : this.scrollY;
@@ -110,7 +111,7 @@ public class ScrollArea extends Area {
             return false;
         }
 
-        int scrollAmount = (int) Math.copySign(data.getScrollSpeed(), scroll);
+        int scrollAmount = (int) Math.copySign(data.getScrollSpeed(), scrollY);
         int scrollTo;
         if (data.isAnimating()) {
             scrollTo = data.getAnimatingTo() - scrollAmount;

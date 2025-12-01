@@ -1,6 +1,6 @@
 package dev.screret.mui;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.widget.IGuiElement;
 
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.Objects;
 public class GuiError {
 
     public static void throwNew(IGuiElement guiElement, Type type, String msg) {
-        if (GTCEu.isClientSide()) {
+        if (ModularUI.isClientSide()) {
             GuiErrorHandler.INSTANCE.pushError(guiElement, type, msg);
         }
     }

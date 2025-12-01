@@ -7,8 +7,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
@@ -31,7 +31,7 @@ public class ContainerScreenWrapper extends AbstractContainerScreen<ModularConta
      *
      * @deprecated Internal use only.
      */
-    @SuppressWarnings("DataFlowIssue")
+    @SuppressWarnings({ "DataFlowIssue", "DeprecatedIsStillUsed" })
     @Deprecated
     @ApiStatus.Internal
     public ContainerScreenWrapper(ModularContainerMenu container, Inventory playerInventory, Component title) {
@@ -45,8 +45,8 @@ public class ContainerScreenWrapper extends AbstractContainerScreen<ModularConta
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics) {
-        handleDrawBackground(guiGraphics, super::renderBackground);
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        handleDrawBackground(guiGraphics, mouseX, mouseY, partialTick, super::renderBackground);
     }
 
     @Override

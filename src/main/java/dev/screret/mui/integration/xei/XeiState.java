@@ -1,6 +1,6 @@
 package dev.screret.mui.integration.xei;
 
-import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
+import dev.screret.mui.client.screen.ModularScreen;
 
 import java.util.function.Predicate;
 

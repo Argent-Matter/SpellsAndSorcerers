@@ -1,15 +1,12 @@
 package dev.screret.motm.common.ui;
 
-import com.gregtechceu.gtceu.api.cover.CoverBehavior;
-import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.mui.base.IPanelHandler;
-import com.gregtechceu.gtceu.api.mui.utils.Alignment;
-import com.gregtechceu.gtceu.api.mui.widgets.ButtonWidget;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import dev.screret.mui.api.IPanelHandler;
+import dev.screret.mui.client.screen.ModularPanel;
+import dev.screret.mui.utils.Alignment;
+import dev.screret.mui.widgets.ButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
 public class MOTMGuis {
@@ -20,28 +17,12 @@ public class MOTMGuis {
         return ModularPanel.defaultPanel(name, width, height);
     }
 
-    public static ModularPanel createPanel(MetaMachine mte, int width, int height) {
-        return createPanel(mte.getDefinition().getId().getPath(), width, height);
-    }
-
-    public static ModularPanel createPanel(CoverBehavior cover, int width, int height) {
-        return createPanel(cover.coverDefinition.getId().getPath(), width, height);
-    }
-
     public static ModularPanel createPanel(ItemStack stack, int width, int height) {
         return createPanel(stack.getDescriptionId(), width, height);
     }
 
     public static ModularPanel createPanel(String name) {
         return ModularPanel.defaultPanel(name, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    }
-
-    public static ModularPanel defaultPanel(MetaMachine machine) {
-        return createPanel(machine.getDefinition().getId().getPath());
-    }
-
-    public static ModularPanel defaultPanel(CoverBehavior cover) {
-        return createPanel(cover.coverDefinition.getId().getPath());
     }
 
     public static ModularPanel defaultPanel(ItemStack stack) {

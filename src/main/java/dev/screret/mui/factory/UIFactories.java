@@ -1,8 +1,6 @@
 package dev.screret.mui.factory;
 
 import dev.screret.mui.api.IUIHolder;
-import dev.screret.mui.common.mui.factory.CoverUIFactory;
-import dev.screret.mui.common.mui.factory.MachineUIFactory;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -24,21 +22,8 @@ public class UIFactories {
         return EntityUIFactory.INSTANCE;
     }
 
-    @Deprecated
-    public static ItemUIFactory item() {
-        return ItemUIFactory.INSTANCE;
-    }
-
     public static PlayerInventoryUIFactory playerInventory() {
         return PlayerInventoryUIFactory.INSTANCE;
-    }
-
-    public static MachineUIFactory machine() {
-        return MachineUIFactory.INSTANCE;
-    }
-
-    public static CoverUIFactory cover() {
-        return CoverUIFactory.INSTANCE;
     }
 
     public static SimpleUIFactory createSimple(ResourceLocation name, IUIHolder<GuiData> holder) {
@@ -54,10 +39,7 @@ public class UIFactories {
         GuiManager.registerFactory(blockEntity());
         GuiManager.registerFactory(sidedBlockEntity());
         GuiManager.registerFactory(entity());
-        GuiManager.registerFactory(item());
         GuiManager.registerFactory(playerInventory());
-        GuiManager.registerFactory(machine());
-        GuiManager.registerFactory(cover());
     }
 
     private UIFactories() {}

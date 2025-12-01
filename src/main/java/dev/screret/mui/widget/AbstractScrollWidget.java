@@ -112,7 +112,7 @@ public abstract class AbstractScrollWidget<I extends IWidget, W extends Abstract
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return this.scroll.mouseScroll(getContext());
     }
 

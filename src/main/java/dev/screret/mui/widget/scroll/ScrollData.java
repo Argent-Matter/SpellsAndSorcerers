@@ -9,8 +9,8 @@ import dev.screret.mui.utils.Interpolation;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import lombok.Setter;

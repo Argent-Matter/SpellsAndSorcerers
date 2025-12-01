@@ -7,8 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,6 @@ public class RichTooltipEvent {
 
     private RichTooltipEvent() {}
 
-    @Cancelable
     public static class Pre extends RenderTooltipEvent.Pre {
 
         @Getter

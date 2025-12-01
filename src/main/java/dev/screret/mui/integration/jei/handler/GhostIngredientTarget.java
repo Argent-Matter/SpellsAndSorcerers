@@ -1,10 +1,9 @@
 package dev.screret.mui.integration.jei.handler;
 
-import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
-
 import net.minecraft.client.renderer.Rect2i;
 
+import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import org.jetbrains.annotations.NotNull;
 

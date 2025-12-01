@@ -1,10 +1,10 @@
 package dev.screret.mui.client.screen;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public abstract class CustomModularScreen extends ModularScreen {
      * Creates a new screen with ModularUI as its owner.
      */
     public CustomModularScreen() {
-        super(GTCEu.MOD_ID);
+        super(ModularUI.MOD_ID);
     }
 
     /**

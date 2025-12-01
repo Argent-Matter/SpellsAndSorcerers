@@ -4,11 +4,11 @@ import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
 import dev.screret.mui.api.widget.IGuiAction;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.value.sync.InteractionSyncHandler;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.SingleChildWidget;
-import dev.screret.mui.common.mui.GTGuiTextures;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public class ButtonWidget<W extends ButtonWidget<W>> extends SingleChildWidget<W
         ButtonWidget<?> buttonWidget = new ButtonWidget<>();
         return buttonWidget.widgetTheme(IThemeApi.CLOSE_BUTTON)
                 .top(4).right(4)
-                .overlay(GTGuiTextures.CROSS_TINY)
+                .overlay(GuiTextures.CROSS_TINY)
                 .onMousePressed((mouseX, mouseY, button) -> {
                     if (button == 0 || button == 1) {
                         buttonWidget.getPanel().closeIfOpen();
@@ -124,9 +124,9 @@ public class ButtonWidget<W extends ButtonWidget<W>> extends SingleChildWidget<W
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
-        return (this.mouseScroll != null && this.mouseScroll.scroll(mouseX, mouseY, delta)) ||
-                (this.syncHandler != null && this.syncHandler.onMouseScroll((int) delta));
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return (this.mouseScroll != null && this.mouseScroll.scroll(mouseX, mouseY, scrollX, scrollY)) ||
+                (this.syncHandler != null && this.syncHandler.onMouseScroll((int) scrollY));
     }
 
     public W onMousePressed(IGuiAction.MousePressed mousePressed) {

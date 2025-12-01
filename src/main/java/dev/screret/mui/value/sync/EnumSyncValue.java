@@ -1,11 +1,12 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.IEnumValue;
 import dev.screret.mui.api.value.sync.IIntSyncValue;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
 
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implements IEnumValue<T>, IIntSyncValue<T> {
+public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T> implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
 
     @Getter
     protected final Class<T> enumClass;
@@ -48,7 +49,7 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implem
         if (clientGetter == null && serverGetter == null) {
             throw new NullPointerException("Client or server getter must not be null!");
         }
-        if (GTCEu.isClientThread()) {
+        if (ModularUI.isClientThread()) {
             this.getter = clientGetter != null ? clientGetter : serverGetter;
             this.setter = clientSetter != null ? clientSetter : serverSetter;
         } else {
@@ -89,13 +90,13 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implem
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeEnum(getValue());
+    public void write(ByteBuf buffer) {
+        VarInt.write(buffer, getValue().ordinal());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
-        setValue(buffer.readEnum(this.enumClass), true, false);
+    public void read(ByteBuf buffer) {
+        setValue(enumClass.getEnumConstants()[VarInt.read(buffer)], true, false);
     }
 
     @Override

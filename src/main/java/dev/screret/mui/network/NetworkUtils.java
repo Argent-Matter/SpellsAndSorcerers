@@ -1,8 +1,10 @@
 package dev.screret.mui.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
 import net.minecraft.world.entity.player.Player;
 
+import dev.screret.mui.ModularUI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.Nullable;
@@ -19,37 +21,37 @@ public class NetworkUtils {
         return player.level().isClientSide;
     }
 
-    public static void writeByteBuf(FriendlyByteBuf writeTo, ByteBuf writeFrom) {
-        writeTo.writeVarInt(writeFrom.readableBytes());
+    public static void writeByteBuf(ByteBuf writeTo, ByteBuf writeFrom) {
+        VarInt.write(writeTo, writeFrom.readableBytes());
         writeTo.writeBytes(writeFrom.slice());
     }
 
-    public static ByteBuf readByteBuf(FriendlyByteBuf buf) {
-        ByteBuf directSliceBuffer = buf.readBytes(buf.readVarInt());
+    public static ByteBuf readByteBuf(ByteBuf buf) {
+        ByteBuf directSliceBuffer = buf.readBytes(VarInt.read(buf));
         return Unpooled.copiedBuffer(directSliceBuffer);
     }
 
-    public static FriendlyByteBuf readFriendlyByteBuf(FriendlyByteBuf buf) {
+    public static FriendlyByteBuf readFriendlyByteBuf(ByteBuf buf) {
         return new FriendlyByteBuf(readByteBuf(buf));
     }
 
-    public static void writeStringSafe(FriendlyByteBuf buffer, String string) {
+    public static void writeStringSafe(ByteBuf buffer, String string) {
         writeStringSafe(buffer, string, Short.MAX_VALUE, false);
     }
 
-    public static void writeStringSafe(FriendlyByteBuf buffer, @Nullable String string, boolean crash) {
+    public static void writeStringSafe(ByteBuf buffer, @Nullable String string, boolean crash) {
         writeStringSafe(buffer, string, Short.MAX_VALUE, crash);
     }
 
-    public static void writeStringSafe(FriendlyByteBuf buffer, @Nullable String string, int maxBytes) {
+    public static void writeStringSafe(ByteBuf buffer, @Nullable String string, int maxBytes) {
         writeStringSafe(buffer, string, maxBytes, false);
     }
 
     private static final int MAX_ENCODED = getMaxEncodedUtfLength(Short.MAX_VALUE);
 
-    public static void writeStringSafe(FriendlyByteBuf buffer, @Nullable String string, int maxBytes, boolean crash) {
+    public static void writeStringSafe(ByteBuf buffer, @Nullable String string, int maxBytes, boolean crash) {
         if (string == null) {
-            buffer.writeVarInt(MAX_ENCODED + 1);
+            VarInt.write(buffer, MAX_ENCODED + 1);
             return;
         }
         maxBytes = Math.min(maxBytes, Short.MAX_VALUE);
@@ -64,16 +66,16 @@ public class NetworkUtils {
             }
             bytes = new byte[maxEncoded];
             System.arraycopy(bytesTest, 0, bytes, 0, maxEncoded);
-            GTCEu.LOGGER.warn("Warning! Synced string exceeds max length!");
+            ModularUI.LOGGER.warn("Warning! Synced string exceeds max length!");
         } else {
             bytes = bytesTest;
         }
-        buffer.writeVarInt(bytes.length);
+        VarInt.write(buffer, bytes.length);
         buffer.writeBytes(bytes);
     }
 
-    public static String readStringSafe(FriendlyByteBuf buffer) {
-        int length = buffer.readVarInt();
+    public static String readStringSafe(ByteBuf buffer) {
+        int length = VarInt.read(buffer);
         if (length > MAX_ENCODED) {
             return null;
         }

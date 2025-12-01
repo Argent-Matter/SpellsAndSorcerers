@@ -1,14 +1,17 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.utils.EqualityTest;
+import dev.screret.mui.utils.serialization.network.IEquals;
 import dev.screret.mui.utils.ICopy;
 import dev.screret.mui.utils.serialization.network.IByteBufAdapter;
-import dev.screret.mui.utils.serialization.network.IByteBufDeserializer;
-import dev.screret.mui.utils.serialization.network.IByteBufSerializer;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
 
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.Collections;
 import java.util.Map;
@@ -16,26 +19,26 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class GenericMapSyncHandler<K, V> extends ValueSyncHandler<Map<K, V>> {
+public class GenericMapSyncHandler<B extends ByteBuf, K, V> extends ValueSyncHandler<B, Map<K, V>> {
 
     private final Supplier<Map<K, V>> getter;
     private final Consumer<Map<K, V>> setter;
-    private final IByteBufDeserializer<K> keyDeserializer;
-    private final IByteBufDeserializer<V> valueDeserializer;
-    private final IByteBufSerializer<K> keySerializer;
-    private final IByteBufSerializer<V> valueSerializer;
-    private final EqualityTest<V> equals;
+    private final StreamDecoder<B, K> keyDeserializer;
+    private final StreamDecoder<B, V> valueDeserializer;
+    private final StreamEncoder<B, K> keySerializer;
+    private final StreamEncoder<B, V> valueSerializer;
+    private final IEquals<V> equals;
     private final ICopy<K> keyCopy;
     private final ICopy<V> valueCopy;
     private final Map<K, V> cache = new Object2ObjectOpenHashMap<>();
 
     public GenericMapSyncHandler(Supplier<Map<K, V>> getter,
                                  Consumer<Map<K, V>> setter,
-                                 IByteBufDeserializer<K> keyDeserializer,
-                                 IByteBufDeserializer<V> valueDeserializer,
-                                 IByteBufSerializer<K> keySerializer,
-                                 IByteBufSerializer<V> valueSerializer,
-                                 EqualityTest<V> equals,
+                                 StreamDecoder<B, K> keyDeserializer,
+                                 StreamDecoder<B, V> valueDeserializer,
+                                 StreamEncoder<B, K> keySerializer,
+                                 StreamEncoder<B, V> valueSerializer,
+                                 IEquals<V> equals,
                                  ICopy<K> keyCopy,
                                  ICopy<V> valueCopy) {
         this.getter = getter;
@@ -44,7 +47,7 @@ public class GenericMapSyncHandler<K, V> extends ValueSyncHandler<Map<K, V>> {
         this.valueDeserializer = valueDeserializer;
         this.keySerializer = keySerializer;
         this.valueSerializer = valueSerializer;
-        this.equals = equals != null ? EqualityTest.wrapNullSafe(equals) : Objects::equals;
+        this.equals = equals != null ? IEquals.wrapNullSafe(equals) : Objects::equals;
         this.keyCopy = keyCopy != null ? keyCopy : ICopy.ofSerializer(keySerializer, keyDeserializer);
         this.valueCopy = valueCopy != null ? valueCopy : ICopy.ofSerializer(valueSerializer, valueDeserializer);;
     }
@@ -60,7 +63,8 @@ public class GenericMapSyncHandler<K, V> extends ValueSyncHandler<Map<K, V>> {
             this.setter.accept(value);
         }
         if (sync) {
-            sync(0, this::write);
+            //noinspection unchecked
+            sync(0, buffer -> this.write((B) buffer));
         }
     }
 
@@ -90,20 +94,20 @@ public class GenericMapSyncHandler<K, V> extends ValueSyncHandler<Map<K, V>> {
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(this.cache.size());
+    public void write(B buffer) {
+        VarInt.write(buffer, this.cache.size());
         for (Map.Entry<K, V> entry : this.cache.entrySet()) {
-            this.keySerializer.serialize(buffer, entry.getKey());
-            this.valueSerializer.serialize(buffer, entry.getValue());
+            this.keySerializer.encode(buffer, entry.getKey());
+            this.valueSerializer.encode(buffer, entry.getValue());
         }
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(B buffer) {
         this.cache.clear();
-        int size = buffer.readVarInt();
+        int size = VarInt.read(buffer);
         for (int i = 0; i < size; i++) {
-            this.cache.put(this.keyDeserializer.deserialize(buffer), this.valueDeserializer.deserialize(buffer));
+            this.cache.put(this.keyDeserializer.decode(buffer), this.valueDeserializer.decode(buffer));
         }
         this.setter.accept(getValue());
     }
@@ -113,89 +117,60 @@ public class GenericMapSyncHandler<K, V> extends ValueSyncHandler<Map<K, V>> {
         return Collections.unmodifiableMap(this.cache);
     }
 
-    public static class Builder<K, V> {
+    @Accessors(fluent = true, chain = true)
+    public static class Builder<B extends ByteBuf, K, V> {
 
+        @Setter
         private Supplier<Map<K, V>> getter;
+        @Setter
         private Consumer<Map<K, V>> setter;
-        private IByteBufDeserializer<K> keyDeserializer;
-        private IByteBufDeserializer<V> valueDeserializer;
-        private IByteBufSerializer<K> keySerializer;
-        private IByteBufSerializer<V> valueSerializer;
-        private EqualityTest<V> equals;
+        @Setter
+        private StreamDecoder<B, K> keyDeserializer;
+        @Setter
+        private StreamDecoder<B, V> valueDeserializer;
+        @Setter
+        private StreamEncoder<B, K> keySerializer;
+        @Setter
+        private StreamEncoder<B, V> valueSerializer;
+        @Setter
+        private IEquals<V> equals;
+        @Setter
         private ICopy<K> keyCopy;
+        @Setter
         private ICopy<V> valueCopy;
 
-        public Builder<K, V> getter(Supplier<Map<K, V>> getter) {
-            this.getter = getter;
-            return this;
-        }
-
-        public Builder<K, V> setter(Consumer<Map<K, V>> setter) {
-            this.setter = setter;
-            return this;
-        }
-
-        public Builder<K, V> keyDeserializer(IByteBufDeserializer<K> keyDeserializer) {
-            this.keyDeserializer = keyDeserializer;
-            return this;
-        }
-
-        public Builder<K, V> valueDeserializer(IByteBufDeserializer<V> valueDeserializer) {
-            this.valueDeserializer = valueDeserializer;
-            return this;
-        }
-
-        public Builder<K, V> keySerializer(IByteBufSerializer<K> keySerializer) {
-            this.keySerializer = keySerializer;
-            return this;
-        }
-
-        public Builder<K, V> valueSerializer(IByteBufSerializer<V> valueSerializer) {
-            this.valueSerializer = valueSerializer;
-            return this;
-        }
-
-        public Builder<K, V> keyAdapter(IByteBufAdapter<K> adapter) {
+        public Builder<B, K, V> keyAdapter(IByteBufAdapter<B, K> adapter) {
             return keyDeserializer(adapter).keySerializer(adapter);
         }
 
-        public Builder<K, V> valueAdapter(IByteBufAdapter<V> adapter) {
+        public Builder<B, K, V> valueAdapter(IByteBufAdapter<B, V> adapter) {
             return valueDeserializer(adapter).valueSerializer(adapter).equals(adapter);
         }
 
-        public Builder<K, V> equals(EqualityTest<V> equals) {
-            this.equals = equals;
-            return this;
-        }
-
-        public Builder<K, V> keyCopy(ICopy<K> keyCopy) {
-            this.keyCopy = keyCopy;
-            return this;
-        }
-
-        public Builder<K, V> immutableKey() {
+        public Builder<B, K, V> immutableKey() {
             return keyCopy(ICopy.immutable());
         }
 
-        public Builder<K, V> valueCopy(ICopy<V> valueCopy) {
-            this.valueCopy = valueCopy;
-            return this;
-        }
-
-        public Builder<K, V> immutableValue() {
+        public Builder<B, K, V> immutableValue() {
             return valueCopy(ICopy.immutable());
         }
 
-        public GenericMapSyncHandler<K, V> build() {
-            if (this.getter == null) throw new NullPointerException("Getter in GenericMapSyncHandler must not be null");
-            if (this.keyDeserializer == null)
+        public GenericMapSyncHandler<B, K, V> build() {
+            if (this.getter == null) {
+                throw new NullPointerException("Getter in GenericMapSyncHandler must not be null");
+            }
+            if (this.keyDeserializer == null) {
                 throw new NullPointerException("Key deserializer in GenericMapSyncHandler must not be null");
-            if (this.valueDeserializer == null)
+            }
+            if (this.valueDeserializer == null) {
                 throw new NullPointerException("Value deserializer in GenericMapSyncHandler must not be null");
-            if (this.keySerializer == null)
+            }
+            if (this.keySerializer == null) {
                 throw new NullPointerException("Key serializer in GenericMapSyncHandler must not be null");
-            if (this.valueSerializer == null)
+            }
+            if (this.valueSerializer == null) {
                 throw new NullPointerException("Value serializer in GenericMapSyncHandler must not be null");
+            }
             return new GenericMapSyncHandler<>(this.getter, this.setter, this.keyDeserializer, this.valueDeserializer,
                     this.keySerializer,
                     this.valueSerializer, this.equals, this.keyCopy, this.valueCopy);

@@ -1,8 +1,8 @@
 package dev.screret.mui.integration.xei.entry.fluid;
 
-import com.gregtechceu.gtceu.integration.xei.entry.EntryList;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-import net.minecraftforge.fluids.FluidStack;
+import dev.screret.mui.integration.xei.entry.EntryList;
 
 import java.util.List;
 

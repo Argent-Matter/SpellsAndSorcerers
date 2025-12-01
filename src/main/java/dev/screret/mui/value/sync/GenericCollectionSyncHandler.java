@@ -1,42 +1,48 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.utils.EqualityTest;
+import dev.screret.mui.utils.serialization.network.IEquals;
 import dev.screret.mui.utils.ICopy;
 import dev.screret.mui.utils.serialization.network.IByteBufAdapter;
-import dev.screret.mui.utils.serialization.network.IByteBufDeserializer;
-import dev.screret.mui.utils.serialization.network.IByteBufSerializer;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
 
+import io.netty.buffer.ByteBuf;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class GenericCollectionSyncHandler<T, C extends Collection<T>> extends ValueSyncHandler<C> {
+public abstract class GenericCollectionSyncHandler<B extends ByteBuf, T, C extends Collection<T>> extends ValueSyncHandler<B, C> {
 
     private final Supplier<C> getter;
     private final Consumer<C> setter;
-    private final IByteBufDeserializer<T> deserializer;
-    private final IByteBufSerializer<T> serializer;
-    private final EqualityTest<T> equals;
+    private final StreamDecoder<B, T> decoder;
+    private final StreamEncoder<B, T> encoder;
+    private final IEquals<T> equals;
     private final ICopy<T> copy;
 
     protected GenericCollectionSyncHandler(@NotNull Supplier<C> getter,
                                            @Nullable Consumer<C> setter,
-                                           @NotNull IByteBufDeserializer<T> deserializer,
-                                           @NotNull IByteBufSerializer<T> serializer,
-                                           @Nullable EqualityTest<T> equals,
+                                           @NotNull StreamDecoder<B, T> decoder,
+                                           @NotNull StreamEncoder<B, T> encoder,
+                                           @Nullable IEquals<T> equals,
                                            @Nullable ICopy<T> copy) {
         this.getter = getter;
         this.setter = setter;
-        this.deserializer = deserializer;
-        this.serializer = serializer;
-        this.equals = equals != null ? EqualityTest.wrapNullSafe(equals) : Objects::equals;
-        this.copy = copy != null ? copy : ICopy.ofSerializer(serializer, deserializer);
+        this.decoder = decoder;
+        this.encoder = encoder;
+        this.equals = equals != null ? IEquals.wrapNullSafe(equals) : Objects::equals;
+        this.copy = copy != null ? copy : ICopy.ofSerializer(encoder, decoder);
     }
 
     @Override
@@ -52,7 +58,8 @@ public abstract class GenericCollectionSyncHandler<T, C extends Collection<T>> e
             this.setter.accept(value);
         }
         if (sync) {
-            sync(0, this::write);
+            //noinspection unchecked
+            sync(0, buffer -> this.write((B) buffer));
         }
     }
 
@@ -74,11 +81,11 @@ public abstract class GenericCollectionSyncHandler<T, C extends Collection<T>> e
     protected abstract boolean didValuesChange(C newValues);
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(B buffer) {
         C c = getValue();
-        buffer.writeVarInt(c.size());
+        VarInt.write(buffer, c.size());
         for (T t : c) {
-            this.serializer.serialize(buffer, t);
+            this.encoder.encode(buffer, t);
         }
     }
 
@@ -89,62 +96,41 @@ public abstract class GenericCollectionSyncHandler<T, C extends Collection<T>> e
         return this.equals.areEqual(a, b);
     }
 
-    protected T deserializeValue(FriendlyByteBuf buffer) {
-        return this.deserializer.deserialize(buffer);
+    protected T deserializeValue(B buffer) {
+        return this.decoder.decode(buffer);
     }
 
     protected T copyValue(T value) {
         return this.copy.createDeepCopy(value);
     }
 
-    public static class Builder<T, C extends Collection<T>, B extends Builder<T, C, B>> {
+    @Accessors(fluent = true, chain = true)
+    public static class Builder<I extends ByteBuf, T, C extends Collection<T>, B extends Builder<I, T, C, B>> {
 
+        @Setter
         protected Supplier<C> getter;
+        @Setter
         protected Consumer<C> setter;
-        protected IByteBufDeserializer<T> deserializer;
-        protected IByteBufSerializer<T> serializer;
-        protected EqualityTest<T> equals;
+        @Setter
+        protected StreamDecoder<I, T> deserializer;
+        @Setter
+        protected StreamEncoder<I, T> serializer;
+        @Setter
+        protected IEquals<T> equals;
+        @Setter
         protected ICopy<T> copy;
 
-        public B getter(Supplier<C> getter) {
-            this.getter = getter;
-            return getSelf();
-        }
-
-        public B setter(Consumer<C> setter) {
-            this.setter = setter;
-            return getSelf();
-        }
-
-        public B deserializer(IByteBufDeserializer<T> deserializer) {
-            this.deserializer = deserializer;
-            return getSelf();
-        }
-
-        public B serializer(IByteBufSerializer<T> serializer) {
-            this.serializer = serializer;
-            return getSelf();
-        }
-
-        // protected, because for sets the objects equals and hash code is used
-        protected B equals(EqualityTest<T> equals) {
-            this.equals = equals;
-            return getSelf();
-        }
-
-        public B adapter(IByteBufAdapter<T> adapter) {
-            return deserializer(adapter).serializer(adapter).equals(adapter);
-        }
-
-        public B copy(ICopy<T> copy) {
-            this.copy = copy;
+        public B adapter(IByteBufAdapter<I, T> adapter) {
+            deserializer(adapter).serializer(adapter).equals(adapter);
             return getSelf();
         }
 
         public B immutableCopy() {
-            return copy(ICopy.immutable());
+            copy(ICopy.immutable());
+            return getSelf();
         }
 
+        @SuppressWarnings("unchecked")
         protected B getSelf() {
             return (B) this;
         }

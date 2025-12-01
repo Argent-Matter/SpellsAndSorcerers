@@ -40,7 +40,7 @@ public interface IGuiAction {
     @FunctionalInterface
     interface MouseScroll extends IGuiAction {
 
-        boolean scroll(double mouseX, double mouseY, double delta);
+        boolean scroll(double mouseX, double mouseY, double scrollX, double scrollY);
     }
 
     @FunctionalInterface

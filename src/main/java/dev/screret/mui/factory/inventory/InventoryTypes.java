@@ -3,18 +3,14 @@ package dev.screret.mui.factory.inventory;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.factory.UIFactories;
 import dev.screret.mui.test.TestItem;
-import dev.screret.mui.common.data.GTCreativeModeTabs;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -23,19 +19,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import static dev.screret.mui.common.registry.GTRegistration.REGISTRATE;
-
 public final class InventoryTypes {
 
+    /*
     public static final ItemEntry<TestItem> TEST_ITEM = REGISTRATE.item("mui_test_item", TestItem::new)
             .tab(GTCreativeModeTabs.ITEM.getKey())
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
             .setData(ProviderType.ITEM_MODEL, NonNullBiConsumer.noop())
             .register();
+    */
 
     @ApiStatus.Internal
     public static void init() {
-        MinecraftForge.EVENT_BUS.addListener(InventoryTypes::onKeyInput);
+        NeoForge.EVENT_BUS.addListener(InventoryTypes::onKeyInput);
     }
 
     @SubscribeEvent

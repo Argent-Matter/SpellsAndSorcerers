@@ -1,14 +1,13 @@
 package dev.screret.mui.client.screen;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.factory.GuiData;
+import dev.screret.mui.network.NetworkUtils;
 import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.widgets.slot.ModularSlot;
 import dev.screret.mui.widgets.slot.SlotGroup;
-import dev.screret.mui.common.data.GTMenuTypes;
 import dev.screret.mui.core.mixins.client.AbstractContainerMenuAccessor;
-import dev.screret.mui.utils.NetworkUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,12 +15,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import org.jetbrains.annotations.*;
@@ -59,12 +56,11 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     private ModularScreen optionalScreen;
 
     public ModularContainerMenu(int containerId) {
-        super(GTMenuTypes.MODULAR_CONTAINER.get(), containerId);
+        super(ModularUI.MODULAR_CONTAINER.get(), containerId);
     }
 
-    public <T extends GuiData> ModularContainerMenu(MenuType<ModularContainerMenu> type, int containerId,
-                                                    Inventory playerInv, @Nullable FriendlyByteBuf data) {
-        super(type, containerId);
+    public <T extends GuiData> ModularContainerMenu(int containerId, Inventory playerInv, @Nullable FriendlyByteBuf data) {
+        this(containerId);
         // TODO: Better integration with menu types for custom containers and screens.
         throw new IllegalArgumentException("Do not open the modular container the forge way. Use an UIFactory!");
     }
@@ -145,7 +141,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     @Override
     public void initializeContents(int stateId, List<ItemStack> items, @NotNull ItemStack carried) {
         if (this.slots.size() != items.size()) {
-            GTCEu.LOGGER.error("Here are {} slots, but expected {}", this.slots.size(), items.size());
+            ModularUI.LOGGER.error("Here are {} slots, but expected {}", this.slots.size(), items.size());
         }
         super.initializeContents(stateId, items, carried);
     }
@@ -166,7 +162,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         if (slot.getSlotGroupName() != null) {
             SlotGroup slotGroup = getSyncManager().getSlotGroup(panelName, slot.getSlotGroupName());
             if (slotGroup == null) {
-                GTCEu.LOGGER.throwing(
+                ModularUI.LOGGER.throwing(
                         new IllegalArgumentException("SlotGroup '" + slot.getSlotGroupName() + "' is not registered!"));
                 return;
             }
@@ -271,7 +267,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                 do {
                     remainder = quickMoveStack(player, slotId);
                     returnable = remainder.copy();
-                } while (!remainder.isEmpty() && ItemHandlerHelper.canItemStacksStack(fromSlot.getItem(), remainder));
+                } while (!remainder.isEmpty() && ItemStack.isSameItemSameComponents(fromSlot.getItem(), remainder));
             } else {
                 Slot clickedSlot = getSlot(slotId);
 
@@ -298,7 +294,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                         clickedSlot.setByPlayer(slotStack);
                         clickedSlot.onTake(player, this.getCarried());
                     } else if (clickedSlot.mayPlace(heldStack)) {
-                        if (ItemStack.isSameItemSameTags(slotStack, heldStack)) {
+                        if (ItemStack.isSameItemSameComponents(slotStack, heldStack)) {
                             int stackCount = mouseButton == LEFT_MOUSE ? heldStack.getCount() : 1;
 
                             if (stackCount > clickedSlot.getMaxStackSize(heldStack) - slotStack.getCount()) {
@@ -314,7 +310,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                             this.setCarried(slotStack);
                         }
                     } else if (heldStack.getMaxStackSize() > 1 &&
-                            ItemStack.isSameItemSameTags(slotStack, heldStack) && !slotStack.isEmpty()) {
+                            ItemStack.isSameItemSameComponents(slotStack, heldStack) && !slotStack.isEmpty()) {
                                 int stackCount = slotStack.getCount();
 
                                 if (stackCount + heldStack.getCount() <= heldStack.getMaxStackSize()) {
@@ -401,7 +397,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                     stack.setCount(stack.getMaxStackSize());
                 }
                 ItemStack remainder = transferItem(slot, stack.copy());
-                if (ItemStack.isSameItemSameTags(remainder, stack)) return ItemStack.EMPTY;
+                if (ItemStack.isSameItemSameComponents(remainder, stack)) return ItemStack.EMPTY;
                 if (base == 0 && remainder.isEmpty()) stack = ItemStack.EMPTY;
                 else stack.setCount(base + remainder.getCount());
                 slot.set(stack);
@@ -422,7 +418,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
             SlotGroup slotGroup = Objects.requireNonNull(toSlot.getSlotGroup());
             if (slotGroup != fromSlotGroup && toSlot.isActive() && toSlot.mayPlace(fromStack)) {
                 ItemStack toStack = toSlot.getItem().copy();
-                if (!fromSlot.isPhantom() && ItemHandlerHelper.canItemStacksStack(fromStack, toStack)) {
+                if (!fromSlot.isPhantom() && ItemStack.isSameItemSameComponents(fromStack, toStack)) {
                     int j = toStack.getCount() + fromStack.getCount();
                     // Math.min(toSlot.getMaxStackSize(), fromStack.getMaxStackSize());
                     int maxSize = toSlot.getMaxStackSize(fromStack);

@@ -1,10 +1,10 @@
 package dev.screret.mui.api;
 
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.drawable.Scrollbar;
 import dev.screret.mui.theme.*;
 import dev.screret.mui.client.screen.ModularScreen;
-import dev.screret.mui.common.mui.GTGuiTextures;
 import dev.screret.mui.utils.serialization.json.JsonBuilder;
 
 import org.jetbrains.annotations.*;
@@ -23,17 +23,17 @@ public interface IThemeApi {
             .register();
 
     WidgetThemeKey<WidgetTheme> PANEL = get().widgetThemeKeyBuilder("panel", WidgetTheme.class)
-            .defaultTheme(WidgetTheme.darkTextNoShadow(176, 166, GTGuiTextures.BACKGROUND))
+            .defaultTheme(WidgetTheme.darkTextNoShadow(176, 166, GuiTextures.MC_BACKGROUND))
             .register();
 
     WidgetThemeKey<WidgetTheme> BUTTON = get().widgetThemeKeyBuilder("button", WidgetTheme.class)
-            .defaultTheme(WidgetTheme.whiteTextShadow(18, 18, GTGuiTextures.MC_BUTTON))
-            .defaultHoverTheme(WidgetTheme.whiteTextShadow(18, 18, GTGuiTextures.MC_BUTTON_HOVERED))
+            .defaultTheme(WidgetTheme.whiteTextShadow(18, 18, GuiTextures.MC_BUTTON))
+            .defaultHoverTheme(WidgetTheme.whiteTextShadow(18, 18, GuiTextures.MC_BUTTON_HOVERED))
             .register();
 
     WidgetThemeKey<WidgetTheme> CLOSE_BUTTON = get().widgetThemeKeyBuilder("closeButton", WidgetTheme.class)
-            .defaultTheme(WidgetTheme.whiteTextShadow(10, 10, GTGuiTextures.MC_BUTTON))
-            .defaultHoverTheme(WidgetTheme.whiteTextShadow(10, 10, GTGuiTextures.MC_BUTTON_HOVERED))
+            .defaultTheme(WidgetTheme.whiteTextShadow(10, 10, GuiTextures.MC_BUTTON))
+            .defaultHoverTheme(WidgetTheme.whiteTextShadow(10, 10, GuiTextures.MC_BUTTON_HOVERED))
             .register();
 
     WidgetThemeKey<WidgetTheme> SCROLLBAR = get().widgetThemeKeyBuilder("scrollbar", WidgetTheme.class)
@@ -41,11 +41,11 @@ public interface IThemeApi {
             .register();
 
     WidgetThemeKey<SlotTheme> ITEM_SLOT = get().widgetThemeKeyBuilder("itemSlot", SlotTheme.class)
-            .defaultTheme(new SlotTheme(GTGuiTextures.SLOT))
+            .defaultTheme(new SlotTheme(GuiTextures.SLOT_ITEM))
             .register();
 
     WidgetThemeKey<SlotTheme> FLUID_SLOT = get().widgetThemeKeyBuilder("fluidSlot", SlotTheme.class)
-            .defaultTheme(new SlotTheme(GTGuiTextures.FLUID_SLOT))
+            .defaultTheme(new SlotTheme(GuiTextures.SLOT_FLUID))
             .register();
 
     WidgetThemeKey<TextFieldTheme> TEXT_FIELD = get().widgetThemeKeyBuilder("textField", TextFieldTheme.class)
@@ -54,8 +54,8 @@ public interface IThemeApi {
 
     WidgetThemeKey<SelectableTheme> TOGGLE_BUTTON = get().widgetThemeKeyBuilder("toggleButton", SelectableTheme.class)
             .defaultTheme(
-                    SelectableTheme.whiteTextShadow(18, 18, GTGuiTextures.MC_BUTTON, GTGuiTextures.MC_BUTTON_DISABLED))
-            .defaultHoverTheme(SelectableTheme.whiteTextShadow(18, 18, GTGuiTextures.MC_BUTTON_HOVERED,
+                    SelectableTheme.whiteTextShadow(18, 18, GuiTextures.MC_BUTTON, GuiTextures.MC_BUTTON_DISABLED))
+            .defaultHoverTheme(SelectableTheme.whiteTextShadow(18, 18, GuiTextures.MC_BUTTON_HOVERED,
                     IDrawable.NONE))
             .register();
 

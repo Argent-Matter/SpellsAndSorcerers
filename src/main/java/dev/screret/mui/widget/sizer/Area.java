@@ -7,10 +7,10 @@ import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.utils.Interpolations;
 import dev.screret.mui.utils.Point;
 import dev.screret.mui.utils.Rectangle;
-import dev.screret.mui.utils.GTMath;
 
 import net.minecraft.util.Mth;
 
+import dev.screret.mui.utils.math.MathHelper;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -508,10 +508,10 @@ public class Area extends Rectangle implements IUnResizeable, IAnimatable<Area> 
                 xBL = stack.transformX(this.x, ey()), xBR = stack.transformX(ex(), ey());
         int yTL = stack.transformY(this.x, this.y), yTR = stack.transformY(ex(), this.y),
                 yBL = stack.transformY(this.x, ey()), yBR = stack.transformY(ex(), ey());
-        int x0 = GTMath.min(xTL, xTR, xBL, xBR);
-        int x1 = GTMath.max(xTL, xTR, xBL, xBR);
-        int y0 = GTMath.min(yTL, yTR, yBL, yBR);
-        int y1 = GTMath.max(yTL, yTR, yBL, yBR);
+        int x0 = MathHelper.min(xTL, xTR, xBL, xBR);
+        int x1 = MathHelper.max(xTL, xTR, xBL, xBR);
+        int y0 = MathHelper.min(yTL, yTR, yBL, yBR);
+        int y1 = MathHelper.max(yTL, yTR, yBL, yBR);
         setPos(x0, y0, x1, y1);
     }
 

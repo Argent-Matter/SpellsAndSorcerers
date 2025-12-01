@@ -10,6 +10,7 @@ import dev.screret.mui.theme.SlotTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.utils.Color;
+import dev.screret.mui.utils.FormattingUtil;
 import dev.screret.mui.utils.MouseData;
 import dev.screret.mui.value.sync.FluidSlotSyncHandler;
 import dev.screret.mui.value.sync.SyncHandler;
@@ -20,7 +21,6 @@ import dev.screret.mui.integration.xei.entry.EntryList;
 import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
 import dev.screret.mui.integration.xei.handlers.IngredientProvider;
-import dev.screret.mui.utils.FormattingUtil;
 import dev.screret.mui.utils.math.SIPrefix;
 
 import net.minecraft.ChatFormatting;
@@ -30,11 +30,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.IFluidTank;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -74,7 +74,7 @@ public class FluidSlot extends Widget<FluidSlot>
         IFluidTank fluidTank = getFluidTank();
         FluidStack fluid = this.syncHandler.getValue();
         if (fluid != null) {
-            tooltip.addLine(IKey.lang(fluid.getDisplayName())).spaceLine(2);
+            tooltip.addLine(IKey.lang(fluid.getHoverName())).spaceLine(2);
         }
         if (this.syncHandler.phantom()) {
             if (fluid != null) {
@@ -224,8 +224,7 @@ public class FluidSlot extends Widget<FluidSlot>
         }
         ItemStack cursorStack = Minecraft.getInstance().player.containerMenu.getCarried();
         if (this.syncHandler.phantom() ||
-                (!cursorStack.isEmpty() &&
-                        cursorStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, null).isPresent())) {
+                (!cursorStack.isEmpty() && cursorStack.getCapability(Capabilities.FluidHandler.ITEM) != null)) {
             MouseData mouseData = MouseData.create(button);
             this.syncHandler.syncToServer(FluidSlotSyncHandler.SYNC_CLICK, mouseData::writeToPacket);
         }
@@ -233,12 +232,12 @@ public class FluidSlot extends Widget<FluidSlot>
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (this.syncHandler.phantom()) {
-            if ((delta > 0 && !this.syncHandler.canFillSlot()) || (delta < 0 && !this.syncHandler.canDrainSlot())) {
+            if ((scrollY > 0 && !this.syncHandler.canFillSlot()) || (scrollY < 0 && !this.syncHandler.canDrainSlot())) {
                 return false;
             }
-            MouseData mouseData = MouseData.create(delta > 0 ? 1 : -1);
+            MouseData mouseData = MouseData.create(scrollY > 0 ? 1 : -1);
             this.syncHandler.syncToServer(FluidSlotSyncHandler.SYNC_SCROLL, mouseData::writeToPacket);
             return true;
         }

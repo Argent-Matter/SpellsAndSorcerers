@@ -1,13 +1,14 @@
 package dev.screret.mui.api.value.sync;
 
 import dev.screret.mui.api.value.IIntValue;
+import io.netty.buffer.ByteBuf;
 
 /**
  * A helper interface for sync values which can be turned into an integer.
  *
  * @param <T> value type
  */
-public interface IIntSyncValue<T> extends IValueSyncHandler<T>, IIntValue<T> {
+public interface IIntSyncValue<B extends ByteBuf, T> extends IValueSyncHandler<B, T>, IIntValue<T> {
 
     @Override
     default void setIntValue(int val) {

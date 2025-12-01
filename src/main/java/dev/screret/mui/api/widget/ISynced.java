@@ -4,6 +4,7 @@ import dev.screret.mui.value.sync.GenericSyncValue;
 import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.value.sync.SyncHandler;
 
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,14 +58,14 @@ public interface ISynced<W extends IWidget> {
         return null;
     }
 
-    default <T> GenericSyncValue<T> castIfTypeGenericElseNull(SyncHandler syncHandler, Class<T> clazz) {
+    default <B extends ByteBuf, T> GenericSyncValue<B, T> castIfTypeGenericElseNull(SyncHandler syncHandler, Class<T> clazz) {
         return castIfTypeGenericElseNull(syncHandler, clazz, null);
     }
 
-    default <T> GenericSyncValue<T> castIfTypeGenericElseNull(SyncHandler syncHandler, Class<T> clazz,
-                                                              @Nullable Consumer<GenericSyncValue<T>> setup) {
-        if (syncHandler instanceof GenericSyncValue<?> genericSyncValue && genericSyncValue.isOfType(clazz)) {
-            GenericSyncValue<T> t = genericSyncValue.cast();
+    default <B extends ByteBuf, T> GenericSyncValue<B, T> castIfTypeGenericElseNull(SyncHandler syncHandler, Class<T> clazz,
+                                                                                @Nullable Consumer<GenericSyncValue<B, T>> setup) {
+        if (syncHandler instanceof GenericSyncValue<?, ?> genericSyncValue && genericSyncValue.isOfType(clazz)) {
+            GenericSyncValue<B, T> t = genericSyncValue.cast();
             if (setup != null) setup.accept(t);
             return t;
         }

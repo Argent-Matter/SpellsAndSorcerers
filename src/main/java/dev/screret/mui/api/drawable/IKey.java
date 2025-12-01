@@ -11,8 +11,8 @@ import dev.screret.mui.utils.serialization.json.JsonHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;

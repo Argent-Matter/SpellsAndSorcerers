@@ -103,5 +103,29 @@ enumExtensions = "META-INF/enum_extensions.json"
     side = "BOTH"
 
 
+[[mods]]
+    modId = "modularui"
+    version = "${version}"
+    displayName = "Modular UI"
+    authors = "GregTech Modern team, Brachy"
+    description='''Modular UI 2 for modern versions'''
+    credits = "Brachy for developing the original library on 1.12, and GregTech Modern team for the port"
+[[mixins]]
+    config = "modularui.mixins.json"
+
+[[dependencies.modularui]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[${neo_version},)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.modularui]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[${minecraft_version}]"
+    ordering = "NONE"
+    side = "BOTH"
+
 #[features.${mod_id}]
 #openGLVersion = "[3.2,)"

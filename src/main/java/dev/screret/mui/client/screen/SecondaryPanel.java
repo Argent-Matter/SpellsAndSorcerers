@@ -5,8 +5,8 @@ import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.widget.WidgetTree;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;

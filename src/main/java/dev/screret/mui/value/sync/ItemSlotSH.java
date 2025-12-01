@@ -3,9 +3,8 @@ package dev.screret.mui.value.sync;
 import dev.screret.mui.widgets.slot.ModularSlot;
 import dev.screret.mui.widgets.slot.PlayerSlotType;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -51,23 +50,23 @@ public class ItemSlotSH extends SyncHandler {
 
     @Override
     public void detectAndSendChanges(boolean init) {
-        ItemStack itemStack = getSlot().getItem();
-        if (itemStack.isEmpty() && this.lastStoredItem.isEmpty()) return;
+        ItemStack stack = getSlot().getItem();
+        if (stack.isEmpty() && this.lastStoredItem.isEmpty()) return;
         boolean onlyAmountChanged = false;
         if (init ||
-                !ItemHandlerHelper.canItemStacksStack(this.lastStoredItem, itemStack) ||
-                (onlyAmountChanged = itemStack.getCount() != this.lastStoredItem.getCount())) {
-            onSlotUpdate(itemStack, onlyAmountChanged, false, init);
+                !ItemStack.isSameItemSameComponents(this.lastStoredItem, stack) ||
+                (onlyAmountChanged = stack.getCount() != this.lastStoredItem.getCount())) {
+            onSlotUpdate(stack, onlyAmountChanged, false, init);
             if (onlyAmountChanged) {
-                this.lastStoredItem.setCount(itemStack.getCount());
+                this.lastStoredItem.setCount(stack.getCount());
             } else {
-                this.lastStoredItem = itemStack.isEmpty() ? ItemStack.EMPTY : itemStack.copy();
+                this.lastStoredItem = stack.isEmpty() ? ItemStack.EMPTY : stack.copy();
             }
             final boolean finalOnlyAmountChanged = onlyAmountChanged;
             final boolean forceSync = false;
-            syncToClient(SYNC_ITEM, buffer -> {
+            syncToClient(SYNC_ITEM, (RegistryFriendlyByteBuf buffer) -> {
                 buffer.writeBoolean(finalOnlyAmountChanged);
-                buffer.writeItem(itemStack);
+                ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, stack);
                 buffer.writeBoolean(init);
                 buffer.writeBoolean(forceSync);
             });
@@ -75,10 +74,10 @@ public class ItemSlotSH extends SyncHandler {
     }
 
     @Override
-    public void readOnClient(int id, FriendlyByteBuf buf) {
+    public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
         if (id == SYNC_ITEM) {
             boolean onlyAmountChanged = buf.readBoolean();
-            this.lastStoredItem = buf.readItem();
+            this.lastStoredItem = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
             onSlotUpdate(this.lastStoredItem, onlyAmountChanged, true, buf.readBoolean());
             if (buf.readBoolean()) {
                 // force sync
@@ -90,7 +89,7 @@ public class ItemSlotSH extends SyncHandler {
     }
 
     @Override
-    public void readOnServer(int id, FriendlyByteBuf buf) {
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
         if (id == SYNC_ENABLED) {
             setEnabled(buf.readBoolean(), false);
         }
@@ -114,9 +113,9 @@ public class ItemSlotSH extends SyncHandler {
         boolean forceSync = true;
         onSlotUpdate(stack, onlyAmountChanged, getSyncManager().isClient(), init);
         this.lastStoredItem = stack.isEmpty() ? ItemStack.EMPTY : stack;
-        syncToClient(SYNC_ITEM, buffer -> {
+        syncToClient(SYNC_ITEM, (RegistryFriendlyByteBuf buffer) -> {
             buffer.writeBoolean(onlyAmountChanged);
-            buffer.writeItem(stack);
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, stack);
             buffer.writeBoolean(init);
             buffer.writeBoolean(forceSync);
         });

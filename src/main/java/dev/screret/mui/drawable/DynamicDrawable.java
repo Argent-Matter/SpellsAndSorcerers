@@ -5,8 +5,8 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 

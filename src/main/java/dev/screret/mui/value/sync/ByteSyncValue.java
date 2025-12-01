@@ -1,18 +1,19 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IByteSyncValue;
 import dev.screret.mui.value.ByteValue;
 
 import net.minecraft.network.FriendlyByteBuf;
 
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class ByteSyncValue extends ValueSyncHandler<Byte> implements IByteSyncValue<Byte> {
+public class ByteSyncValue extends ValueSyncHandler<ByteBuf, Byte> implements IByteSyncValue<ByteBuf, Byte> {
 
     private byte cache;
     private final ByteValue.Supplier getter;
@@ -34,7 +35,7 @@ public class ByteSyncValue extends ValueSyncHandler<Byte> implements IByteSyncVa
         if (clientGetter == null && serverGetter == null) {
             throw new NullPointerException("Client or server getter must not be null!");
         }
-        if (GTCEu.isClientThread()) {
+        if (ModularUI.isClientThread()) {
             this.getter = clientGetter != null ? clientGetter : serverGetter;
             this.setter = clientSetter != null ? clientSetter : serverSetter;
         } else {
@@ -69,12 +70,12 @@ public class ByteSyncValue extends ValueSyncHandler<Byte> implements IByteSyncVa
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(ByteBuf buffer) {
         buffer.writeByte(getByteValue());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(ByteBuf buffer) {
         setByteValue(buffer.readByte(), true, false);
     }
 

@@ -2,9 +2,9 @@ package dev.screret.mui.widgets;
 
 import dev.screret.mui.api.widget.ISynced;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.widget.ParentWidget;
 import dev.screret.mui.widgets.slot.ItemSlot;
-import dev.screret.mui.common.mui.GTGuiTextures;
 
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
@@ -49,14 +49,14 @@ public class SlotGroupWidget extends ParentWidget<SlotGroupWidget> {
         String key = "player";
         for (int i = 0; i < 9; i++) {
             slotGroupWidget.child(slotConsumer.apply(i, new ItemSlot())
-                    .background(GTGuiTextures.SLOT)
+                    .background(GuiTextures.SLOT_ITEM)
                     .syncHandler(key, i)
                     .pos(i * 18, 3 * 18 + 4)
                     .name("slot_" + i));
         }
         for (int i = 0; i < 27; i++) {
             slotGroupWidget.child(slotConsumer.apply(i + 9, new ItemSlot())
-                    .background(GTGuiTextures.SLOT)
+                    .background(GuiTextures.SLOT_ITEM)
                     .syncHandler(key, i + 9)
                     .pos(i % 9 * 18, i / 9 * 18)
                     .name("slot_" + (i + 9)));

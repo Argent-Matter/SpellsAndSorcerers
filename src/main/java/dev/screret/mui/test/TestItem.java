@@ -1,5 +1,6 @@
 package dev.screret.mui.test;
 
+import com.mojang.blaze3d.vertex.*;
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.IUIHolder;
 import dev.screret.mui.api.drawable.IDrawable;
@@ -30,17 +31,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +47,6 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
-
 public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInventoryGuiData<?>> {
 
     public TestItem(Properties properties) {
@@ -62,12 +56,10 @@ public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInvent
 
     @Override
     public ModularPanel buildUI(PlayerInventoryGuiData<?> data, PanelSyncManager syncManager, UISettings settings) {
-        var cap = data.getUsedItemStack().getCapability(ITEM_HANDLER);
-        if (!cap.isPresent() || cap.resolve().isEmpty()) return null;
-        IItemHandler itemHandler = cap.resolve().get();
-        syncManager.registerSlotGroup("mixer_items", 2);
+        IItemHandler itemHandler = data.getUsedItemStack().getCapability(Capabilities.ItemHandler.ITEM);
         if (!(itemHandler instanceof IItemHandlerModifiable ihm)) return null;
 
+        syncManager.registerSlotGroup("mixer_items", 2);
         // if the player slot is the slot with this item, then disallow any interaction
         // if the item is not in the player inventory (bauble for example), then this items slot is not on the screen,
         // and we don't need to limit accessibility
@@ -89,7 +81,7 @@ public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInvent
                                         .slotGroup("mixer_items")
                                         // do not allow putting items which can hold other items into the item
                                         // some mods don't do this on their backpacks, so it won't catch those cases
-                                        .filter(stack -> !stack.getCapability(ITEM_HANDLER).isPresent())))
+                                        .filter(stack -> stack.getCapability(Capabilities.ItemHandler.ITEM) != null)))
                                 .build()
                                 .align(Alignment.TopLeft)))
                 .child(SlotGroupWidget.playerInventory(false)));
@@ -123,19 +115,18 @@ public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInvent
         IDrawable correctedGradient = (context1, x, y, width, height, widgetTheme) -> {
             int points = 500;
             Tesselator tesselator = Tesselator.getInstance();
-            BufferBuilder buffer = tesselator.getBuilder();
+            BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
 
-            buffer.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
             float x0 = x;
             float w = (float) width / points;
             for (int i = 0; i < points; i++) {
                 int color = Color.lerp(color1.getColor(), color2.getColor(), (float) i / points);
                 int r = Color.getRed(color), g = Color.getGreen(color), b = Color.getBlue(color), a = 0xFF;
-                buffer.vertex(x0, y, 0).color(r, g, b, a).endVertex();
-                buffer.vertex(x0, y + height, 0).color(r, g, b, a).endVertex();
+                buffer.addVertex(x0, y, 0).setColor(r, g, b, a);
+                buffer.addVertex(x0, y + height, 0).setColor(r, g, b, a);
                 x0 += w;
             }
-            tesselator.end();
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
         };
 
         ModularPanel panel = new ModularPanel("colors").width(300).coverChildrenHeight().padding(7);
@@ -187,6 +178,7 @@ public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInvent
                         .child(correctedGradient.asWidget().widthRel(1f).height(10)));
     }
 
+    /*
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ICapabilityProvider() {
@@ -201,6 +193,7 @@ public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInvent
             }
         };
     }
+    */
 
     @Override
     public boolean canEquip(SlotContext slotContext, ItemStack stack) {

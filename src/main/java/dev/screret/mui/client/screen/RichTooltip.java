@@ -1,5 +1,6 @@
 package dev.screret.mui.client.screen;
 
+import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.drawable.IRichTextBuilder;
@@ -12,7 +13,6 @@ import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.event.RichTooltipEvent;
 import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.config.ConfigHolder;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -25,10 +25,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -131,8 +131,7 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
 
         var gatherEvent = new RenderTooltipEvent.GatherComponents(stack, screen.width, screen.height,
                 textLines, this.maxWidth);
-        if (MinecraftForge.EVENT_BUS.post(gatherEvent)) {
-            // canceled
+        if (NeoForge.EVENT_BUS.post(gatherEvent).isCanceled()) {
             return;
         }
 
@@ -150,8 +149,7 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
         RichTooltipEvent.Pre event = new RichTooltipEvent.Pre(stack, context.getGraphics(),
                 mouseX, mouseY, screen.width, screen.height,
                 context.getFont(), components, DefaultTooltipPositioner.INSTANCE, copy);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
-            // canceled
+        if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
             return;
         }
         // we are supposed to now use the strings of the event, but we can't properly determine where to put them
@@ -197,7 +195,7 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
 
         Pos pos = this.pos;
         if (pos == null) {
-            pos = ConfigHolder.INSTANCE.client.ui.tooltipPos;
+            pos = ModularUIConfig.getTooltipPos();
         }
         if (pos == Pos.FIXED) {
             return new Rectangle(this.x, this.y, width, height);
@@ -398,7 +396,7 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
         }
         /*
          * TODO fix this JEI compat thing
-         * if (GTCEu.Mods.isJEILoaded()) {
+         * if (ModularUI.Mods.isJEILoaded()) {
          * IShowsRecipeFocuses overlay = (IShowsRecipeFocuses)
          * ModularUIJeiPlugin.getRuntime().getIngredientListOverlay();
          * IClickedIngredient<?> ingredient = overlay.getIngredientUnderMouse(x, y);

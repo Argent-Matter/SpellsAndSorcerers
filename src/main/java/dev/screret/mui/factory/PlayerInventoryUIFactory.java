@@ -1,6 +1,6 @@
 package dev.screret.mui.factory;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IUIHolder;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.factory.inventory.InventoryType;
@@ -10,8 +10,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +32,7 @@ public class PlayerInventoryUIFactory extends AbstractUIFactory<PlayerInventoryG
     }
 
     public void openFromCurios(Player player, String type, int index) {
-        if (!GTCEu.Mods.isCuriosLoaded()) {
+        if (!ModularUI.Mods.CURIOS.isLoaded()) {
             throw new IllegalArgumentException("Can't open UI for curios item when bauble is not loaded!");
         }
         GuiManager.open(
@@ -43,35 +43,35 @@ public class PlayerInventoryUIFactory extends AbstractUIFactory<PlayerInventoryG
         GuiManager.open(this, PlayerInventoryGuiData.of(player, type, context, index), verifyServerSide(player));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void openFromPlayerInventoryClient(int index) {
         GuiManager.openFromClient(this,
                 PlayerInventoryGuiData.of(MCHelper.getPlayer(), InventoryTypes.PLAYER, null, index));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void openFromHandClient(InteractionHand hand) {
         openFromPlayerInventoryClient(
                 hand == InteractionHand.OFF_HAND ? Inventory.SLOT_OFFHAND :
                         MCHelper.getPlayer().getInventory().selected);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void openFromCuriosClient(String type, int index) {
-        if (!GTCEu.Mods.isCuriosLoaded()) {
+        if (!ModularUI.Mods.CURIOS.isLoaded()) {
             throw new IllegalArgumentException("Can't open UI for baubles item when bauble is not loaded!");
         }
         GuiManager.openFromClient(
                 this, PlayerInventoryGuiData.of(MCHelper.getPlayer(), InventoryTypes.CURIOS, type, index));
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public <T> void openClient(InventoryType<T> type, T context, int index) {
         GuiManager.openFromClient(this, PlayerInventoryGuiData.of(MCHelper.getPlayer(), type, context, index));
     }
 
     private PlayerInventoryUIFactory() {
-        super(GTCEu.id("player_inventory"));
+        super(ModularUI.id("player_inventory"));
     }
 
     @Override

@@ -83,7 +83,7 @@ public class InteractableIcon extends DelegateIcon implements Interactable {
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
-        return this.onMouseScrolled != null && this.onMouseScrolled.scroll(mouseX, mouseY, delta);
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return this.onMouseScrolled != null && this.onMouseScrolled.scroll(mouseX, mouseY, scrollX, scrollY);
     }
 }

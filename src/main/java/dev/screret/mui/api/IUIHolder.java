@@ -6,8 +6,8 @@ import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.UISettings;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * An interface to implement on {@link net.minecraft.world.level.block.entity.BlockEntity} or

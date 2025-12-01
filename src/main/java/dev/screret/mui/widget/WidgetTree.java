@@ -1,6 +1,6 @@
 package dev.screret.mui.widget;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.layout.ILayoutWidget;
 import dev.screret.mui.api.widget.ISynced;
@@ -582,7 +582,7 @@ public class WidgetTree {
 
     @ApiStatus.Internal
     public static void resizeInternal(IWidget parent, boolean onOpen) {
-        if (!GTCEu.isClientThread()) return;
+        if (!ModularUI.isClientThread()) return;
 
         long fullTime = Util.getNanos();
 
@@ -598,7 +598,7 @@ public class WidgetTree {
                 MCHelper.getPlayer().sendSystemMessage(Component.literal("MUI: Failed to resize sub tree of widget " +
                         parent + " of screen " + parent.getScreen().toString() + " '. See log for more info."));
             }
-            GTCEu.LOGGER.error("Failed to resize widget. Affected widget tree:");
+            ModularUI.LOGGER.error("Failed to resize widget. Affected widget tree:");
             printTree(parent, INFO_RESIZED_COLLAPSED);
         }
         rawTime = Util.getNanos() - rawTime;
@@ -611,7 +611,7 @@ public class WidgetTree {
 
         if (WidgetTree.logResizeTime) {
             fullTime = Util.getNanos() - fullTime;
-            GTCEu.LOGGER.info("Resized widget tree in {} ns and {} ns for full resize.",
+            ModularUI.LOGGER.info("Resized widget tree in {} ns and {} ns for full resize.",
                     FormattingUtil.formatNumbers(rawTime),
                     FormattingUtil.formatNumbers(fullTime));
         }
@@ -664,7 +664,7 @@ public class WidgetTree {
     public static void printTree(IWidget parent, Predicate<IWidget> test, WidgetInfo additionalInfo) {
         StringBuilder builder = new StringBuilder("Widget tree of ")
                 .append(parent).append('\n');
-        GTCEu.LOGGER.info(widgetTreeToString(builder, parent, test, additionalInfo));
+        ModularUI.LOGGER.info(widgetTreeToString(builder, parent, test, additionalInfo));
     }
 
     public static String widgetTreeToString(IWidget parent) {

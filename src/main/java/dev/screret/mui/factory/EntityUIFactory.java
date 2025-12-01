@@ -1,6 +1,6 @@
 package dev.screret.mui.factory;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IUIHolder;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +17,7 @@ public class EntityUIFactory extends AbstractUIFactory<EntityGuiData> {
     public static final EntityUIFactory INSTANCE = new EntityUIFactory();
 
     protected EntityUIFactory() {
-        super(GTCEu.id("entity"));
+        super(ModularUI.id("entity"));
     }
 
     public <E extends Entity & IUIHolder<EntityGuiData>> void open(Player player, E entity) {

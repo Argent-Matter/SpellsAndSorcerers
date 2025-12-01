@@ -1,16 +1,16 @@
 package dev.screret.mui.integration.rei.handler;
 
-import com.gregtechceu.gtceu.integration.xei.entry.EntryList;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidStackList;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidTagList;
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemTagList;
-import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
-import com.gregtechceu.gtceu.utils.GTMath;
+import dev.screret.mui.integration.xei.entry.EntryList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidTagList;
+import dev.screret.mui.integration.xei.entry.item.ItemStackList;
+import dev.screret.mui.integration.xei.entry.item.ItemTagList;
+import dev.screret.mui.integration.xei.handlers.IngredientProvider;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
+import dev.screret.mui.utils.math.MathHelper;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
@@ -76,12 +76,12 @@ public class REIStackConverter {
                 return null;
             }
             dev.architectury.fluid.FluidStack fluidStack = stack.castValue();
-            return new FluidStack(fluidStack.getFluid(), GTMath.saturatedCast(fluidStack.getAmount()),
-                    fluidStack.getTag());
+            return new FluidStack(fluidStack.getFluid().builtInRegistryHolder(), MathHelper.saturatedCast(fluidStack.getAmount()),
+                    fluidStack.getPatch());
         }
 
         private static dev.architectury.fluid.FluidStack toREIStack(FluidStack stack) {
-            return dev.architectury.fluid.FluidStack.create(stack.getFluid(), stack.getAmount(), stack.getTag());
+            return dev.architectury.fluid.FluidStack.create(stack.getFluid(), stack.getAmount(), stack.getComponentsPatch());
         }
 
         private static EntryIngredient toREIIngredient(Stream<FluidStack> stream) {

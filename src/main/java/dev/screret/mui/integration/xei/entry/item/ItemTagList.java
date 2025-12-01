@@ -2,6 +2,7 @@ package dev.screret.mui.integration.xei.entry.item;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
@@ -21,9 +22,9 @@ public final class ItemTagList implements ItemEntryList {
     @Getter
     private final List<ItemTagEntry> entries = new ArrayList<>();
 
-    public static ItemTagList of(@NotNull TagKey<Item> tag, int amount, @Nullable CompoundTag nbt) {
+    public static ItemTagList of(@NotNull TagKey<Item> tag, int amount, @NotNull DataComponentPatch componentPatch) {
         var list = new ItemTagList();
-        list.add(tag, amount, nbt);
+        list.add(tag, amount, componentPatch);
         return list;
     }
 
@@ -31,8 +32,8 @@ public final class ItemTagList implements ItemEntryList {
         entries.add(entry);
     }
 
-    public void add(@NotNull TagKey<Item> tag, int amount, @Nullable CompoundTag nbt) {
-        add(new ItemTagEntry(tag, amount, nbt));
+    public void add(@NotNull TagKey<Item> tag, int amount, @NotNull DataComponentPatch componentPatch) {
+        add(new ItemTagEntry(tag, amount, componentPatch));
     }
 
     @Override
@@ -47,17 +48,17 @@ public final class ItemTagList implements ItemEntryList {
                 .toList();
     }
 
-    public record ItemTagEntry(@NotNull TagKey<Item> tag, int amount, @Nullable CompoundTag nbt) {
+    public record ItemTagEntry(@NotNull TagKey<Item> tag, int amount, @NotNull DataComponentPatch componentPatch) {
 
         public Stream<ItemStack> stacks() {
             return BuiltInRegistries.ITEM.getTag(tag).map(HolderSet.ListBacked::stream).orElseGet(Stream::empty)
-                    .map(holder -> stackWithTag(holder, amount, nbt));
+                    .map(holder -> stackWithComponents(holder, amount, componentPatch));
         }
     }
 
-    static ItemStack stackWithTag(Holder<Item> holder, int amount, @Nullable CompoundTag nbt) {
+    static ItemStack stackWithComponents(Holder<Item> holder, int amount, @NotNull DataComponentPatch componentPatch) {
         ItemStack stack = new ItemStack(holder.value(), amount);
-        stack.setTag(nbt);
+        stack.applyComponents(componentPatch);
         return stack;
     }
 }

@@ -1,23 +1,22 @@
 package dev.screret.mui.integration.emi.handler;
 
-import com.gregtechceu.gtceu.integration.xei.entry.EntryList;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidStackList;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidTagList;
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemTagList;
-import com.gregtechceu.gtceu.integration.xei.handlers.IngredientProvider;
-import com.gregtechceu.gtceu.utils.GTMath;
-
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
-import dev.emi.emi.api.forge.ForgeEmiStack;
+import dev.emi.emi.api.neoforge.NeoForgeEmiStack;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.screret.mui.integration.xei.entry.EntryList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidTagList;
+import dev.screret.mui.integration.xei.entry.item.ItemStackList;
+import dev.screret.mui.integration.xei.entry.item.ItemTagList;
+import dev.screret.mui.integration.xei.handlers.IngredientProvider;
+import dev.screret.mui.utils.math.MathHelper;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,8 +42,8 @@ public class EmiStackConverter {
             if (key == null || key == Items.AIR) {
                 return null;
             }
-            ItemStack itemStack = new ItemStack(key, GTMath.saturatedCast(stack.getAmount()));
-            itemStack.setTag(stack.getNbt());
+            ItemStack itemStack = new ItemStack(key, MathHelper.saturatedCast(stack.getAmount()));
+            itemStack.applyComponents(stack.getComponentChanges());
             return itemStack;
         }
 
@@ -77,11 +76,12 @@ public class EmiStackConverter {
             if (key == null || key == Fluids.EMPTY) {
                 return null;
             }
-            return new FluidStack(key, GTMath.saturatedCast(stack.getAmount()), stack.getNbt());
+            return new FluidStack(key.builtInRegistryHolder(), MathHelper.saturatedCast(stack.getAmount()),
+                    stack.getComponentChanges());
         }
 
         private static EmiIngredient toEMIIngredient(Stream<FluidStack> stream) {
-            return EmiIngredient.of(stream.map(ForgeEmiStack::of).toList());
+            return EmiIngredient.of(stream.map(NeoForgeEmiStack::of).toList());
         }
 
         @Override

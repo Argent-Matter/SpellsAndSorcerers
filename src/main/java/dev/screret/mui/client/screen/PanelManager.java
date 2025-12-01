@@ -1,6 +1,6 @@
 package dev.screret.mui.client.screen;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.widget.WidgetTree;
@@ -195,7 +195,7 @@ public class PanelManager {
         if (existing == null) {
             this.panelHandlerMap.put(panel.getName(), panelHandler);
         } else if (existing != panelHandler) {
-            GTCEu.LOGGER.error(
+            ModularUI.LOGGER.error(
                     "Tried to open a panel, but a panel handler that opens the same panel already exists. Using existing panel handler!");
             existing.openPanel();
             return;

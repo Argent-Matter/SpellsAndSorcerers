@@ -1,14 +1,14 @@
 package dev.screret.mui.integration.xei.handlers;
 
-import com.gregtechceu.gtceu.api.mui.base.XeiSettings;
-import com.gregtechceu.gtceu.api.mui.base.widget.IGuiElement;
-import com.gregtechceu.gtceu.api.mui.base.widget.IWidget;
-import com.gregtechceu.gtceu.api.mui.drawable.GuiDraw;
-import com.gregtechceu.gtceu.api.mui.utils.Color;
-import com.gregtechceu.gtceu.api.mui.utils.Rectangle;
-import com.gregtechceu.gtceu.api.mui.widget.Widget;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
+import dev.screret.mui.api.XeiSettings;
+import dev.screret.mui.api.widget.IGuiElement;
+import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.drawable.GuiDraw;
+import dev.screret.mui.utils.Color;
 
+import dev.screret.mui.utils.Rectangle;
+import dev.screret.mui.widget.Widget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

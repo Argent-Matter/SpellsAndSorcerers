@@ -1,6 +1,6 @@
 package dev.screret.mui.theme;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
 import dev.screret.mui.utils.*;
@@ -13,9 +13,9 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -44,8 +44,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
     @Override
     protected @NotNull Map<String, List<ResourceLocation>> prepare(ResourceManager resourceManager,
                                                                    ProfilerFiller profiler) {
-        GTCEu.LOGGER.info("Reloading Themes...");
-        MinecraftForge.EVENT_BUS.post(new ReloadThemeEvent.Pre());
+        ModularUI.LOGGER.info("Reloading Themes...");
+        NeoForge.EVENT_BUS.post(new ReloadThemeEvent.Pre());
         ThemeAPI.INSTANCE.onReload();
 
         Map<String, List<ResourceLocation>> themes = new Object2ObjectOpenHashMap<>();
@@ -54,7 +54,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
         for (String namespace : resourceManager.getNamespaces()) {
             profiler.push(namespace);
 
-            for (Resource resource : resourceManager.getResourceStack(new ResourceLocation(namespace, THEMES_PATH))) {
+            for (Resource resource : resourceManager.getResourceStack(ResourceLocation.fromNamespaceAndPath(namespace, THEMES_PATH))) {
                 profiler.push(resource.sourcePackId());
                 themeJsonSources.add(resource.sourcePackId());
 
@@ -62,7 +62,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                 try (InputStream stream = resource.open()) {
                     element = JsonHelper.parse(stream);
                 } catch (Exception e) {
-                    GTCEu.LOGGER.catching(e);
+                    ModularUI.LOGGER.catching(e);
                     continue;
                 }
                 JsonObject definitions;
@@ -73,7 +73,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                 for (Map.Entry<String, JsonElement> entry : definitions.entrySet()) {
                     if (entry.getKey().equals("screens")) {
                         if (!entry.getValue().isJsonObject()) {
-                            GTCEu.LOGGER.error("Theme screen definitions must be an object!");
+                            ModularUI.LOGGER.error("Theme screen definitions must be an object!");
                             continue;
                         }
                         loadScreenThemes(entry.getValue().getAsJsonObject());
@@ -81,11 +81,11 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                     }
                     if (entry.getValue().isJsonObject() || entry.getValue().isJsonArray() ||
                             entry.getValue().isJsonNull()) {
-                        GTCEu.LOGGER.throwing(new JsonParseException("Theme must be a string!"));
+                        ModularUI.LOGGER.throwing(new JsonParseException("Theme must be a string!"));
                         continue;
                     }
                     themes.computeIfAbsent(entry.getKey(), key -> new ArrayList<>())
-                            .add(new ResourceLocation(entry.getValue().getAsString()));
+                            .add(ResourceLocation.parse(entry.getValue().getAsString()));
                 }
                 profiler.pop();
             }
@@ -93,7 +93,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
             profiler.pop();
 
         }
-        GTCEu.LOGGER.info("Found themes.json's at {}", themeJsonSources);
+        ModularUI.LOGGER.info("Found themes.json's at {}", themeJsonSources);
         return themes;
     }
 
@@ -150,7 +150,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
         }
 
         validateJsonScreenThemes();
-        MinecraftForge.EVENT_BUS.post(new ReloadThemeEvent.Post());
+        NeoForge.EVENT_BUS.post(new ReloadThemeEvent.Post());
     }
 
     private static void validateAncestorTree(Map<String, ThemeJson> themeMap) {
@@ -168,21 +168,21 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                 }
                 parent = themeMap.get(parent.parent);
                 if (parent == null) {
-                    GTCEu.LOGGER.error(
+                    ModularUI.LOGGER.error(
                             "Can't find parent '{}' for theme '{}'! All children for '{}' are therefore invalid!",
                             theme.parent, theme.id, theme.id);
                     invalidThemes.addAll(parents);
                     break;
                 }
                 if (parents.contains(parent)) {
-                    GTCEu.LOGGER.error(
+                    ModularUI.LOGGER.error(
                             "Ancestor tree for themes can't be circular! All of the following make a circle or are children of the circle: {}",
                             parents);
                     invalidThemes.addAll(parents);
                     break;
                 }
                 if (invalidThemes.contains(parent)) {
-                    GTCEu.LOGGER.error(
+                    ModularUI.LOGGER.error(
                             "Parent '{}' was found to be invalid before. All following are children of it and are therefore invalid too: {}",
                             theme.parent, parents);
                     invalidThemes.addAll(parents);
@@ -224,7 +224,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
             profiler.pop();
         }
         if (jsons.isEmpty()) {
-            GTCEu.LOGGER.throwing(new JsonParseException("Theme must be a JsonObject!"));
+            ModularUI.LOGGER.throwing(new JsonParseException("Theme must be a JsonObject!"));
             return null;
         }
         return new ThemeJson(id, jsons, override);
@@ -236,7 +236,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                 String theme = entry.getValue().getAsString();
                 ThemeAPI.INSTANCE.jsonScreenThemes.put(entry.getKey(), theme);
             } else {
-                GTCEu.LOGGER.error("Theme screen definitions must be strings!");
+                ModularUI.LOGGER.error("Theme screen definitions must be strings!");
             }
         }
     }
@@ -246,7 +246,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                 .object2ObjectEntrySet().fastIterator(); iterator.hasNext();) {
             Map.Entry<String, String> entry = iterator.next();
             if (!ThemeAPI.INSTANCE.hasTheme(entry.getValue())) {
-                GTCEu.LOGGER.error("Tried to register theme '{}' for screen '{}', but theme does not exist",
+                ModularUI.LOGGER.error("Tried to register theme '{}' for screen '{}', but theme does not exist",
                         entry.getValue(), entry.getKey());
                 iterator.remove();
             }
@@ -374,7 +374,7 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
                     return element.getAsJsonObject();
                 }
                 // incorrect data format
-                GTCEu.LOGGER.warn(
+                ModularUI.LOGGER.warn(
                         "WidgetTheme '{}' of theme '{}' with parent '{}' was found to have an incorrect data format.",
                         key, this.id, this.parent);
             }

@@ -1,9 +1,10 @@
 package dev.screret.mui.api.drawable;
 
+import dev.screret.motm.common.data.util.LangUtil;
 import dev.screret.mui.drawable.text.Spacer;
 import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.data.lang.LangHandler;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -109,7 +110,7 @@ public interface IRichTextBuilder<T extends IRichTextBuilder<T>> {
      * @return this
      */
     default T addMultiLine(String lang) {
-        for (MutableComponent text : LangHandler.getMultiLang(lang)) {
+        for (Component text : LangUtil.getMultiline(lang)) {
             getRichText().addLine(text);
         }
         return getThis();

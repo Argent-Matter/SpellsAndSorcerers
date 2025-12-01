@@ -1,8 +1,8 @@
 package dev.screret.mui.utils;
 
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import lombok.Setter;

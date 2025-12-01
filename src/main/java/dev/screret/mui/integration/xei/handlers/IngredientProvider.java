@@ -1,7 +1,7 @@
 package dev.screret.mui.integration.xei.handlers;
 
-import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.integration.xei.entry.EntryList;
+
+import dev.screret.mui.integration.xei.entry.EntryList;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +10,7 @@ import java.util.function.UnaryOperator;
 
 /**
  * An interface for recipe viewers to get the ingredient from a widget to show recipes for example.
- * Implement this on {@link com.gregtechceu.gtceu.api.mui.base.widget.IWidget}.
+ * Implement this on {@link dev.screret.mui.api.widget.IWidget}.
  * No further registration needed.
  *
  * @param <I> type of the ingredient
@@ -25,10 +25,6 @@ public interface IngredientProvider<I> {
 
     default float chance() {
         return 1.0f;
-    }
-
-    default IO ingredientIO() {
-        return null;
     }
 
     /**

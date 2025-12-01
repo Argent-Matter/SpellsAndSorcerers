@@ -1,6 +1,6 @@
 package dev.screret.mui.api;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -9,5 +9,5 @@ import org.jetbrains.annotations.NotNull;
 public interface ISyncedAction {
 
     @ApiStatus.OverrideOnly
-    void invoke(@NotNull FriendlyByteBuf packet);
+    void invoke(@NotNull RegistryFriendlyByteBuf packet);
 }

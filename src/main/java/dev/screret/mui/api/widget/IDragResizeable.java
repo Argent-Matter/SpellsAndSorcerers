@@ -1,8 +1,9 @@
 package dev.screret.mui.api.widget;
 
+import net.minecraft.client.gui.screens.Screen;
+
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.utils.GTUtil;
 
 /**
  * Implement this interface on a {@link IWidget} to allow it being resized by dragging the edges similar to windows.
@@ -83,7 +84,7 @@ public interface IDragResizeable {
      */
     static void applyDrag(IDragResizeable resizeable, IWidget widget, ResizeDragArea dragArea, Area startArea, int dx,
                           int dy) {
-        int keepPosFactor = resizeable.keepPosOnDragResize() || GTUtil.isShiftDown() ? 2 : 1;
+        int keepPosFactor = resizeable.keepPosOnDragResize() || Screen.hasShiftDown() ? 2 : 1;
         if (dx != 0) {
             if (dragArea.left) {
                 int s = startArea.width - dx * keepPosFactor;

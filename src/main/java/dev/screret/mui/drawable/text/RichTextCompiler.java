@@ -1,6 +1,6 @@
 package dev.screret.mui.drawable.text;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IIcon;
 import dev.screret.mui.api.drawable.IKey;
@@ -102,7 +102,7 @@ public class RichTextCompiler {
                 if (icon1.getHeight() <= 0) icon1.height(defaultSize);
             }
             if (icon.getWidth() > this.maxWidth) {
-                GTCEu.LOGGER.warn("Icon is wider than max width");
+                ModularUI.LOGGER.warn("Icon is wider than max width");
             }
             checkNewLine(icon.getWidth());
             addLineElement(icon);

@@ -1,6 +1,6 @@
 package dev.screret.mui.factory;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IUIHolder;
 import dev.screret.mui.api.MCHelper;
 
@@ -9,8 +9,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class BlockEntityUIFactory extends AbstractUIFactory<PosGuiData> {
     public static final BlockEntityUIFactory INSTANCE = new BlockEntityUIFactory();
 
     private BlockEntityUIFactory() {
-        super(GTCEu.id("block_entity"));
+        super(ModularUI.id("block_entity"));
     }
 
     public <T extends BlockEntity & IUIHolder<PosGuiData>> void open(Player player, T blockEntity) {

@@ -1,11 +1,10 @@
 package dev.screret.motm.common.ui;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.mui.base.GuiAxis;
-import com.gregtechceu.gtceu.api.mui.drawable.ColorType;
-import com.gregtechceu.gtceu.api.mui.drawable.TabTexture;
-import com.gregtechceu.gtceu.api.mui.drawable.UITexture;
+import dev.screret.motm.MagicOfTheMind;
+import dev.screret.mui.api.GuiAxis;
+import dev.screret.mui.drawable.ColorType;
+import dev.screret.mui.drawable.TabTexture;
+import dev.screret.mui.drawable.UITexture;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +48,7 @@ public class MOTMGuiTextures {
 
     // BACKGROUNDS
     public static final UITexture BACKGROUND = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/background.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/background.png")
             .imageSize(16, 16)
             .adaptable(4)
             .name(IDs.STANDARD_BACKGROUND)
@@ -57,7 +56,7 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture BACKGROUND_POPUP = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/background_popup.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/background_popup.png")
             .imageSize(195, 136)
             .adaptable(4)
             .name(IDs.COVER_BACKGROUND)
@@ -65,14 +64,14 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture BACKGROUND_TITLE = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/background.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/background.png")
             .imageSize(16, 16)
             .adaptable(4)
             .subAreaUV(0, 0, 1f, .75f)
             .build();
 
     public static final UITexture BACKGROUND_INVERSE = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/background_inverse.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/background_inverse.png")
             .imageSize(16, 16)
             .adaptable(3)
             .name(IDs.STANDARD_BACKGROUND_INVERSE)
@@ -80,14 +79,14 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture BACKGROUND_BRONZE = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/background_bronze.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/background_bronze.png")
             .imageSize(176, 166)
             .adaptable(3)
             .name(IDs.BRONZE_BACKGROUND)
             .build();
 
     public static final UITexture BACKGROUND_STEEL = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/background_steel.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/background_steel.png")
             .imageSize(176, 166)
             .adaptable(3)
             .name(IDs.STEEL_BACKGROUND)
@@ -95,7 +94,7 @@ public class MOTMGuiTextures {
 
     // todo move to textures/gui/base
     public static final UITexture BACKGROUND_PRIMITIVE = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/primitive/primitive_background.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/primitive/primitive_background.png")
             .imageSize(176, 166)
             .adaptable(3)
             .name(IDs.PRIMITIVE_BACKGROUND)
@@ -105,18 +104,18 @@ public class MOTMGuiTextures {
 
     // DISPLAYS
     public static final UITexture DISPLAY = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/display.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/display.png")
             .imageSize(182, 117)
             .canApplyTheme()
             .build();
 
     public static final UITexture DISPLAY_BRONZE = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/display_bronze.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/display_bronze.png")
             .imageSize(162, 121)
             .build();
 
     public static final UITexture DISPLAY_STEEL = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/display_steel.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/display_steel.png")
             .imageSize(162, 121)
             .adaptable(1)
             .build();
@@ -125,7 +124,7 @@ public class MOTMGuiTextures {
 
     // SLOTS
     public static final UITexture SLOT = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/slot.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/slot.png")
             .imageSize(18, 18)
             .adaptable(1)
             .name(IDs.STANDARD_SLOT)
@@ -133,14 +132,14 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture SLOT_BRONZE = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/slot_bronze.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/slot_bronze.png")
             .imageSize(18, 18)
             .adaptable(1)
             .name(IDs.BRONZE_SLOT)
             .build();
 
     public static final UITexture SLOT_STEEL = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/slot_steel.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/slot_steel.png")
             .imageSize(18, 18)
             .adaptable(1)
             .name(IDs.STEEL_SLOT)
@@ -148,14 +147,14 @@ public class MOTMGuiTextures {
 
     // todo move to textures/gui/base
     public static final UITexture SLOT_PRIMITIVE = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/primitive/primitive_slot.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/primitive/primitive_slot.png")
             .imageSize(18, 18)
             .adaptable(1)
             .name(IDs.PRIMITIVE_SLOT)
             .build();
 
     public static final UITexture FLUID_SLOT = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/fluid_slot.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/fluid_slot.png")
             .imageSize(18, 18)
             .adaptable(1)
             .name(IDs.STANDARD_FLUID_SLOT)
@@ -399,7 +398,7 @@ public class MOTMGuiTextures {
     // BUTTONS
 
     public static final UITexture BUTTON = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/button.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/button.png")
             .imageSize(32, 32)
             .adaptable(2)
             .name(IDs.STANDARD_BUTTON)
@@ -425,7 +424,7 @@ public class MOTMGuiTextures {
     public static final UITexture BUTTON_PERCENT = fullImage("textures/gui/overlay/mode_percent.png");
 
     public static final UITexture BUTTON_DISTINCT = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/button_distinct_buses.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/button_distinct_buses.png")
             .subAreaXYWH(0, 0, 16, 16)
             .build();
 
@@ -520,12 +519,12 @@ public class MOTMGuiTextures {
     // more custom progress bars
     // todo these boiler empty bars can probably be replaced by using a resized steam slot texture
     public static final UITexture PROGRESS_BAR_BOILER_EMPTY_BRONZE = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/progress_bar/progress_bar_boiler_empty_bronze.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/progress_bar/progress_bar_boiler_empty_bronze.png")
             .imageSize(10, 54)
             .adaptable(1)
             .build();
     public static final UITexture PROGRESS_BAR_BOILER_EMPTY_STEEL = new UITexture.Builder()
-            .location(GTCEu.MOD_ID, "textures/gui/progress_bar/progress_bar_boiler_empty_steel.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/progress_bar/progress_bar_boiler_empty_steel.png")
             .imageSize(10, 54)
             .adaptable(1)
             .build();
@@ -647,13 +646,13 @@ public class MOTMGuiTextures {
     public static final UITexture CURSOR = fullImage("textures/gui/icon/mui2/cursor.png");
 
     public static final UITexture MUI_LOGO = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/icon/modular_ui_logo.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/icon/modular_ui_logo.png")
             .imageSize(603, 603)
             .name("logo")
             .build();
 
     public static final UITexture MC_BUTTON = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/mc_button.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/mc_button.png")
             .imageSize(16, 32) // texture is 32x64, but this looks nicer
             .subAreaUV(0f, 0f, 1f, 0.5f)
             .adaptable(2).tiled()
@@ -662,14 +661,14 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture CYCLE_BUTTON = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/button_distribution_mode.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/button_distribution_mode.png")
             .imageSize(20, 60)
             .name("cycle")
             .build();
     // 16, 48, 16, 16, true);
 
     public static final UITexture MC_BUTTON_PRESSED = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/mc_button.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/mc_button.png")
             .imageSize(16, 32)
             .subAreaUV(0f, 0.5f, 1f, 1f)
             .adaptable(2).tiled()
@@ -678,7 +677,7 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture MC_BUTTON_HOVERED = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/mc_button_hovered.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/mc_button_hovered.png")
             .imageSize(16, 32)
             .subAreaUV(0f, 0f, 1f, 0.5f)
             .adaptable(2).tiled()
@@ -686,7 +685,7 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture MC_BUTTON_HOVERED_PRESSED = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/mc_button_hovered.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/mc_button_hovered.png")
             .imageSize(16, 32)
             .subAreaUV(0f, 0.5f, 1f, 1f)
             .adaptable(2).tiled()
@@ -694,7 +693,7 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture MC_BUTTON_DISABLED = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/widget/mc_button_disabled.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/widget/mc_button_disabled.png")
             .imageSize(16, 16)
             .subAreaUV(0f, 0f, 1f, 0.5f)
             .adaptable(1).tiled()
@@ -702,14 +701,14 @@ public class MOTMGuiTextures {
             .build();
 
     public static final UITexture MUI_DISPLAY = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/mui_display.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/mui_display.png")
             .imageSize(143, 75)
             .adaptable(2)
             .name("display")
             .build();
 
     public static final UITexture MUI_DISPLAY_SMALL = UITexture.builder()
-            .location(GTCEu.MOD_ID, "textures/gui/base/mui_display_small.png")
+            .location(MagicOfTheMind.MODID, "textures/gui/base/mui_display_small.png")
             .imageSize(18, 18)
             .adaptable(1)
             .name("display_small")
@@ -745,7 +744,7 @@ public class MOTMGuiTextures {
     }
 
     private static UITexture fullImage(String path, ColorType colorType) {
-        return UITexture.fullImage(GTCEu.MOD_ID, path, colorType);
+        return UITexture.fullImage(MagicOfTheMind.MODID, path, colorType);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -761,7 +760,7 @@ public class MOTMGuiTextures {
         for (int indexX = 0; indexX < countX; indexX++) {
             for (int indexY = 0; indexY < countY; indexY++) {
                 slices[(indexX * countX) + indexY] = UITexture.builder()
-                        .location(GTCEu.MOD_ID, path)
+                        .location(MagicOfTheMind.MODID, path)
                         .imageSize(imageWidth, imageHeight)
                         .colorType(colorType)
                         .subAreaXYWH(indexX * sliceWidth, indexY * sliceHeight, sliceWidth, sliceHeight)
@@ -785,18 +784,9 @@ public class MOTMGuiTextures {
 
     private static UITexture progressBar(String path, int width, int height, ColorType colorType) {
         UITexture.Builder builder = new UITexture.Builder()
-                .location(GTCEu.MOD_ID, path)
+                .location(MagicOfTheMind.MODID, path)
                 .imageSize(width, height)
                 .colorType(colorType);
         return builder.build();
-    }
-
-    // todo steam logos? multi indicator blinking logos?
-    public static @NotNull UITexture getLogo(MOTMGuiTheme theme) {
-        if (theme != null) {
-            UITexture logo = theme.getLogo();
-            if (logo != null) return logo;
-        }
-        return GTValues.XMAS.getAsBoolean() ? GREGTECH_LOGO_XMAS : GREGTECH_LOGO;
     }
 }

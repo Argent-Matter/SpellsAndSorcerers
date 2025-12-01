@@ -1,11 +1,10 @@
 package dev.screret.mui.factory;
 
-import dev.screret.mui.utils.NetworkUtils;
-
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import dev.screret.mui.network.NetworkUtils;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -14,9 +13,8 @@ import java.util.Objects;
  * This class and subclasses are holding necessary data to find the exact same GUI on client and server.
  * For example, if the GUI was opened by right-clicking a BlockEntity, then this data needs a world and a block pos.
  * <p>
- * Also see {@link PosGuiData} (useful for BlockEntities), {@link SidedPosGuiData} (useful for covers from GregTech) and
- * {@link HandGuiData} (useful for guis opened by interacting with an item in the players hand) for default
- * implementations.
+ * Also see {@link PosGuiData} (useful for BlockEntities) and {@link SidedPosGuiData} (useful for covers from GregTech)
+ * for default implementations.
  * </p>
  */
 public class GuiData {

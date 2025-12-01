@@ -99,9 +99,9 @@ public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextB
     }
 
     @Override
-    public boolean onMouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (getHoveredElement() instanceof Interactable interactable) {
-            return interactable.onMouseScrolled(mouseX, mouseY, delta);
+            return interactable.onMouseScrolled(mouseX, mouseY, scrollX, scrollY);
         }
         return false;
     }

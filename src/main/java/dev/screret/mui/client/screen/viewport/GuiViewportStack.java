@@ -238,7 +238,7 @@ public class GuiViewportStack implements IViewportStack {
     @Override
     public void applyTo(PoseStack poseStack) {
         if (this.top == null) return;
-        poseStack.mulPoseMatrix(this.top.getMatrix());
+        poseStack.mulPose(this.top.getMatrix());
     }
 
     @Nullable

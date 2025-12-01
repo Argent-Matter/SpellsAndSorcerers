@@ -1,5 +1,6 @@
 package dev.screret.mui.widgets;
 
+import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.value.IDoubleValue;
 import dev.screret.mui.drawable.UITexture;
 import dev.screret.mui.theme.WidgetTheme;
@@ -10,7 +11,6 @@ import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.config.ConfigHolder;
 
 import net.minecraft.util.Mth;
 
@@ -105,7 +105,7 @@ public class ProgressWidget extends Widget<ProgressWidget> {
     }
 
     public float getProgressUV(float uv) {
-        if (ConfigHolder.INSTANCE.client.ui.smoothProgressBar) {
+        if (ModularUIConfig.isSmoothProgressBars()) {
             return uv;
         }
         return (float) (Math.floor(uv * this.imageSize) / this.imageSize);

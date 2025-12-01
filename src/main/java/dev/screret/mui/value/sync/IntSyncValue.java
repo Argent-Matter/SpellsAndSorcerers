@@ -1,12 +1,14 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IDoubleSyncValue;
 import dev.screret.mui.api.value.sync.IIntSyncValue;
 import dev.screret.mui.api.value.sync.IStringSyncValue;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
 
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +17,8 @@ import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-public class IntSyncValue extends ValueSyncHandler<Integer>
-                          implements IIntSyncValue<Integer>, IDoubleSyncValue<Integer>, IStringSyncValue<Integer> {
+public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
+                          implements IIntSyncValue<ByteBuf, Integer>, IDoubleSyncValue<ByteBuf, Integer>, IStringSyncValue<ByteBuf, Integer> {
 
     private int cache;
     private final IntSupplier getter;
@@ -44,7 +46,7 @@ public class IntSyncValue extends ValueSyncHandler<Integer>
         if (clientGetter == null && serverGetter == null) {
             throw new NullPointerException("Client or server getter must not be null!");
         }
-        if (GTCEu.isClientThread()) {
+        if (ModularUI.isClientThread()) {
             this.getter = clientGetter != null ? clientGetter : serverGetter;
             this.setter = clientSetter != null ? clientSetter : serverSetter;
         } else {
@@ -105,13 +107,13 @@ public class IntSyncValue extends ValueSyncHandler<Integer>
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(this.cache);
+    public void write(ByteBuf buffer) {
+        VarInt.write(buffer, this.cache);
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
-        setIntValue(buffer.readVarInt(), true, false);
+    public void read(ByteBuf buffer) {
+        setIntValue(VarInt.read(buffer), true, false);
     }
 
     @Override

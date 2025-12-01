@@ -1,6 +1,6 @@
 package dev.screret.mui.schema;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.utils.BlockPosUtil;
 import dev.screret.mui.utils.fakelevel.SchemaLevel;
 
@@ -217,9 +217,9 @@ public class ArraySchema implements ISchema {
                 }
             }
             if (!errors.isEmpty()) {
-                GTCEu.LOGGER.error("Error validating ArrayScheme BlockArray:");
+                ModularUI.LOGGER.error("Error validating ArrayScheme BlockArray:");
                 for (String e : errors) {
-                    GTCEu.LOGGER.error("  - {}", e);
+                    ModularUI.LOGGER.error("  - {}", e);
                 }
                 throw new IllegalArgumentException("The ArraySchema builder was misconfigured. See message above.");
             }

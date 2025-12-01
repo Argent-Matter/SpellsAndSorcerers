@@ -57,7 +57,7 @@ public class SequentialAnimator extends BaseAnimator<SequentialAnimator> impleme
             if (!animator.isAnimating()) {
                 // animator has finished
                 this.currentIndex += getDirection();
-                // GTCEu.LOGGER.info("Finished {}th animator", this.currentIndex);
+                // ModularUI.LOGGER.info("Finished {}th animator", this.currentIndex);
                 if (this.currentIndex >= this.animators.size() || this.currentIndex < 0) {
                     // whole sequence has finished
                     stop(false);

@@ -7,8 +7,8 @@ import dev.screret.mui.widget.sizer.Box;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;

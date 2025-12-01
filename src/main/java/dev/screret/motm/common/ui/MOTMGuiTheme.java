@@ -1,20 +1,17 @@
 package dev.screret.motm.common.ui;
 
-import com.gregtechceu.gtceu.api.cover.IMuiCover;
-import com.gregtechceu.gtceu.api.mui.base.ITheme;
-import com.gregtechceu.gtceu.api.mui.base.IThemeApi;
-import com.gregtechceu.gtceu.api.mui.drawable.UITexture;
-import com.gregtechceu.gtceu.api.mui.theme.ReloadThemeEvent;
-import com.gregtechceu.gtceu.api.mui.theme.WidgetTheme;
-import com.gregtechceu.gtceu.api.mui.theme.WidgetThemeKey;
-import com.gregtechceu.gtceu.api.mui.utils.Color;
-import com.gregtechceu.gtceu.client.mui.screen.RichTooltip;
-import com.gregtechceu.gtceu.config.ConfigHolder;
-import com.gregtechceu.gtceu.utils.serialization.json.JsonBuilder;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
+import dev.screret.mui.api.ITheme;
+import dev.screret.mui.api.IThemeApi;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.drawable.UITexture;
+import dev.screret.mui.theme.ReloadThemeEvent;
+import dev.screret.mui.theme.WidgetTheme;
+import dev.screret.mui.theme.WidgetThemeKey;
+import dev.screret.mui.utils.Color;
+import dev.screret.mui.utils.serialization.json.JsonBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,42 +28,6 @@ public class MOTMGuiTheme {
             .defaultTheme(new WidgetTheme(0, 0, null, Color.WHITE.main, 0x404040, false, 0))
             .defaultHoverTheme(null)
             .register();
-
-    public static final MOTMGuiTheme STANDARD = templateBuilder("gregtech_standard")
-            .panel(MOTMGuiTextures.IDs.STANDARD_BACKGROUND)
-            .itemSlot(MOTMGuiTextures.IDs.STANDARD_SLOT)
-            .fluidSlot(MOTMGuiTextures.IDs.STANDARD_FLUID_SLOT)
-            .color(ConfigHolder.INSTANCE.client.ui.getDefaultUIColor())
-            .button(MOTMGuiTextures.IDs.STANDARD_BUTTON)
-            .simpleToggleButton(MOTMGuiTextures.IDs.STANDARD_BUTTON,
-                    MOTMGuiTextures.IDs.STANDARD_SLOT,
-                    ConfigHolder.INSTANCE.client.ui.getDefaultUIColor())
-            .build();
-
-    public static final MOTMGuiTheme COVER = templateBuilder("gregtech_cover")
-            .panel(MOTMGuiTextures.IDs.COVER_BACKGROUND)
-            .itemSlot(MOTMGuiTextures.IDs.STANDARD_SLOT)
-            .fluidSlot(MOTMGuiTextures.IDs.STANDARD_FLUID_SLOT)
-            .color(ConfigHolder.INSTANCE.client.ui.getDefaultUIColor())
-            .textColor(IMuiCover.UI_TEXT_COLOR)
-            .build();
-
-    // TODO Multiblock theme for display texture, logo changes
-
-    public static final MOTMGuiTheme BRONZE = templateBuilder("gregtech_bronze")
-            .panel(MOTMGuiTextures.IDs.BRONZE_BACKGROUND)
-            .itemSlot(MOTMGuiTextures.IDs.BRONZE_SLOT)
-            .build();
-
-    public static final MOTMGuiTheme STEEL = templateBuilder("gregtech_steel")
-            .panel(MOTMGuiTextures.IDs.STEEL_BACKGROUND)
-            .itemSlot(MOTMGuiTextures.IDs.STEEL_SLOT)
-            .build();
-
-    public static final MOTMGuiTheme PRIMITIVE = templateBuilder("gregtech_primitive")
-            .panel(MOTMGuiTextures.IDs.PRIMITIVE_BACKGROUND)
-            .itemSlot(MOTMGuiTextures.IDs.PRIMITIVE_SLOT)
-            .build();
 
     private final String themeId;
 
@@ -105,7 +66,7 @@ public class MOTMGuiTheme {
     }
 
     public static void registerThemes() {
-        MinecraftForge.EVENT_BUS.register(MOTMGuiTheme.class);
+        NeoForge.EVENT_BUS.register(MOTMGuiTheme.class);
         THEMES.forEach(MOTMGuiTheme::register);
     }
 

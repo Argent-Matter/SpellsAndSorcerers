@@ -1,16 +1,16 @@
 package dev.screret.mui.widgets.textfield;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.drawable.ITextLine;
 import dev.screret.mui.api.value.IStringValue;
+import dev.screret.mui.utils.math.MathHelper;
 import dev.screret.mui.value.StringValue;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.value.sync.ValueSyncHandler;
 import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.utils.GTMath;
 import dev.screret.mui.utils.math.ParseResult;
 
 import net.minecraft.util.Mth;
@@ -38,11 +38,11 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
     private boolean tooltipOverride = false;
 
     public double parse(String num) {
-        ParseResult result = GTMath.parseExpression(num, this.defaultNumber, true);
+        ParseResult result = MathHelper.parseExpression(num, this.defaultNumber, true);
         double value = result.getResult();
         if (result.isFailure()) {
             this.mathFailMessage = result.getError();
-            GTCEu.LOGGER.error("Math expression error in {}: {}", this, this.mathFailMessage);
+            ModularUI.LOGGER.error("Math expression error in {}: {}", this, this.mathFailMessage);
         }
         return value;
     }
@@ -68,7 +68,7 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
     @Override
     public boolean isValidSyncHandler(SyncHandler syncHandler) {
         if (syncHandler instanceof IStringValue<?> iStringValue &&
-                syncHandler instanceof ValueSyncHandler<?> valueSyncHandler) {
+                syncHandler instanceof ValueSyncHandler<?, ?> valueSyncHandler) {
             this.stringValue = iStringValue;
             valueSyncHandler.setChangeListener(() -> {
                 markTooltipDirty();
@@ -197,7 +197,7 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
     }
 
     public TextFieldWidget setNumbersLong(LongSupplier min, LongSupplier max) {
-        return setNumbersLong(val -> GTMath.clamp(val, min.getAsLong(), max.getAsLong()));
+        return setNumbersLong(val -> Mth.clamp(val, min.getAsLong(), max.getAsLong()));
     }
 
     public TextFieldWidget setNumbersDouble(DoubleSupplier min, DoubleSupplier max) {

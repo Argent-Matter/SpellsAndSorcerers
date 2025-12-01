@@ -1,13 +1,12 @@
 package dev.screret.mui.integration.jei.handler;
 
-import com.gregtechceu.gtceu.api.mui.base.IMuiScreen;
-import com.gregtechceu.gtceu.core.mixins.jei.IngredientListOverlayAccessor;
-import com.gregtechceu.gtceu.integration.jei.GTJEIPlugin;
-import com.gregtechceu.gtceu.integration.xei.handlers.GhostIngredientSlot;
-import com.gregtechceu.gtceu.integration.xei.handlers.RecipeViewerHandler;
-
 import net.minecraft.client.gui.screens.Screen;
 
+import dev.screret.mui.api.IMuiScreen;
+import dev.screret.mui.core.mixins.jei.IngredientListOverlayAccessor;
+import dev.screret.mui.integration.jei.MuiJEIPlugin;
+import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -59,7 +58,7 @@ public class JEIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
     @Override
     public void setSearchFocused(boolean focused) {
         // only set the search field state if it's JEI's actual search field and not JEMI
-        if (GTJEIPlugin.getRuntime().getIngredientListOverlay() instanceof IngredientListOverlayAccessor accessor) {
+        if (MuiJEIPlugin.getRuntime().getIngredientListOverlay() instanceof IngredientListOverlayAccessor accessor) {
             accessor.getSearchField().setFocused(focused);
         }
     }

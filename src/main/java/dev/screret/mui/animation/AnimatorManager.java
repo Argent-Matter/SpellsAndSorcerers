@@ -1,10 +1,10 @@
 package dev.screret.mui.animation;
 
 import net.minecraft.Util;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class AnimatorManager {
     private AnimatorManager() {}
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.register(new AnimatorManager());
+        NeoForge.EVENT_BUS.register(new AnimatorManager());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

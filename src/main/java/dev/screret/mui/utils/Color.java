@@ -1,12 +1,12 @@
 package dev.screret.mui.utils;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.drawable.IInterpolation;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -934,7 +934,7 @@ public class Color {
                 try {
                     index = Integer.parseInt(colorString.substring(i + 1));
                 } catch (NumberFormatException e) {
-                    GTCEu.LOGGER.error("[THEME] If the color is a word then after teh : must come a negative or " +
+                    ModularUI.LOGGER.error("[THEME] If the color is a word then after teh : must come a negative or " +
                             "positive integer, but got '{}'", colorString.substring(i + 1));
                 }
                 colorString = colorString.substring(0, i);
@@ -945,7 +945,7 @@ public class Color {
                 if (index > 0) return colorShade.brighterSafe(index - 1);
                 return colorShade.darkerSafe(-index - 1);
             }
-            GTCEu.LOGGER.error("[THEME] No color shade for name '{}' was found", colorString);
+            ModularUI.LOGGER.error("[THEME] No color shade for name '{}' was found", colorString);
             return WHITE.main;
         }
         if (jsonElement.isJsonObject()) {

@@ -1,11 +1,17 @@
 package dev.screret.mui.value.sync;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.neoforged.neoforge.network.connection.ConnectionType;
+
 import dev.screret.mui.api.IPacketWriter;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.utils.RegistryAccessContainer;
 import dev.screret.mui.widget.WidgetTree;
 
-import net.minecraft.network.FriendlyByteBuf;
-
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,27 +19,35 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * This sync handler calls a function on client and server which creates a widget after being notified. The widget is
- * then handed over to a
- * linked {@link DynamicSyncHandler}.
+ * This sync handler calls a function on client and server which creates a widget after being notified.<br>
+ * The widget is then handed over to a linked {@link DynamicSyncHandler}.
  */
+@Accessors(fluent = true, chain = true)
 public class DynamicSyncHandler extends SyncHandler {
 
+    /**
+     * A widget creator which is called on client and server. {@link SyncHandler}s can be created here using
+     * {@link PanelSyncManager#getOrCreateSyncHandler(String, int, Class, Supplier)}.<br>
+     * Returning null in the function will not update the widget.<br>
+     * On client side the result is handed over to a linked {@link dev.screret.mui.widgets.DynamicSyncedWidget}.
+     * @see IWidgetProvider
+     */
+    @Setter
     private IWidgetProvider widgetProvider;
     private Consumer<IWidget> onWidgetUpdate;
 
-    private IPacketWriter lastRejectedPacket;
+    private IPacketWriter<? super RegistryFriendlyByteBuf> lastRejectedPacket;
     private IWidget lastRejectedWidget;
 
     @Override
-    public void readOnClient(int id, FriendlyByteBuf buf) {
+    public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
         if (id == 0) {
             updateWidget(parseWidget(buf));
         }
     }
 
     @Override
-    public void readOnServer(int id, FriendlyByteBuf buf) {
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
         if (id == 0) {
             // do nothing with the widget on server side
             parseWidget(buf);
@@ -49,7 +63,7 @@ public class DynamicSyncHandler extends SyncHandler {
         }
     }
 
-    private IWidget parseWidget(FriendlyByteBuf buf) {
+    private IWidget parseWidget(RegistryFriendlyByteBuf buf) {
         getSyncManager().allowTemporarySyncHandlerRegistration(true);
         IWidget widget = this.widgetProvider.createWidget(getSyncManager(), buf);
         getSyncManager().allowTemporarySyncHandlerRegistration(false);
@@ -85,7 +99,7 @@ public class DynamicSyncHandler extends SyncHandler {
      *
      * @param packetWriter data to pass to the function
      */
-    public void notifyUpdate(IPacketWriter packetWriter) {
+    public void notifyUpdate(IPacketWriter<? super RegistryFriendlyByteBuf> packetWriter) {
         if (!isValid()) {
             // sync handler not yet initialised
             // store for later
@@ -93,27 +107,15 @@ public class DynamicSyncHandler extends SyncHandler {
             this.lastRejectedPacket = packetWriter;
             return;
         }
-        IWidget widget = parseWidget(packetWriter.toPacket());
+        RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), RegistryAccessContainer.current(),
+                ConnectionType.NEOFORGE);
+        packetWriter.write(buffer);
+        IWidget widget = parseWidget(buffer);
+
         if (getSyncManager().isClient()) {
             updateWidget(widget);
         }
         sync(0, packetWriter);
-    }
-
-    /**
-     * Sets a widget creator which is called on client and server. {@link SyncHandler}s can be created here using
-     * {@link PanelSyncManager#getOrCreateSyncHandler(String, int, Class, Supplier)}. Returning null in the function
-     * will not update the widget.
-     * On client side the result is handed over to a linked
-     * {@link dev.screret.mui.widgets.DynamicSyncedWidget}.
-     *
-     * @param widgetProvider the widget creator function
-     * @return this
-     * @see IWidgetProvider
-     */
-    public DynamicSyncHandler widgetProvider(IWidgetProvider widgetProvider) {
-        this.widgetProvider = widgetProvider;
-        return this;
     }
 
     /**
@@ -140,6 +142,6 @@ public class DynamicSyncHandler extends SyncHandler {
          * @return a new widget or null if widget shouldn't be updated
          */
         @Nullable
-        IWidget createWidget(PanelSyncManager syncManager, FriendlyByteBuf buf);
+        IWidget createWidget(PanelSyncManager syncManager, RegistryFriendlyByteBuf buf);
     }
 }

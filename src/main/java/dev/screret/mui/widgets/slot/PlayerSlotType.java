@@ -2,8 +2,8 @@ package dev.screret.mui.widgets.slot;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.*;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.*;
 
 public enum PlayerSlotType {
 

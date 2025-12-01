@@ -7,6 +7,7 @@ import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.ModularScreen;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -152,7 +153,7 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
     }
 
     @Override
-    public void readOnClient(int i, FriendlyByteBuf packetBuffer) {
+    public void readOnClient(int i, RegistryFriendlyByteBuf packetBuffer) {
         if (i == 1) {
             openPanel(false);
         } else if (i == 2) {
@@ -163,7 +164,7 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
     }
 
     @Override
-    public void readOnServer(int i, FriendlyByteBuf packetBuffer) {
+    public void readOnServer(int i, RegistryFriendlyByteBuf packetBuffer) {
         if (i == 0) {
             openPanel(false);
             syncToClient(1);

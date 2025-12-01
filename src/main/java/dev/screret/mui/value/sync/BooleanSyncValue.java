@@ -1,11 +1,12 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IBoolSyncValue;
 import dev.screret.mui.api.value.sync.IStringSyncValue;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
-public class BooleanSyncValue extends ValueSyncHandler<Boolean>
-                              implements IBoolSyncValue<Boolean>, IStringSyncValue<Boolean> {
+public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
+                              implements IBoolSyncValue<ByteBuf, Boolean>, IStringSyncValue<ByteBuf, Boolean> {
 
     private final BooleanSupplier getter;
     private final BooleanConsumer setter;
@@ -43,7 +44,7 @@ public class BooleanSyncValue extends ValueSyncHandler<Boolean>
         if (clientGetter == null && serverGetter == null) {
             throw new NullPointerException("Client or server getter must not be null!");
         }
-        if (GTCEu.isClientThread()) {
+        if (ModularUI.isClientThread()) {
             this.getter = clientGetter != null ? clientGetter : serverGetter;
             this.setter = clientSetter != null ? clientSetter : serverSetter;
         } else {
@@ -94,12 +95,12 @@ public class BooleanSyncValue extends ValueSyncHandler<Boolean>
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(ByteBuf buffer) {
         buffer.writeBoolean(getBoolValue());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(ByteBuf buffer) {
         setBoolValue(buffer.readBoolean(), true, false);
     }
 

@@ -1,6 +1,6 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.GTCEu;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IDoubleSyncValue;
 import dev.screret.mui.api.value.sync.IFloatSyncValue;
 import dev.screret.mui.api.value.sync.IStringSyncValue;
@@ -9,14 +9,15 @@ import dev.screret.mui.utils.FloatSupplier;
 
 import net.minecraft.network.FriendlyByteBuf;
 
+import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class FloatSyncValue extends ValueSyncHandler<Float> implements
-                            IFloatSyncValue<Float>, IDoubleSyncValue<Float>, IStringSyncValue<Float> {
+public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
+                            IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {
 
     private final FloatSupplier getter;
     private final FloatConsumer setter;
@@ -44,7 +45,7 @@ public class FloatSyncValue extends ValueSyncHandler<Float> implements
         if (clientGetter == null && serverGetter == null) {
             throw new NullPointerException("Client or server getter must not be null!");
         }
-        if (GTCEu.isClientThread()) {
+        if (ModularUI.isClientThread()) {
             this.getter = clientGetter != null ? clientGetter : serverGetter;
             this.setter = clientSetter != null ? clientSetter : serverSetter;
         } else {
@@ -95,12 +96,12 @@ public class FloatSyncValue extends ValueSyncHandler<Float> implements
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(ByteBuf buffer) {
         buffer.writeFloat(getFloatValue());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(ByteBuf buffer) {
         setFloatValue(buffer.readFloat(), true, false);
     }
 

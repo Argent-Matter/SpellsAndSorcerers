@@ -1,11 +1,10 @@
 package dev.screret.mui.integration.xei.handlers;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.client.mui.screen.ScreenWrapper;
-import com.gregtechceu.gtceu.integration.emi.handler.EmiScreenHandler;
-import com.gregtechceu.gtceu.integration.jei.handler.JEIScreenHandler;
-import com.gregtechceu.gtceu.integration.rei.handler.REIScreenHandler;
+import dev.screret.mui.ModularUI;
+import dev.screret.mui.client.screen.ScreenWrapper;
+import dev.screret.mui.integration.emi.handler.EmiScreenHandler;
+import dev.screret.mui.integration.jei.handler.JEIScreenHandler;
+import dev.screret.mui.integration.rei.handler.REIScreenHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,11 +20,11 @@ public abstract class RecipeViewerHandler {
     public static RecipeViewerHandler getCurrent() {
         if (current == null) {
             Supplier<Function<Class<ScreenWrapper>, ? extends RecipeViewerHandler>> supplier;
-            if (GTCEu.isModLoaded(GTValues.MODID_EMI)) {
+            if (ModularUI.Mods.EMI.isLoaded()) {
                 supplier = () -> EmiScreenHandler::of;
-            } else if (GTCEu.isModLoaded(GTValues.MODID_REI)) {
+            } else if (ModularUI.Mods.REI.isLoaded()) {
                 supplier = () -> REIScreenHandler::of;
-            } else if (GTCEu.isModLoaded(GTValues.MODID_JEI)) {
+            } else if (ModularUI.Mods.JEI.isLoaded()) {
                 supplier = () -> JEIScreenHandler::of;
             } else {
                 supplier = () -> cls -> DUMMY;
