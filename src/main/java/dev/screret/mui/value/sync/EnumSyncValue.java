@@ -8,15 +8,17 @@ import net.minecraft.network.VarInt;
 
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T> implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T>
+                          implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
 
     @Getter
     protected final Class<T> enumClass;

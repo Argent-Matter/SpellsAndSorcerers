@@ -1,10 +1,10 @@
 package dev.screret.mui.utils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An iterable to iterate in reverse order over a list.

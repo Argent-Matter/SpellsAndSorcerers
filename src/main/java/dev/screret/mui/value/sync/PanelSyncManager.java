@@ -3,14 +3,13 @@ package dev.screret.mui.value.sync;
 import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.ISyncedAction;
+import dev.screret.mui.client.screen.ModularContainerMenu;
 import dev.screret.mui.network.packets.SyncHandlerPacket;
 import dev.screret.mui.widgets.slot.ModularSlot;
 import dev.screret.mui.widgets.slot.SlotGroup;
-import dev.screret.mui.client.screen.ModularContainerMenu;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -25,13 +24,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PanelSyncManager {
 

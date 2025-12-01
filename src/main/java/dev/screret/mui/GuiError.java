@@ -1,6 +1,5 @@
 package dev.screret.mui;
 
-import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.widget.IGuiElement;
 
 import lombok.Getter;

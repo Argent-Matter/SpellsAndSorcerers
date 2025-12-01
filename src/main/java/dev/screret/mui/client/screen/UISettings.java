@@ -10,10 +10,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 import lombok.Getter;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.ApiStatus;
 
 public class UISettings {
 

@@ -1,14 +1,14 @@
 package dev.screret.mui.integration.jei;
 
 import dev.screret.mui.ModularUI;
-
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.resources.ResourceLocation;
-
 import dev.screret.mui.client.screen.ContainerScreenWrapper;
 import dev.screret.mui.client.screen.ScreenWrapper;
 import dev.screret.mui.integration.jei.handler.JEIContainerHandler;
 import dev.screret.mui.integration.jei.handler.JEIScreenHandler;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.resources.ResourceLocation;
+
 import lombok.Getter;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

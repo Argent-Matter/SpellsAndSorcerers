@@ -1,8 +1,5 @@
 package dev.screret.motm.common.ui;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
-
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
 import dev.screret.mui.client.screen.RichTooltip;
@@ -12,12 +9,16 @@ import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeKey;
 import dev.screret.mui.utils.Color;
 import dev.screret.mui.utils.serialization.json.JsonBuilder;
-import org.jetbrains.annotations.Nullable;
+
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
 
 public class MOTMGuiTheme {
 

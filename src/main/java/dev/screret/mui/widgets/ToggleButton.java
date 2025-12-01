@@ -3,10 +3,10 @@ package dev.screret.mui.widgets;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.value.IBoolValue;
+import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.theme.SelectableTheme;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
-import dev.screret.mui.client.screen.RichTooltip;
 
 import lombok.Getter;
 import lombok.Setter;

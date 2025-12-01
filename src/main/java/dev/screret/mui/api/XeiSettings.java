@@ -1,9 +1,9 @@
 package dev.screret.mui.api;
 
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.mui.utils.Rectangle;
 
 import org.jetbrains.annotations.ApiStatus;
 

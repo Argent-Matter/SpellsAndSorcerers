@@ -2,12 +2,12 @@ package dev.screret.mui.widgets;
 
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.value.IValue;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.GuiDraw;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.value.ObjectValue;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.world.item.ItemStack;
 

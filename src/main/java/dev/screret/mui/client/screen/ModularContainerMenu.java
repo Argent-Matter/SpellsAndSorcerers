@@ -1,13 +1,13 @@
 package dev.screret.mui.client.screen;
 
 import dev.screret.mui.ModularUI;
+import dev.screret.mui.core.mixins.client.AbstractContainerMenuAccessor;
 import dev.screret.mui.factory.GuiData;
 import dev.screret.mui.network.NetworkUtils;
 import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.widgets.slot.ModularSlot;
 import dev.screret.mui.widgets.slot.SlotGroup;
-import dev.screret.mui.core.mixins.client.AbstractContainerMenuAccessor;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,12 +21,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
-import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import org.jetbrains.annotations.*;
 
 public class ModularContainerMenu extends AbstractContainerMenu {
 

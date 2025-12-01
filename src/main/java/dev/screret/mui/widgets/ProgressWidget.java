@@ -2,6 +2,8 @@ package dev.screret.mui.widgets;
 
 import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.value.IDoubleValue;
+import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.UITexture;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
@@ -9,8 +11,6 @@ import dev.screret.mui.utils.Color;
 import dev.screret.mui.value.DoubleValue;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.util.Mth;
 

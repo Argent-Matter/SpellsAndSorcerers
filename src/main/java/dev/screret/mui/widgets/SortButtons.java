@@ -5,10 +5,11 @@ import dev.screret.mui.widget.Widget;
 import dev.screret.mui.widgets.slot.SlotGroup;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SortButtons extends Widget<SortButtons> {
 

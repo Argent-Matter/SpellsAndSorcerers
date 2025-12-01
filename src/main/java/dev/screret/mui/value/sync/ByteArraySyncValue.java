@@ -3,11 +3,12 @@ package dev.screret.mui.value.sync;
 import dev.screret.mui.utils.serialization.network.ByteBufAdapters;
 
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ByteArraySyncValue extends GenericSyncValue<ByteBuf, byte[]> {
 

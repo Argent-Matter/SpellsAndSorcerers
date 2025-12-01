@@ -1,5 +1,7 @@
 package dev.screret.mui.utils.serialization.network;
 
+import dev.screret.mui.network.NetworkUtils;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -8,13 +10,13 @@ import net.minecraft.network.codec.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import dev.screret.mui.network.NetworkUtils;
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.network.codec.ByteBufCodecs.*;
 

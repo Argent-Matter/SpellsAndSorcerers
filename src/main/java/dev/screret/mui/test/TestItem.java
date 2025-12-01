@@ -1,10 +1,12 @@
 package dev.screret.mui.test;
 
-import com.mojang.blaze3d.vertex.*;
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.IUIHolder;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
+import dev.screret.mui.client.screen.ModularPanel;
+import dev.screret.mui.client.screen.UISettings;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.GuiDraw;
 import dev.screret.mui.drawable.Rectangle;
 import dev.screret.mui.factory.PlayerInventoryGuiData;
@@ -23,29 +25,23 @@ import dev.screret.mui.widgets.layout.Column;
 import dev.screret.mui.widgets.layout.Flow;
 import dev.screret.mui.widgets.slot.ItemSlot;
 import dev.screret.mui.widgets.slot.ModularSlot;
-import dev.screret.mui.client.screen.ModularPanel;
-import dev.screret.mui.client.screen.UISettings;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemStackHandler;
 
+import com.mojang.blaze3d.vertex.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInventoryGuiData<?>> {
 
@@ -179,21 +175,21 @@ public class TestItem extends Item implements ICurioItem, IUIHolder<PlayerInvent
     }
 
     /*
-    @Override
-    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new ICapabilityProvider() {
-
-            @Override
-            public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                if (cap == ITEM_HANDLER) {
-                    var handler = new ItemStackHandler(4);
-                    return LazyOptional.of(() -> handler).cast();
-                }
-                return LazyOptional.empty();
-            }
-        };
-    }
-    */
+     * @Override
+     * public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+     * return new ICapabilityProvider() {
+     * 
+     * @Override
+     * public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+     * if (cap == ITEM_HANDLER) {
+     * var handler = new ItemStackHandler(4);
+     * return LazyOptional.of(() -> handler).cast();
+     * }
+     * return LazyOptional.empty();
+     * }
+     * };
+     * }
+     */
 
     @Override
     public boolean canEquip(SlotContext slotContext, ItemStack stack) {

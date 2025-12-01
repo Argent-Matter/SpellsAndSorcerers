@@ -5,18 +5,19 @@ import dev.screret.mui.api.layout.ILayoutWidget;
 import dev.screret.mui.api.layout.IResizeable;
 import dev.screret.mui.api.layout.IViewport;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.widgets.layout.IExpander;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.gui.GuiGraphics;
 
 import com.google.common.base.Joiner;
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Contract;
 
 public class InternalWidgetTree {
 

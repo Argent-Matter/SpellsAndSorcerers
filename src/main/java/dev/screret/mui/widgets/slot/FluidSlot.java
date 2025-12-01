@@ -4,24 +4,24 @@ import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.GuiDraw;
 import dev.screret.mui.drawable.text.TextRenderer;
+import dev.screret.mui.integration.xei.entry.EntryList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
+import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.mui.integration.xei.handlers.IngredientProvider;
 import dev.screret.mui.theme.SlotTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.utils.Color;
 import dev.screret.mui.utils.FormattingUtil;
 import dev.screret.mui.utils.MouseData;
+import dev.screret.mui.utils.math.SIPrefix;
 import dev.screret.mui.value.sync.FluidSlotSyncHandler;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.screen.RichTooltip;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.integration.xei.entry.EntryList;
-import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
-import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
-import dev.screret.mui.integration.xei.handlers.IngredientProvider;
-import dev.screret.mui.utils.math.SIPrefix;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -38,10 +38,11 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FluidSlot extends Widget<FluidSlot>
                        implements Interactable, GhostIngredientSlot<FluidStack>, IngredientProvider<FluidStack> {

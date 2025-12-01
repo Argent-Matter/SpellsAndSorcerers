@@ -8,21 +8,21 @@ import dev.screret.mui.api.value.IBoolValue;
 import dev.screret.mui.api.value.IEnumValue;
 import dev.screret.mui.api.value.IIntValue;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.drawable.UITexture;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.value.IntValue;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.screen.RichTooltip;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AbstractCycleButtonWidget<W extends AbstractCycleButtonWidget<W>> extends Widget<W>
                                       implements Interactable {

@@ -1,9 +1,9 @@
 package dev.screret.mui.value.sync;
 
+import dev.screret.mui.widgets.slot.ModularSlot;
+
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-
-import dev.screret.mui.widgets.slot.ModularSlot;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 

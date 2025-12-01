@@ -1,12 +1,11 @@
 package dev.screret.mui.integration.xei.handlers;
 
-
 import dev.screret.mui.integration.xei.entry.EntryList;
+
+import java.util.function.UnaryOperator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.UnaryOperator;
 
 /**
  * An interface for recipe viewers to get the ingredient from a widget to show recipes for example.

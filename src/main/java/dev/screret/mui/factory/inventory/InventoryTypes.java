@@ -12,22 +12,23 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
+
 public final class InventoryTypes {
 
     /*
-    public static final ItemEntry<TestItem> TEST_ITEM = REGISTRATE.item("mui_test_item", TestItem::new)
-            .tab(GTCreativeModeTabs.ITEM.getKey())
-            .setData(ProviderType.LANG, NonNullBiConsumer.noop())
-            .setData(ProviderType.ITEM_MODEL, NonNullBiConsumer.noop())
-            .register();
-    */
+     * public static final ItemEntry<TestItem> TEST_ITEM = REGISTRATE.item("mui_test_item", TestItem::new)
+     * .tab(GTCreativeModeTabs.ITEM.getKey())
+     * .setData(ProviderType.LANG, NonNullBiConsumer.noop())
+     * .setData(ProviderType.ITEM_MODEL, NonNullBiConsumer.noop())
+     * .register();
+     */
 
     @ApiStatus.Internal
     public static void init() {

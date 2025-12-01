@@ -5,10 +5,11 @@ import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.value.sync.SyncHandler;
 
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Marks a widget as synced
@@ -63,7 +64,7 @@ public interface ISynced<W extends IWidget> {
     }
 
     default <B extends ByteBuf, T> GenericSyncValue<B, T> castIfTypeGenericElseNull(SyncHandler syncHandler, Class<T> clazz,
-                                                                                @Nullable Consumer<GenericSyncValue<B, T>> setup) {
+                                                                                    @Nullable Consumer<GenericSyncValue<B, T>> setup) {
         if (syncHandler instanceof GenericSyncValue<?, ?> genericSyncValue && genericSyncValue.isOfType(clazz)) {
             GenericSyncValue<B, T> t = genericSyncValue.cast();
             if (setup != null) setup.accept(t);

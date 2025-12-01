@@ -1,21 +1,23 @@
 package dev.screret.mui.integration.jei.handler;
 
-import net.minecraft.client.renderer.Rect2i;
-
 import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.client.screen.ContainerScreenWrapper;
 import dev.screret.mui.integration.jei.MuiJEIPlugin;
 import dev.screret.mui.integration.xei.handlers.IngredientProvider;
 import dev.screret.mui.utils.Rectangle;
+
+import net.minecraft.client.renderer.Rect2i;
+
 import lombok.Getter;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.runtime.IClickableIngredient;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
 
 public class JEIContainerHandler implements IGuiContainerHandler<ContainerScreenWrapper> {
 

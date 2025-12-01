@@ -2,9 +2,9 @@ package dev.screret.mui.widget.wrapper;
 
 import dev.screret.mui.api.widget.IFocusedWidget;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.widget.EmptyWidget;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+import dev.screret.mui.widget.EmptyWidget;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -18,14 +18,14 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class WidgetWrapper extends AbstractWidget {

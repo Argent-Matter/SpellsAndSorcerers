@@ -1,5 +1,12 @@
 package dev.screret.mui.network.packets;
 
+import dev.screret.mui.ModularUI;
+import dev.screret.mui.api.IPacketWriter;
+import dev.screret.mui.client.screen.ModularContainerMenu;
+import dev.screret.mui.client.screen.ModularScreen;
+import dev.screret.mui.network.NetworkUtils;
+import dev.screret.mui.value.sync.ModularSyncManager;
+
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -10,13 +17,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import dev.screret.mui.ModularUI;
-import dev.screret.mui.api.IPacketWriter;
-import dev.screret.mui.client.screen.ModularContainerMenu;
-import dev.screret.mui.client.screen.ModularScreen;
-import dev.screret.mui.network.NetworkUtils;
-import dev.screret.mui.value.sync.ModularSyncManager;
 import io.netty.buffer.Unpooled;
+
 import org.jetbrains.annotations.Nullable;
 
 public record SyncHandlerPacket(String panel, String key, boolean action,
@@ -30,7 +32,7 @@ public record SyncHandlerPacket(String panel, String key, boolean action,
             .ofMember(SyncHandlerPacket::encode, SyncHandlerPacket::decode);
 
     public SyncHandlerPacket(String panel, String key, boolean action,
-                                           IPacketWriter<? super RegistryFriendlyByteBuf> packetWriter) {
+                             IPacketWriter<? super RegistryFriendlyByteBuf> packetWriter) {
         this(panel, key, action, null, packetWriter);
     }
 

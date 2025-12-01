@@ -1,16 +1,17 @@
 package dev.screret.mui.widgets.slot;
 
-import dev.screret.mui.utils.MouseData;
-import dev.screret.mui.value.sync.PhantomItemSlotSH;
-import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
 import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.mui.utils.MouseData;
+import dev.screret.mui.value.sync.PhantomItemSlotSH;
+import dev.screret.mui.value.sync.SyncHandler;
 
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

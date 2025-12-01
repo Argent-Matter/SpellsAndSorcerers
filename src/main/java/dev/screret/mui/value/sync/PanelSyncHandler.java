@@ -2,17 +2,16 @@ package dev.screret.mui.value.sync;
 
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.widget.ISynced;
-import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.ModularScreen;
+import dev.screret.mui.widget.WidgetTree;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import java.util.Objects;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * If you want another panel where some widgets may be able to sync data, you will need this.

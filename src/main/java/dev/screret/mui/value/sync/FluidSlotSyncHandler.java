@@ -4,7 +4,6 @@ import dev.screret.mui.ModularUI;
 import dev.screret.mui.utils.FluidTankHandler;
 import dev.screret.mui.utils.MouseData;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -20,6 +19,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -7,19 +7,19 @@ import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.utils.RegistryAccessContainer;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
 
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 public class DrawableSerialization implements JsonSerializer<IDrawable>, JsonDeserializer<IDrawable> {
 

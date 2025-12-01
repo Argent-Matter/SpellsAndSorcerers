@@ -1,8 +1,8 @@
 package dev.screret.mui.value.sync;
 
 import dev.screret.mui.ModularUI;
-import dev.screret.mui.widgets.slot.SlotGroup;
 import dev.screret.mui.client.screen.ModularContainerMenu;
+import dev.screret.mui.widgets.slot.SlotGroup;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,11 +17,12 @@ import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 public class ModularSyncManager {
 

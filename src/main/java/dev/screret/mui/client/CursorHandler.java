@@ -4,9 +4,10 @@ import dev.screret.mui.api.widget.ResizeDragArea;
 
 import net.minecraft.client.Minecraft;
 
+import org.lwjgl.glfw.GLFW;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 public class CursorHandler {
 

@@ -1,12 +1,13 @@
 package dev.screret.mui.overlay;
 
 import dev.screret.mui.api.IMuiScreen;
-import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.client.screen.ModularScreen;
+import dev.screret.mui.utils.Rectangle;
 
 import net.minecraft.client.gui.screens.Screen;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.ApiStatus;
 
 /**

@@ -1,6 +1,7 @@
 package dev.screret.mui.widgets;
 
 import dev.screret.mui.api.drawable.IKey;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.text.TextRenderer;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
@@ -8,16 +9,16 @@ import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.widget.Widget;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.widget.sizer.Box;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.IntSupplier;
+
+import org.jetbrains.annotations.Nullable;
 
 public class TextWidget<W extends TextWidget<W>> extends Widget<W> {
 

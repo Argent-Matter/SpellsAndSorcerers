@@ -4,12 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3fc;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+
+import org.jetbrains.annotations.NotNull;
 
 public interface ISchema extends Iterable<Map.Entry<BlockPos, BlockState>> {
 

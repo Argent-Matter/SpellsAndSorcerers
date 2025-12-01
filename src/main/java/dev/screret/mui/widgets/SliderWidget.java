@@ -5,6 +5,7 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.value.IDoubleValue;
 import dev.screret.mui.api.widget.IGuiAction;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.drawable.Rectangle;
 import dev.screret.mui.theme.WidgetTheme;
@@ -15,7 +16,6 @@ import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widget.sizer.Unit;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.util.Mth;
 
@@ -23,6 +23,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+
 import org.jetbrains.annotations.NotNull;
 
 @Accessors(chain = true)

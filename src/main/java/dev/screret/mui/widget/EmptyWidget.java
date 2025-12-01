@@ -3,15 +3,16 @@ package dev.screret.mui.widget;
 import dev.screret.mui.api.layout.IResizeable;
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.theme.WidgetThemeEntry;
-import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.widget.sizer.Flex;
 import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+import dev.screret.mui.theme.WidgetThemeEntry;
+import dev.screret.mui.widget.sizer.Area;
+import dev.screret.mui.widget.sizer.Flex;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

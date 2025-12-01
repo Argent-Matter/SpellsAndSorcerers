@@ -1,10 +1,10 @@
 package dev.screret.mui.drawable.text;
 
 import dev.screret.mui.api.drawable.ITextLine;
-import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.core.mixins.client.StringSplitterAccessor;
+import dev.screret.mui.utils.Alignment;
+import dev.screret.mui.widget.sizer.Area;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;

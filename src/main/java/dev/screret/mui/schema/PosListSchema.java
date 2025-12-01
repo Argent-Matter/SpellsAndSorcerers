@@ -9,11 +9,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiPredicate;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class PosListSchema implements ISchema {
 

@@ -11,6 +11,7 @@ import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import lombok.Setter;
+
 import org.jetbrains.annotations.NotNull;
 
 /**

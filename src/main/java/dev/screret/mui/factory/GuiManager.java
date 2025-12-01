@@ -5,16 +5,15 @@ import dev.screret.mui.api.IMuiScreen;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.UIFactory;
 import dev.screret.mui.api.XeiSettings;
+import dev.screret.mui.client.screen.*;
 import dev.screret.mui.core.mixins.ServerPlayerAccessor;
 import dev.screret.mui.network.packets.OpenGuiPacket;
 import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.widget.WidgetTree;
-import dev.screret.mui.client.screen.*;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,13 +31,14 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = ModularUI.MOD_ID)
 public class GuiManager {

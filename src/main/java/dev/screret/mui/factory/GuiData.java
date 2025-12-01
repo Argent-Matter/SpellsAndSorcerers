@@ -1,10 +1,11 @@
 package dev.screret.mui.factory;
 
+import dev.screret.mui.network.NetworkUtils;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import dev.screret.mui.network.NetworkUtils;
 import lombok.Getter;
 
 import java.util.Objects;

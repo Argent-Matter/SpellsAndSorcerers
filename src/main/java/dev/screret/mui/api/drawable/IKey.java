@@ -1,12 +1,12 @@
 package dev.screret.mui.api.drawable;
 
 import dev.screret.mui.api.IJsonSerializable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.text.*;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.widgets.TextWidget;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
+import dev.screret.mui.widgets.TextWidget;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -15,11 +15,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This represents a piece of text in a GUI.

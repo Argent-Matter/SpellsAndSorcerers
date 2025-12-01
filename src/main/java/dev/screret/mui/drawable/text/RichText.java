@@ -1,12 +1,12 @@
 package dev.screret.mui.drawable.text;
 
 import dev.screret.mui.api.drawable.*;
-import dev.screret.mui.theme.WidgetTheme;
-import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.utils.TooltipLines;
 import dev.screret.mui.client.component.DrawableTooltipComponent;
 import dev.screret.mui.client.component.TooltipComponentIcon;
 import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.theme.WidgetTheme;
+import dev.screret.mui.utils.Alignment;
+import dev.screret.mui.utils.TooltipLines;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.FormattedText;

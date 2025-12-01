@@ -10,11 +10,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
 @EventBusSubscriber(modid = ModularUI.MOD_ID, value = Dist.CLIENT)

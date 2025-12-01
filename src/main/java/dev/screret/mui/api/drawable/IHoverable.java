@@ -1,8 +1,8 @@
 package dev.screret.mui.api.drawable;
 
+import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.drawable.text.RichText;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.RichTooltip;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;

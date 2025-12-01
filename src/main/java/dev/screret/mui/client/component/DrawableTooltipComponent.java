@@ -3,8 +3,8 @@ package dev.screret.mui.client.component;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IIcon;
 import dev.screret.mui.api.drawable.IKey;
-import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.theme.WidgetTheme;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 
 public class DrawableTooltipComponent implements ClientTooltipComponent, TooltipComponent {

@@ -1,14 +1,14 @@
 package dev.screret.mui.drawable;
 
-import dev.screret.mui.drawable.text.TextRenderer;
-import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.utils.Color;
-import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.client.screen.event.RichTooltipEvent;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+import dev.screret.mui.drawable.text.TextRenderer;
+import dev.screret.mui.utils.Alignment;
+import dev.screret.mui.utils.Color;
 import dev.screret.mui.utils.FormattingUtil;
+import dev.screret.mui.widget.sizer.Area;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -37,14 +37,15 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 
 import java.lang.Math;
 import java.util.List;
 
-import static net.minecraft.util.Mth.TWO_PI;
+import org.jetbrains.annotations.Nullable;
+
 import static net.minecraft.util.Mth.HALF_PI;
+import static net.minecraft.util.Mth.TWO_PI;
 
 public class GuiDraw {
 
@@ -84,17 +85,13 @@ public class GuiDraw {
 
         float x1 = x0 + w, y1 = y0 + h;
         bufferbuilder.addVertex(pose, x0, y0, 0.0f)
-                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
-                ;
+                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL));
         bufferbuilder.addVertex(pose, x0, y1, 0.0f)
-                .setColor(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL))
-                ;
+                .setColor(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL));
         bufferbuilder.addVertex(pose, x1, y1, 0.0f)
-                .setColor(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR))
-                ;
+                .setColor(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR));
         bufferbuilder.addVertex(pose, x1, y0, 0.0f)
-                .setColor(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR))
-                ;
+                .setColor(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR));
     }
 
     public static void drawCircle(GuiGraphics graphics, float x0, float y0, float diameter, int color, int segments) {
@@ -120,8 +117,7 @@ public class GuiDraw {
         // start at center
         bufferbuilder.addVertex(pose, x_2, y_2, 0.0f)
                 .setColor(Color.getRed(centerColor), Color.getGreen(centerColor), Color.getBlue(centerColor),
-                        Color.getAlpha(centerColor))
-                ;
+                        Color.getAlpha(centerColor));
         int a = Color.getAlpha(outerColor), r = Color.getRed(outerColor), g = Color.getGreen(outerColor),
                 b = Color.getBlue(outerColor);
         float incr = (float) (TWO_PI / segments);
@@ -159,66 +155,55 @@ public class GuiDraw {
         int color = Color.average(colorBL, colorBR, colorTR, colorTL);
         // start at center
         bufferbuilder.addVertex(pose, x0 + w / 2f, y0 + h / 2f, 0.0f)
-                .setColor(Color.getRed(color), Color.getGreen(color), Color.getBlue(color), Color.getAlpha(color))
-                ;
+                .setColor(Color.getRed(color), Color.getGreen(color), Color.getBlue(color), Color.getAlpha(color));
         // left side
         bufferbuilder.addVertex(pose, x0, y0 + cornerRadius, 0.0f)
-                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
-                ;
+                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL));
         bufferbuilder.addVertex(pose, x0, y1 - cornerRadius, 0.0f)
-                .setColor(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL))
-                ;
+                .setColor(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL), Color.getAlpha(colorBL));
         // bottom left corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x0 + cornerRadius - Math.cos(HALF_PI / segments * i) * cornerRadius);
             float y = (float) (y1 - cornerRadius + Math.sin(HALF_PI / segments * i) * cornerRadius);
             bufferbuilder.addVertex(x, y, 0.0f)
                     .setColor(Color.getRed(colorBL), Color.getGreen(colorBL), Color.getBlue(colorBL),
-                            Color.getAlpha(colorBL))
-                    ;
+                            Color.getAlpha(colorBL));
         }
         // bottom side
         bufferbuilder.addVertex(pose, x1 - cornerRadius, y1, 0.0f)
-                .setColor(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR))
-                ;
+                .setColor(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR), Color.getAlpha(colorBR));
         // bottom right corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x1 - cornerRadius + Math.sin(HALF_PI / segments * i) * cornerRadius);
             float y = (float) (y1 - cornerRadius + Math.cos(HALF_PI / segments * i) * cornerRadius);
             bufferbuilder.addVertex(pose, x, y, 0.0f)
                     .setColor(Color.getRed(colorBR), Color.getGreen(colorBR), Color.getBlue(colorBR),
-                            Color.getAlpha(colorBR))
-                    ;
+                            Color.getAlpha(colorBR));
         }
         // right side
         bufferbuilder.addVertex(pose, x1, y0 + cornerRadius, 0.0f)
-                .setColor(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR))
-                ;
+                .setColor(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR), Color.getAlpha(colorTR));
         // top right corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x1 - cornerRadius + Math.cos(HALF_PI / segments * i) * cornerRadius);
             float y = (float) (y0 + cornerRadius - Math.sin(HALF_PI / segments * i) * cornerRadius);
             bufferbuilder.addVertex(pose, x, y, 0.0f)
                     .setColor(Color.getRed(colorTR), Color.getGreen(colorTR), Color.getBlue(colorTR),
-                            Color.getAlpha(colorTR))
-                    ;
+                            Color.getAlpha(colorTR));
         }
         // top side
         bufferbuilder.addVertex(pose, x0 + cornerRadius, y0, 0.0f)
-                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
-                ;
+                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL));
         // top left corner
         for (int i = 1; i <= segments; i++) {
             float x = (float) (x0 + cornerRadius - Math.sin(HALF_PI / segments * i) * cornerRadius);
             float y = (float) (y0 + cornerRadius - Math.cos(HALF_PI / segments * i) * cornerRadius);
             bufferbuilder.addVertex(pose, x, y, 0.0f)
                     .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL),
-                            Color.getAlpha(colorTL))
-                    ;
+                            Color.getAlpha(colorTL));
         }
         bufferbuilder.addVertex(pose, x0, y0 + cornerRadius, 0.0f)
-                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL))
-                ;
+                .setColor(Color.getRed(colorTL), Color.getGreen(colorTL), Color.getBlue(colorTL), Color.getAlpha(colorTL));
     }
 
     public static void drawTexture(Matrix4f pose, ResourceLocation location, float x, float y, float w, float h,

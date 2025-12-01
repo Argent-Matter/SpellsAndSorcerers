@@ -6,7 +6,8 @@ import net.minecraft.world.item.ItemStack;
 public class CursorSlotSyncHandler extends SyncHandler {
 
     public void sync() {
-        sync(0, (RegistryFriendlyByteBuf buffer) -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, getSyncManager().getPlayer().containerMenu.getCarried()));
+        sync(0, (RegistryFriendlyByteBuf buffer) -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer,
+                getSyncManager().getPlayer().containerMenu.getCarried()));
     }
 
     @Override

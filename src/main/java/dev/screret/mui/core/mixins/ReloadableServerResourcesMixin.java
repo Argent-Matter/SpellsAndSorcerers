@@ -1,5 +1,6 @@
-
 package dev.screret.mui.core.mixins;
+
+import dev.screret.mui.utils.RegistryAccessContainer;
 
 import net.minecraft.commands.Commands;
 import net.minecraft.core.RegistryAccess;
@@ -8,7 +9,6 @@ import net.minecraft.tags.TagManager;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.neoforged.neoforge.common.conditions.ICondition;
 
-import dev.screret.mui.utils.RegistryAccessContainer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,17 +19,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ReloadableServerResources.class)
 public abstract class ReloadableServerResourcesMixin {
 
-	@Shadow
-	@Final
-	private TagManager tagManager;
+    @Shadow
+    @Final
+    private TagManager tagManager;
 
-	@Shadow
+    @Shadow
     public abstract ICondition.IContext getConditionContext();
 
-	@Inject(method = "<init>", at = @At("TAIL"))
-	private void mui$hookResourceLoad(RegistryAccess.Frozen registryAccess, FeatureFlagSet enabledFeatures,
-									  Commands.CommandSelection commandSelection, int functionCompilationLevel,
-									  CallbackInfo ci) {
-		RegistryAccessContainer.update(registryAccess, getConditionContext());
-	}
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void mui$hookResourceLoad(RegistryAccess.Frozen registryAccess, FeatureFlagSet enabledFeatures,
+                                      Commands.CommandSelection commandSelection, int functionCompilationLevel,
+                                      CallbackInfo ci) {
+        RegistryAccessContainer.update(registryAccess, getConditionContext());
+    }
 }

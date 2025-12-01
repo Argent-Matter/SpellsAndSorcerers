@@ -1,9 +1,9 @@
 package dev.screret.mui.api.widget;
 
-import net.minecraft.client.gui.screens.Screen;
-
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.widget.sizer.Area;
+
+import net.minecraft.client.gui.screens.Screen;
 
 /**
  * Implement this interface on a {@link IWidget} to allow it being resized by dragging the edges similar to windows.

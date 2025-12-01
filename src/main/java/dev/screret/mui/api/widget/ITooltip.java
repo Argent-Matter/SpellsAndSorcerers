@@ -3,14 +3,14 @@ package dev.screret.mui.api.widget;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.drawable.ITextLine;
+import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.drawable.text.StyledText;
 import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.client.screen.RichTooltip;
+
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 /**
  * Helper interface with tooltip builder methods for widgets.

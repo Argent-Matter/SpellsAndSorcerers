@@ -1,12 +1,11 @@
 package dev.screret.mui.utils.serialization.json;
 
-import com.google.gson.*;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.drawable.DrawableSerialization;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.utils.Color;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import com.google.gson.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("JavaExistingMethodCanBeUsed")
 public class JsonHelper {

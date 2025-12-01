@@ -2,10 +2,10 @@ package dev.screret.mui.value.sync;
 
 import dev.screret.mui.api.ISyncedAction;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 
 public class SyncedAction {

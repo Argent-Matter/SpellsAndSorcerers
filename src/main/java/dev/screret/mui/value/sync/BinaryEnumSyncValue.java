@@ -1,16 +1,15 @@
 package dev.screret.mui.value.sync;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-
 import dev.screret.mui.api.value.sync.IBoolSyncValue;
 
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Accepts enums which have exactly two elements. Can act as {@link IBoolSyncValue}.

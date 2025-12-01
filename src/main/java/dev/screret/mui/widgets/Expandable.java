@@ -7,20 +7,20 @@ import dev.screret.mui.api.layout.IViewport;
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.utils.HoveredWidgetList;
 import dev.screret.mui.utils.Interpolation;
 import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.widget.EmptyWidget;
 import dev.screret.mui.widget.Widget;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import org.jetbrains.annotations.NotNull;
 
 public class Expandable extends Widget<Expandable> implements Interactable, IViewport {
 

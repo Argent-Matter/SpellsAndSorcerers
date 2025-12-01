@@ -1,5 +1,10 @@
 package dev.screret.mui.core.mixins.client;
 
+import dev.screret.mui.ModularUIConfig;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.drawable.text.FontRenderHelper;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -9,10 +14,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.screret.mui.ModularUIConfig;
-import dev.screret.mui.client.screen.RichTooltip;
-import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.drawable.text.FontRenderHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

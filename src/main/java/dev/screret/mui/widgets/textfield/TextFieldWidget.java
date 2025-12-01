@@ -5,23 +5,24 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.drawable.ITextLine;
 import dev.screret.mui.api.value.IStringValue;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.utils.math.MathHelper;
+import dev.screret.mui.utils.math.ParseResult;
 import dev.screret.mui.value.StringValue;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.value.sync.ValueSyncHandler;
-import dev.screret.mui.client.screen.RichTooltip;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.utils.math.ParseResult;
 
 import net.minecraft.util.Mth;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.ParsePosition;
 import java.util.function.*;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Text input widget with one line only. Can be synced between client and server. Can handle text validation.

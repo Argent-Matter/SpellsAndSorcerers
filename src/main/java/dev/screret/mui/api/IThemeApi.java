@@ -1,15 +1,15 @@
 package dev.screret.mui.api;
 
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.drawable.Scrollbar;
 import dev.screret.mui.theme.*;
-import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.utils.serialization.json.JsonBuilder;
 
-import org.jetbrains.annotations.*;
-
 import java.util.List;
+
+import org.jetbrains.annotations.*;
 
 /**
  * An API interface for Themes.

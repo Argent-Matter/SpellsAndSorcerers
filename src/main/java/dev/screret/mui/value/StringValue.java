@@ -2,10 +2,10 @@ package dev.screret.mui.value;
 
 import dev.screret.mui.api.value.IStringValue;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
 
 public class StringValue extends ObjectValue<String> implements IStringValue<String> {
 

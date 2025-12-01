@@ -9,7 +9,13 @@ import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.api.widget.IVanillaSlot;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.client.screen.viewport.LocatedWidget;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+import dev.screret.mui.core.mixins.client.AbstractContainerScreenAccessor;
+import dev.screret.mui.core.mixins.client.ScreenAccessor;
 import dev.screret.mui.drawable.GuiDraw;
+import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
 import dev.screret.mui.overlay.OverlayManager;
 import dev.screret.mui.overlay.OverlayStack;
 import dev.screret.mui.utils.Color;
@@ -20,12 +26,6 @@ import dev.screret.mui.widgets.RichTextWidget;
 import dev.screret.mui.widgets.slot.ItemSlot;
 import dev.screret.mui.widgets.slot.ModularSlot;
 import dev.screret.mui.widgets.slot.SlotGroup;
-import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.client.screen.viewport.LocatedWidget;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.core.mixins.client.AbstractContainerScreenAccessor;
-import dev.screret.mui.core.mixins.client.ScreenAccessor;
-import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -54,15 +54,16 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnmodifiableView;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 @ApiStatus.Internal
 @EventBusSubscriber(modid = ModularUI.MOD_ID, value = Dist.CLIENT)
@@ -409,7 +410,7 @@ public class ClientScreenHandler {
             guiGraphics.fillGradient(0, 0, screen.width, screen.height,
                     Color.withAlpha(color, (int) (startAlpha * alpha)),
                     Color.withAlpha(color, (int) (endAlpha * alpha)));
-            //noinspection removal,UnstableApiUsage
+            // noinspection removal,UnstableApiUsage
             NeoForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(screen, guiGraphics));
         }
     }
@@ -468,7 +469,7 @@ public class ClientScreenHandler {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.pose().pushPose();
         graphics.pose().translate(x, y, 0);
-        //noinspection UnstableApiUsage
+        // noinspection UnstableApiUsage
         NeoForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(mcScreen, graphics, mouseX, mouseY));
 
         AbstractContainerMenu menu = mcScreen.getMenu();

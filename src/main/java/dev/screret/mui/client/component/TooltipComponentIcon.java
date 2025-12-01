@@ -2,9 +2,9 @@ package dev.screret.mui.client.component;
 
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IIcon;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.widget.sizer.Box;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -14,6 +14,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.Nullable;
 
 public class TooltipComponentIcon implements IIcon {

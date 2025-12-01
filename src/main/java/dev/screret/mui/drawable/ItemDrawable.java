@@ -1,19 +1,12 @@
 package dev.screret.mui.drawable;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.Codec;
 import dev.screret.mui.api.IJsonSerializable;
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.utils.serialization.json.JsonHelper;
 
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,15 +14,16 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ItemDrawable implements IDrawable, IJsonSerializable<ItemDrawable> {
 

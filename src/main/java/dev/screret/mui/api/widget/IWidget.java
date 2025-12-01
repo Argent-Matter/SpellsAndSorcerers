@@ -3,23 +3,24 @@ package dev.screret.mui.api.widget;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.layout.IResizeable;
 import dev.screret.mui.api.layout.IViewportStack;
+import dev.screret.mui.client.screen.ModularPanel;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.theme.WidgetThemeEntry;
+import dev.screret.mui.utils.FormattingUtil;
 import dev.screret.mui.utils.Point;
 import dev.screret.mui.utils.Stencil;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widget.sizer.Flex;
-import dev.screret.mui.client.screen.ModularPanel;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-import dev.screret.mui.utils.FormattingUtil;
 
 import com.google.common.base.CharMatcher;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A widget in a GUI

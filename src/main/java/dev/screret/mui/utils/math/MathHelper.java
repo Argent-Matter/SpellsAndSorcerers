@@ -2,11 +2,12 @@ package dev.screret.mui.utils.math;
 
 import net.minecraft.util.Mth;
 
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.mariuszgromada.math.mxparser.Constant;
 import org.mariuszgromada.math.mxparser.Expression;
+
+import org.jetbrains.annotations.Nullable;
 
 public class MathHelper {
 
@@ -67,7 +68,7 @@ public class MathHelper {
         }
     }
 
-    public static int min(int @Nullable ... values) {
+    public static int min(int @Nullable... values) {
         if (values == null || values.length == 0) throw new IllegalArgumentException();
         if (values.length == 1) return values[0];
         if (values.length == 2) return Math.min(values[0], values[1]);

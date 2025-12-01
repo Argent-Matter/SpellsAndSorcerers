@@ -3,10 +3,10 @@ package dev.screret.mui.widget.scroll;
 import dev.screret.mui.animation.Animator;
 import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.Scrollbar;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Interpolation;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
@@ -14,6 +14,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ScrollData {

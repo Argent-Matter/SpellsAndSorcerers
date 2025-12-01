@@ -1,10 +1,10 @@
 package dev.screret.mui.drawable.text;
 
 import dev.screret.mui.api.drawable.IKey;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.widgets.TextWidget;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
@@ -12,9 +12,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.IntSupplier;
+
+import org.jetbrains.annotations.Nullable;
 
 public class StyledText extends BaseKey {
 

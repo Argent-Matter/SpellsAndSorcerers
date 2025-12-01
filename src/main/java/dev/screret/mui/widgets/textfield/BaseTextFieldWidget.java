@@ -4,6 +4,7 @@ import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.widget.IFocusedWidget;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.theme.TextFieldTheme;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
@@ -12,7 +13,6 @@ import dev.screret.mui.widget.AbstractScrollWidget;
 import dev.screret.mui.widget.scroll.HorizontalScrollData;
 import dev.screret.mui.widget.scroll.ScrollData;
 import dev.screret.mui.widgets.VoidWidget;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.text.DecimalFormat;
@@ -29,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The base of a text input widget. Handles mouse/InputConstants input and rendering.

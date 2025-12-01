@@ -6,11 +6,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
 
 public final class ItemHolderSetList implements ItemEntryList {
 

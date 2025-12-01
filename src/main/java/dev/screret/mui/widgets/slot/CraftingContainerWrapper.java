@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 
 /**

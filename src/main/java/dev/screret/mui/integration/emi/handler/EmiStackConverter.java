@@ -1,5 +1,13 @@
 package dev.screret.mui.integration.emi.handler;
 
+import dev.screret.mui.integration.xei.entry.EntryList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
+import dev.screret.mui.integration.xei.entry.fluid.FluidTagList;
+import dev.screret.mui.integration.xei.entry.item.ItemStackList;
+import dev.screret.mui.integration.xei.entry.item.ItemTagList;
+import dev.screret.mui.integration.xei.handlers.IngredientProvider;
+import dev.screret.mui.utils.math.MathHelper;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -10,22 +18,16 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import dev.emi.emi.api.neoforge.NeoForgeEmiStack;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import dev.screret.mui.integration.xei.entry.EntryList;
-import dev.screret.mui.integration.xei.entry.fluid.FluidStackList;
-import dev.screret.mui.integration.xei.entry.fluid.FluidTagList;
-import dev.screret.mui.integration.xei.entry.item.ItemStackList;
-import dev.screret.mui.integration.xei.entry.item.ItemTagList;
-import dev.screret.mui.integration.xei.handlers.IngredientProvider;
-import dev.screret.mui.utils.math.MathHelper;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Custom EmiStack -> vanilla/forge/mod stack converters

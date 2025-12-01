@@ -12,10 +12,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Locale;
 import java.util.function.ToIntFunction;
+
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Utility class for dealing with colors.

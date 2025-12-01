@@ -1,8 +1,8 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.utils.serialization.network.IEquals;
 import dev.screret.mui.utils.ICopy;
 import dev.screret.mui.utils.serialization.network.IByteBufAdapter;
+import dev.screret.mui.utils.serialization.network.IEquals;
 
 import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamDecoder;
@@ -63,7 +63,7 @@ public class GenericMapSyncHandler<B extends ByteBuf, K, V> extends ValueSyncHan
             this.setter.accept(value);
         }
         if (sync) {
-            //noinspection unchecked
+            // noinspection unchecked
             sync(0, buffer -> this.write((B) buffer));
         }
     }

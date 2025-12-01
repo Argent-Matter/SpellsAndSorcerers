@@ -1,10 +1,10 @@
 package dev.screret.mui.api;
 
-import dev.screret.mui.factory.GuiData;
-import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.UISettings;
+import dev.screret.mui.factory.GuiData;
+import dev.screret.mui.value.sync.PanelSyncManager;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

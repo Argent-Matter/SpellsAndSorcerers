@@ -2,9 +2,9 @@ package dev.screret.mui.api;
 
 import dev.screret.mui.theme.*;
 
-import org.jetbrains.annotations.UnmodifiableView;
-
 import java.util.Collection;
+
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * A theme is parsed from json and contains style information like color or background texture.

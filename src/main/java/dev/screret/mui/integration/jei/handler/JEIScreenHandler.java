@@ -1,21 +1,23 @@
 package dev.screret.mui.integration.jei.handler;
 
-import net.minecraft.client.gui.screens.Screen;
-
 import dev.screret.mui.api.IMuiScreen;
 import dev.screret.mui.core.mixins.jei.IngredientListOverlayAccessor;
 import dev.screret.mui.integration.jei.MuiJEIPlugin;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
 import dev.screret.mui.integration.xei.handlers.RecipeViewerHandler;
+
+import net.minecraft.client.gui.screens.Screen;
+
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class JEIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
                              implements IGhostIngredientHandler<T> {

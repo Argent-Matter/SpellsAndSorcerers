@@ -4,20 +4,20 @@ import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
 import dev.screret.mui.api.widget.IVanillaSlot;
 import dev.screret.mui.api.widget.Interactable;
-import dev.screret.mui.drawable.GuiDraw;
-import dev.screret.mui.drawable.text.TextRenderer;
-import dev.screret.mui.theme.SlotTheme;
-import dev.screret.mui.theme.WidgetThemeEntry;
-import dev.screret.mui.value.sync.ItemSlotSH;
-import dev.screret.mui.value.sync.SyncHandler;
-import dev.screret.mui.widget.Widget;
 import dev.screret.mui.client.screen.ClientScreenHandler;
 import dev.screret.mui.client.screen.RichTooltip;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.core.mixins.client.AbstractContainerScreenAccessor;
 import dev.screret.mui.core.mixins.client.ScreenAccessor;
+import dev.screret.mui.drawable.GuiDraw;
+import dev.screret.mui.drawable.text.TextRenderer;
 import dev.screret.mui.integration.xei.entry.item.ItemStackList;
 import dev.screret.mui.integration.xei.handlers.IngredientProvider;
+import dev.screret.mui.theme.SlotTheme;
+import dev.screret.mui.theme.WidgetThemeEntry;
+import dev.screret.mui.value.sync.ItemSlotSH;
+import dev.screret.mui.value.sync.SyncHandler;
+import dev.screret.mui.widget.Widget;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -32,10 +32,11 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.UnaryOperator;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interactable, IngredientProvider<ItemStack> {
 

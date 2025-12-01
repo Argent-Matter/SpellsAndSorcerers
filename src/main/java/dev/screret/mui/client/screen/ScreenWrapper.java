@@ -9,6 +9,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)

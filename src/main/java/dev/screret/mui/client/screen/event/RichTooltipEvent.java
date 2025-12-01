@@ -10,9 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnstableApiUsage")
 public class RichTooltipEvent {

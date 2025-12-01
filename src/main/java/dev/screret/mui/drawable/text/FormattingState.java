@@ -8,10 +8,11 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Unit;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.Nullable;
 
 public class FormattingState {
 

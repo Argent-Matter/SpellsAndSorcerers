@@ -1,9 +1,9 @@
 package dev.screret.mui.api.widget;
 
 import dev.screret.mui.api.layout.IResizeable;
-import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+import dev.screret.mui.widget.sizer.Area;
 
 /**
  * Base interface for gui elements. For example widgets.

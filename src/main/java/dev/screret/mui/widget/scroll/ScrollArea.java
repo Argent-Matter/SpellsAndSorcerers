@@ -2,11 +2,11 @@ package dev.screret.mui.widget.scroll;
 
 import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Color;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widget.sizer.Box;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Mth;

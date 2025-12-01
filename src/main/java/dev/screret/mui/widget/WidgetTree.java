@@ -5,11 +5,11 @@ import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.layout.ILayoutWidget;
 import dev.screret.mui.api.widget.ISynced;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.value.sync.ModularSyncManager;
-import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.utils.FormattingUtil;
+import dev.screret.mui.value.sync.ModularSyncManager;
+import dev.screret.mui.value.sync.PanelSyncManager;
 
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
@@ -19,10 +19,6 @@ import com.google.common.collect.Streams;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,6 +28,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * Helper class to perform operations on widget trees such as traversing, drawing, resizing, finding widgets and

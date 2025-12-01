@@ -2,10 +2,10 @@ package dev.screret.mui.value;
 
 import dev.screret.mui.api.value.IValue;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @deprecated use {@link ObjectValue.Dynamic} instead

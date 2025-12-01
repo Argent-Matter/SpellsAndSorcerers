@@ -16,12 +16,13 @@ import me.shedaniel.rei.api.client.gui.drag.*;
 import me.shedaniel.rei.api.client.gui.widgets.TextField;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZonesProvider;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.Nullable;
 
 public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
                              implements DraggableStackProvider<T>, ExclusionZonesProvider<T> {

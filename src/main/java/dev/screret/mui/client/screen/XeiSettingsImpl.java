@@ -1,21 +1,21 @@
 package dev.screret.mui.client.screen;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-
 import dev.screret.mui.api.XeiSettings;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.integration.xei.XeiState;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.mui.utils.Rectangle;
 
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.UnmodifiableView;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * Keeps track of everything related to JEI in a Modular GUI.

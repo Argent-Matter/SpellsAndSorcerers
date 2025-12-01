@@ -3,22 +3,23 @@ package dev.screret.mui.client.screen;
 import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IPanelHandler;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.widget.WidgetTree;
-import dev.screret.mui.widget.wrapper.WidgetWrapper;
 import dev.screret.mui.client.screen.viewport.LocatedWidget;
 import dev.screret.mui.utils.ReverseIterable;
+import dev.screret.mui.widget.WidgetTree;
+import dev.screret.mui.widget.wrapper.WidgetWrapper;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.Getter;
+
+import java.util.*;
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
-
-import java.util.*;
-import java.util.function.Supplier;
 
 public class PanelManager {
 

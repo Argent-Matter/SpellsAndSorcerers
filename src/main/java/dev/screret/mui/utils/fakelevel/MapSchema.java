@@ -1,19 +1,19 @@
 package dev.screret.mui.utils.fakelevel;
 
+import dev.screret.mui.schema.ISchema;
+import dev.screret.mui.utils.BlockPosUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.google.common.collect.AbstractIterator;
-import dev.screret.mui.schema.ISchema;
-import dev.screret.mui.utils.BlockPosUtil;
 import it.unimi.dsi.fastutil.longs.Long2ReferenceMap;
 import it.unimi.dsi.fastutil.longs.Long2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MapSchema implements ISchema {
 

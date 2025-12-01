@@ -5,9 +5,9 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.NotNull;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

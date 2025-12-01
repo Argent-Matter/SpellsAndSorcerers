@@ -4,17 +4,17 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.layout.ILayoutWidget;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.GuiTextures;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.widget.AbstractParentWidget;
 import dev.screret.mui.widget.WidgetTree;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public class CategoryList extends AbstractParentWidget<IWidget, CategoryList> implements Interactable, ILayoutWidget {
 

@@ -3,16 +3,16 @@ package dev.screret.mui.widgets;
 import dev.screret.mui.api.drawable.IHoverable;
 import dev.screret.mui.api.drawable.IRichTextBuilder;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.text.RichText;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.screen.RichTooltip;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class RichTextWidget extends Widget<RichTextWidget> implements IRichTextBuilder<RichTextWidget>, Interactable {
 

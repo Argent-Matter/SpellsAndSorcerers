@@ -1,4 +1,3 @@
 package dev.screret.mui.network;
 
-public class NetworkHandler {
-}
+public class NetworkHandler {}

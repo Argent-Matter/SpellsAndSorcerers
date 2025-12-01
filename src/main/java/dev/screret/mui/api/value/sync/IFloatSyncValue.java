@@ -1,6 +1,7 @@
 package dev.screret.mui.api.value.sync;
 
 import dev.screret.mui.api.value.IFloatValue;
+
 import io.netty.buffer.ByteBuf;
 
 public interface IFloatSyncValue<B extends ByteBuf, T> extends IValueSyncHandler<B, T>, IFloatValue<T> {

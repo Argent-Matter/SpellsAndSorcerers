@@ -1,5 +1,7 @@
 package dev.screret.mui.api.drawable;
 
+import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.DrawableStack;
 import dev.screret.mui.drawable.Icon;
 import dev.screret.mui.theme.WidgetTheme;
@@ -7,8 +9,6 @@ import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Color;
 import dev.screret.mui.widget.Widget;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.viewport.GuiContext;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;

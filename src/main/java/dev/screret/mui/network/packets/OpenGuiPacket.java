@@ -1,5 +1,11 @@
 package dev.screret.mui.network.packets;
 
+import dev.screret.mui.ModularUI;
+import dev.screret.mui.api.UIFactory;
+import dev.screret.mui.factory.GuiData;
+import dev.screret.mui.factory.GuiManager;
+import dev.screret.mui.network.NetworkUtils;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
@@ -8,13 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import dev.screret.mui.ModularUI;
-import dev.screret.mui.api.UIFactory;
-import dev.screret.mui.factory.GuiData;
-import dev.screret.mui.factory.GuiManager;
-import dev.screret.mui.network.NetworkUtils;
-
-public record OpenGuiPacket<T extends GuiData>(int windowId, UIFactory<T> factory, FriendlyByteBuf data) implements CustomPacketPayload {
+public record OpenGuiPacket<T extends GuiData>(int windowId, UIFactory<T> factory, FriendlyByteBuf data)
+        implements CustomPacketPayload {
 
     public static final ResourceLocation ID = ModularUI.id("open_gui");
     public static final Type<OpenGuiPacket<?>> TYPE = new Type<>(ID);
@@ -29,7 +30,7 @@ public record OpenGuiPacket<T extends GuiData>(int windowId, UIFactory<T> factor
 
     public static <T extends GuiData> OpenGuiPacket<T> decode(FriendlyByteBuf buf) {
         int windowId = buf.readVarInt();
-        //noinspection unchecked
+        // noinspection unchecked
         UIFactory<T> factory = (UIFactory<T>) GuiManager.getFactory(buf.readResourceLocation());
         FriendlyByteBuf data = NetworkUtils.readFriendlyByteBuf(buf);
         return new OpenGuiPacket<>(windowId, factory, data);

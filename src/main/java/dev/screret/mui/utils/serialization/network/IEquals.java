@@ -1,8 +1,8 @@
 package dev.screret.mui.utils.serialization.network;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A custom function that tests objects for equality.

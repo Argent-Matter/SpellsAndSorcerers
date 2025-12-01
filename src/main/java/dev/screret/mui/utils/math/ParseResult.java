@@ -1,6 +1,7 @@
 package dev.screret.mui.utils.math;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 
 public class ParseResult {

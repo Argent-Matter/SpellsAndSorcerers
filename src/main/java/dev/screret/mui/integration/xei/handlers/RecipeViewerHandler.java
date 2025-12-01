@@ -6,11 +6,11 @@ import dev.screret.mui.integration.emi.handler.EmiScreenHandler;
 import dev.screret.mui.integration.jei.handler.JEIScreenHandler;
 import dev.screret.mui.integration.rei.handler.REIScreenHandler;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class RecipeViewerHandler {
 

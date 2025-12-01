@@ -5,9 +5,9 @@ import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.drawable.IIcon;
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.drawable.ITextLine;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.DelegateIcon;
 import dev.screret.mui.drawable.Icon;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

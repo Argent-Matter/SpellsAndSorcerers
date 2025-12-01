@@ -1,22 +1,23 @@
 package dev.screret.mui.widgets.textfield;
 
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.text.FontRenderHelper;
 import dev.screret.mui.utils.Point;
 import dev.screret.mui.widget.scroll.ScrollArea;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.network.chat.Component;
 
 import com.google.common.base.Joiner;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles the text itself like inserting and deleting text. Also handles the cursor and marking text.

@@ -1,8 +1,8 @@
 package dev.screret.mui.api;
 
+import dev.screret.mui.client.screen.*;
 import dev.screret.mui.factory.GuiData;
 import dev.screret.mui.value.sync.PanelSyncManager;
-import dev.screret.mui.client.screen.*;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

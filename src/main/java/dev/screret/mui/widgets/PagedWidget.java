@@ -4,13 +4,14 @@ import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.widget.Widget;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntConsumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class PagedWidget<W extends PagedWidget<W>> extends Widget<W> {
 

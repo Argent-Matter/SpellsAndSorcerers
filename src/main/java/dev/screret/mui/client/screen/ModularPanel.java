@@ -7,6 +7,9 @@ import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.layout.IViewport;
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.api.widget.*;
+import dev.screret.mui.client.screen.viewport.GuiViewportStack;
+import dev.screret.mui.client.screen.viewport.LocatedWidget;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.HoveredWidgetList;
 import dev.screret.mui.utils.Interpolation;
@@ -18,9 +21,6 @@ import dev.screret.mui.widget.ParentWidget;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widgets.SlotGroupWidget;
-import dev.screret.mui.client.screen.viewport.GuiViewportStack;
-import dev.screret.mui.client.screen.viewport.LocatedWidget;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.Util;
 
@@ -28,10 +28,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +37,11 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is like a window in windows. It can hold any amount of widgets. It may also be draggable.
@@ -739,7 +740,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     }
 
     public float getScale() {
-        //if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
+        // if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
         // 0.9 is default nea value
         return Interpolations.lerp(0.9f, 1f, getAnimator().getValue());
         // TODO NEA
@@ -748,7 +749,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
     }
 
     public float getAlpha() {
-        //if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
+        // if (ConfigHolder.INSTANCE.client.ui.animationTime == 0) return 1f;
         return getAnimator().getValue();
         // if (!ModularUI.Mods.NEA.isLoaded() || NEAConfig.openingAnimationTime == 0) return 1f;
         // return getAnimator().getValue();
@@ -773,7 +774,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         if (this.animator == null) {
             this.animator = new Animator()
                     .bounds(0f, 1f)
-                    //.duration(ConfigHolder.INSTANCE.client.ui.animationTime)
+                    // .duration(ConfigHolder.INSTANCE.client.ui.animationTime)
                     .curve(Interpolation.SINE_OUT); // TODO: NEA config values
             this.animator.reset(true);
         }

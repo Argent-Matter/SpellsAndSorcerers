@@ -1,8 +1,8 @@
 package dev.screret.mui.integration.xei.entry.item;
 
-import net.minecraft.world.item.ItemStack;
-
 import dev.screret.mui.integration.xei.entry.EntryList;
+
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 

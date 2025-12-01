@@ -2,7 +2,6 @@ package dev.screret.mui.value.sync;
 
 import dev.screret.mui.api.value.sync.IValueSyncHandler;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import io.netty.buffer.ByteBuf;

@@ -6,9 +6,9 @@ import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.GuiDraw;
 import dev.screret.mui.utils.Color;
-
 import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.widget.Widget;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

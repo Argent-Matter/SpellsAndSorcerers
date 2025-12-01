@@ -9,6 +9,7 @@ import dev.screret.mui.utils.serialization.json.JsonHelper;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;
+
 import org.jetbrains.annotations.Nullable;
 
 public class SelectableTheme extends WidgetTheme {

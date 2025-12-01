@@ -12,7 +12,6 @@ import java.util.function.Function;
 
 public class MuiRenderTypes extends RenderType {
 
-
     private static final Function<ResourceLocation, RenderType> GUI_TEXTURE = Util.memoize((texture) -> {
         return create("gui_texture", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS,
                 RenderType.TRANSIENT_BUFFER_SIZE, false, true,

@@ -15,13 +15,14 @@ import net.minecraft.world.inventory.Slot;
 import com.google.common.collect.AbstractIterator;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.*;
+import java.util.function.Consumer;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
-
-import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * This class contains all the info from {@link GuiContext} and additional MUI specific info like the current

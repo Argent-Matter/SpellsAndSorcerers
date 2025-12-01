@@ -1,11 +1,11 @@
 package dev.screret.mui.factory.inventory;
 
+import dev.screret.mui.network.NetworkUtils;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import dev.screret.mui.network.NetworkUtils;
 import lombok.Getter;
 
 /**

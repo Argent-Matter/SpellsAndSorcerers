@@ -1,16 +1,17 @@
 package dev.screret.mui.drawable.text;
 
 import dev.screret.mui.api.drawable.IIcon;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.widget.sizer.Box;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.Nullable;
 
 public class TextIcon implements IIcon {

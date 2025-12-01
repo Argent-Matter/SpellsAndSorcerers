@@ -21,13 +21,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import it.unimi.dsi.fastutil.objects.*;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 @OnlyIn(Dist.CLIENT)
@@ -54,7 +55,8 @@ public class ThemeManager extends SimplePreparableReloadListener<Map<String, Lis
         for (String namespace : resourceManager.getNamespaces()) {
             profiler.push(namespace);
 
-            for (Resource resource : resourceManager.getResourceStack(ResourceLocation.fromNamespaceAndPath(namespace, THEMES_PATH))) {
+            for (Resource resource : resourceManager
+                    .getResourceStack(ResourceLocation.fromNamespaceAndPath(namespace, THEMES_PATH))) {
                 profiler.push(resource.sourcePackId());
                 themeJsonSources.add(resource.sourcePackId());
 

@@ -1,9 +1,9 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.utils.serialization.network.IEquals;
 import dev.screret.mui.utils.ICopy;
-import dev.screret.mui.utils.serialization.network.IByteBufAdapter;
 import dev.screret.mui.utils.serialization.network.ByteBufAdapters;
+import dev.screret.mui.utils.serialization.network.IByteBufAdapter;
+import dev.screret.mui.utils.serialization.network.IEquals;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamDecoder;
@@ -12,22 +12,23 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class GenericSyncValue<B extends ByteBuf, T> extends ValueSyncHandler<B, T> {
 
     public static GenericSyncValue<RegistryFriendlyByteBuf, ItemStack> forItem(@NotNull Supplier<ItemStack> getter,
-                                                      @Nullable Consumer<ItemStack> setter) {
+                                                                               @Nullable Consumer<ItemStack> setter) {
         return new GenericSyncValue<>(getter, setter, ByteBufAdapters.ITEM_STACK);
     }
 
     public static GenericSyncValue<RegistryFriendlyByteBuf, FluidStack> forFluid(@NotNull Supplier<FluidStack> getter,
-                                                        @Nullable Consumer<FluidStack> setter) {
+                                                                                 @Nullable Consumer<FluidStack> setter) {
         return new GenericSyncValue<>(getter, setter, ByteBufAdapters.FLUID_STACK);
     }
 
@@ -118,7 +119,7 @@ public class GenericSyncValue<B extends ByteBuf, T> extends ValueSyncHandler<B, 
             this.setter.accept(value);
         }
         if (sync) {
-            //noinspection unchecked
+            // noinspection unchecked
             sync(0, buffer -> this.write((B) buffer));
         }
     }

@@ -5,11 +5,11 @@ import dev.screret.mui.value.sync.DynamicSyncHandler;
 import dev.screret.mui.value.sync.SyncHandler;
 import dev.screret.mui.widget.Widget;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A widget which can update its child based on a function in {@link DynamicSyncHandler}.

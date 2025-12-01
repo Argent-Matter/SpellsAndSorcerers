@@ -8,8 +8,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface that handles user interactions on {@link IWidget} objects.
@@ -124,10 +125,10 @@ public interface Interactable {
      * If this scroll view scrolled to the end and this returns false, the scroll will get passed through another scroll
      * view below this.
      *
-     * @param mouseX the X coordinate of the mouse.
-     * @param mouseY the Y coordinate of the mouse.
-     * @param scrollX  amount scrolled by on the X axis (usually irrelevant)
-     * @param scrollY  amount scrolled by on the Y axis (usually irrelevant)
+     * @param mouseX  the X coordinate of the mouse.
+     * @param mouseY  the Y coordinate of the mouse.
+     * @param scrollX amount scrolled by on the X axis (usually irrelevant)
+     * @param scrollY amount scrolled by on the Y axis (usually irrelevant)
      * @return true if this widget can be scrolled at all
      */
     default boolean onMouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {

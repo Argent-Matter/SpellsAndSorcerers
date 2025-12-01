@@ -2,19 +2,19 @@ package dev.screret.mui.factory;
 
 import dev.screret.mui.api.IUIHolder;
 import dev.screret.mui.api.UIFactory;
-import dev.screret.mui.value.sync.PanelSyncManager;
 import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.UISettings;
+import dev.screret.mui.value.sync.PanelSyncManager;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractUIFactory<T extends GuiData> implements UIFactory<T> {
 

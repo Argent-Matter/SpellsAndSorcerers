@@ -7,14 +7,13 @@ import dev.screret.mui.api.value.sync.IStringSyncValue;
 import dev.screret.mui.utils.FloatConsumer;
 import dev.screret.mui.utils.FloatSupplier;
 
-import net.minecraft.network.FriendlyByteBuf;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
                             IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {

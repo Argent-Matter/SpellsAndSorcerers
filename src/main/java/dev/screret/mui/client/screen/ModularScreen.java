@@ -1,6 +1,5 @@
 package dev.screret.mui.client.screen;
 
-import dev.screret.motm.MagicOfTheMind;
 import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IMuiScreen;
 import dev.screret.mui.api.ITheme;
@@ -8,6 +7,7 @@ import dev.screret.mui.api.IThemeApi;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.widget.IGuiAction;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.GuiDraw;
 import dev.screret.mui.overlay.OverlayScreenWrapper;
 import dev.screret.mui.utils.Color;
@@ -15,7 +15,6 @@ import dev.screret.mui.value.sync.ModularSyncManager;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widget.wrapper.WidgetWrapper;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,16 +41,17 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import lombok.Getter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This is the base class for all modular UIs. It only exists on client side.
@@ -526,10 +526,10 @@ public class ModularScreen implements GuiEventListener, Renderable, LayoutElemen
      * Interactable#onMouseScrolled(double, double, double)} on every widget under
      * the mouse after gui action listeners have been called.
      *
-     * @param mouseX current mouse X coordinate relative to the screen
-     * @param mouseY current mouse Y coordinate relative to the screen
-     * @param scrollX  amount scrolled by on the X axis (usually irrelevant)
-     * @param scrollY  the direction and speed of the scroll
+     * @param mouseX  current mouse X coordinate relative to the screen
+     * @param mouseY  current mouse Y coordinate relative to the screen
+     * @param scrollX amount scrolled by on the X axis (usually irrelevant)
+     * @param scrollY the direction and speed of the scroll
      * @return true if the action was consumed and further processing should be canceled
      */
     @Override

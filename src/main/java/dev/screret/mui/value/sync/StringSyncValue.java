@@ -2,16 +2,17 @@ package dev.screret.mui.value.sync;
 
 import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IStringSyncValue;
-
 import dev.screret.mui.network.NetworkUtils;
+
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class StringSyncValue extends ValueSyncHandler<ByteBuf, String> implements IStringSyncValue<ByteBuf, String> {
 

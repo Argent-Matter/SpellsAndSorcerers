@@ -4,9 +4,9 @@ import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.widget.IGuiElement;
+import dev.screret.mui.client.screen.ClientScreenHandler;
 import dev.screret.mui.utils.Stencil;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.ClientScreenHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -17,9 +17,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
+import org.joml.Matrix4f;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 
 /**
  * A gui context contains various properties like screen size, mouse position, last clicked button etc.

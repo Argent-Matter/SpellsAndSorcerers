@@ -1,19 +1,20 @@
 package dev.screret.mui.value.sync;
 
 import dev.screret.mui.api.IPacketWriter;
+import dev.screret.mui.network.packets.SyncHandlerPacket;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import dev.screret.mui.network.packets.SyncHandlerPacket;
 import lombok.Getter;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * Base class for handling syncing of widgets.
@@ -159,7 +160,8 @@ public abstract class SyncHandler {
         return this.syncManager;
     }
 
-    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
+                                    SyncHandler syncHandler) {
         Objects.requireNonNull(writer);
         Objects.requireNonNull(syncHandler);
         if (!syncHandler.isValid()) {
@@ -169,7 +171,8 @@ public abstract class SyncHandler {
                 new SyncHandlerPacket(panel, syncHandler.getKey(), false, writer));
     }
 
-    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
+                                    SyncHandler syncHandler) {
         Objects.requireNonNull(writer);
         Objects.requireNonNull(syncHandler);
         if (!syncHandler.isValid()) {

@@ -5,9 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
@@ -15,6 +12,10 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.ChatFormatting.*;
 

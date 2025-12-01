@@ -1,10 +1,10 @@
 package dev.screret.mui.api;
 
+import dev.screret.mui.client.screen.ModularPanel;
+import dev.screret.mui.client.screen.SecondaryPanel;
 import dev.screret.mui.value.sync.ItemSlotSH;
 import dev.screret.mui.value.sync.PanelSyncHandler;
 import dev.screret.mui.value.sync.PanelSyncManager;
-import dev.screret.mui.client.screen.ModularPanel;
-import dev.screret.mui.client.screen.SecondaryPanel;
 
 import org.jetbrains.annotations.ApiStatus;
 

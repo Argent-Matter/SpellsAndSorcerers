@@ -1,22 +1,22 @@
 package dev.screret.mui.value.sync;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.neoforged.neoforge.network.connection.ConnectionType;
-
 import dev.screret.mui.api.IPacketWriter;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.utils.RegistryAccessContainer;
 import dev.screret.mui.widget.WidgetTree;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.neoforged.neoforge.network.connection.ConnectionType;
+
 import io.netty.buffer.Unpooled;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This sync handler calls a function on client and server which creates a widget after being notified.<br>
@@ -30,6 +30,7 @@ public class DynamicSyncHandler extends SyncHandler {
      * {@link PanelSyncManager#getOrCreateSyncHandler(String, int, Class, Supplier)}.<br>
      * Returning null in the function will not update the widget.<br>
      * On client side the result is handed over to a linked {@link dev.screret.mui.widgets.DynamicSyncedWidget}.
+     * 
      * @see IWidgetProvider
      */
     @Setter

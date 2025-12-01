@@ -12,9 +12,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
 
 public class BlockEntityUIFactory extends AbstractUIFactory<PosGuiData> {
 

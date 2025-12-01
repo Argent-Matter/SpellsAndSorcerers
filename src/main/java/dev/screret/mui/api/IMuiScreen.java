@@ -1,12 +1,12 @@
 package dev.screret.mui.api;
 
-import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.client.screen.ClientScreenHandler;
 import dev.screret.mui.client.screen.ContainerScreenWrapper;
 import dev.screret.mui.client.screen.ModularScreen;
 import dev.screret.mui.client.screen.ScreenWrapper;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.core.mixins.client.AbstractContainerScreenAccessor;
+import dev.screret.mui.utils.Rectangle;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,8 +17,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 /**
  * Implement this interface on a {@link Screen} to be able to use it as a custom wrapper.

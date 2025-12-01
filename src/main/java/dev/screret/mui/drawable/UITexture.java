@@ -4,11 +4,11 @@ import dev.screret.motm.MagicOfTheMind;
 import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.IJsonSerializable;
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.utils.Interpolations;
-import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.utils.serialization.json.JsonHelper;
+import dev.screret.mui.widget.sizer.Area;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+
 import org.jetbrains.annotations.Nullable;
 
 @Accessors(fluent = true, chain = true)
@@ -84,7 +85,8 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         boolean png = !location.getPath().endsWith(".png");
         boolean textures = !location.getPath().startsWith("textures/");
         if (png || textures) {
-            location = location.withPath(path -> png ? (textures ? TEXTURES_PREFIX + path + PNG_SUFFIX : path + PNG_SUFFIX) : TEXTURES_PREFIX + path);
+            location = location.withPath(
+                    path -> png ? (textures ? TEXTURES_PREFIX + path + PNG_SUFFIX : path + PNG_SUFFIX) : TEXTURES_PREFIX + path);
         }
         this.location = location;
         this.u0 = u0;

@@ -1,11 +1,11 @@
 package dev.screret.mui;
 
+import dev.screret.mui.client.screen.RichTooltip;
+
 import net.minecraft.ChatFormatting;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.*;
-
-import dev.screret.mui.client.screen.RichTooltip;
 
 import java.util.Objects;
 
@@ -19,7 +19,8 @@ public class ModularUIConfig {
             .translation("config.mui.defaultScrollSpeed")
             .defineInRange("defaultScrollSpeed", 30, 1, 100);
     public static final BooleanValue SMOOTH_PROGRESS_BARS = BUILDER
-            .comment("If progress bars should step in texture pixels or screen pixels. (Screen pixels are way smaller and therefore smoother)")
+            .comment(
+                    "If progress bars should step in texture pixels or screen pixels. (Screen pixels are way smaller and therefore smoother)")
             .translation("config.mui.smoothProgressBars")
             .define("smoothProgressBars", false);
     // Default direction

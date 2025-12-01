@@ -1,6 +1,7 @@
 package dev.screret.mui.api.value.sync;
 
 import dev.screret.mui.api.value.IBoolValue;
+
 import io.netty.buffer.ByteBuf;
 
 /**

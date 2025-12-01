@@ -1,9 +1,8 @@
 package dev.screret.mui.utils;
 
-import com.mojang.blaze3d.vertex.*;
 import dev.screret.mui.api.layout.IViewportStack;
-import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.viewport.GuiContext;
+import dev.screret.mui.widget.sizer.Area;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,11 +10,13 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A util class for stencil stack used as a scissor stack. The reason for using stencils over scissors is that scissors

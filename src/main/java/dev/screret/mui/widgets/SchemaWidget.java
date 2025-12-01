@@ -2,20 +2,21 @@ package dev.screret.mui.widgets;
 
 import dev.screret.mui.api.drawable.IKey;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.schemarenderer.BaseSchemaRenderer;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.schema.ISchema;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.math.MathHelper;
 import dev.screret.mui.widget.Widget;
-import dev.screret.mui.client.schemarenderer.BaseSchemaRenderer;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SchemaWidget extends Widget<SchemaWidget> implements Interactable {
 

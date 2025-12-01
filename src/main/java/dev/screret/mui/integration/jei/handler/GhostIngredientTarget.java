@@ -1,10 +1,12 @@
 package dev.screret.mui.integration.jei.handler;
 
-import net.minecraft.client.renderer.Rect2i;
-
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.integration.xei.handlers.GhostIngredientSlot;
+
+import net.minecraft.client.renderer.Rect2i;
+
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
+
 import org.jetbrains.annotations.NotNull;
 
 public class GhostIngredientTarget<I> implements IGhostIngredientHandler.Target<I> {

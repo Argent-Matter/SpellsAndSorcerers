@@ -6,8 +6,6 @@ import dev.screret.mui.drawable.ColorType;
 import dev.screret.mui.drawable.TabTexture;
 import dev.screret.mui.drawable.UITexture;
 
-import org.jetbrains.annotations.NotNull;
-
 public class MOTMGuiTextures {
 
     /** Keys used for GT assets registered for use in Themes */

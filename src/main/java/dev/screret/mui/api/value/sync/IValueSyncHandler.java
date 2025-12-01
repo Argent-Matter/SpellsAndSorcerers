@@ -1,9 +1,8 @@
 package dev.screret.mui.api.value.sync;
 
 import dev.screret.mui.api.value.IValue;
-import io.netty.buffer.ByteBuf;
 
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
 
 /**
  * A helper interface for syncing an object value.

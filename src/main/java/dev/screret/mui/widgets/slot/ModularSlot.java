@@ -15,13 +15,14 @@ import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The base class for slots in a modular ui.

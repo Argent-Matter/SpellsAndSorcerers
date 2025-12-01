@@ -5,20 +5,21 @@ import dev.screret.mui.api.value.sync.IDoubleSyncValue;
 import dev.screret.mui.api.value.sync.IIntSyncValue;
 import dev.screret.mui.api.value.sync.IStringSyncValue;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
 
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
-                          implements IIntSyncValue<ByteBuf, Integer>, IDoubleSyncValue<ByteBuf, Integer>, IStringSyncValue<ByteBuf, Integer> {
+                          implements IIntSyncValue<ByteBuf, Integer>, IDoubleSyncValue<ByteBuf, Integer>,
+                          IStringSyncValue<ByteBuf, Integer> {
 
     private int cache;
     private final IntSupplier getter;

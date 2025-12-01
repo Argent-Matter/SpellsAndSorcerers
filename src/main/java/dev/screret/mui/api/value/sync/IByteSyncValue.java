@@ -1,6 +1,7 @@
 package dev.screret.mui.api.value.sync;
 
 import dev.screret.mui.api.value.IByteValue;
+
 import io.netty.buffer.ByteBuf;
 
 public interface IByteSyncValue<B extends ByteBuf, T> extends IByteValue<T>, IValueSyncHandler<B, T> {

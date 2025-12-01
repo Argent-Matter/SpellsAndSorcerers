@@ -3,10 +3,10 @@ package dev.screret.mui.theme;
 import dev.screret.mui.api.ITheme;
 import dev.screret.mui.api.IThemeApi;
 
-import org.jetbrains.annotations.UnmodifiableView;
-
 import java.util.Collection;
 import java.util.Collections;
+
+import org.jetbrains.annotations.UnmodifiableView;
 
 public class Theme extends AbstractTheme {
 

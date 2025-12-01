@@ -2,15 +2,15 @@ package dev.screret.mui.widget;
 
 import dev.screret.mui.api.drawable.IDrawable;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.widgets.VoidWidget;
-import dev.screret.mui.client.screen.ModularPanel;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * A widget which can hold any amount of children.

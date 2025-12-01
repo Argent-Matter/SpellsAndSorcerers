@@ -8,16 +8,17 @@ import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.api.widget.IPositioned;
 import dev.screret.mui.api.widget.IVanillaSlot;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.utils.Alignment;
 import dev.screret.mui.core.mixins.client.SlotAccessor;
+import dev.screret.mui.utils.Alignment;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.DoubleSupplier;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class handles resizing and positioning of widgets.

@@ -23,12 +23,13 @@ import it.unimi.dsi.fastutil.chars.CharSet;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import java.util.*;
 import java.util.function.BiPredicate;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ArraySchema implements ISchema {
 

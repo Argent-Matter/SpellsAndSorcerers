@@ -1,9 +1,9 @@
 package dev.screret.mui.theme;
 
-import org.jetbrains.annotations.UnmodifiableView;
-
 import java.util.Collection;
 import java.util.Collections;
+
+import org.jetbrains.annotations.UnmodifiableView;
 
 public class DefaultTheme extends AbstractTheme {
 

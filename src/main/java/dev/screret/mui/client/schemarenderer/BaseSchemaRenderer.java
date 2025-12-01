@@ -2,6 +2,7 @@ package dev.screret.mui.client.schemarenderer;
 
 import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.drawable.IDrawable;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.Icon;
 import dev.screret.mui.integration.embeddium.SodiumCompat;
 import dev.screret.mui.schema.ISchema;
@@ -11,7 +12,6 @@ import dev.screret.mui.utils.MatrixUtils;
 import dev.screret.mui.utils.RenderUtil;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widgets.SchemaWidget;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.CrashReport;
 import net.minecraft.Util;
@@ -51,9 +51,6 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectLinkedOpenHashMap;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -65,6 +62,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * World rendering is based on Applied energistics 2's <a href=
@@ -510,7 +511,8 @@ public class BaseSchemaRenderer implements IDrawable {
             this.isCanceled.set(true);
         }
 
-        protected BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers, SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType) {
+        protected BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers,
+                                                SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType) {
             BufferBuilder builder = bufferLayers.get(renderType);
             if (builder == null) {
                 ByteBufferBuilder bytebufferbuilder = sectionBufferBuilderPack.buffer(renderType);

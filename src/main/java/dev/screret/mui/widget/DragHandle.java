@@ -4,11 +4,11 @@ import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.api.widget.IDraggable;
 import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.api.widget.IWidget;
-import dev.screret.mui.utils.HoveredWidgetList;
-import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.DraggablePanelWrapper;
 import dev.screret.mui.client.screen.ModularPanel;
 import dev.screret.mui.client.screen.viewport.ModularGuiContext;
+import dev.screret.mui.utils.HoveredWidgetList;
+import dev.screret.mui.widget.sizer.Area;
 
 import net.minecraft.client.gui.GuiGraphics;
 

@@ -7,10 +7,10 @@ import dev.screret.mui.api.widget.IGuiElement;
 import dev.screret.mui.utils.Interpolations;
 import dev.screret.mui.utils.Point;
 import dev.screret.mui.utils.Rectangle;
+import dev.screret.mui.utils.math.MathHelper;
 
 import net.minecraft.util.Mth;
 
-import dev.screret.mui.utils.math.MathHelper;
 import lombok.Getter;
 import lombok.Setter;
 

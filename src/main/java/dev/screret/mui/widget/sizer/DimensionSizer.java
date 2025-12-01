@@ -1,7 +1,7 @@
 package dev.screret.mui.widget.sizer;
 
-import dev.screret.mui.ModularUI;
 import dev.screret.mui.GuiError;
+import dev.screret.mui.ModularUI;
 import dev.screret.mui.ModularUIConfig;
 import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.layout.IResizeable;
@@ -9,9 +9,10 @@ import dev.screret.mui.api.widget.IGuiElement;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.IntSupplier;
+
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Handles calculating size and position in one dimension (x or y).

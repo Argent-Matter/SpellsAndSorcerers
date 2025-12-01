@@ -5,7 +5,6 @@ import dev.screret.mui.api.value.sync.IServerMouseAction;
 import dev.screret.mui.utils.KeyboardData;
 import dev.screret.mui.utils.MouseData;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
 public class InteractionSyncHandler extends SyncHandler {

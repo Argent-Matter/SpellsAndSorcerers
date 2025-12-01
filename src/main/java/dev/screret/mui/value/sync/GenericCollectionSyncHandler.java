@@ -1,10 +1,9 @@
 package dev.screret.mui.value.sync;
 
-import dev.screret.mui.utils.serialization.network.IEquals;
 import dev.screret.mui.utils.ICopy;
 import dev.screret.mui.utils.serialization.network.IByteBufAdapter;
+import dev.screret.mui.utils.serialization.network.IEquals;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamDecoder;
 import net.minecraft.network.codec.StreamEncoder;
@@ -13,14 +12,14 @@ import io.netty.buffer.ByteBuf;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class GenericCollectionSyncHandler<B extends ByteBuf, T, C extends Collection<T>> extends ValueSyncHandler<B, C> {
 
@@ -58,7 +57,7 @@ public abstract class GenericCollectionSyncHandler<B extends ByteBuf, T, C exten
             this.setter.accept(value);
         }
         if (sync) {
-            //noinspection unchecked
+            // noinspection unchecked
             sync(0, buffer -> this.write((B) buffer));
         }
     }

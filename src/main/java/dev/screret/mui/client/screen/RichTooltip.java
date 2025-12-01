@@ -5,14 +5,14 @@ import dev.screret.mui.api.GuiAxis;
 import dev.screret.mui.api.MCHelper;
 import dev.screret.mui.api.drawable.IRichTextBuilder;
 import dev.screret.mui.api.widget.IWidget;
+import dev.screret.mui.client.screen.event.RichTooltipEvent;
+import dev.screret.mui.client.screen.viewport.GuiContext;
 import dev.screret.mui.drawable.GuiDraw;
 import dev.screret.mui.drawable.text.RichText;
 import dev.screret.mui.drawable.text.TextRenderer;
 import dev.screret.mui.utils.Color;
 import dev.screret.mui.utils.Rectangle;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.event.RichTooltipEvent;
-import dev.screret.mui.client.screen.viewport.GuiContext;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -37,12 +37,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.Tolerate;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.Nullable;
 
 @Accessors(fluent = true, chain = true)
 public class RichTooltip implements IRichTextBuilder<RichTooltip> {

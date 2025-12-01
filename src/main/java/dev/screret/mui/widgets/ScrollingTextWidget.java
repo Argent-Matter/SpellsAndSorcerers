@@ -5,11 +5,11 @@ import dev.screret.mui.animation.IAnimator;
 import dev.screret.mui.animation.SequentialAnimator;
 import dev.screret.mui.animation.Wait;
 import dev.screret.mui.api.drawable.IKey;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.drawable.text.TextRenderer;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.Interpolation;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.network.chat.Component;
 

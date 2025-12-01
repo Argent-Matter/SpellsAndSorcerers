@@ -1,16 +1,18 @@
 package dev.screret.mui.network;
 
+import dev.screret.mui.ModularUI;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.world.entity.player.Player;
 
-import dev.screret.mui.ModularUI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
 
 public class NetworkUtils {
 

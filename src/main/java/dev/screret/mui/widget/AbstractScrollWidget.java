@@ -5,6 +5,7 @@ import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.api.widget.IGuiAction;
 import dev.screret.mui.api.widget.IWidget;
 import dev.screret.mui.api.widget.Interactable;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
 import dev.screret.mui.utils.HoveredWidgetList;
@@ -13,7 +14,6 @@ import dev.screret.mui.widget.scroll.ScrollArea;
 import dev.screret.mui.widget.scroll.ScrollData;
 import dev.screret.mui.widget.scroll.VerticalScrollData;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -6,13 +6,14 @@ import dev.screret.mui.widget.sizer.Area;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class is a matrix stack aka pose stack. It keeps track of widget transformations (including position)

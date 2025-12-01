@@ -1,5 +1,7 @@
 package dev.screret.mui;
 
+import dev.screret.mui.client.screen.ModularContainerMenu;
+
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
@@ -15,15 +17,15 @@ import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import dev.screret.mui.client.screen.ModularContainerMenu;
 import it.unimi.dsi.fastutil.floats.FloatUnaryOperator;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import org.mariuszgromada.math.mxparser.License;
 
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
 
 @Mod(ModularUI.MOD_ID)
 public class ModularUI {
@@ -39,7 +41,8 @@ public class ModularUI {
 
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, ModularUI.MOD_ID);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<ModularContainerMenu>> MODULAR_CONTAINER = MENU_TYPES.register("modular",
+    public static final DeferredHolder<MenuType<?>, MenuType<ModularContainerMenu>> MODULAR_CONTAINER = MENU_TYPES.register(
+            "modular",
             () -> IMenuTypeExtension.create(ModularContainerMenu::new));
 
     public ModularUI(IEventBus modEventBus, ModContainer modContainer) {

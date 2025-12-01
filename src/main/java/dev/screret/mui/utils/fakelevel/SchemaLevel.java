@@ -1,6 +1,9 @@
 package dev.screret.mui.utils.fakelevel;
 
 import dev.screret.mui.ModularUI;
+import dev.screret.mui.schema.ISchema;
+import dev.screret.mui.utils.BlockPosUtil;
+import dev.screret.mui.utils.RegistryAccessContainer;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -45,15 +48,10 @@ import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-import dev.screret.mui.schema.ISchema;
-import dev.screret.mui.utils.BlockPosUtil;
-import dev.screret.mui.utils.RegistryAccessContainer;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3fc;
 
 import java.util.Iterator;
@@ -63,6 +61,9 @@ import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -227,9 +228,7 @@ public class SchemaLevel extends Level implements ISchema {
     }
 
     @Override
-    public void setMapData(MapId mapId, MapItemSavedData mapData) {
-
-    }
+    public void setMapData(MapId mapId, MapItemSavedData mapData) {}
 
     @Override
     public MapId getFreeMapId() {
@@ -260,9 +259,7 @@ public class SchemaLevel extends Level implements ISchema {
     }
 
     @Override
-    public void setDayTimePerTick(float dayTimePerTick) {
-
-    }
+    public void setDayTimePerTick(float dayTimePerTick) {}
 
     @Override
     public void playSeededSound(@Nullable Player player, double x, double y, double z, Holder<SoundEvent> sound,
@@ -316,9 +313,7 @@ public class SchemaLevel extends Level implements ISchema {
     public void levelEvent(@Nullable Player player, int type, BlockPos pos, int data) {}
 
     @Override
-    public void gameEvent(Holder<GameEvent> gameEvent, Vec3 pos, GameEvent.Context context) {
-
-    }
+    public void gameEvent(Holder<GameEvent> gameEvent, Vec3 pos, GameEvent.Context context) {}
 
     @Override
     public float getShade(@NotNull Direction direction, boolean shade) {

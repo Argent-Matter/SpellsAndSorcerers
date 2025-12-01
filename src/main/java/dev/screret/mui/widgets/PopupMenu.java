@@ -5,10 +5,11 @@ import dev.screret.mui.widget.Widget;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public class PopupMenu<W extends PopupMenu<W>> extends Widget<W> {
 

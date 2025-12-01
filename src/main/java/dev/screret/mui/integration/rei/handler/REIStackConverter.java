@@ -6,25 +6,26 @@ import dev.screret.mui.integration.xei.entry.fluid.FluidTagList;
 import dev.screret.mui.integration.xei.entry.item.ItemStackList;
 import dev.screret.mui.integration.xei.entry.item.ItemTagList;
 import dev.screret.mui.integration.xei.handlers.IngredientProvider;
+import dev.screret.mui.utils.math.MathHelper;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import dev.screret.mui.utils.math.MathHelper;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.EntryType;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Custom EntryStack -> vanilla/forge/mod stack converters

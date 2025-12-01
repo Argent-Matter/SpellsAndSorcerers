@@ -8,6 +8,10 @@ import dev.screret.mui.api.layout.IResizeable;
 import dev.screret.mui.api.layout.IViewportStack;
 import dev.screret.mui.api.value.IValue;
 import dev.screret.mui.api.widget.*;
+import dev.screret.mui.client.screen.ModularPanel;
+import dev.screret.mui.client.screen.ModularScreen;
+import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.factory.GuiData;
 import dev.screret.mui.theme.WidgetTheme;
 import dev.screret.mui.theme.WidgetThemeEntry;
@@ -18,23 +22,20 @@ import dev.screret.mui.value.sync.ValueSyncHandler;
 import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.widget.sizer.Flex;
 import dev.screret.mui.widget.sizer.IUnResizeable;
-import dev.screret.mui.client.screen.ModularPanel;
-import dev.screret.mui.client.screen.ModularScreen;
-import dev.screret.mui.client.screen.RichTooltip;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A very modular implementation of {@link IWidget}. This is the base class for almost all UI elements.

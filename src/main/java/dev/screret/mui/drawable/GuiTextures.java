@@ -203,8 +203,12 @@ public interface GuiTextures {
     UITexture CHECK_BOX_EMPTY = CHECK_BOX.getSubArea(0, 0, 1f, 0.5f);
     UITexture CHECK_BOX_FULL = CHECK_BOX.getSubArea(0, 0.5f, 1f, 1f);
 
-    TabTexture TAB_TOP = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_top", ColorType.DEFAULT), GuiAxis.Y, false, 28, 32, 4);
-    TabTexture TAB_BOTTOM = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_bottom", ColorType.DEFAULT), GuiAxis.Y, true, 28, 32, 4);
-    TabTexture TAB_LEFT = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_left", ColorType.DEFAULT), GuiAxis.X, false, 32, 28, 4);
-    TabTexture TAB_RIGHT = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_right", ColorType.DEFAULT), GuiAxis.X, true, 32, 28, 4);
+    TabTexture TAB_TOP = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_top", ColorType.DEFAULT), GuiAxis.Y,
+            false, 28, 32, 4);
+    TabTexture TAB_BOTTOM = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_bottom", ColorType.DEFAULT),
+            GuiAxis.Y, true, 28, 32, 4);
+    TabTexture TAB_LEFT = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_left", ColorType.DEFAULT), GuiAxis.X,
+            false, 32, 28, 4);
+    TabTexture TAB_RIGHT = TabTexture.of(UITexture.fullImage(ModularUI.MOD_ID, "gui/tab/tabs_right", ColorType.DEFAULT),
+            GuiAxis.X, true, 32, 28, 4);
 }

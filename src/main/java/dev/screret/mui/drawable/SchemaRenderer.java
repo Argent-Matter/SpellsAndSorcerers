@@ -1,9 +1,9 @@
 package dev.screret.mui.drawable;
 
-import dev.screret.mui.schema.ISchema;
 import dev.screret.mui.client.schemarenderer.BaseSchemaRenderer;
 import dev.screret.mui.client.schemarenderer.BlockHighlight;
 import dev.screret.mui.client.schemarenderer.Camera;
+import dev.screret.mui.schema.ISchema;
 
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -11,9 +11,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.Tolerate;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.*;
+
+import org.jetbrains.annotations.NotNull;
 
 @Accessors(fluent = true, chain = true)
 public class SchemaRenderer extends BaseSchemaRenderer {

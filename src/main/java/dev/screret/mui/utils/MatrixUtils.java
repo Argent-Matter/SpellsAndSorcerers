@@ -1,5 +1,7 @@
 package dev.screret.mui.utils;
 
+import dev.screret.mui.utils.math.MathHelper;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -14,8 +16,6 @@ import com.mojang.blaze3d.platform.GlUtil;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.screret.mui.utils.math.MathHelper;
-import org.jetbrains.annotations.Contract;
 import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
@@ -25,6 +25,8 @@ import java.security.InvalidParameterException;
 import java.util.Objects;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.Contract;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -305,4 +307,3 @@ public class MatrixUtils {
         return transform.unproject(x, y, depth, viewport, new Vector3f());
     }
 }
-

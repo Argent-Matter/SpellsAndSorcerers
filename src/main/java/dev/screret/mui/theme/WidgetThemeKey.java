@@ -2,11 +2,12 @@ package dev.screret.mui.theme;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WidgetThemeKey<T extends WidgetTheme> implements Comparable<WidgetThemeKey<?>> {
 

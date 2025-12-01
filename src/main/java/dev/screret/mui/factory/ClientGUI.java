@@ -10,10 +10,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.function.IntFunction;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.IntFunction;
 
 /**
  * Helper class to open client only GUIs. This class is safe to use inside a Modular GUI.

@@ -4,14 +4,13 @@ import dev.screret.mui.ModularUI;
 import dev.screret.mui.api.value.sync.IByteSyncValue;
 import dev.screret.mui.value.ByteValue;
 
-import net.minecraft.network.FriendlyByteBuf;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class ByteSyncValue extends ValueSyncHandler<ByteBuf, Byte> implements IByteSyncValue<ByteBuf, Byte> {
 

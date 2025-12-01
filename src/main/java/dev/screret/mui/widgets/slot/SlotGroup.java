@@ -5,12 +5,13 @@ import net.minecraft.world.inventory.Slot;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * A slot group is a group of slots that can be sorted (via Inventory BogoSorter)

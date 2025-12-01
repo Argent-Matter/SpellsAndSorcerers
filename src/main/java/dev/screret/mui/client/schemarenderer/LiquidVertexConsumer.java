@@ -64,7 +64,7 @@ public class LiquidVertexConsumer implements VertexConsumer {
 
     @Override
     public void addVertex(float x, float y, float z, int color, float texU,
-                       float texV, int overlayUV, int lightmapUV, float normalX, float normalY, float normalZ) {
+                          float texV, int overlayUV, int lightmapUV, float normalX, float normalY, float normalZ) {
         delegate.addVertex(x, y, z, color, texU, texV, overlayUV, lightmapUV, normalX, normalY, normalZ);
     }
 

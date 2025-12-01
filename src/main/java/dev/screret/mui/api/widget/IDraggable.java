@@ -2,11 +2,11 @@ package dev.screret.mui.api.widget;
 
 import dev.screret.mui.api.layout.IViewport;
 import dev.screret.mui.api.layout.IViewportStack;
+import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 import dev.screret.mui.utils.HoveredWidgetList;
 import dev.screret.mui.widget.DraggableWidget;
 import dev.screret.mui.widget.WidgetTree;
 import dev.screret.mui.widget.sizer.Area;
-import dev.screret.mui.client.screen.viewport.ModularGuiContext;
 
 import net.minecraft.client.gui.GuiGraphics;
 

@@ -3,9 +3,9 @@ package dev.screret.mui.drawable.text;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
 
 public class StringKey extends BaseKey {
 

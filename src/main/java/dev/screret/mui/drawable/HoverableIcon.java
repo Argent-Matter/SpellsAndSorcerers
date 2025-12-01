@@ -3,10 +3,11 @@ package dev.screret.mui.drawable;
 import dev.screret.mui.api.drawable.IHoverable;
 import dev.screret.mui.api.drawable.IIcon;
 import dev.screret.mui.api.widget.ITooltip;
-import dev.screret.mui.widget.sizer.Area;
 import dev.screret.mui.client.screen.RichTooltip;
+import dev.screret.mui.widget.sizer.Area;
 
 import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

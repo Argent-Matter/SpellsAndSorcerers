@@ -1,19 +1,21 @@
 package dev.screret.mui.integration.xei.handlers.fluid;
 
+import dev.screret.mui.integration.xei.entry.fluid.FluidEntryList;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-import dev.screret.mui.integration.xei.entry.fluid.FluidEntryList;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -60,14 +62,14 @@ public class CycleFluidEntryHandler implements IFluidHandler {
     }
 
     /*
-    @Override
-    public void setFluidInTank(int tank, @NotNull FluidStack fluidStack) {
-        if (tank >= 0 && tank < entries.size()) {
-            entries.set(tank, FluidStackList.of(fluidStack));
-            unwrapped = null;
-        }
-    }
-    */
+     * @Override
+     * public void setFluidInTank(int tank, @NotNull FluidStack fluidStack) {
+     * if (tank >= 0 && tank < entries.size()) {
+     * entries.set(tank, FluidStackList.of(fluidStack));
+     * unwrapped = null;
+     * }
+     * }
+     */
 
     @Override
     public int getTankCapacity(int tank) {
