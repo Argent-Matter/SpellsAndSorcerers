@@ -13,5 +13,6 @@ public class MOTMRegistries {
             .createRegistryKey(MOTMUtil.id("wand_abilities"));
     public static final Registry<WandAbility<?>> WAND_ABILITIES = new RegistryBuilder<>(WAND_ABILITY_REGISTRY)
             .defaultKey(MOTMUtil.id("dummy"))
+            .sync(true)
             .create();
 }
