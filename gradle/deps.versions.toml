@@ -104,7 +104,7 @@ observable          = { module = "curse.maven:observable-509575", version.ref = 
 kotlinForForge      = { module = "thedarkcolour:kotlinforforge", version.ref = "kotlinForForge" }
 
 [bundles]
-jei = ["jei-common-api", "jei-neoforge-api"]
+jei = ["jei-common-api", "jei-neoforge-api", "jei-neoforge-impl"]
 rei = ["rei-plugin", "rei-neoforge"]
 rei-runtime = ["rei-neoforge", "architectury", "clothConfig"]
 kjs = ["kubejs", "rhino"]

@@ -1,6 +1,5 @@
 package dev.screret.motm.api.ability;
 
-import com.mojang.datafixers.util.Either;
 import dev.screret.motm.api.registry.MOTMRegistries;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -20,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;

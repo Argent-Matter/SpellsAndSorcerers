@@ -36,6 +36,10 @@ neoForge {
             sourceSet(sourceSets.extra)
             sourceSet(sourceSets.clientExtra)
         }
+        "modularui" {
+            sourceSet(sourceSets.main)
+            sourceSet(sourceSets.client)
+        }
     }
 
     // Default run configurations.
