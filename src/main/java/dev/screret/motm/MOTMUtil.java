@@ -37,6 +37,8 @@ public class MOTMUtil {
     public static final Map<ResourceLocation, ItemStack> CUSTOM_WANDS = Maps.newHashMap();
     public static final Map<ResourceLocation, ItemStack> CUSTOM_WAND_CORES = Maps.newHashMap();
 
+    private static final ResourceLocation TEMPLATE_LOCATION = ResourceLocation.fromNamespaceAndPath(MagicOfTheMind.MODID, "");
+
     public static void generateWandItems() {
         if (!CUSTOM_WANDS.isEmpty()) {
             return;
@@ -104,7 +106,7 @@ public class MOTMUtil {
     }
 
     public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MagicOfTheMind.MODID, path);
+        return TEMPLATE_LOCATION.withPath(path);
     }
 
     public static BlockHitResult getHitResult(Level level, LivingEntity entity, ClipContext.Fluid fluidInteractionMode,

@@ -50,7 +50,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import com.mojang.logging.LogUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -60,14 +61,11 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(modid = MagicOfTheMind.MODID)
 public class MagicOfTheMind {
 
-    // Define mod id in a common place for everything to reference
     public static final String MODID = "motm";
-    // Directly reference a slf4j logger
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final String NAME = "Magic of the Mind";
+    public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     public MagicOfTheMind(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
-
         MOTMWandAbilities.WAND_ABILITIES.register(modEventBus);
         MOTMArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         MOTMDataComponents.DATA_COMPONENTS.register(modEventBus);
