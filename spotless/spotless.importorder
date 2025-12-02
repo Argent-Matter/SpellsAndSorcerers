@@ -3,9 +3,9 @@
 0=dev.screret
 1=software.bernie
 1=net.tslat
-1=net
-2=
-3=java
-4=javax
-4=org.jetbrains
-5=\#
+2=net
+3=
+4=java
+5=javax
+5=org.jetbrains
+6=\#

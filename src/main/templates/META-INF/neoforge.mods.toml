@@ -9,9 +9,9 @@ license = "${mod_license}"
     displayName = "${mod_name}"
     displayURL = "${mod_url}"
     logoFile = "logo.png"
-    authors = "screret, JuiceyBeans"
+    authors = "${mod_authors}"
     description='''${mod_description}'''
-    credits = "JuiceyBeans"
+    credits = "${mod_credits}"
 
 enumExtensions = "META-INF/enum_extensions.json"
 # [mods."modernfix:integration"]
@@ -61,6 +61,13 @@ enumExtensions = "META-INF/enum_extensions.json"
         curseforge = "smartbrainlib"
 
 [[dependencies.${mod_id}]]
+    modId = "modularui"
+    type = "required"
+    versionRange = "[${modularui_version}]"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.${mod_id}]]
     modId = "kubejs"
     type = "optional"
     versionRange = "[${kjs_version},)"
@@ -99,31 +106,6 @@ enumExtensions = "META-INF/enum_extensions.json"
     modId = "jade"
     type = "optional"
     versionRange = "[${jade_version},)"
-    ordering = "NONE"
-    side = "BOTH"
-
-
-[[mods]]
-    modId = "modularui"
-    version = "${version}"
-    displayName = "Modular UI"
-    authors = "GregTech Modern team, Brachy"
-    description='''Modular UI 2 for modern versions'''
-    credits = "Brachy for developing the original library on 1.12, and GregTech Modern team for the port"
-[[mixins]]
-    config = "modularui.mixins.json"
-
-[[dependencies.modularui]]
-    modId = "neoforge"
-    type = "required"
-    versionRange = "[${neo_version},)"
-    ordering = "NONE"
-    side = "BOTH"
-
-[[dependencies.modularui]]
-    modId = "minecraft"
-    type = "required"
-    versionRange = "[${minecraft_version}]"
     ordering = "NONE"
     side = "BOTH"
 

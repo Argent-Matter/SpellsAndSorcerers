@@ -1,9 +1,9 @@
 package dev.screret.motm.common.ui;
 
-import dev.screret.mui.api.IPanelHandler;
-import dev.screret.mui.client.screen.ModularPanel;
-import dev.screret.mui.utils.Alignment;
-import dev.screret.mui.widgets.ButtonWidget;
+import dev.screret.modularui.api.IPanelHandler;
+import dev.screret.modularui.client.screen.ModularPanel;
+import dev.screret.modularui.utils.Alignment;
+import dev.screret.modularui.widgets.ButtonWidget;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

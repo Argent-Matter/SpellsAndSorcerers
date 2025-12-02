@@ -26,30 +26,34 @@ tasks.matching { it.name.startsWith('prepare') }.configureEach {
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var neoVersion = libs.versions.neoForge.get()
     neoVersion = neoVersion.substring(0, neoVersion.lastIndexOf('.'))
+
     var replaceProperties = [
             version             : version_toml,
-            mod_id              : mod_id,
+            mod_id              : project.properties.mod_id,
+            mod_license         : project.properties.mod_license,
+            mod_name            : project.properties.mod_name,
+            mod_description     : project.properties.mod_description,
+            mod_authors         : project.properties.mod_authors,
+            mod_credits         : project.properties.mod_credits,
+            mod_url             : project.properties.mod_url,
+            mod_issue_tracker   : project.properties.mod_issue_tracker,
             minecraft_version   : libs.versions.minecraft.get(),
             loader_version      : libs.versions.loader.get(),
             neo_version         : neoVersion,
             geckolib_version    : deps.versions.geckoLib.get(),
             sbl_version         : deps.versions.smartBrainLib.get(),
+            modularui_version   : project(':ModularUI').properties.mod_version,
             kjs_version         : deps.versions.kubejs.get().split("\\.")[0], // only specify major version of kjs
             jei_version         : deps.versions.jei.get(),
             rei_version         : deps.versions.rei.get(),
             emi_version         : deps.versions.emi.get(),
             top_version         : deps.versions.theOneProbe.get(),
             jade_version        : deps.versions.jade.get(),
-            mod_license         : mod_license,
-            mod_name            : mod_name,
-            mod_description     : mod_description,
-            mod_url             : mod_url,
-            mod_issue_tracker   : mod_issue_tracker
     ]
     inputs.properties replaceProperties
     expand replaceProperties
-    from "src/main/templates"
-    into "build/generated/sources/modMetadata"
+    from "$projectDir/src/main/templates"
+    into "$projectDir/build/generated/sources/modMetadata"
 }
 // Include the output of "generateModMetadata" as an input directory for the build
 // this works with both building through Gradle and the IDE.

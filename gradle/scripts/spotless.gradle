@@ -13,10 +13,10 @@ spotless {
         endWithNewline()
     }
     java {
-        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        target "$rootDir/src/main/java/**/*.java", "$rootDir/src/test/java/**/*.java"
 
-        def orderFile = file("$rootDir/spotless/spotless.importorder")
-        def formatFile = file("$rootDir/spotless/spotless.eclipseformat.xml")
+        def orderFile = file("${rootProject.rootDir}/spotless/spotless.importorder")
+        def formatFile = file("${rootProject.rootDir}/spotless/spotless.eclipseformat.xml")
 
         toggleOffOn()
         importOrderFile(orderFile)
@@ -25,8 +25,8 @@ spotless {
         eclipse('4.36').configFile(formatFile)
     }
     kotlin {
-        target 'src/test/java/**/*.kt'
-        ktlint('1.4.1').setEditorConfigPath("$rootDir/spotless/spotless.ktlint")
+        target "$rootDir/src/test/java/**/*.kt"
+        ktlint('1.4.1').setEditorConfigPath("${rootProject.rootDir}/spotless/spotless.ktlint")
 
         toggleOffOn()
         endWithNewline()

@@ -1,0 +1,30 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "dev.screret.modularui.core.mixins",
+    "compatibilityLevel": "JAVA_17",
+    "refmap": "modularui.refmap.json",
+    "mixins": [
+        "ReloadableServerResourcesMixin",
+        "ServerPlayerAccessor",
+        "TransientCraftingContainerAccessor",
+        "WorldLoaderMixin",
+        "client.AbstractContainerMenuAccessor",
+        "client.SlotAccessor",
+        "jei.IngredientListOverlayAccessor"
+    ],
+    "client": [
+        "client.AbstractContainerScreenAccessor",
+        "client.AbstractContainerScreenMixin",
+        "client.AbstractWidgetMixin",
+        "client.BufferBuilderAccessor",
+        "client.GuiGraphicsMixin",
+        "client.KeyMappingAccessor",
+        "client.MinecraftMixin",
+        "client.ScreenAccessor",
+        "client.StringSplitterAccessor"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+  }
+}

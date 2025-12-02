@@ -17,13 +17,13 @@ afterEvaluate {
     tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
         destinationDirectory = file('build/libs/')
         manifest.attributes([
-                'MixinConfigs': 'gtceu.mixins.json',
+                'MixinConfigs': "${project.properties.mod_id}.mixins.json",
                 'Specification-Title': project.name,
-                'Specification-Version': mod_version,
-                'Specification-Vendor': 'GregTechCEu Team',
+                'Specification-Version': project.properties.mod_version,
+                'Specification-Vendor': project.properties.mod_authors,
                 'Implementation-Title': base.archivesName,
-                'Implementation-Version': version,
-                'Implementation-Vendor': 'GregTechCEu Team',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': project.properties.mod_authors,
         ])
 
         exclude ".cache"

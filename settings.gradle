@@ -24,4 +24,6 @@ dependencyResolutionManagement {
     }
 }
 
+include("ModularUI")
+
 rootProject.name = "${mod_id}"

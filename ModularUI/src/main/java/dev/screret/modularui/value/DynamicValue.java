@@ -1,0 +1,36 @@
+package dev.screret.modularui.value;
+
+import dev.screret.modularui.api.value.IValue;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * @deprecated use {@link ObjectValue.Dynamic} instead
+ */
+@Deprecated
+public class DynamicValue<T> implements IValue<T> {
+
+    private final Supplier<T> getter;
+    @Nullable
+    private final Consumer<T> setter;
+
+    public DynamicValue(Supplier<T> getter, @Nullable Consumer<T> setter) {
+        this.getter = getter;
+        this.setter = setter;
+    }
+
+    @Override
+    public T getValue() {
+        return this.getter.get();
+    }
+
+    @Override
+    public void setValue(T value) {
+        if (this.setter != null) {
+            this.setter.accept(value);
+        }
+    }
+}

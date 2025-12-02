@@ -1,5 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
+def is_root_project = project == rootProject
+
 neoForge {
     // Specify NeoForge version
     version = libs.versions.neoForge.get()
@@ -12,16 +14,20 @@ neoForge {
     // This line is optional. Access Transformers are automatically detected
     accessTransformers {
         var file = project.file('src/main/resources/META-INF/accesstransformer.cfg')
-        from(file)
-        publish(file)
+        if (file.exists()) {
+            from file
+            publish file
+        }
     }
     // I'd have it on but it just doesn't work :( (fails on some neoforge classes)
     // validateAccessTransformers = true
 
     interfaceInjectionData {
         var file = project.file('injected_interfaces/interfaces.json')
-        from(file)
-        publish file
+        if (file.exists()) {
+            from file
+            publish file
+        }
     }
 
     addModdingDependenciesTo(sourceSets.test)
@@ -29,19 +35,22 @@ neoForge {
 
     mods {
         // define mod <-> source bindings
-        "${mod_id}" {
+        "${project.properties.mod_id}" {
             sourceSet(sourceSets.main)
             sourceSet(sourceSets.client)
             sourceSet(sourceSets.test)
             sourceSet(sourceSets.extra)
             sourceSet(sourceSets.clientExtra)
         }
-        "modularui" {
-            sourceSet(sourceSets.main)
-            sourceSet(sourceSets.client)
-        }
     }
 
+    if (!is_root_project) {
+        // only add the run configurations to the root project, remove them from subprojects
+        runs {
+            removeIf { true }
+        }
+        return
+    }
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
@@ -151,7 +160,7 @@ neoForge {
             // "REGISTRYDUMP": For getting the contents of all registries.
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             // Enable assertions for our classes in dev environment
-            jvmArgument('-ea:com.gregtechceu.gtceu...')
+            jvmArgument('-ea:dev.screret...')
 
             // Recommended logging level for the console
             // You can set various levels here.

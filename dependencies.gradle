@@ -3,14 +3,12 @@ dependencies {
     if (enableJarJarDependencies) {
         jarJar(api(deps.geckoLib.get()))
         jarJar(api(deps.smartBrainLib.get()))
+        jarJar(api(project(':ModularUI')))
     } else {
         api(deps.geckoLib)
         api(deps.smartBrainLib)
+        api(project(':ModularUI'))
     }
-
-    // Math Parser
-    jarJar(implementation(libs.mxparser.get()))
-    additionalRuntimeClasspath(libs.mxparser.get())
 
     // Recipe Viewers
     compileOnly(deps.bundles.jei)
