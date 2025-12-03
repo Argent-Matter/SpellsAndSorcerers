@@ -208,6 +208,7 @@ public class ModularScreen implements GuiEventListener, Renderable, LayoutElemen
      * @param height height of the resized game window
      */
     @MustBeInvokedByOverriders
+    @ApiStatus.OverrideOnly
     public void onResize(int width, int height) {
         this.context.updateScreenArea(width, height);
         if (this.panelManager.tryInit()) {

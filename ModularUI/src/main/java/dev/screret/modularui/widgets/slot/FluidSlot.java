@@ -8,6 +8,7 @@ import dev.screret.modularui.client.screen.RichTooltip;
 import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
 import dev.screret.modularui.drawable.GuiDraw;
 import dev.screret.modularui.drawable.text.TextRenderer;
+import dev.screret.modularui.integration.recipeviewer.RecipeSlotRole;
 import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 import dev.screret.modularui.integration.recipeviewer.entry.fluid.FluidStackList;
 import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
@@ -24,12 +25,9 @@ import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.widget.Widget;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -38,12 +36,16 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.text.DecimalFormat;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Accessors(fluent = true, chain = true)
 public class FluidSlot extends Widget<FluidSlot>
                        implements Interactable, GhostIngredientSlot<FluidStack>, IngredientProvider<FluidStack> {
 
@@ -53,17 +55,22 @@ public class FluidSlot extends Widget<FluidSlot>
     private static final DecimalFormat TOOLTIP_FORMAT = new DecimalFormat("#.##");
     private static final IFluidTank EMPTY = new FluidTank(0);
 
-    static {
-        TOOLTIP_FORMAT.setGroupingUsed(true);
-        TOOLTIP_FORMAT.setGroupingSize(3);
-    }
-
     private final TextRenderer textRenderer = new TextRenderer();
     private FluidSlotSyncHandler syncHandler;
     private int contentOffsetX = 1, contentOffsetY = 1;
+    /**
+     * whether the fluid should be rendered as full or as the partial amount.
+     */
+    @Setter
     private boolean alwaysShowFull = true;
-    @Nullable
-    private IDrawable overlayTexture = null;
+    /**
+     * A texture that is rendered on top of the fluid
+     */
+    @Setter
+    private @Nullable IDrawable overlayTexture = null;
+    @Getter
+    @Setter
+    private RecipeSlotRole recipeRole = RecipeSlotRole.RENDER_ONLY;
 
     public FluidSlot() {
         size(DEFAULT_SIZE);
@@ -85,16 +92,18 @@ public class FluidSlot extends Widget<FluidSlot>
                 }
             } else {
                 tooltip.addLine(IKey.lang("modularui.fluid.empty"));
-                tooltip.addLine(IKey.lang("modularui.fluid.capacity", formatFluidTooltipAmount(fluidTank.getCapacity()),
-                        getUnit()));
+                tooltip.addLine(IKey.lang("modularui.fluid.capacity",
+                        formatFluidTooltipAmount(fluidTank.getCapacity()), getUnit()));
             }
             if (this.syncHandler.controlsAmount()) {
                 tooltip.addLine(IKey.lang("modularui.fluid.phantom.control"));
             }
         } else {
             if (fluid != null) {
-                tooltip.addLine(IKey.lang("modularui.fluid.amount", formatFluidTooltipAmount(fluid.getAmount()),
-                        formatFluidTooltipAmount(fluidTank.getCapacity()), getUnit()));
+                tooltip.addLine(IKey.lang("modularui.fluid.amount",
+                        formatFluidTooltipAmount(fluid.getAmount()),
+                        formatFluidTooltipAmount(fluidTank.getCapacity()),
+                        getUnit()));
                 addAdditionalFluidInfo(tooltip, fluid);
             } else {
                 tooltip.addLine(IKey.lang("modularui.fluid.empty"));
@@ -120,18 +129,13 @@ public class FluidSlot extends Widget<FluidSlot>
     }
 
     private Component getFluidModName(FluidStack fluidStack) {
-        String modID = getFluidModID(fluidStack.getFluid());
-        var container = ModList.get().getModContainerById(modID);
+        String modid = BuiltInRegistries.FLUID.getKey(fluidStack.getFluid()).getNamespace();
+        var container = ModList.get().getModContainerById(modid);
         if (container.isPresent()) {
-            return Component.literal(container.get().getModInfo().getDisplayName()).withStyle(ChatFormatting.BLUE,
-                    ChatFormatting.ITALIC);
+            return Component.literal(container.get().getModInfo().getDisplayName())
+                    .withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC);
         }
-        return Component.literal(modID).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC);
-    }
-
-    public static String getFluidModID(Fluid fluid) {
-        ResourceLocation modName = BuiltInRegistries.FLUID.getKey(fluid);
-        return modName.getNamespace();
+        return Component.literal(modid).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC);
     }
 
     public void addAdditionalFluidInfo(RichTooltip tooltip, FluidStack fluidStack) {}
@@ -223,7 +227,7 @@ public class FluidSlot extends Widget<FluidSlot>
         if (!this.syncHandler.canFillSlot() && !this.syncHandler.canDrainSlot()) {
             return Result.ACCEPT;
         }
-        ItemStack cursorStack = Minecraft.getInstance().player.containerMenu.getCarried();
+        ItemStack cursorStack = this.getContext().getScreen().getContainer().getCarried();
         if (this.syncHandler.phantom() ||
                 (!cursorStack.isEmpty() && cursorStack.getCapability(Capabilities.FluidHandler.ITEM) != null)) {
             MouseData mouseData = MouseData.create(button);
@@ -270,6 +274,14 @@ public class FluidSlot extends Widget<FluidSlot>
         return this.syncHandler == null ? EMPTY : this.syncHandler.fluidTank();
     }
 
+    @Override
+    public @NotNull FluidSlotSyncHandler getSyncHandler() {
+        if (this.syncHandler == null) {
+            throw new IllegalStateException("Widget is not initialised!");
+        }
+        return this.syncHandler;
+    }
+
     /**
      * Set the offset in x and y (on both sides) at which the fluid should be rendered.
      * Default is 1 for both.
@@ -280,22 +292,6 @@ public class FluidSlot extends Widget<FluidSlot>
     public FluidSlot contentOffset(int x, int y) {
         this.contentOffsetX = x;
         this.contentOffsetY = y;
-        return this;
-    }
-
-    /**
-     * @param alwaysShowFull if the fluid should be rendered as full or as the partial amount.
-     */
-    public FluidSlot alwaysShowFull(boolean alwaysShowFull) {
-        this.alwaysShowFull = alwaysShowFull;
-        return this;
-    }
-
-    /**
-     * @param overlayTexture texture that is rendered on top of the fluid
-     */
-    public FluidSlot overlayTexture(@Nullable IDrawable overlayTexture) {
-        this.overlayTexture = overlayTexture;
         return this;
     }
 

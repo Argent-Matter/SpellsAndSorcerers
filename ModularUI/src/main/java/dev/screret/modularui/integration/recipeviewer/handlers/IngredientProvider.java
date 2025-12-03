@@ -1,5 +1,6 @@
 package dev.screret.modularui.integration.recipeviewer.handlers;
 
+import dev.screret.modularui.integration.recipeviewer.RecipeSlotRole;
 import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 
 import java.util.function.UnaryOperator;
@@ -38,5 +39,10 @@ public interface IngredientProvider<I> {
     @Nullable
     default Object ingredientOverride() {
         return null;
+    }
+
+    @NotNull
+    default RecipeSlotRole recipeRole() {
+        return RecipeSlotRole.RENDER_ONLY;
     }
 }

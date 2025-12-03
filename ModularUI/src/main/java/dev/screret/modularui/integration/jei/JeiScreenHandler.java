@@ -1,0 +1,187 @@
+package dev.screret.modularui.integration.jei;
+
+import dev.screret.modularui.api.IMuiScreen;
+import dev.screret.modularui.api.widget.IGuiElement;
+import dev.screret.modularui.core.mixins.jei.IngredientListOverlayAccessor;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
+import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
+import dev.screret.modularui.utils.Rectangle;
+
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
+
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import lombok.Getter;
+import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.gui.handlers.IGuiProperties;
+import mezz.jei.api.gui.handlers.IScreenHandler;
+import mezz.jei.api.ingredients.IIngredientType;
+import mezz.jei.api.ingredients.ITypedIngredient;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.runtime.IClickableIngredient;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
+                             implements IGhostIngredientHandler<T>, IScreenHandler<T> {
+
+    private static final Map<Class<?>, JeiScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Screen & IMuiScreen> JeiScreenHandler<T> of(Class<T> clazz) {
+        return (JeiScreenHandler<T>) CACHE.computeIfAbsent(clazz, clz -> new JeiScreenHandler<>((Class<T>) clz));
+    }
+
+    protected final Class<T> clazz;
+
+    private JeiScreenHandler(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+    public static <T extends Screen & IMuiScreen, T2 extends AbstractContainerScreen<?> & IMuiScreen> void register(Class<T> clz,
+                                                                                                                    IGuiHandlerRegistration registration) {
+        if (AbstractContainerScreen.class.isAssignableFrom(clz)) {
+            // noinspection unchecked
+            new ContainerScreen<>((Class<T2>) clz).register(registration);
+        } else {
+            new JeiScreenHandler<>(clz).register(registration);
+        }
+    }
+
+    public void register(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(this.clazz, this);
+        registration.addGuiScreenHandler(this.clazz, this);
+    }
+
+    @Override
+    public <I> List<Target<I>> getTargetsTyped(T screen, ITypedIngredient<I> ingredient, boolean doStart) {
+        currentIngredient = ingredient;
+
+        List<GhostIngredientSlot<?>> ghostSlots = screen.getScreen().getContext()
+                .getRecipeViewerSettings().getGhostIngredientSlots();
+        List<Target<I>> ghostHandlerTargets = new ArrayList<>();
+        for (var slot : ghostSlots) {
+            if (slot.isEnabled() && slot.castGhostIngredientIfValid(ingredient.getIngredient()) != null) {
+                @SuppressWarnings("unchecked")
+                GhostIngredientSlot<I> slotWithType = (GhostIngredientSlot<I>) slot;
+                ghostHandlerTargets.add(new GhostIngredientTarget<>(slotWithType));
+            }
+        }
+        return ghostHandlerTargets;
+    }
+
+    @Override
+    public boolean shouldHighlightTargets() {
+        return false;
+    }
+
+    @Override
+    public @Nullable IGuiProperties apply(T guiScreen) {
+        return guiScreen.getScreen().getContext().getRecipeViewerSettings().isEnabled(guiScreen.getScreen()) ?
+                new ModularUIJeiProperties(guiScreen) : null;
+    }
+
+    @Override
+    public void onComplete() {
+        currentIngredient = null;
+    }
+
+    // this is an actual ItemStack/FluidStack instance, **not** an ITypedIngredient or such
+    private static Object currentIngredient = null;
+
+    @Override
+    public void setSearchFocused(boolean focused) {
+        // only set the search field state if it's JEI's actual search field and not JEMI
+        if (ModularUIJeiPlugin.getRuntime().getIngredientListOverlay() instanceof IngredientListOverlayAccessor accessor) {
+            accessor.getSearchField().setFocused(focused);
+        }
+    }
+
+    @Override
+    public @Nullable Object getCurrentlyDragged() {
+        if (currentIngredient == null) return null;
+        return currentIngredient;
+    }
+
+    public static class ContainerScreen<T extends AbstractContainerScreen<?> & IMuiScreen> extends JeiScreenHandler<T>
+                                       implements IGuiContainerHandler<T> {
+
+        private ContainerScreen(Class<T> clazz) {
+            super(clazz);
+        }
+
+        @Override
+        public void register(IGuiHandlerRegistration registry) {
+            super.register(registry);
+            registry.addGuiContainerHandler(this.clazz, this);
+        }
+
+        @Override
+        public List<Rect2i> getGuiExtraAreas(T screen) {
+            return screen.getScreen().getContext()
+                    .getRecipeViewerSettings().getAllExclusionAreas()
+                    .stream().map(Rectangle::asRect2i)
+                    .toList();
+        }
+
+        @Override
+        public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(T screen, double mouseX, double mouseY) {
+            IGuiElement hovered = screen.getScreen().getContext().getTopHovered();
+            if (hovered instanceof IngredientProvider<?> provider) {
+                var override = provider.ingredientOverride();
+                if (override instanceof IClickableIngredient<?> clickableIngredient) {
+                    JeiScreenHandler.currentIngredient = clickableIngredient.getIngredient();
+                    return Optional.of(clickableIngredient);
+                }
+                if (provider.getIngredients().isEmpty()) return Optional.empty();
+
+                Optional<? extends IClickableIngredient<?>> ingredient = this
+                        .createClickableIngredient(mapFirstIngredient(provider), hovered.getArea());
+
+                JeiScreenHandler.currentIngredient = ingredient.map(IClickableIngredient::getIngredient).orElse(null);
+                // noinspection unchecked
+                return (Optional<IClickableIngredient<?>>) ingredient;
+            }
+            return Optional.empty();
+        }
+
+        private <I> I mapFirstIngredient(IngredientProvider<I> provider) {
+            return provider.renderMappingFunction().apply(provider.getIngredients().getStacks().getFirst());
+        }
+
+        private <I> Optional<IClickableIngredient<I>> createClickableIngredient(I ingredient, Rectangle area) {
+            return ModularUIJeiPlugin.getRuntime()
+                    .getIngredientManager()
+                    .createClickableIngredient(ingredient, area.asRect2i(), false);
+        }
+
+        private record ClickableIngredient<T>(ITypedIngredient<T> ingredient, @Getter Rect2i area)
+                implements IClickableIngredient<T> {
+
+            @SuppressWarnings("removal") // I have to override this.
+            @Override
+            public @NotNull ITypedIngredient<T> getTypedIngredient() {
+                return ingredient;
+            }
+
+            @Override
+            public @NotNull IIngredientType<T> getIngredientType() {
+                return ingredient.getType();
+            }
+
+            @Override
+            public @NotNull T getIngredient() {
+                return ingredient.getIngredient();
+            }
+        }
+    }
+}
