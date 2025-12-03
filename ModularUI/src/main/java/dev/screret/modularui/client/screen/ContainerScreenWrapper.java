@@ -28,12 +28,12 @@ public class ContainerScreenWrapper extends AbstractContainerScreen<ModularConta
     }
 
     /**
-     * This is only used to create the menu type with Registrate. Do not use it (even though it may work).
-     *
-     * @deprecated Internal use only.
+     * This is only used to register the menu type. Do not use it (even though it may work).
+     * <p>
+     * <h3>Internal use only.</h3>
+     * </p>
      */
-    @SuppressWarnings({ "DataFlowIssue", "DeprecatedIsStillUsed" })
-    @Deprecated
+    @SuppressWarnings("DataFlowIssue")
     @ApiStatus.Internal
     public ContainerScreenWrapper(ModularContainerMenu container, Inventory playerInventory, Component title) {
         super(container, playerInventory, title);

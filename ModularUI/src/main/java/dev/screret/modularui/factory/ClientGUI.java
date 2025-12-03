@@ -3,8 +3,8 @@ package dev.screret.modularui.factory;
 import dev.screret.modularui.api.MCHelper;
 import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.client.screen.ModularScreen;
-import dev.screret.modularui.client.screen.UISettings;
 import dev.screret.modularui.client.screen.RecipeViewerSettingsImpl;
+import dev.screret.modularui.client.screen.UISettings;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;

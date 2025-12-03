@@ -60,7 +60,8 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         super(ModularUI.MODULAR_CONTAINER.get(), containerId);
     }
 
-    public <T extends GuiData> ModularContainerMenu(int containerId, Inventory playerInv, @Nullable FriendlyByteBuf data) {
+    @ApiStatus.Internal
+    public ModularContainerMenu(int containerId, Inventory playerInv, @Nullable FriendlyByteBuf data) {
         this(containerId);
         // TODO: Better integration with menu types for custom containers and screens.
         throw new IllegalArgumentException("Do not open the modular container the forge way. Use an UIFactory!");

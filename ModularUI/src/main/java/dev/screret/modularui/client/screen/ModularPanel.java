@@ -157,11 +157,6 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         }
     }
 
-    @Deprecated
-    public void animateClose() {
-        closeIfOpen();
-    }
-
     @Override
     public boolean hasParent() {
         return false;
@@ -826,7 +821,7 @@ public class ModularPanel extends ParentWidget<ModularPanel> implements IViewpor
         return this;
     }
 
-    @Deprecated
+    @ApiStatus.Internal
     @Override
     public ModularPanel name(String name) {
         throw new IllegalStateException("Name for ModularPanels are final!");

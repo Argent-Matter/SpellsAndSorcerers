@@ -576,11 +576,6 @@ public class WidgetTree {
         }, true);
     }
 
-    @Deprecated
-    public static void resize(IWidget parent) {
-        parent.scheduleResize();
-    }
-
     @ApiStatus.Internal
     public static void resizeInternal(IWidget parent, boolean onOpen) {
         if (!ModularUI.isClientThread()) return;

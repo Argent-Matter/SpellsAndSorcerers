@@ -1,7 +1,7 @@
 package dev.screret.modularui.client.screen;
 
-import dev.screret.modularui.api.UIFactory;
 import dev.screret.modularui.api.RecipeViewerSettings;
+import dev.screret.modularui.api.UIFactory;
 import dev.screret.modularui.factory.GuiData;
 import dev.screret.modularui.factory.PosGuiData;
 

@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,15 +98,6 @@ public class FormattingUtil {
             if (nextIsUpper || Character.isDigit(curChar) ^ Character.isDigit(nextChar)) result.append('_');
         }
         return result.toString();
-    }
-
-    /**
-     * @deprecated use {@link FormattingUtil#toLowerCaseUnderscore(String) toLowerCaseUnderscore} instead.
-     */
-    @ApiStatus.Obsolete(since = "7.0.0")
-    @Deprecated(since = "7.0.0")
-    public static String toLowerCaseUnder(String string) {
-        return toLowerCaseUnderscore(string);
     }
 
     /**

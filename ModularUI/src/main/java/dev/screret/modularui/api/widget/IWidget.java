@@ -74,7 +74,6 @@ public interface IWidget extends IGuiElement {
      * @param context gui context
      */
     @ApiStatus.NonExtendable
-    @Deprecated
     @Override
     default void draw(ModularGuiContext context) {
         draw(context, getWidgetTheme(context.getTheme()));

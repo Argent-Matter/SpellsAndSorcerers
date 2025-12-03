@@ -388,7 +388,7 @@ public class PanelSyncManager {
     }
 
     public <T extends SyncHandler> T getOrCreateSyncHandler(String name, int id, Class<T> clazz, Supplier<T> supplier) {
-        SyncHandler syncHandler = getSyncHandler(name);
+        SyncHandler syncHandler = getSyncHandlerFromMapKey(name);
         if (syncHandler == null) {
             if (isLocked() && !this.allowSyncHandlerRegistration) {
                 // registration is locked, and we don't have permission to temporarily bypass lock
@@ -420,12 +420,6 @@ public class PanelSyncManager {
 
     public Collection<SlotGroup> getSlotGroups() {
         return this.slotGroups.values();
-    }
-
-    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
-    @Deprecated
-    public @Nullable SyncHandler getSyncHandler(String mapKey) {
-        return getSyncHandlerFromMapKey(mapKey);
     }
 
     public @Nullable SyncHandler getSyncHandlerFromMapKey(String mapKey) {

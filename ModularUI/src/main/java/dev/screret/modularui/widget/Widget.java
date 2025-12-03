@@ -946,15 +946,6 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     }
 
     /**
-     * @deprecated this got renamed to name
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
-    @Deprecated
-    public W debugName(String name) {
-        return name(name);
-    }
-
-    /**
      * This can be used to find the widget with various methods from {@link WidgetTree} from a parent.
      * The name is also included in {@link #toString()}.
      *

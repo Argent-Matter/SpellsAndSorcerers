@@ -16,8 +16,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.Locale;
 import java.util.function.ToIntFunction;
 
-import org.jetbrains.annotations.ApiStatus;
-
 /**
  * Utility class for dealing with colors.
  * <b>All methods assume the color int to be AARRGGBB if not stated otherwise!</b>
@@ -756,15 +754,6 @@ public class Color {
         }
         return argb((int) Math.sqrt(r / colorHolders.length), (int) Math.sqrt(g / colorHolders.length),
                 (int) Math.sqrt(b / colorHolders.length), a / colorHolders.length);
-    }
-
-    /**
-     * @deprecated renamed to {@link #lerp(int, int, float)}
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
-    @Deprecated
-    public static int interpolate(int color1, int color2, float value) {
-        return lerp(color1, color2, value);
     }
 
     public static int average(int argb1, int argb2) {
