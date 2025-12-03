@@ -769,7 +769,7 @@ public class Color {
      * @return linear interpolated ARGB color
      */
     public static int lerp(int argb1, int argb2, float value) {
-        return interpolate(Interpolation.LINEAR, argb1, argb2, value);
+        return lerp(Interpolation.LINEAR, argb1, argb2, value);
     }
 
     /**
@@ -781,7 +781,7 @@ public class Color {
      * @param value  progress value
      * @return interpolated ARGB color
      */
-    public static int interpolate(IInterpolation curve, int color1, int color2, float value) {
+    public static int lerp(IInterpolation curve, int color1, int color2, float value) {
         value = Mth.clamp(value, 0, 1);
         int r = (int) lerpComp(curve, Color.getRed(color1), Color.getRed(color2), value);
         int g = (int) lerpComp(curve, Color.getGreen(color1), Color.getGreen(color2), value);

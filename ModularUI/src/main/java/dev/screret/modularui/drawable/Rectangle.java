@@ -134,10 +134,10 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
     public Rectangle interpolate(Rectangle start, Rectangle end, float t) {
         this.cornerRadius = Interpolations.lerp(start.cornerRadius, end.cornerRadius, t);
         this.cornerSegments = Interpolations.lerp(start.cornerSegments, end.cornerSegments, t);
-        this.colorTL = Color.interpolate(start.colorTL, end.colorTL, t);
-        this.colorTR = Color.interpolate(start.colorTR, end.colorTR, t);
-        this.colorBL = Color.interpolate(start.colorBL, end.colorBL, t);
-        this.colorBR = Color.interpolate(start.colorBR, end.colorBR, t);
+        this.colorTL = Color.lerp(start.colorTL, end.colorTL, t);
+        this.colorTR = Color.lerp(start.colorTR, end.colorTR, t);
+        this.colorBL = Color.lerp(start.colorBL, end.colorBL, t);
+        this.colorBR = Color.lerp(start.colorBR, end.colorBR, t);
         return this;
     }
 
