@@ -1,4 +1,4 @@
-package dev.screret.modularui.integration.rei.handler;
+package dev.screret.modularui.integration.rei;
 
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.widget.IGuiElement;

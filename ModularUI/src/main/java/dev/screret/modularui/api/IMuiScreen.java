@@ -38,7 +38,7 @@ public interface IMuiScreen {
 
     /**
      * This method decides how the gui background is drawn.
-     * The intended usage is to override {@link Screen#renderBackground(GuiGraphics)} and call this method
+     * The intended usage is to override {@link Screen#renderBackground(GuiGraphics,int,int,float)} and call this method
      * with the super method reference as the second parameter.
      *
      * @param guiGraphics  this screen's {@link GuiGraphics} instance

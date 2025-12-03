@@ -1,4 +1,4 @@
-package dev.screret.modularui.integration.jei.handler;
+package dev.screret.modularui.integration.jei;
 
 import dev.screret.modularui.api.widget.IWidget;
 import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;

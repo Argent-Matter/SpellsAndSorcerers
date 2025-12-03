@@ -1,4 +1,4 @@
-package dev.screret.modularui.integration.rei.handler;
+package dev.screret.modularui.integration.rei;
 
 import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 import dev.screret.modularui.integration.recipeviewer.entry.fluid.FluidStackList;

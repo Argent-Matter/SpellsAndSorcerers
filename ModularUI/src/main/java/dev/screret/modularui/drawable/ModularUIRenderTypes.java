@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 
 import java.util.function.Function;
 
-public class MuiRenderTypes extends RenderType {
+public class ModularUIRenderTypes extends RenderType {
 
     private static final Function<ResourceLocation, RenderType> GUI_TEXTURE = Util.memoize((texture) -> {
         return create("gui_texture", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS,
@@ -52,7 +52,7 @@ public class MuiRenderTypes extends RenderType {
         return GUI_OVERLAY_TRIANGLE_FAN;
     }
 
-    private MuiRenderTypes() {
+    private ModularUIRenderTypes() {
         super("", VertexFormat.builder().build(), VertexFormat.Mode.QUADS, 0, false, false, () -> {}, () -> {});
         throw new IllegalStateException("Do not instantiate MuiRenderTypes directly!");
     }

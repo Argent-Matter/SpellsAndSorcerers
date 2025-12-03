@@ -1,4 +1,4 @@
-package dev.screret.modularui.integration.emi.handler;
+package dev.screret.modularui.integration.emi;
 
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.widget.IGuiElement;
@@ -93,7 +93,7 @@ public class EmiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
             if (converter == null) {
                 return EmiStackInteraction.EMPTY;
             }
-            @SuppressWarnings({ "rawtypes" })
+            @SuppressWarnings({ "rawtypes", "unchecked" })
             var converted = ((EmiStackConverter.Converter) converter).convertTo(provider);
             return new EmiStackInteraction(converted, null, false);
         }

@@ -8,7 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 @EventBusSubscriber(modid = ModularUI.MOD_ID, value = Dist.CLIENT)
-public class MuiClientEvents {
+public class ModularUIClientEvents {
 
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {

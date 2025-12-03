@@ -2,9 +2,9 @@ package dev.screret.modularui.integration.recipeviewer.handlers;
 
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.client.screen.ScreenWrapper;
-import dev.screret.modularui.integration.emi.handler.EmiScreenHandler;
-import dev.screret.modularui.integration.jei.handler.JeiScreenHandler;
-import dev.screret.modularui.integration.rei.handler.REIScreenHandler;
+import dev.screret.modularui.integration.emi.EmiScreenHandler;
+import dev.screret.modularui.integration.jei.JeiScreenHandler;
+import dev.screret.modularui.integration.rei.REIScreenHandler;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
