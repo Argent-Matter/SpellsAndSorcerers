@@ -122,13 +122,13 @@ public class ShapelessWandRecipe implements WandRecipe {
                                         ? DataResult.error(() -> "Too many ingredients for shapeless wand recipe. The maximum is: %s".formatted(MAX_SIZE_Y * MAX_SIZE_X))
                                         : DataResult.success(NonNullList.of(Ingredient.EMPTY, array));
                             }
-                            }, DataResult::success
-                        ).forGetter(ShapelessWandRecipe::getIngredients),
+                            }, DataResult::success)
+                        .forGetter(ShapelessWandRecipe::getIngredients),
                 WandAbilityIngredient.CODEC.fieldOf("result").forGetter(ShapelessWandRecipe::getResult)
         ).apply(instance, ShapelessWandRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, NonNullList<Ingredient>> INGREDIENT_STREAM_CODEC = ByteBufCodecs.collection(
-                size -> NonNullList.withSize(size, Ingredient.EMPTY), Ingredient.CONTENTS_STREAM_CODEC, MAX_SIZE_Y * MAX_SIZE_X);
+                NonNullList::createWithCapacity, Ingredient.CONTENTS_STREAM_CODEC, MAX_SIZE_Y * MAX_SIZE_X);
         private static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWandRecipe> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, ShapelessWandRecipe::getGroup,
                 INGREDIENT_STREAM_CODEC, ShapelessWandRecipe::getIngredients,
