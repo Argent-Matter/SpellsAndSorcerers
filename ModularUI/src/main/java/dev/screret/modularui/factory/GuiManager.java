@@ -4,7 +4,7 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.MCHelper;
 import dev.screret.modularui.api.UIFactory;
-import dev.screret.modularui.api.XeiSettings;
+import dev.screret.modularui.api.RecipeViewerSettings;
 import dev.screret.modularui.client.screen.*;
 import dev.screret.modularui.core.mixins.ServerPlayerAccessor;
 import dev.screret.modularui.network.packets.OpenGuiPacket;
@@ -72,7 +72,7 @@ public class GuiManager {
         if (player instanceof FakePlayer || openedContainers.contains(player)) return;
         openedContainers.add(player);
         // create panel, collect sync handlers and create menu
-        UISettings settings = new UISettings(XeiSettings.DUMMY);
+        UISettings settings = new UISettings(RecipeViewerSettings.DUMMY);
         settings.defaultCanInteractWith(factory, guiData);
         PanelSyncManager syncManager = new PanelSyncManager(false);
         ModularPanel panel = factory.createPanel(guiData, syncManager, settings);

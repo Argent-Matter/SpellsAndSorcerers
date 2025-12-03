@@ -26,11 +26,10 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * This class contains all the info from {@link GuiContext} and additional MUI specific info like the current
- * {@link ModularScreen},
- * current hovered widget, current dragged widget, current focused widget and XEI settings.
- * An instance can only be obtained from {@link ModularScreen#getContext()}. One instance is created every time a
- * {@link ModularScreen}
- * is created.
+ * {@link ModularScreen}, current hovered widget, current dragged widget, current focused widget and recipe viewer settings.
+ * <br>
+ * An instance can only be obtained from {@link ModularScreen#getContext()}.
+ * One instance is created every time a {@link ModularScreen} is created.
  */
 public class ModularGuiContext extends GuiContext {
 
@@ -84,39 +83,6 @@ public class ModularGuiContext extends GuiContext {
      */
     public boolean isHovered() {
         return !this.hovered.isEmpty();
-    }
-
-    /**
-     * @return true if the widget is directly below the mouse
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.7.0")
-    @Deprecated
-    public boolean isHovered(IGuiElement guiElement) {
-        return guiElement.isHovering();
-    }
-
-    /**
-     * Checks if a widget is hovered for a certain amount of ticks
-     *
-     * @param guiElement widget
-     * @param ticks      time hovered
-     * @return true if the widget is hovered for at least a certain number of ticks
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.7.0")
-    @Deprecated
-    public boolean isHoveredFor(IGuiElement guiElement, int ticks) {
-        // convert from frames per second to ticks per second
-        return guiElement.isHoveringFor(ticks);
-    }
-
-    /**
-     * @return the hovered widget (widget directly below the mouse)
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "2.7.0")
-    @Deprecated
-    @Nullable
-    public IWidget getHovered() {
-        return getTopHovered();
     }
 
     public @Nullable IWidget getTopHovered() {
@@ -459,11 +425,11 @@ public class ModularGuiContext extends GuiContext {
         return this.settings;
     }
 
-    public XeiSettingsImpl getXeiSettings() {
+    public RecipeViewerSettingsImpl getRecipeViewerSettings() {
         if (this.screen.isOverlay()) {
-            throw new IllegalStateException("Overlays don't have JEI settings!");
+            throw new IllegalStateException("Overlays don't have recipe viewer settings!");
         }
-        return (XeiSettingsImpl) getUISettings().getXeiSettings();
+        return (RecipeViewerSettingsImpl) getUISettings().getRecipeViewerSettings();
     }
 
     @ApiStatus.Internal

@@ -1,8 +1,8 @@
 package dev.screret.modularui.widgets.slot;
 
 import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
-import dev.screret.modularui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
 import dev.screret.modularui.utils.MouseData;
 import dev.screret.modularui.value.sync.PhantomItemSlotSH;
 import dev.screret.modularui.value.sync.SyncHandler;
@@ -22,7 +22,7 @@ public class PhantomItemSlot extends ItemSlot implements GhostIngredientSlot<Ite
     @Override
     public void onInit() {
         super.onInit();
-        getContext().getXeiSettings().addGhostIngredientSlot(this);
+        getContext().getRecipeViewerSettings().addGhostIngredientSlot(this);
     }
 
     @Override

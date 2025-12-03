@@ -1,7 +1,7 @@
-package dev.screret.modularui.integration.xei.handlers.item;
+package dev.screret.modularui.integration.recipeviewer.handlers.item;
 
-import dev.screret.modularui.integration.xei.entry.item.ItemEntryList;
-import dev.screret.modularui.integration.xei.entry.item.ItemStackList;
+import dev.screret.modularui.integration.recipeviewer.entry.item.ItemEntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.item.ItemStackList;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;

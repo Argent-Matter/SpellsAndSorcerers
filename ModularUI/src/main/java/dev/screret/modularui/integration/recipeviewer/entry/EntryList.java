@@ -1,4 +1,4 @@
-package dev.screret.modularui.integration.xei.entry;
+package dev.screret.modularui.integration.recipeviewer.entry;
 
 import java.util.List;
 

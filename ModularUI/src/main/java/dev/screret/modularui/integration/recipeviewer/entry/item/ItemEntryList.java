@@ -1,6 +1,6 @@
-package dev.screret.modularui.integration.xei.entry.item;
+package dev.screret.modularui.integration.recipeviewer.entry.item;
 
-import dev.screret.modularui.integration.xei.entry.EntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 
 import net.minecraft.world.item.ItemStack;
 

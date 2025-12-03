@@ -15,7 +15,7 @@ import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
 import dev.screret.modularui.core.mixins.client.AbstractContainerScreenAccessor;
 import dev.screret.modularui.core.mixins.client.ScreenAccessor;
 import dev.screret.modularui.drawable.GuiDraw;
-import dev.screret.modularui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
 import dev.screret.modularui.overlay.OverlayManager;
 import dev.screret.modularui.overlay.OverlayStack;
 import dev.screret.modularui.utils.Color;
@@ -103,7 +103,7 @@ public class ClientScreenHandler {
     @SubscribeEvent
     public static void onScreenKeyPressedHigh(ScreenEvent.KeyPressed.Pre event) {
         defaultContext.updateLatestKey(event.getKeyCode(), event.getScanCode(), event.getModifiers());
-        // TODO: early needs to be before XEI, but emi does mixin into KeyboardHandler so it is before everything
+        // TODO: early needs to be before recipe viewers, but emi does mixin into KeyboardHandler so it is before everything
         if (keyPressedEvent(event, InputPhase.EARLY)) {
             keyPressedEvent(event, InputPhase.LATE);
         }
@@ -124,7 +124,7 @@ public class ClientScreenHandler {
     @SubscribeEvent
     public static void onScreenKeyReleasedHigh(ScreenEvent.KeyReleased.Pre event) {
         defaultContext.updateLatestKey(event.getKeyCode(), event.getScanCode(), event.getModifiers());
-        // TODO also needs to be before XEI
+        // TODO also needs to be before recipe viewers
         // dont need late for release event
         keyReleasedEvent(event, InputPhase.EARLY);
     }

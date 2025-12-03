@@ -1,11 +1,11 @@
 package dev.screret.modularui.integration.emi.handler;
 
-import dev.screret.modularui.integration.xei.entry.EntryList;
-import dev.screret.modularui.integration.xei.entry.fluid.FluidStackList;
-import dev.screret.modularui.integration.xei.entry.fluid.FluidTagList;
-import dev.screret.modularui.integration.xei.entry.item.ItemStackList;
-import dev.screret.modularui.integration.xei.entry.item.ItemTagList;
-import dev.screret.modularui.integration.xei.handlers.IngredientProvider;
+import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.fluid.FluidStackList;
+import dev.screret.modularui.integration.recipeviewer.entry.fluid.FluidTagList;
+import dev.screret.modularui.integration.recipeviewer.entry.item.ItemStackList;
+import dev.screret.modularui.integration.recipeviewer.entry.item.ItemTagList;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
 import dev.screret.modularui.utils.math.MathHelper;
 
 import net.minecraft.world.item.Item;

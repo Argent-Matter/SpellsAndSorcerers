@@ -8,10 +8,10 @@ import dev.screret.modularui.client.screen.RichTooltip;
 import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
 import dev.screret.modularui.drawable.GuiDraw;
 import dev.screret.modularui.drawable.text.TextRenderer;
-import dev.screret.modularui.integration.xei.entry.EntryList;
-import dev.screret.modularui.integration.xei.entry.fluid.FluidStackList;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
-import dev.screret.modularui.integration.xei.handlers.IngredientProvider;
+import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.fluid.FluidStackList;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
 import dev.screret.modularui.theme.SlotTheme;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.utils.Alignment;
@@ -162,7 +162,7 @@ public class FluidSlot extends Widget<FluidSlot>
         this.textRenderer.setShadow(true);
         this.textRenderer.setScale(0.5f);
         this.textRenderer.setColor(Color.WHITE.main);
-        getContext().getXeiSettings().addGhostIngredientSlot(this);
+        getContext().getRecipeViewerSettings().addGhostIngredientSlot(this);
     }
 
     @Override

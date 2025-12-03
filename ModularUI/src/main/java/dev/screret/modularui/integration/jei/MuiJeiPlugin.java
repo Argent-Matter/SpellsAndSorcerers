@@ -3,8 +3,8 @@ package dev.screret.modularui.integration.jei;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.client.screen.ContainerScreenWrapper;
 import dev.screret.modularui.client.screen.ScreenWrapper;
-import dev.screret.modularui.integration.jei.handler.JEIContainerHandler;
-import dev.screret.modularui.integration.jei.handler.JEIScreenHandler;
+import dev.screret.modularui.integration.jei.handler.JeiContainerHandler;
+import dev.screret.modularui.integration.jei.handler.JeiScreenHandler;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 @JeiPlugin
-public class MuiJEIPlugin implements IModPlugin {
+public class MuiJeiPlugin implements IModPlugin {
 
     @Getter
     private static IJeiRuntime runtime = null;
@@ -38,9 +38,9 @@ public class MuiJEIPlugin implements IModPlugin {
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         if (ModularUI.Mods.REI.isLoaded() || ModularUI.Mods.EMI.isLoaded()) return;
-        registration.addGhostIngredientHandler(ScreenWrapper.class, JEIScreenHandler.of(ScreenWrapper.class));
+        registration.addGhostIngredientHandler(ScreenWrapper.class, JeiScreenHandler.of(ScreenWrapper.class));
         registration.addGhostIngredientHandler(ContainerScreenWrapper.class,
-                JEIScreenHandler.of(ContainerScreenWrapper.class));
-        registration.addGuiContainerHandler(ContainerScreenWrapper.class, JEIContainerHandler.INSTANCE);
+                JeiScreenHandler.of(ContainerScreenWrapper.class));
+        registration.addGuiContainerHandler(ContainerScreenWrapper.class, JeiContainerHandler.INSTANCE);
     }
 }

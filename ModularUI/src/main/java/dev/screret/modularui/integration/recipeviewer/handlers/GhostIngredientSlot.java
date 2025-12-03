@@ -1,6 +1,6 @@
-package dev.screret.modularui.integration.xei.handlers;
+package dev.screret.modularui.integration.recipeviewer.handlers;
 
-import dev.screret.modularui.api.XeiSettings;
+import dev.screret.modularui.api.RecipeViewerSettings;
 import dev.screret.modularui.api.widget.IGuiElement;
 import dev.screret.modularui.api.widget.IWidget;
 import dev.screret.modularui.client.screen.viewport.GuiContext;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * An interface for compat with recipe viewers' ghost slots.
  * Implement this on any {@link IWidget}.
  * This slot must then be manually registered in something like {@link Widget#onInit()}
- * with {@link XeiSettings#addGhostIngredientSlot(IWidget)}
+ * with {@link RecipeViewerSettings#addGhostIngredientSlot(IWidget)}
  *
  * @param <I> type of the ingredient
  */

@@ -1,4 +1,4 @@
-package dev.screret.modularui.integration.xei.entry.item;
+package dev.screret.modularui.integration.recipeviewer.entry.item;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;

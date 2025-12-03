@@ -2,44 +2,44 @@ package dev.screret.modularui.api;
 
 import dev.screret.modularui.api.widget.IWidget;
 import dev.screret.modularui.client.screen.ModularScreen;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
 import dev.screret.modularui.utils.Rectangle;
 
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Keeps track of everything related to JEI in a Modular GUI.
- * By default, JEI is disabled in client only GUIs.
- * This class can be safely interacted with even when JEI/HEI is not installed.
+ * Keeps track of everything related to recipe viewers in a Modular GUI.
+ * By default, the recipe viewer is disabled in client only GUIs.
+ * This class can be safely interacted with even when EMI/JEI/REI is not installed.
  */
 @ApiStatus.NonExtendable
-public interface XeiSettings {
+public interface RecipeViewerSettings {
 
     /**
-     * Force XEI to be enabled
+     * Force recipe viewer to be enabled
      */
-    void forceEnabled();
+    void enable();
 
     /**
-     * Force XEI to be disabled
+     * Force recipe viewer to be disabled
      */
-    void forceDisabled();
+    void disable();
 
     /**
-     * Only enabled XEI in synced GUIs
+     * Only enable the recipe viewer in synced GUIs
      */
-    void defaultXei();
+    void defaultState();
 
     /**
-     * Checks if XEI is enabled for a given screen
+     * Checks if the recipe viewer is enabled for a given screen
      *
      * @param screen modular screen
-     * @return true if xei is enabled
+     * @return true if the recipe viewer is enabled
      */
     boolean isEnabled(ModularScreen screen);
 
     /**
-     * Adds an exclusion zone. XEI will always try to avoid exclusion zones. <br>
+     * Adds an exclusion zone. Recipe viewers will always try to avoid exclusion zones. <br>
      * <b>If a widgets wishes to have an exclusion zone it should use {@link #addExclusionArea(IWidget)}!</b>
      *
      * @param area exclusion area
@@ -54,7 +54,7 @@ public interface XeiSettings {
     void removeExclusionArea(Rectangle area);
 
     /**
-     * Adds an exclusion zone of a widget. XEI will always try to avoid exclusion zones. <br>
+     * Adds an exclusion zone of a widget. Recipe viewers will always try to avoid exclusion zones. <br>
      * Useful when a widget is outside its panel.
      *
      * @param area widget
@@ -69,8 +69,8 @@ public interface XeiSettings {
     void removeExclusionArea(IWidget area);
 
     /**
-     * Adds a XEI ghost slot. Ghost slots can display an ingredient, but the ingredient does not really exist.
-     * By calling this method users will be able to drag ingredients from JEI into the slot.
+     * Adds a recipe viewer ghost slot. Ghost slots can display an ingredient, but the ingredient does not really exist.
+     * By calling this method users will be able to drag ingredients from recipe viewers into the slot.
      *
      * @param slot slot widget
      * @param <W>  slot widget type
@@ -78,23 +78,23 @@ public interface XeiSettings {
     <W extends IWidget & GhostIngredientSlot<?>> void addGhostIngredientSlot(W slot);
 
     /**
-     * Removes a XEI ghost slot.
+     * Removes a recipe viewer ghost slot.
      *
      * @param slot slot widget
      * @param <W>  slot widget type
      */
     <W extends IWidget & GhostIngredientSlot<?>> void removeGhostIngredientSlot(W slot);
 
-    XeiSettings DUMMY = new XeiSettings() {
+    RecipeViewerSettings DUMMY = new RecipeViewerSettings() {
 
         @Override
-        public void forceEnabled() {}
+        public void enable() {}
 
         @Override
-        public void forceDisabled() {}
+        public void disable() {}
 
         @Override
-        public void defaultXei() {}
+        public void defaultState() {}
 
         @Override
         public boolean isEnabled(ModularScreen screen) {

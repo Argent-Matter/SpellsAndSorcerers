@@ -1,10 +1,10 @@
-package dev.screret.modularui.integration.xei;
+package dev.screret.modularui.integration.recipeviewer;
 
 import dev.screret.modularui.client.screen.ModularScreen;
 
 import java.util.function.Predicate;
 
-public enum XeiState implements Predicate<ModularScreen> {
+public enum RecipeViewerState implements Predicate<ModularScreen> {
 
     ENABLED {
 

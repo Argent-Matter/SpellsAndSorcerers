@@ -1,6 +1,6 @@
-package dev.screret.modularui.integration.xei.handlers.fluid;
+package dev.screret.modularui.integration.recipeviewer.handlers.fluid;
 
-import dev.screret.modularui.integration.xei.entry.fluid.FluidEntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.fluid.FluidEntryList;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.neoforged.neoforge.fluids.FluidStack;

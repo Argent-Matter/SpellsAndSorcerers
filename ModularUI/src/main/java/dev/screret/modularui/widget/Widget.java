@@ -63,7 +63,7 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     private int timeHovered = -1;
     private int timeBelowMouse = -1;
     @Getter
-    private boolean excludeAreaInXei = false;
+    private boolean recipeViewerExclusionArea = false;
     // gui context
     /**
      * Returns if this widget is currently part of an open panel. Only if this is true information about parent, panel
@@ -189,8 +189,8 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
         if (!getScreen().isClientOnly()) {
             initialiseSyncHandler(getScreen().getSyncManager(), late);
         }
-        if (isExcludeAreaInXei()) {
-            getContext().getXeiSettings().addExclusionArea(this);
+        if (isRecipeViewerExclusionArea()) {
+            getContext().getRecipeViewerSettings().addExclusionArea(this);
         }
         onInit();
         if (hasChildren()) {
@@ -249,8 +249,8 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
                     this.context.getScreen().removeGuiActionListener(action);
                 }
             }
-            if (isExcludeAreaInXei()) {
-                getContext().getXeiSettings().removeExclusionArea(this);
+            if (isRecipeViewerExclusionArea()) {
+                getContext().getRecipeViewerSettings().removeExclusionArea(this);
             }
         }
         if (hasChildren()) {
@@ -872,14 +872,14 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     // === Other ===
     // -------------
 
-    public W excludeAreaInXei() {
-        return excludeAreaInXei(true);
+    public W recipeViewerExclusionArea() {
+        return recipeViewerExclusionArea(true);
     }
 
-    public W excludeAreaInXei(boolean val) {
-        this.excludeAreaInXei = val;
+    public W recipeViewerExclusionArea(boolean value) {
+        this.recipeViewerExclusionArea = value;
         if (isValid()) {
-            getContext().getXeiSettings().addExclusionArea(this);
+            getContext().getRecipeViewerSettings().addExclusionArea(this);
         }
         return getThis();
     }

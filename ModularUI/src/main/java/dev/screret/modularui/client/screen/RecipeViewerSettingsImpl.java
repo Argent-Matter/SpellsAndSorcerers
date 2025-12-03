@@ -1,9 +1,9 @@
 package dev.screret.modularui.client.screen;
 
-import dev.screret.modularui.api.XeiSettings;
+import dev.screret.modularui.api.RecipeViewerSettings;
 import dev.screret.modularui.api.widget.IWidget;
-import dev.screret.modularui.integration.xei.XeiState;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.RecipeViewerState;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
 import dev.screret.modularui.utils.Rectangle;
 
 import net.neoforged.api.distmarker.Dist;
@@ -23,35 +23,35 @@ import org.jetbrains.annotations.UnmodifiableView;
  * This class can be safely interacted with even when JEI/HEI is not installed.
  */
 @OnlyIn(Dist.CLIENT)
-public class XeiSettingsImpl implements XeiSettings {
+public class RecipeViewerSettingsImpl implements RecipeViewerSettings {
 
-    private XeiState xeiState = XeiState.DEFAULT;
-    private final List<IWidget> jeiExclusionWidgets = new ArrayList<>();
-    private final List<Rectangle> jeiExclusionAreas = new ArrayList<>();
+    private RecipeViewerState recipeViewerState = RecipeViewerState.DEFAULT;
+    private final List<IWidget> exclusionWidgets = new ArrayList<>();
+    private final List<Rectangle> exclusionAreas = new ArrayList<>();
     private final List<GhostIngredientSlot<?>> ghostIngredientSlots = new ArrayList<>();
 
     /**
      * Force JEI to be enabled
      */
     @Override
-    public void forceEnabled() {
-        this.xeiState = XeiState.ENABLED;
+    public void enable() {
+        this.recipeViewerState = RecipeViewerState.ENABLED;
     }
 
     /**
      * Force JEI to be disabled
      */
     @Override
-    public void forceDisabled() {
-        this.xeiState = XeiState.DISABLED;
+    public void disable() {
+        this.recipeViewerState = RecipeViewerState.DISABLED;
     }
 
     /**
      * Only enabled JEI in synced GUIs
      */
     @Override
-    public void defaultXei() {
-        this.xeiState = XeiState.DEFAULT;
+    public void defaultState() {
+        this.recipeViewerState = RecipeViewerState.DEFAULT;
     }
 
     /**
@@ -62,7 +62,7 @@ public class XeiSettingsImpl implements XeiSettings {
      */
     @Override
     public boolean isEnabled(ModularScreen screen) {
-        return this.xeiState.test(screen);
+        return this.recipeViewerState.test(screen);
     }
 
     /**
@@ -73,8 +73,8 @@ public class XeiSettingsImpl implements XeiSettings {
      */
     @Override
     public void addExclusionArea(Rectangle area) {
-        if (!this.jeiExclusionAreas.contains(area)) {
-            this.jeiExclusionAreas.add(area);
+        if (!this.exclusionAreas.contains(area)) {
+            this.exclusionAreas.add(area);
         }
     }
 
@@ -85,7 +85,7 @@ public class XeiSettingsImpl implements XeiSettings {
      */
     @Override
     public void removeExclusionArea(Rectangle area) {
-        this.jeiExclusionAreas.remove(area);
+        this.exclusionAreas.remove(area);
     }
 
     /**
@@ -96,8 +96,8 @@ public class XeiSettingsImpl implements XeiSettings {
      */
     @Override
     public void addExclusionArea(IWidget area) {
-        if (!this.jeiExclusionWidgets.contains(area)) {
-            this.jeiExclusionWidgets.add(area);
+        if (!this.exclusionWidgets.contains(area)) {
+            this.exclusionWidgets.add(area);
         }
     }
 
@@ -108,7 +108,7 @@ public class XeiSettingsImpl implements XeiSettings {
      */
     @Override
     public void removeExclusionArea(IWidget area) {
-        this.jeiExclusionWidgets.remove(area);
+        this.exclusionWidgets.remove(area);
     }
 
     /**
@@ -138,12 +138,12 @@ public class XeiSettingsImpl implements XeiSettings {
 
     @UnmodifiableView
     public List<Rectangle> getExclusionAreas() {
-        return Collections.unmodifiableList(this.jeiExclusionAreas);
+        return Collections.unmodifiableList(this.exclusionAreas);
     }
 
     @UnmodifiableView
     public List<IWidget> getExclusionWidgets() {
-        return Collections.unmodifiableList(this.jeiExclusionWidgets);
+        return Collections.unmodifiableList(this.exclusionWidgets);
     }
 
     @UnmodifiableView
@@ -153,9 +153,9 @@ public class XeiSettingsImpl implements XeiSettings {
 
     @ApiStatus.Internal
     public List<Rectangle> getAllExclusionAreas() {
-        this.jeiExclusionWidgets.removeIf(widget -> !widget.isValid());
-        List<Rectangle> areas = new ArrayList<>(this.jeiExclusionAreas);
-        for (Iterator<IWidget> iterator = this.jeiExclusionWidgets.iterator(); iterator.hasNext();) {
+        this.exclusionWidgets.removeIf(widget -> !widget.isValid());
+        List<Rectangle> areas = new ArrayList<>(this.exclusionAreas);
+        for (Iterator<IWidget> iterator = this.exclusionWidgets.iterator(); iterator.hasNext();) {
             IWidget widget = iterator.next();
             if (!widget.isValid()) {
                 iterator.remove();

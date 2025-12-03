@@ -1,7 +1,7 @@
 package dev.screret.modularui.integration.jei.handler;
 
 import dev.screret.modularui.api.widget.IWidget;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
 
 import net.minecraft.client.renderer.Rect2i;
 

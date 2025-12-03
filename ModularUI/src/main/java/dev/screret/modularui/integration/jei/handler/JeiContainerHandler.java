@@ -2,8 +2,8 @@ package dev.screret.modularui.integration.jei.handler;
 
 import dev.screret.modularui.api.widget.IGuiElement;
 import dev.screret.modularui.client.screen.ContainerScreenWrapper;
-import dev.screret.modularui.integration.jei.MuiJEIPlugin;
-import dev.screret.modularui.integration.xei.handlers.IngredientProvider;
+import dev.screret.modularui.integration.jei.MuiJeiPlugin;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
 import dev.screret.modularui.utils.Rectangle;
 
 import net.minecraft.client.renderer.Rect2i;
@@ -19,16 +19,16 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
-public class JEIContainerHandler implements IGuiContainerHandler<ContainerScreenWrapper> {
+public class JeiContainerHandler implements IGuiContainerHandler<ContainerScreenWrapper> {
 
-    public static final JEIContainerHandler INSTANCE = new JEIContainerHandler();
+    public static final JeiContainerHandler INSTANCE = new JeiContainerHandler();
 
-    private JEIContainerHandler() {}
+    private JeiContainerHandler() {}
 
     @Override
     public @NotNull List<Rect2i> getGuiExtraAreas(ContainerScreenWrapper screen) {
         return screen.getScreen().getContext()
-                .getXeiSettings().getAllExclusionAreas()
+                .getRecipeViewerSettings().getAllExclusionAreas()
                 .stream().map(Rectangle::asRect2i)
                 .toList();
     }
@@ -40,16 +40,16 @@ public class JEIContainerHandler implements IGuiContainerHandler<ContainerScreen
         if (hovered instanceof IngredientProvider<?> provider) {
             var override = provider.ingredientOverride();
             if (override != null) {
-                JEIScreenHandler.currentIngredient = ((IClickableIngredient<?>) override).getTypedIngredient();
+                JeiScreenHandler.currentIngredient = ((IClickableIngredient<?>) override).getTypedIngredient();
                 return Optional.of((IClickableIngredient<?>) override);
             }
             if (provider.getIngredients().isEmpty()) return Optional.empty();
 
-            Optional<? extends ITypedIngredient<?>> ingredient = MuiJEIPlugin.getRuntime()
+            Optional<? extends ITypedIngredient<?>> ingredient = MuiJeiPlugin.getRuntime()
                     .getIngredientManager()
                     .createTypedIngredient(mapFirstIngredient(provider));
 
-            JEIScreenHandler.currentIngredient = ingredient.orElse(null);
+            JeiScreenHandler.currentIngredient = ingredient.orElse(null);
             return ingredient.map(i -> new ClickableIngredient<>(i, hovered.getArea().asRect2i()));
         }
         return Optional.empty();

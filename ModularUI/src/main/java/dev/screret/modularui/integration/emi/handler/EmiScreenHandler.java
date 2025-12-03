@@ -2,9 +2,9 @@ package dev.screret.modularui.integration.emi.handler;
 
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.widget.IGuiElement;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
-import dev.screret.modularui.integration.xei.handlers.IngredientProvider;
-import dev.screret.modularui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
+import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.Item;
@@ -42,7 +42,7 @@ public class EmiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
     @Override
     public boolean dropStack(T screen, EmiIngredient stack, int x, int y) {
         List<GhostIngredientSlot<?>> ghostSlots = screen.getScreen().getContext()
-                .getXeiSettings().getGhostIngredientSlots();
+                .getRecipeViewerSettings().getGhostIngredientSlots();
 
         var stacks = stack.getEmiStacks();
         if (stacks.isEmpty()) return false;
@@ -73,7 +73,7 @@ public class EmiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
     @Override
     public void addExclusionArea(T screen, Consumer<Bounds> consumer) {
         screen.getScreen().getContext()
-                .getXeiSettings().getAllExclusionAreas()
+                .getRecipeViewerSettings().getAllExclusionAreas()
                 .stream()
                 .map(rect -> new Bounds(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()))
                 .forEach(consumer);

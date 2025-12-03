@@ -1,6 +1,6 @@
-package dev.screret.modularui.integration.xei.entry.fluid;
+package dev.screret.modularui.integration.recipeviewer.entry.fluid;
 
-import dev.screret.modularui.integration.xei.entry.EntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 

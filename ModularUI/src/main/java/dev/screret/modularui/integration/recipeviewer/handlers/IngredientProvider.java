@@ -1,6 +1,6 @@
-package dev.screret.modularui.integration.xei.handlers;
+package dev.screret.modularui.integration.recipeviewer.handlers;
 
-import dev.screret.modularui.integration.xei.entry.EntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 
 import java.util.function.UnaryOperator;
 

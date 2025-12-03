@@ -2,9 +2,9 @@ package dev.screret.modularui.integration.jei.handler;
 
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.core.mixins.jei.IngredientListOverlayAccessor;
-import dev.screret.modularui.integration.jei.MuiJEIPlugin;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
-import dev.screret.modularui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.modularui.integration.jei.MuiJeiPlugin;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
 
 import net.minecraft.client.gui.screens.Screen;
 
@@ -19,17 +19,17 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class JEIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
+public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
                              implements IGhostIngredientHandler<T> {
 
-    private static final Map<Class<?>, JEIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
+    private static final Map<Class<?>, JeiScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T extends Screen & IMuiScreen> JEIScreenHandler<T> of(Class<T> cls) {
-        return (JEIScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new JEIScreenHandler<T>());
+    public static <T extends Screen & IMuiScreen> JeiScreenHandler<T> of(Class<T> cls) {
+        return (JeiScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new JeiScreenHandler<T>());
     }
 
-    private JEIScreenHandler() {}
+    private JeiScreenHandler() {}
 
     @Override
     public <I> @NotNull List<Target<I>> getTargetsTyped(T screen,
@@ -38,7 +38,7 @@ public class JEIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         currentIngredient = ingredient;
 
         List<GhostIngredientSlot<?>> ghostSlots = screen.getScreen().getContext()
-                .getXeiSettings().getGhostIngredientSlots();
+                .getRecipeViewerSettings().getGhostIngredientSlots();
         List<Target<I>> ghostHandlerTargets = new ArrayList<>();
         for (var slot : ghostSlots) {
             if (slot.isEnabled() && slot.castGhostIngredientIfValid(ingredient.getIngredient()) != null) {
@@ -60,7 +60,7 @@ public class JEIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
     @Override
     public void setSearchFocused(boolean focused) {
         // only set the search field state if it's JEI's actual search field and not JEMI
-        if (MuiJEIPlugin.getRuntime().getIngredientListOverlay() instanceof IngredientListOverlayAccessor accessor) {
+        if (MuiJeiPlugin.getRuntime().getIngredientListOverlay() instanceof IngredientListOverlayAccessor accessor) {
             accessor.getSearchField().setFocused(focused);
         }
     }

@@ -9,7 +9,7 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 
 @EmiEntrypoint
-public class MuiEMIPlugin implements EmiPlugin {
+public class MuiEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {

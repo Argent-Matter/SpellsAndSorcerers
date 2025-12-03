@@ -2,9 +2,9 @@ package dev.screret.modularui.integration.rei.handler;
 
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.widget.IGuiElement;
-import dev.screret.modularui.integration.xei.handlers.GhostIngredientSlot;
-import dev.screret.modularui.integration.xei.handlers.IngredientProvider;
-import dev.screret.modularui.integration.xei.handlers.RecipeViewerHandler;
+import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
+import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
 import dev.screret.modularui.utils.Rectangle;
 
 import net.minecraft.client.gui.screens.Screen;
@@ -48,7 +48,7 @@ public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
                                                                   DraggableStack stack) {
             currentIngredient = stack;
             return context.getScreen().getScreen().getContext()
-                    .getXeiSettings().getGhostIngredientSlots().stream()
+                    .getRecipeViewerSettings().getGhostIngredientSlots().stream()
                     .map(target -> BoundsProvider.ofRectangle(asREIRect(target.getArea())));
         }
 
@@ -56,7 +56,7 @@ public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         public DraggedAcceptorResult acceptDraggedStack(DraggingContext<T> context,
                                                         DraggableStack stack) {
             List<GhostIngredientSlot<?>> ghostSlots = context.getScreen().getScreen().getContext()
-                    .getXeiSettings().getGhostIngredientSlots();
+                    .getRecipeViewerSettings().getGhostIngredientSlots();
             for (var slot : ghostSlots) {
                 if (!slot.isEnabled()) {
                     continue;
@@ -142,7 +142,7 @@ public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
     @Override
     public Collection<me.shedaniel.math.Rectangle> provide(T screen) {
         return screen.getScreen().getContext()
-                .getXeiSettings().getAllExclusionAreas().stream()
+                .getRecipeViewerSettings().getAllExclusionAreas().stream()
                 .map(REIScreenHandler::asREIRect)
                 .toList();
     }

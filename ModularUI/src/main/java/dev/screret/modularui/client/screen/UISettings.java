@@ -1,7 +1,7 @@
 package dev.screret.modularui.client.screen;
 
 import dev.screret.modularui.api.UIFactory;
-import dev.screret.modularui.api.XeiSettings;
+import dev.screret.modularui.api.RecipeViewerSettings;
 import dev.screret.modularui.factory.GuiData;
 import dev.screret.modularui.factory.PosGuiData;
 
@@ -25,14 +25,14 @@ public class UISettings {
     @Getter
     private String theme;
     @Getter
-    private final XeiSettings xeiSettings;
+    private final RecipeViewerSettings recipeViewerSettings;
 
     public UISettings() {
-        this(new XeiSettingsImpl());
+        this(new RecipeViewerSettingsImpl());
     }
 
-    public UISettings(XeiSettings xeiSettings) {
-        this.xeiSettings = xeiSettings;
+    public UISettings(RecipeViewerSettings recipeViewerSettings) {
+        this.recipeViewerSettings = recipeViewerSettings;
     }
 
     /**

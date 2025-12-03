@@ -1,9 +1,9 @@
-package dev.screret.modularui.integration.xei.handlers;
+package dev.screret.modularui.integration.recipeviewer.handlers;
 
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.client.screen.ScreenWrapper;
 import dev.screret.modularui.integration.emi.handler.EmiScreenHandler;
-import dev.screret.modularui.integration.jei.handler.JEIScreenHandler;
+import dev.screret.modularui.integration.jei.handler.JeiScreenHandler;
 import dev.screret.modularui.integration.rei.handler.REIScreenHandler;
 
 import java.util.function.Function;
@@ -25,7 +25,7 @@ public abstract class RecipeViewerHandler {
             } else if (ModularUI.Mods.REI.isLoaded()) {
                 supplier = () -> REIScreenHandler::of;
             } else if (ModularUI.Mods.JEI.isLoaded()) {
-                supplier = () -> JEIScreenHandler::of;
+                supplier = () -> JeiScreenHandler::of;
             } else {
                 supplier = () -> cls -> DUMMY;
             }
