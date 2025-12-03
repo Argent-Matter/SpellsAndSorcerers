@@ -8,6 +8,10 @@ import dev.screret.modularui.widgets.ButtonWidget;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.jetbrains.annotations.NotNull;
 
 public class MOTMGuis {
@@ -57,10 +61,16 @@ public class MOTMGuis {
                 .deleteCachedPanel(deleteCachedPanel);
     }
 
+    @Accessors(chain = true, fluent = true)
     public static class PopupPanel extends ModularPanel {
 
-        private boolean disableBelow;
-        private boolean closeOnOutsideClick;
+        @Getter
+        @Setter
+        private boolean disablePanelsBelow;
+        @Getter
+        @Setter
+        private boolean closeOnOutOfBoundsClick;
+        @Setter
         private boolean deleteCachedPanel;
 
         private PopupPanel(@NotNull String name) {
@@ -85,21 +95,6 @@ public class MOTMGuis {
             }
         }
 
-        public PopupPanel disablePanelsBelow(boolean disableBelow) {
-            this.disableBelow = disableBelow;
-            return this;
-        }
-
-        public PopupPanel closeOnOutOfBoundsClick(boolean closeOnOutsideClick) {
-            this.closeOnOutsideClick = closeOnOutsideClick;
-            return this;
-        }
-
-        public PopupPanel deleteCachedPanel(boolean deleteCachedPanel) {
-            this.deleteCachedPanel = deleteCachedPanel;
-            return this;
-        }
-
         @Override
         public PopupPanel size(int w, int h) {
             super.size(w, h);
@@ -110,16 +105,6 @@ public class MOTMGuis {
         public PopupPanel size(int val) {
             super.size(val);
             return this;
-        }
-
-        @Override
-        public boolean disablePanelsBelow() {
-            return disableBelow;
-        }
-
-        @Override
-        public boolean closeOnOutOfBoundsClick() {
-            return closeOnOutsideClick;
         }
     }
 }

@@ -1,7 +1,7 @@
 package dev.screret.motm.client.gui.overlay;
 
-import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.api.capability.mana.Mana;
+import dev.screret.motm.common.ui.MOTMGuiTextures;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.MOTMAttachmentTypes;
 
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ManaBarOverlay implements LayeredDraw.Layer {
 
-    public static final ResourceLocation MANA_BAR_LOCATION = MOTMUtil.id("textures/gui/mana_bar.png");
+    public static final ResourceLocation MANA_BAR_LOCATION = MOTMGuiTextures.MANA_BAR.location();
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, @NotNull DeltaTracker deltaTracker) {
