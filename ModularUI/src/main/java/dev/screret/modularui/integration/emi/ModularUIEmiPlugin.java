@@ -12,7 +12,7 @@ public class ModularUIEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        registry.addExclusionArea(ScreenWrapper.class, EmiScreenHandler.of(ScreenWrapper.class));
-        registry.addExclusionArea(ContainerScreenWrapper.class, EmiScreenHandler.of(ContainerScreenWrapper.class));
+        EmiScreenHandler.register(ScreenWrapper.class, registry);
+        EmiScreenHandler.register(ContainerScreenWrapper.class, registry);
     }
 }

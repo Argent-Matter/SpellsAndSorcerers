@@ -19,7 +19,6 @@ public class ModularUIREIPlugin implements REIClientPlugin {
 
     @Override
     public void registerScreens(ScreenRegistry registry) {
-        registry.registerDraggableStackProvider(REIScreenHandler.of(ScreenWrapper.class));
-        registry.registerDraggableStackVisitor(REIScreenHandler.of(ScreenWrapper.class).getDraggableVisitor());
+        REIScreenHandler.register(ScreenWrapper.class, registry);
     }
 }

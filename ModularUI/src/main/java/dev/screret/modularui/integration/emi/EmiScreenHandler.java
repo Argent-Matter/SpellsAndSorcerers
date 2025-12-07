@@ -12,6 +12,7 @@ import net.minecraft.world.level.material.Fluid;
 
 import dev.emi.emi.api.EmiDragDropHandler;
 import dev.emi.emi.api.EmiExclusionArea;
+import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.EmiStackProvider;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -34,10 +35,22 @@ public class EmiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
 
     @SuppressWarnings("unchecked")
     public static <T extends Screen & IMuiScreen> EmiScreenHandler<T> of(Class<T> cls) {
-        return (EmiScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new EmiScreenHandler<T>());
+        return (EmiScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new EmiScreenHandler<T>((Class<T>) c));
     }
 
-    private EmiScreenHandler() {}
+    protected final Class<T> clazz;
+
+    private EmiScreenHandler(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+    public void register(EmiRegistry registry) {
+        registry.addExclusionArea(this.clazz, this);
+    }
+
+    public static <T extends Screen & IMuiScreen> void register(Class<T> clazz, EmiRegistry registry) {
+        of(clazz).register(registry);
+    }
 
     @Override
     public boolean dropStack(T screen, EmiIngredient stack, int x, int y) {

@@ -15,6 +15,7 @@ import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.drag.*;
 import me.shedaniel.rei.api.client.gui.widgets.TextField;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZonesProvider;
+import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 
 import java.util.Collection;
@@ -30,8 +31,23 @@ public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
     private static final Map<Class<?>, REIScreenHandler<?>> CACHE = new Reference2ReferenceOpenHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T extends Screen & IMuiScreen> REIScreenHandler<T> of(Class<T> cls) {
-        return (REIScreenHandler<T>) CACHE.computeIfAbsent(cls, c -> new REIScreenHandler<T>());
+    public static <T extends Screen & IMuiScreen> REIScreenHandler<T> of(Class<T> clazz) {
+        return (REIScreenHandler<T>) CACHE.computeIfAbsent(clazz, clz -> new REIScreenHandler<>((Class<T>) clz));
+    }
+
+    protected final Class<T> clazz;
+
+    private REIScreenHandler(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+    public void register(ScreenRegistry registry) {
+        registry.registerDraggableStackProvider(this);
+        registry.registerDraggableStackVisitor(this.getDraggableVisitor());
+    }
+
+    public static <T extends Screen & IMuiScreen> void register(Class<T> clazz, ScreenRegistry registry) {
+        of(clazz).register(registry);
     }
 
     // I have to do this mess because of conflicting comparable impls.
@@ -83,8 +99,6 @@ public class REIScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
             return DraggedAcceptorResult.PASS;
         }
     };
-
-    private REIScreenHandler() {}
 
     @Override
     public @Nullable DraggableStack getHoveredStack(DraggingContext<T> context, double mouseX, double mouseY) {

@@ -103,7 +103,7 @@ public class ModularUIREIDisplay<T extends Recipe<?>, W extends IWidget> impleme
         return Optional.of(this.recipe.id());
     }
 
-    public List<Widget> createWidget(Rectangle bounds) {
+    public List<Widget> createWidgets(Rectangle bounds) {
         List<Widget> widgets = new ArrayList<>();
         widgets.add(new UIWrapperWidget());
 

@@ -44,13 +44,13 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         this.clazz = clazz;
     }
 
-    public static <T extends Screen & IMuiScreen, T2 extends AbstractContainerScreen<?> & IMuiScreen> void register(Class<T> clz,
+    public static <T extends Screen & IMuiScreen, T2 extends AbstractContainerScreen<?> & IMuiScreen> void register(Class<T> clazz,
                                                                                                                     IGuiHandlerRegistration registration) {
-        if (AbstractContainerScreen.class.isAssignableFrom(clz)) {
+        if (AbstractContainerScreen.class.isAssignableFrom(clazz)) {
             // noinspection unchecked
-            new ContainerScreen<>((Class<T2>) clz).register(registration);
+            ContainerScreen.ofContainer((Class<T2>) clazz).register(registration);
         } else {
-            new JeiScreenHandler<>(clz).register(registration);
+            of(clazz).register(registration);
         }
     }
 
@@ -111,6 +111,11 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
 
     public static class ContainerScreen<T extends AbstractContainerScreen<?> & IMuiScreen> extends JeiScreenHandler<T>
                                        implements IGuiContainerHandler<T> {
+
+        @SuppressWarnings("unchecked")
+        public static <T extends AbstractContainerScreen<?> & IMuiScreen> ContainerScreen<T> ofContainer(Class<T> clazz) {
+            return (ContainerScreen<T>) CACHE.computeIfAbsent(clazz, clz -> new ContainerScreen<>((Class<T>) clz));
+        }
 
         private ContainerScreen(Class<T> clazz) {
             super(clazz);
