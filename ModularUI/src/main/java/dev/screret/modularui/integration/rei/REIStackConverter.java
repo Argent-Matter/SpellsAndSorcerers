@@ -52,9 +52,9 @@ public class REIStackConverter {
         }
 
         @Override
-        public @NotNull EntryIngredient convertTo(EntryList<ItemStack> stack, float chance,
+        public EntryIngredient convertTo(EntryList<ItemStack> stack, float chance,
                                                   UnaryOperator<ItemStack> mapper) {
-            if (stack == null || stack.isEmpty()) {
+            if (stack.isEmpty()) {
                 return EntryIngredient.empty();
             }
             if (stack instanceof ItemStackList stackList) {
@@ -93,9 +93,9 @@ public class REIStackConverter {
         }
 
         @Override
-        public @NotNull EntryIngredient convertTo(EntryList<FluidStack> stack, float chance,
+        public EntryIngredient convertTo(EntryList<FluidStack> stack, float chance,
                                                   UnaryOperator<FluidStack> mapper) {
-            if (stack == null || stack.isEmpty()) {
+            if (stack.isEmpty()) {
                 return EntryIngredient.empty();
             }
             if (stack instanceof FluidStackList stackList) {
@@ -121,7 +121,6 @@ public class REIStackConverter {
         return (Converter<T>) CONVERTERS.get(clazz);
     }
 
-    @NotNull
     public static <T> Optional<Converter<T>> getFor(Class<T> clazz) {
         return Optional.ofNullable(getForNullable(clazz));
     }
@@ -131,10 +130,8 @@ public class REIStackConverter {
         @Nullable
         T convertFrom(EntryStack<?> stack);
 
-        @NotNull
         EntryIngredient convertTo(EntryList<T> stack, float chance, UnaryOperator<T> mapper);
 
-        @NotNull
         default EntryIngredient convertTo(IngredientProvider<T> slot) {
             return this.convertTo(slot.getIngredients(), slot.chance(), slot.renderMappingFunction());
         }

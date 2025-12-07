@@ -25,8 +25,6 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -42,8 +40,6 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ModularUIEmiRecipe<T extends Recipe<?>, W extends IWidget> implements EmiRecipe {
-
-    private static final IItemHandlerModifiable EMPTY_ITEM_HANDLER = new EmptyItemHandler();
 
     @Getter
     protected final RecipeHolder<T> recipe;
@@ -83,29 +79,30 @@ public abstract class ModularUIEmiRecipe<T extends Recipe<?>, W extends IWidget>
         }, Duration.ofSeconds(10));
 
         for (IWidget widget : WidgetUtil.getFlatWidgetCollection(recipeWidget)) {
-            if (widget instanceof IngredientProvider<?> provider) {
-                RecipeSlotRole role = provider.recipeRole();
-                if (role == RecipeSlotRole.RENDER_ONLY) {
-                    continue;
-                }
+            if (!(widget instanceof IngredientProvider<?> provider)) {
+                continue;
+            }
+            RecipeSlotRole role = provider.recipeRole();
+            if (role == RecipeSlotRole.RENDER_ONLY) {
+                continue;
+            }
 
-                EmiStackConverter.Converter<?> converter = EmiStackConverter.getForNullable(provider.ingredientClass());
-                if (converter == null) {
-                    continue;
-                }
-                @SuppressWarnings({ "rawtypes", "unchecked" })
-                EmiIngredient ingredient = ((EmiStackConverter.Converter) converter).convertTo(provider);
+            EmiStackConverter.Converter<?> converter = EmiStackConverter.getForNullable(provider.ingredientClass());
+            if (converter == null) {
+                continue;
+            }
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            EmiIngredient ingredient = ((EmiStackConverter.Converter) converter).convertTo(provider);
 
-                switch (role) {
-                    case INPUT -> inputs.add(ingredient);
-                    case OUTPUT -> {
-                        if (ingredient.getEmiStacks().size() > 1) {
-                            allowRecipeTree = false;
-                        }
-                        outputs.addAll(ingredient.getEmiStacks());
+            switch (role) {
+                case INPUT -> inputs.add(ingredient);
+                case OUTPUT -> {
+                    if (ingredient.getEmiStacks().size() > 1) {
+                        allowRecipeTree = false;
                     }
-                    case CATALYST -> catalysts.add(ingredient);
+                    outputs.addAll(ingredient.getEmiStacks());
                 }
+                case CATALYST -> catalysts.add(ingredient);
             }
         }
     }
@@ -133,7 +130,7 @@ public abstract class ModularUIEmiRecipe<T extends Recipe<?>, W extends IWidget>
             SlotWidget slotWidget = null;
             // Clear the MUI slots and add EMI slots based on them.
             if (provider instanceof ItemSlot itemSlot) {
-                itemSlot.slot(EMPTY_ITEM_HANDLER, 0)
+                itemSlot.slot(RecipeScreenRenderingUtil.EMPTY_ITEM_HANDLER, 0)
                         .invisible();
             } else if (provider instanceof FluidSlot fluidSlot) {
                 fluidSlot.syncHandler(EmptyFluidTank.INSTANCE)
@@ -208,7 +205,7 @@ public abstract class ModularUIEmiRecipe<T extends Recipe<?>, W extends IWidget>
         }
     }
 
-    public class UIForegroundRenderWidget extends dev.emi.emi.api.widget.Widget {
+    public class UIForegroundRenderWidget extends Widget {
 
         public UIForegroundRenderWidget() {}
 
