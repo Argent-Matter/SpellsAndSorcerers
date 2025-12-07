@@ -20,7 +20,7 @@ public class MinecraftMixin {
                      shift = At.Shift.AFTER))
     public void timer(CallbackInfo ci) {
         ModularUI.getTimer60Fps().advanceTime(Util.getMillis(), true);
-        for (int j = 0; j < Math.min(20, ModularUI.getTimer60Fps().getGameTimeDeltaTicks()); ++j) {
+        for (int j = 0; j < Math.min(20, ModularUI.getTimer60Fps().getRealtimeDeltaTicks()); ++j) {
             ClientScreenHandler.onFrameUpdate();
         }
     }

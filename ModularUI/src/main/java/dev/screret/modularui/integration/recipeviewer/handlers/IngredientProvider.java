@@ -1,5 +1,6 @@
 package dev.screret.modularui.integration.recipeviewer.handlers;
 
+import dev.screret.modularui.api.widget.IWidget;
 import dev.screret.modularui.integration.recipeviewer.RecipeSlotRole;
 import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
 
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <I> type of the ingredient
  */
-public interface IngredientProvider<I> {
+public interface IngredientProvider<I> extends IWidget {
 
     EntryList<I> getIngredients();
 

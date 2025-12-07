@@ -1,33 +1,26 @@
 package dev.screret.modularui.integration.jei;
 
-import dev.screret.modularui.api.widget.IWidget;
 import dev.screret.modularui.integration.recipeviewer.handlers.GhostIngredientSlot;
 
 import net.minecraft.client.renderer.Rect2i;
 
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 
-import org.jetbrains.annotations.NotNull;
-
 public class GhostIngredientTarget<I> implements IGhostIngredientHandler.Target<I> {
 
     private final GhostIngredientSlot<I> ghostSlot;
-
-    public static <I, W extends IWidget & GhostIngredientSlot<I>> GhostIngredientTarget<I> of(W slot) {
-        return new GhostIngredientTarget<>(slot);
-    }
 
     public GhostIngredientTarget(GhostIngredientSlot<I> ghostSlot) {
         this.ghostSlot = ghostSlot;
     }
 
     @Override
-    public @NotNull Rect2i getArea() {
+    public Rect2i getArea() {
         return this.ghostSlot.getArea().asRect2i();
     }
 
     @Override
-    public void accept(@NotNull I ingredient) {
+    public void accept(I ingredient) {
         if (this.ghostSlot.ingredientHandlingOverride(ingredient)) {
             return;
         }

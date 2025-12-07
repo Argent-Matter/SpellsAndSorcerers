@@ -26,11 +26,10 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Custom EmiStack -> vanilla/forge/mod stack converters
+ * Custom {@link EmiStack} <-> vanilla/forge/mod stack converters
  */
 public class EmiStackConverter {
 
@@ -54,9 +53,9 @@ public class EmiStackConverter {
         }
 
         @Override
-        public @NotNull EmiIngredient convertTo(EntryList<ItemStack> stack, float chance,
-                                                UnaryOperator<ItemStack> mapper) {
-            if (stack == null || stack.isEmpty()) {
+        public EmiIngredient convertTo(EntryList<ItemStack> stack, float chance,
+                                       UnaryOperator<ItemStack> mapper) {
+            if (stack.isEmpty()) {
                 return EmiStack.EMPTY;
             }
             if (stack instanceof ItemStackList stackList) {
@@ -87,9 +86,9 @@ public class EmiStackConverter {
         }
 
         @Override
-        public @NotNull EmiIngredient convertTo(EntryList<FluidStack> stack, float chance,
-                                                UnaryOperator<FluidStack> mapper) {
-            if (stack == null || stack.isEmpty()) {
+        public EmiIngredient convertTo(EntryList<FluidStack> stack, float chance,
+                                       UnaryOperator<FluidStack> mapper) {
+            if (stack.isEmpty()) {
                 return EmiStack.EMPTY;
             }
             if (stack instanceof FluidStackList stackList) {
@@ -98,7 +97,7 @@ public class EmiStackConverter {
                 return EmiIngredient.of(tagList.getEntries().stream()
                         .map(FluidTagList.FluidTagEntry::stacks)
                         .map(stream -> toEMIIngredient(stream))
-                        .collect(Collectors.toList()), tagList.getEntries().get(0).amount()).setChance(chance);
+                        .collect(Collectors.toList()), tagList.getEntries().getFirst().amount()).setChance(chance);
             }
             return EmiStack.EMPTY;
         }
@@ -115,7 +114,6 @@ public class EmiStackConverter {
         return (Converter<T>) CONVERTERS.get(clazz);
     }
 
-    @NotNull
     public static <T> Optional<Converter<T>> getFor(Class<T> clazz) {
         return Optional.ofNullable(getForNullable(clazz));
     }
@@ -125,10 +123,8 @@ public class EmiStackConverter {
         @Nullable
         T convertFrom(EmiStack stack);
 
-        @NotNull
         EmiIngredient convertTo(EntryList<T> stack, float chance, UnaryOperator<T> mapper);
 
-        @NotNull
         default EmiIngredient convertTo(IngredientProvider<T> slot) {
             return this.convertTo(slot.getIngredients(), slot.chance(), slot.renderMappingFunction());
         }

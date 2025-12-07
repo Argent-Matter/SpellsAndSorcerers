@@ -13,12 +13,10 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import lombok.Getter;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.gui.handlers.IGuiProperties;
 import mezz.jei.api.gui.handlers.IScreenHandler;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.runtime.IClickableIngredient;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewerHandler
@@ -162,26 +159,6 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
             return ModularUIJeiPlugin.getRuntime()
                     .getIngredientManager()
                     .createClickableIngredient(ingredient, area.asRect2i(), false);
-        }
-
-        private record ClickableIngredient<T>(ITypedIngredient<T> ingredient, @Getter Rect2i area)
-                implements IClickableIngredient<T> {
-
-            @SuppressWarnings("removal") // I have to override this.
-            @Override
-            public @NotNull ITypedIngredient<T> getTypedIngredient() {
-                return ingredient;
-            }
-
-            @Override
-            public @NotNull IIngredientType<T> getIngredientType() {
-                return ingredient.getType();
-            }
-
-            @Override
-            public @NotNull T getIngredient() {
-                return ingredient.getIngredient();
-            }
         }
     }
 }
