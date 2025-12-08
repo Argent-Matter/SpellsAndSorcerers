@@ -3,6 +3,12 @@ shadowJar {
     configurations = [project.configurations.includedLibrary]
     minimize {}
     archiveClassifier = ""
+    dependsOn(tasks.jar, tasks.jarJar)
+}
+
+if (project == rootProject) {
+    tasks.shadowJar.dependsOn ':ModularUI:shadowJar'
+    tasks.jarJar.dependsOn ':ModularUI:shadowJar'
 }
 
 // Add sources jar to components.java
