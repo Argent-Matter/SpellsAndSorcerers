@@ -111,11 +111,13 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         return currentIngredient;
     }
 
-    public static class ContainerScreen<T extends AbstractContainerMenu, T1 extends AbstractContainerScreen<T> & IMuiScreen> extends JeiScreenHandler<T1>
+    public static class ContainerScreen<T extends AbstractContainerMenu, T1 extends AbstractContainerScreen<T> & IMuiScreen>
+                                       extends JeiScreenHandler<T1>
                                        implements IGuiContainerHandler<T1> {
 
         @SuppressWarnings("unchecked")
-        public static <M extends AbstractContainerMenu, T extends AbstractContainerScreen<M> & IMuiScreen> ContainerScreen<M, T> ofContainer(Class<T> clazz) {
+        public static <M extends AbstractContainerMenu,
+                T extends AbstractContainerScreen<M> & IMuiScreen> ContainerScreen<M, T> ofContainer(Class<T> clazz) {
             return (ContainerScreen<M, T>) CACHE.computeIfAbsent(clazz, clz -> new ContainerScreen<>((Class<T>) clz));
         }
 

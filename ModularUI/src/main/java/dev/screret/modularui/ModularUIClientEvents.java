@@ -13,6 +13,7 @@ public class ModularUIClientEvents {
 
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {
-        event.<ModularContainerMenu, ContainerScreenWrapper>register(ModularUI.MODULAR_CONTAINER.get(), ContainerScreenWrapper::new);
+        event.<ModularContainerMenu, ContainerScreenWrapper>register(ModularUI.MODULAR_CONTAINER.get(),
+                ContainerScreenWrapper::new);
     }
 }
