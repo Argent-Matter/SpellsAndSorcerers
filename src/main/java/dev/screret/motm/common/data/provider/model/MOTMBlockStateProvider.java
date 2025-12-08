@@ -19,7 +19,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 public class MOTMBlockStateProvider extends BlockStateProvider {
 
     public MOTMBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-        super(output, MagicOfTheMind.MODID, exFileHelper);
+        super(output, MagicOfTheMind.MOD_ID, exFileHelper);
     }
 
     @Override

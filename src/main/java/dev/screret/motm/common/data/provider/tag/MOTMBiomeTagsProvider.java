@@ -15,7 +15,7 @@ public class MOTMBiomeTagsProvider extends BiomeTagsProvider {
 
     public MOTMBiomeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                                  ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, MagicOfTheMind.MODID, existingFileHelper);
+        super(output, lookupProvider, MagicOfTheMind.MOD_ID, existingFileHelper);
     }
 
     @Override

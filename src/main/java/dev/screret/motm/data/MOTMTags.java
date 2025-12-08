@@ -38,14 +38,14 @@ public class MOTMTags {
 
     public static final class Blocks {
 
-        public static final TagKey<Block> GLINT_ORES = forgeTag("ores/glint");
-        public static final TagKey<Block> SOULSTEEL_BLOCKS = forgeTag("storage_blocks/soulsteel");
+        public static final TagKey<Block> GLINT_ORES = commonTag("ores/glint");
+        public static final TagKey<Block> SOULSTEEL_BLOCKS = commonTag("storage_blocks/soulsteel");
 
         private static TagKey<Block> tag(String name) {
             return BlockTags.create(MOTMUtil.id(name));
         }
 
-        private static TagKey<Block> forgeTag(String name) {
+        private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
         }
     }

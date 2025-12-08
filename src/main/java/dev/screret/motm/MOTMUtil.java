@@ -37,7 +37,7 @@ public class MOTMUtil {
     public static final Map<ResourceLocation, ItemStack> CUSTOM_WANDS = Maps.newHashMap();
     public static final Map<ResourceLocation, ItemStack> CUSTOM_WAND_CORES = Maps.newHashMap();
 
-    private static final ResourceLocation TEMPLATE_LOCATION = ResourceLocation.fromNamespaceAndPath(MagicOfTheMind.MODID, "");
+    private static final ResourceLocation TEMPLATE_LOCATION = ResourceLocation.fromNamespaceAndPath(MagicOfTheMind.MOD_ID, "");
 
     public static void generateWandItems() {
         if (!CUSTOM_WANDS.isEmpty()) {

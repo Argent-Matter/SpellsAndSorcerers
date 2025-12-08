@@ -3,10 +3,12 @@ package dev.screret.motm.common.menu.container;
 import dev.screret.motm.common.block.entity.PotionDistilleryBlockEntity;
 import dev.screret.motm.common.menu.slot.DistilleryFuelSlot;
 import dev.screret.motm.common.menu.slot.DistilleryResultSlot;
-import dev.screret.motm.data.MOTMContainers;
+import dev.screret.motm.data.MOTMBlockEntities;
+import dev.screret.motm.data.MOTMMenuTypes;
 import dev.screret.motm.data.MOTMRecipeTypes;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -15,6 +17,8 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
+
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -34,33 +38,35 @@ public class PotionDistilleryMenu extends AbstractContainerMenu {
         this(containerId, playerInventory, null);
     }
 
-    public PotionDistilleryMenu(int containerId, Inventory playerInventory, PotionDistilleryBlockEntity blockEntity) {
-        super(MOTMContainers.POTION_DISTILLERY.get(), containerId);
-        this.blockEntity = blockEntity;
+    public PotionDistilleryMenu(int containerId, Inventory inv, @Nullable RegistryFriendlyByteBuf extraData) {
+        super(MOTMMenuTypes.POTION_DISTILLERY.get(), containerId);
+        this.blockEntity = Optional.ofNullable(extraData)
+                .flatMap(buf -> inv.player.level().getBlockEntity(buf.readBlockPos(), MOTMBlockEntities.POTION_DISTILLERY.get()))
+                .orElse(null);
 
         if (this.blockEntity != null) {
             checkContainerSize(this.blockEntity.getInventory(), 5);
             checkContainerDataCount(blockEntity.getDataAccess(), 4);
 
             this.data = blockEntity.getDataAccess();
-            this.level = playerInventory.player.level();
+            this.level = inv.player.level();
 
             IItemHandler items = this.blockEntity.getInventory();
             this.addSlot(new DistilleryFuelSlot(this, items, 0, 17, 17));
             this.addSlot(new SlotItemHandler(items, 1, 79, 17));
 
-            this.addSlot(new DistilleryResultSlot(playerInventory.player, items, 2, 56, 51));
-            this.addSlot(new DistilleryResultSlot(playerInventory.player, items, 3, 79, 58));
-            this.addSlot(new DistilleryResultSlot(playerInventory.player, items, 4, 102, 51));
+            this.addSlot(new DistilleryResultSlot(inv.player, items, 2, 56, 51));
+            this.addSlot(new DistilleryResultSlot(inv.player, items, 3, 79, 58));
+            this.addSlot(new DistilleryResultSlot(inv.player, items, 4, 102, 51));
 
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 9; ++j) {
-                    this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                    this.addSlot(new Slot(inv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
                 }
             }
 
             for (int k = 0; k < 9; ++k) {
-                this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
+                this.addSlot(new Slot(inv, k, 8 + k * 18, 142));
             }
 
             this.addDataSlots(this.data);

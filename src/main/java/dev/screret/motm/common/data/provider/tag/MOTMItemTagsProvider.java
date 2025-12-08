@@ -18,7 +18,7 @@ public class MOTMItemTagsProvider extends ItemTagsProvider {
 
     public MOTMItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                                 CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, blockTagProvider, MagicOfTheMind.MODID, existingFileHelper);
+        super(output, lookupProvider, blockTagProvider, MagicOfTheMind.MOD_ID, existingFileHelper);
     }
 
     @Override

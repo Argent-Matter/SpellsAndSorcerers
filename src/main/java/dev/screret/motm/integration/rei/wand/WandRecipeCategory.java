@@ -23,7 +23,7 @@ import java.util.List;
 
 public class WandRecipeCategory implements DisplayCategory<DefaultWandDisplay> {
 
-    public static final CategoryIdentifier<DefaultWandDisplay> WANDS = CategoryIdentifier.of(MagicOfTheMind.MODID,
+    public static final CategoryIdentifier<DefaultWandDisplay> WANDS = CategoryIdentifier.of(MagicOfTheMind.MOD_ID,
             "plugins/wands");
 
     @Override

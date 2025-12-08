@@ -56,11 +56,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
-@Mod(MagicOfTheMind.MODID)
-@EventBusSubscriber(modid = MagicOfTheMind.MODID)
+@Mod(MagicOfTheMind.MOD_ID)
+@EventBusSubscriber(modid = MagicOfTheMind.MOD_ID)
 public class MagicOfTheMind {
 
-    public static final String MODID = "motm";
+    public static final String MOD_ID = "motm";
     public static final String NAME = "Magic of the Mind";
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
@@ -84,7 +84,7 @@ public class MagicOfTheMind {
         MOTMMobEffects.EFFECTS.register(modEventBus);
         MOTMPotions.POTIONS.register(modEventBus);
 
-        MOTMContainers.MENU_TYPES.register(modEventBus);
+        MOTMMenuTypes.MENU_TYPES.register(modEventBus);
 
         MOTMEntityTypes.ENTITY_TYPES.register(modEventBus);
         MOTMBlockEntities.BLOCK_ENTITIES.register(modEventBus);
@@ -152,7 +152,7 @@ public class MagicOfTheMind {
         DatapackBuiltinEntriesProvider provider = gen.addProvider(true, new DatapackBuiltinEntriesProvider(
                 packOutput, registries, new RegistrySetBuilder()
                         .add(Registries.ENCHANTMENT, MOTMEnchantments::bootstrap),
-                Set.of(MagicOfTheMind.MODID)));
+                Set.of(MagicOfTheMind.MOD_ID)));
         registries = provider.getRegistryProvider();
 
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
@@ -169,7 +169,7 @@ public class MagicOfTheMind {
 
         // gen.addProvider(event.includeServer(), new ModBlockstateProvider(gen, existingFileHelper));
 
-        gen.addProvider(event.includeClient(), new MOTMLangProvider(packOutput, MagicOfTheMind.MODID, "en_us"));
+        gen.addProvider(event.includeClient(), new MOTMLangProvider(packOutput, MagicOfTheMind.MOD_ID, "en_us"));
         gen.addProvider(event.includeClient(), new MOTMBlockStateProvider(packOutput, existingFileHelper));
         gen.addProvider(event.includeClient(), new MOTMItemModelProvider(packOutput, existingFileHelper));
     }

@@ -36,7 +36,7 @@ public class MOTMJeiPlugin implements IModPlugin {
 
     @Override
     public void registerModInfo(IModInfoRegistration registration) {
-        registration.addModAliases(MagicOfTheMind.MODID, MagicOfTheMind.NAME);
+        registration.addModAliases(MagicOfTheMind.MOD_ID, MagicOfTheMind.NAME);
     }
 
     @Override

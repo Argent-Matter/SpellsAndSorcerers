@@ -19,7 +19,7 @@ public class MOTMBlockTagsProvider extends BlockTagsProvider {
 
     public MOTMBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                                  @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, MagicOfTheMind.MODID, existingFileHelper);
+        super(output, lookupProvider, MagicOfTheMind.MOD_ID, existingFileHelper);
     }
 
     protected void addTags(HolderLookup.Provider registries) {

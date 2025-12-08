@@ -11,8 +11,10 @@ import java.util.function.Supplier;
 
 public class MOTMParticles {
 
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE,
-            MagicOfTheMind.MODID);
+    // spotless:off
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MagicOfTheMind.MOD_ID);
 
     public static final Supplier<SimpleParticleType> EYE = PARTICLES.register("eye", () -> new SimpleParticleType(true));
+
+    // spotless:on
 }

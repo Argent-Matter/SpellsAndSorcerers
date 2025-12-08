@@ -13,11 +13,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class MOTMMobEffects {
 
-    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT,
-            MagicOfTheMind.MODID);
+    // spotless:off
+    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, MagicOfTheMind.MOD_ID);
 
     public static final DeferredHolder<MobEffect, MobEffect> MANA = EFFECTS.register("mana",
             () -> MobEffectAccessor.callInit(MobEffectCategory.BENEFICIAL, 0x00e180)
-                    .addAttributeModifier(MOTMAttributes.MANA, MOTMUtil.id("mana_potion"), 25,
-                            AttributeModifier.Operation.ADD_VALUE));
+                    .addAttributeModifier(MOTMAttributes.MANA, MOTMUtil.id("mana_potion"), 25, AttributeModifier.Operation.ADD_VALUE));
+
+    // spotless:on
 }

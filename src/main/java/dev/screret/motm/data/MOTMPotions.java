@@ -14,8 +14,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class MOTMPotions {
 
-    public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(BuiltInRegistries.POTION,
-            MagicOfTheMind.MODID);
+    // spotless:off
+    public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(BuiltInRegistries.POTION, MagicOfTheMind.MOD_ID);
 
     public static final DeferredHolder<Potion, Potion> MANA = POTIONS.register("mana",
             () -> new Potion(new MobEffectInstance(MOTMMobEffects.MANA, 3600)));
@@ -23,6 +23,8 @@ public class MOTMPotions {
             () -> new Potion(new MobEffectInstance(MOTMMobEffects.MANA, 9600)));
     public static final DeferredHolder<Potion, Potion> STRONG_MANA = POTIONS.register("strong_mana",
             () -> new Potion(new MobEffectInstance(MOTMMobEffects.MANA, 1800, 1)));
+
+    // spotless:on
 
     public static void registerPotionMixes(RegisterBrewingRecipesEvent event) {
         PotionBrewing.Builder builder = event.getBuilder();

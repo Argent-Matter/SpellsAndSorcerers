@@ -15,19 +15,17 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class MOTMBlocks {
 
-    // Create a Deferred Register to hold Blocks which will all be registered under the "motm" namespace
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.Blocks.createBlocks(MagicOfTheMind.MODID);
+    // spotless:off
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.Blocks.createBlocks(MagicOfTheMind.MOD_ID);
 
     public static final DeferredBlock<WandTableBlock> WAND_TABLE = BLOCKS.register("wand_table", WandTableBlock::new);
-    public static final DeferredBlock<SummoningCircleBlock> SUMMONING_CIRCLE = BLOCKS.register("summoning_circle",
-            SummoningCircleBlock::new);
+    public static final DeferredBlock<SummoningCircleBlock> SUMMONING_CIRCLE = BLOCKS.register("summoning_circle", SummoningCircleBlock::new);
     public static final DeferredBlock<PalantirBlock> PALANTIR = BLOCKS.register("palantir", PalantirBlock::new);
-    public static final DeferredBlock<PotionDistilleryBlock> POTION_DISTILLERY = BLOCKS.register("potion_distillery",
-            PotionDistilleryBlock::new);
+    public static final DeferredBlock<PotionDistilleryBlock> POTION_DISTILLERY = BLOCKS.register("potion_distillery", PotionDistilleryBlock::new);
 
-    public static final DeferredBlock<Block> SOULSTEEL_BLOCK = BLOCKS.register("soulsteel_block",
-            () -> new Block(BlockBehaviour.Properties.of().strength(5.0F)));
+    public static final DeferredBlock<Block> SOULSTEEL_BLOCK = BLOCKS.registerSimpleBlock("soulsteel_block", BlockBehaviour.Properties.of().strength(5.0F));
     public static final DeferredBlock<Block> GLINT_ORE = BLOCKS.register("glint_ore",
-            () -> new DropExperienceBlock(UniformInt.of(5, 10),
-                    BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(3.0F, 9.0F)));
+            () -> new DropExperienceBlock(UniformInt.of(5, 10), BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(3.0F, 9.0F)));
+
+    // spotless:on
 }

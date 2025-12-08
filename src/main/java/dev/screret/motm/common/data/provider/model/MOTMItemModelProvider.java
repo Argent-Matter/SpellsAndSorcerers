@@ -10,7 +10,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 public class MOTMItemModelProvider extends ItemModelProvider {
 
     public MOTMItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, MagicOfTheMind.MODID, existingFileHelper);
+        super(output, MagicOfTheMind.MOD_ID, existingFileHelper);
     }
 
     @Override

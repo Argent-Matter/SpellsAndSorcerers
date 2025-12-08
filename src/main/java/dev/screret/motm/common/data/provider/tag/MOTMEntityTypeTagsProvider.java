@@ -18,7 +18,7 @@ public class MOTMEntityTypeTagsProvider extends EntityTypeTagsProvider {
 
     public MOTMEntityTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries,
                                       @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, registries, MagicOfTheMind.MODID, existingFileHelper);
+        super(output, registries, MagicOfTheMind.MOD_ID, existingFileHelper);
     }
 
     @Override

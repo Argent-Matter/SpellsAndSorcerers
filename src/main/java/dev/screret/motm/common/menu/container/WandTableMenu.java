@@ -4,7 +4,7 @@ import dev.screret.motm.common.menu.stackhandler.CraftOutputItemHandler;
 import dev.screret.motm.common.menu.stackhandler.CraftResultStackHandler;
 import dev.screret.motm.common.recipe.wand.WandRecipe;
 import dev.screret.motm.data.MOTMBlocks;
-import dev.screret.motm.data.MOTMContainers;
+import dev.screret.motm.data.MOTMMenuTypes;
 import dev.screret.motm.data.MOTMRecipeTypes;
 
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -48,7 +48,7 @@ public class WandTableMenu extends AbstractContainerMenu {
     }
 
     public WandTableMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(MOTMContainers.WAND_TABLE.get(), containerId);
+        super(MOTMMenuTypes.WAND_TABLE.get(), containerId);
         this.access = access;
         this.player = playerInventory.player;
         this.addSlot(new CraftOutputItemHandler(playerInventory.player, this.inputSlots, this.resultSlot, 0, 124, 35));

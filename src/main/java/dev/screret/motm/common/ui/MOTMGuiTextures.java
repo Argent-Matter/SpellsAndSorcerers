@@ -45,7 +45,7 @@ public interface MOTMGuiTextures {
     }
 
     private static UITexture fullImage(String path, ColorType colorType) {
-        return UITexture.fullImage(MagicOfTheMind.MODID, path, colorType);
+        return UITexture.fullImage(MagicOfTheMind.MOD_ID, path, colorType);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -62,7 +62,7 @@ public interface MOTMGuiTextures {
         for (int indexX = 0; indexX < countX; indexX++) {
             for (int indexY = 0; indexY < countY; indexY++) {
                 slices[(indexX * countX) + indexY] = UITexture.builder()
-                        .location(MagicOfTheMind.MODID, path)
+                        .location(MagicOfTheMind.MOD_ID, path)
                         .imageSize(imageWidth, imageHeight)
                         .colorType(colorType)
                         .subAreaXYWH(indexX * sliceWidth, indexY * sliceHeight, sliceWidth, sliceHeight)
@@ -86,7 +86,7 @@ public interface MOTMGuiTextures {
 
     private static UITexture progressBar(String path, int width, int height, @Nullable ColorType colorType) {
         UITexture.Builder builder = new UITexture.Builder()
-                .location(MagicOfTheMind.MODID, path)
+                .location(MagicOfTheMind.MOD_ID, path)
                 .imageSize(width, height)
                 .colorType(colorType);
         return builder.build();

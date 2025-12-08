@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class MOTMAttachmentTypes {
 
-    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MagicOfTheMind.MODID);
+    // spotless:off
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MagicOfTheMind.MOD_ID);
 
     public static final Supplier<AttachmentType<Mana>> MANA = ATTACHMENT_TYPES.register("mana",
             () -> AttachmentType.serializable(() -> new Mana(
@@ -21,4 +21,6 @@ public class MOTMAttachmentTypes {
                     MOTMConfig.Server.maxDefaultMana.get(),
                     MOTMConfig.Server.maxDefaultMana.get(),
                     MOTMConfig.Server.maxDefaultMana.get())).build());
+
+    // spotless:on
 }

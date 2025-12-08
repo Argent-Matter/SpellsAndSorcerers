@@ -17,7 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
-@EventBusSubscriber(modid = MagicOfTheMind.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MagicOfTheMind.MOD_ID, value = Dist.CLIENT)
 public class EyeHallucinationHandler {
 
     private static BossWizardEntity hallucination;

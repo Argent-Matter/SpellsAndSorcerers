@@ -27,15 +27,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
-@EventBusSubscriber(modid = MagicOfTheMind.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MagicOfTheMind.MOD_ID, value = Dist.CLIENT)
 public class ClientEventListeners {
 
     // region mod bus events
 
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {
-        event.register(MOTMContainers.WAND_TABLE.get(), WandTableScreen::new);
-        event.register(MOTMContainers.POTION_DISTILLERY.get(), PotionDistilleryScreen::new);
+        event.register(MOTMMenuTypes.WAND_TABLE.get(), WandTableScreen::new);
+        event.register(MOTMMenuTypes.POTION_DISTILLERY.get(), PotionDistilleryScreen::new);
     }
 
     @SubscribeEvent

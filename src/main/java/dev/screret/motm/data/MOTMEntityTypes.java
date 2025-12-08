@@ -14,22 +14,22 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class MOTMEntityTypes {
 
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE,
-            MagicOfTheMind.MODID);
+    // spotless:off
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MagicOfTheMind.MOD_ID);
 
     public static final DeferredHolder<EntityType<?>, EntityType<WizardEntity>> WIZARD = ENTITY_TYPES.register("wizard",
             () -> EntityType.Builder.of(WizardEntity::new, MobCategory.MONSTER)
                     .sized(0.6F, 1.95F).clientTrackingRange(8)
-                    .build(WizardEntity.class.getSimpleName().toLowerCase()));
-    public static final DeferredHolder<EntityType<?>, EntityType<BossWizardEntity>> BOSS_WIZARD = ENTITY_TYPES.register(
-            "boss_wizard",
+                    .build("motm_wizard"));
+    public static final DeferredHolder<EntityType<?>, EntityType<BossWizardEntity>> BOSS_WIZARD = ENTITY_TYPES.register("boss_wizard",
             () -> EntityType.Builder.of(BossWizardEntity::new, MobCategory.MONSTER)
                     .fireImmune().immuneTo(Blocks.WITHER_ROSE).sized(0.7F, 2.4F).clientTrackingRange(8)
-                    .build(BossWizardEntity.class.getSimpleName().toLowerCase()));
+                    .build("motm_boss_wizard"));
 
-    public static final DeferredHolder<EntityType<?>, EntityType<OneRingItem.RingItemEntity>> RING_ITEM = ENTITY_TYPES.register(
-            "the_one_ring",
+    public static final DeferredHolder<EntityType<?>, EntityType<OneRingItem.RingItemEntity>> RING_ITEM = ENTITY_TYPES.register("the_one_ring",
             () -> EntityType.Builder.of(OneRingItem.RingItemEntity::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(6).updateInterval(20).noSummon()
-                    .build(OneRingItem.RingItemEntity.class.getSimpleName().toLowerCase()));
+                    .build("motm_the_one_ring"));
+
+    // spotless:on
 }
