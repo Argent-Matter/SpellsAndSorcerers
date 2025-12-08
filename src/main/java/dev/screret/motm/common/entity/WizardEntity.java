@@ -1,9 +1,5 @@
 package dev.screret.motm.common.entity;
 
-import dev.screret.motm.MOTMUtil;
-import dev.screret.motm.api.ability.WandAbilityInstance;
-import dev.screret.motm.config.MOTMConfig;
-
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -35,7 +31,6 @@ import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
@@ -108,17 +103,6 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
-    public static List<ItemStack> possibleWands;
-
-    @Override
-    protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
-        if (possibleWands == null) {
-            MOTMUtil.generateWandItems();
-            possibleWands = MOTMUtil.CUSTOM_WANDS.values().stream().toList();
-        }
-        this.setItemSlot(EquipmentSlot.MAINHAND, possibleWands.get(random.nextInt(possibleWands.size() - 1)));
-    }
-
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
@@ -167,21 +151,6 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
-        if (!MOTMConfig.Server.dropWandCores.get()) {
-            return;
-        }
-        var toDrop = MOTMUtil.getMainAbilityFromStack(this.getMainHandItem()).get();
-        while (!toDrop.getChildren().isEmpty()) {
-            toDrop = toDrop.getChildren().getFirst();
-        }
-        ItemEntity itemEntity = this.spawnAtLocation(MOTMUtil.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
-        if (itemEntity != null) {
-            itemEntity.setExtendedLifetime();
-        }
-    }
-
-    @Override
     protected SoundEvent getCastingSoundEvent() {
         return SoundEvents.GHAST_SCREAM;
     }
@@ -220,10 +189,6 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
 
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
-        if (MOTMUtil.getMainAbilityFromStack(this.getMainHandItem()).isPresent()) {
-            MOTMUtil.getMainAbilityFromStack(this.getMainHandItem()).get().execute(this.level(), this, this.getMainHandItem(),
-                    new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
-        }
     }
 
     public class WizardSpellGoal extends SpellcasterUseSpellGoal {
@@ -240,7 +205,7 @@ public class WizardEntity extends SpellcasterIllager implements RangedAttackMob,
 
         @Override
         public boolean canUse() {
-            return super.canUse() && MOTMUtil.getMainAbilityFromStack(WizardEntity.this.getMainHandItem()).isPresent();
+            return super.canUse();
         }
 
         @Override

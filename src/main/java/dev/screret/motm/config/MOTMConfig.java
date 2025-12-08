@@ -43,8 +43,6 @@ public class MOTMConfig {
 
         public static ModConfigSpec.IntValue maxDefaultMana;
 
-        public static ModConfigSpec.BooleanValue dropWandCores;
-
         private static void setupConfig(ModConfigSpec.Builder builder) {
             builder.comment("Spells & Sorcerers Server Configuration")
                     .push("server");
@@ -61,10 +59,6 @@ public class MOTMConfig {
                     .comment("Maximum default mana (no potion effects)")
                     .translation("motm.configgui.maxDefaultMana")
                     .defineInRange("maxDefaultMana", 100, 0, Integer.MAX_VALUE);
-            dropWandCores = builder
-                    .comment("Do wizards drop wand cores?")
-                    .translation("motm.configgui.dropWandCores")
-                    .define("dropWandCores", true);
             enableQthulhuEyeConversion = builder
                     .comment("Does the Eye of Qthulhu convert blocks?")
                     .translation("motm.configgui.enableQthulhuEyeConversion")

@@ -26,18 +26,5 @@ public class WizardRenderer extends GeoEntityRenderer<WizardEntity> {
     public void postRender(PoseStack poseStack, WizardEntity animatable, BakedGeoModel model,
                            MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender,
                            float partialTick, int packedLight, int packedOverlay, int colour) {
-        if (model.getBone("rightArm").isEmpty() || MOTMUtil.getMainAbilityFromStack(animatable.getMainHandItem()).isEmpty()) {
-            return;
-        }
-        if (!animatable.isCastingSpell()) {
-            return;
-        }
-        Vector3d handWorldPos = model.getBone("rightArm").get().getWorldPosition();
-        animatable.level().addParticle(
-                MOTMUtil.getMainAbilityFromStack(animatable.getMainHandItem()).get().getAbility().getParticle(),
-                handWorldPos.x, handWorldPos.y, handWorldPos.z,
-                animatable.getRandom().nextDouble() - 0.5D,
-                -animatable.getRandom().nextDouble(),
-                animatable.getRandom().nextDouble() - 0.5D);
     }
 }

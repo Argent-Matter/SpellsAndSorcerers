@@ -1,10 +1,8 @@
 package dev.screret.motm.common.entity;
 
 import dev.screret.motm.MOTMUtil;
-import dev.screret.motm.api.ability.WandAbilityInstance;
 import dev.screret.motm.common.entity.goal.ShootEnemyGoal;
 import dev.screret.motm.config.MOTMConfig;
-import dev.screret.motm.data.MOTMWandAbilities;
 
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -75,7 +73,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected int spellCastingTickCount;
-    private @Nullable WandAbilityInstance currentSpell = null;
     private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN,
             BossEvent.BossBarOverlay.PROGRESS);
     private BlockPos spawnPos;
@@ -84,7 +81,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         super(type, level);
         this.moveControl = new FlyingMoveControl(this, 10, true);
         this.setHealth(this.getMaxHealth());
-        this.setItemSlot(EquipmentSlot.MAINHAND, createBossWand());
     }
 
     @Override
@@ -194,7 +190,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, createBossWand());
     }
 
     @Override
@@ -225,29 +220,9 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     }
 
     @Override
-    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
-        if (!MOTMConfig.Server.dropWandCores.get()) {
-            return;
-        }
-        var toDrop = MOTMUtil.getMainAbilityFromStack(this.getMainHandItem()).get();
-        while (!toDrop.getChildren().isEmpty()) {
-            toDrop = toDrop.getChildren().getFirst();
-        }
-        ItemEntity itemEntity = this.spawnAtLocation(MOTMUtil.CUSTOM_WAND_CORES.get(toDrop.getId()).copy());
-        if (itemEntity != null) {
-            itemEntity.setExtendedLifetime();
-        }
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("invulnerable_ticks", this.getInvulnerableTicks());
-        if (this.currentSpell != null) {
-            compound.put("current_spell", WandAbilityInstance.CODEC
-                    .encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), this.currentSpell)
-                    .getOrThrow());
-        }
         compound.put("spawn_pos", NbtUtils.writeBlockPos(this.spawnPos));
     }
 
@@ -255,11 +230,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setInvulnerableTicks(compound.getInt("invulnerable_ticks"));
-        if (compound.contains("current_spell")) {
-            this.currentSpell = WandAbilityInstance.CODEC
-                    .parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), compound.get("current_spell"))
-                    .result().orElse(null);
-        }
         NbtUtils.readBlockPos(compound, "spawn_pos").ifPresent(pos -> this.spawnPos = pos);
 
         if (this.hasCustomName()) {
@@ -280,21 +250,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         this.setInvulnerable(true);
         this.bossEvent.setProgress(0.0F);
         this.setHealth(this.getMaxHealth() / 3.0F);
-    }
-
-    public boolean isCastingSpell() {
-        if (this.level().isClientSide) {
-            return currentSpell != null;
-        } else {
-            return this.spellCastingTickCount > 0;
-        }
-    }
-
-    public void setCastingSpell(@Nullable WandAbilityInstance currentSpell) {
-        this.currentSpell = currentSpell;
-        if (currentSpell != null) {
-            this.setIsAttacking(true);
-        }
     }
 
     public SoundEvent getCastingSound() {
@@ -333,10 +288,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
-        if (currentSpell != null) {
-            currentSpell.execute(this.level(), this, this.getMainHandItem(),
-                    new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
-        }
     }
 
     @Override
@@ -354,16 +305,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     @Override
     public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
         return false;
-    }
-
-    private ItemStack createBossWand() {
-        HolderLookup.RegistryLookup<Enchantment> enchantRegistry = this.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-
-        var wandItem = MOTMUtil.createWand(MOTMWandAbilities.LARGE_FIREBALL.get(), MOTMWandAbilities.HEAL_SELF.get());
-        enchantRegistry.get(Enchantments.POWER).ifPresent(holder -> wandItem.enchant(holder, 1));
-        enchantRegistry.get(Enchantments.QUICK_CHARGE).ifPresent(holder -> wandItem.enchant(holder, 3));
-
-        return wandItem;
     }
 
     class WizardDoNothingGoal extends Goal {

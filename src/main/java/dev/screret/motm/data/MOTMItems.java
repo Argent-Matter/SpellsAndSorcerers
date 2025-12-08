@@ -21,10 +21,6 @@ public class MOTMItems {
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.registerSimpleBlockItem("soulsteel_block", MOTMBlocks.SOULSTEEL_BLOCK);
     public static final DeferredItem<BlockItem> GLINT_ORE = ITEMS.registerSimpleBlockItem(MOTMBlocks.GLINT_ORE);
 
-    // WANDS
-    public static final DeferredItem<WandItem> WAND = ITEMS.register("wand", WandItem::new);
-    public static final DeferredItem<WandCoreItem> WAND_CORE = ITEMS.register("wand_core", WandCoreItem::new);
-
     // OTHER ITEMS
     public static final DeferredItem<Item> HANDLE = ITEMS.registerSimpleItem("handle");
     public static final DeferredItem<Item> SOUL_BOTTLE = ITEMS.registerSimpleItem("soul_bottle", new Item.Properties().craftRemainder(Items.GLASS_BOTTLE));

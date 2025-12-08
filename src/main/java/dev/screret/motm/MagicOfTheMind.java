@@ -34,7 +34,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -64,7 +63,6 @@ public class MagicOfTheMind {
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     public MagicOfTheMind(IEventBus modEventBus, ModContainer modContainer) {
-        MOTMWandAbilities.WAND_ABILITIES.register(modEventBus);
         MOTMArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         MOTMDataComponents.DATA_COMPONENTS.register(modEventBus);
 
@@ -100,12 +98,11 @@ public class MagicOfTheMind {
 
     @SubscribeEvent
     private static void registerRegistries(final NewRegistryEvent event) {
-        event.register(MOTMRegistries.WAND_ABILITIES);
+        MOTMRegistries.register(event);
     }
 
     @SubscribeEvent
     public static void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
-        MOTMUtil.generateWandItems();
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.accept(MOTMItems.SOULSTEEL_AXE.get());
             event.accept(MOTMItems.SOULSTEEL_SWORD.get());
@@ -113,8 +110,6 @@ public class MagicOfTheMind {
             event.accept(MOTMItems.SOULSTEEL_CHESTPLATE.get());
             event.accept(MOTMItems.SOULSTEEL_LEGGINGS.get());
             event.accept(MOTMItems.SOULSTEEL_BOOTS.get());
-            event.acceptAll(MOTMUtil.CUSTOM_WANDS.values());
-            event.acceptAll(MOTMUtil.CUSTOM_WAND_CORES.values());
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(MOTMItems.SOULSTEEL_AXE.get());
             event.accept(MOTMItems.SOULSTEEL_HOE.get());

@@ -1,17 +1,12 @@
 package dev.screret.motm.common.entity.goal;
 
-import dev.screret.motm.MOTMUtil;
-import dev.screret.motm.api.ability.WandAbilityInstance;
 import dev.screret.motm.common.entity.BossWizardEntity;
-import dev.screret.motm.common.entity.WizardEntity;
 
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
-import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +66,6 @@ public class ShootEnemyGoal extends Goal {
         this.target = null;
         this.seeTime = 0;
         this.attackTime = -1;
-        this.mob.setCastingSpell(null);
         this.mob.setIsAttacking(false);
     }
 
@@ -108,7 +102,6 @@ public class ShootEnemyGoal extends Goal {
             if (this.target != null) {
                 this.mob.setIsAttacking(true);
                 this.mob.playSound(this.mob.getCastingSound());
-                this.mob.setCastingSpell(getSpell(this.mob.getRandom()));
                 this.mob.performRangedAttack(this.target, clampedRatio);
             }
 
@@ -120,14 +113,5 @@ public class ShootEnemyGoal extends Goal {
                     .floor(Mth.lerp(Math.sqrt(distance) / (double) this.attackRadius, this.attackIntervalMin,
                             this.attackIntervalMax));
         }
-    }
-
-    protected @Nullable WandAbilityInstance getSpell(RandomSource random) {
-        if (WizardEntity.possibleWands == null) {
-            WizardEntity.possibleWands = List.copyOf(MOTMUtil.CUSTOM_WANDS.values());
-        }
-        return MOTMUtil.getMainAbilityFromStack(WizardEntity.possibleWands
-                .get(random.nextInt(WizardEntity.possibleWands.size() - 1)))
-                .orElse(null);
     }
 }
