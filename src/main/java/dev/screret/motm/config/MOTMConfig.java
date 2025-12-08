@@ -9,7 +9,7 @@ public class MOTMConfig {
         public static final ModConfigSpec clientSpec;
 
         private static void setupConfig(ModConfigSpec.Builder builder) {
-            builder.comment("Spells & Sorcerers Client Configuration");
+            builder.comment("Magic of the Mind Client Configuration");
         }
 
         static {
@@ -22,17 +22,9 @@ public class MOTMConfig {
     public static class Server {
 
         public static final ModConfigSpec serverSpec;
-        public static ModConfigSpec.BooleanValue enableQthulhuEyeConversion;
 
         private static void setupConfig(ModConfigSpec.Builder builder) {
-            builder.comment("Spells & Sorcerers Server Configuration")
-                    .push("server");
-
-            enableQthulhuEyeConversion = builder
-                    .comment("Does the Eye of Qthulhu convert blocks?")
-                    .translation("motm.configgui.enableQthulhuEyeConversion")
-                    .define("enableQthulhuEyeConversion", true);
-            builder.pop();
+            builder.comment("Magic of the Mind Server Configuration");
         }
 
         static {

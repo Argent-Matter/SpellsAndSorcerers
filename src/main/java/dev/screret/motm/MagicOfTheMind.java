@@ -1,8 +1,6 @@
 package dev.screret.motm;
 
 import dev.screret.motm.api.registry.MOTMRegistries;
-import dev.screret.motm.common.data.EyeConversionManager;
-import dev.screret.motm.common.data.provider.conversion.EyeConversionProvider;
 import dev.screret.motm.common.data.provider.lang.MOTMLangProvider;
 import dev.screret.motm.common.data.provider.model.*;
 import dev.screret.motm.common.data.provider.recipe.MOTMRecipeProvider;
@@ -32,7 +30,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
@@ -108,7 +105,6 @@ public class MagicOfTheMind {
             event.accept(MOTMItems.SOULSTEEL_HOE.get());
             event.accept(MOTMItems.SOULSTEEL_PICKAXE.get());
             event.accept(MOTMItems.SOULSTEEL_SHOVEL.get());
-            event.accept(MOTMItems.CTHULHU_EYE.get());
         } else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
@@ -142,7 +138,6 @@ public class MagicOfTheMind {
                 new MOTMItemTagsProvider(packOutput, registries, blockTags.contentsGetter(), existingFileHelper));
 
         gen.addProvider(event.includeServer(), new MOTMRecipeProvider(packOutput, registries));
-        gen.addProvider(event.includeServer(), new EyeConversionProvider(packOutput));
 
         gen.addProvider(event.includeServer(), new MOTMBiomeTagsProvider(packOutput, registries, existingFileHelper));
         gen.addProvider(event.includeServer(), new MOTMEntityTypeTagsProvider(packOutput, registries, existingFileHelper));
@@ -166,12 +161,6 @@ public class MagicOfTheMind {
 
     @SubscribeEvent
     public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {}
-
-    @SubscribeEvent
-    public static void registerReloadListeners(final AddReloadListenerEvent event) {
-        EyeConversionManager.INSTANCE = new EyeConversionManager();
-        event.addListener(EyeConversionManager.INSTANCE);
-    }
 
     @SubscribeEvent
     public static void registerBrewingRecipes(final RegisterBrewingRecipesEvent event) {

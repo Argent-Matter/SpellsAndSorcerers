@@ -25,7 +25,6 @@ public class MOTMItems {
     public static final DeferredItem<Item> HANDLE = ITEMS.registerSimpleItem("handle");
     public static final DeferredItem<Item> SOUL_BOTTLE = ITEMS.registerSimpleItem("soul_bottle", new Item.Properties().craftRemainder(Items.GLASS_BOTTLE));
     public static final DeferredItem<Item> CLOUD_BOTTLE = ITEMS.registerSimpleItem("cloud_bottle", new Item.Properties().craftRemainder(Items.GLASS_BOTTLE));
-    public static final DeferredItem<CthulhuEyeItem> CTHULHU_EYE = ITEMS.register("cthulhu_eye", CthulhuEyeItem::new);
     public static final DeferredItem<Item> SOULSTEEL_INGOT = ITEMS.registerSimpleItem("soulsteel_ingot");
     public static final DeferredItem<Item> SOULSTEEL_NUGGET = ITEMS.registerSimpleItem("soulsteel_nugget");
     public static final DeferredItem<Item> GLINT = ITEMS.registerSimpleItem("glint");
