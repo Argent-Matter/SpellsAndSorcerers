@@ -1,16 +1,10 @@
 package dev.screret.motm;
 
-import dev.screret.motm.api.capability.mana.Mana;
 import dev.screret.motm.api.registry.MOTMRegistries;
-import dev.screret.motm.common.block.entity.PotionDistilleryBlockEntity;
-import dev.screret.motm.common.data.EyeConversionManager;
-import dev.screret.motm.common.data.provider.conversion.EyeConversionProvider;
 import dev.screret.motm.common.data.provider.lang.MOTMLangProvider;
 import dev.screret.motm.common.data.provider.model.*;
 import dev.screret.motm.common.data.provider.recipe.MOTMRecipeProvider;
 import dev.screret.motm.common.data.provider.tag.*;
-import dev.screret.motm.common.entity.BossWizardEntity;
-import dev.screret.motm.common.entity.WizardEntity;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.*;
 import dev.screret.motm.data.MOTMIngredientTypes;
@@ -23,9 +17,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -35,18 +26,15 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import org.apache.logging.log4j.LogManager;
@@ -65,7 +53,6 @@ public class MagicOfTheMind {
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
     public MagicOfTheMind(IEventBus modEventBus, ModContainer modContainer) {
-        MOTMWandAbilities.WAND_ABILITIES.register(modEventBus);
         MOTMArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         MOTMDataComponents.DATA_COMPONENTS.register(modEventBus);
 
@@ -93,20 +80,19 @@ public class MagicOfTheMind {
 
         MOTMCreativeTabs.CREATIVE_TABS.register(modEventBus);
 
-        modContainer.registerConfig(ModConfig.Type.CLIENT, MOTMConfig.Client.clientSpec);
-        modContainer.registerConfig(ModConfig.Type.SERVER, MOTMConfig.Server.serverSpec);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, MOTMConfig.Client.CLIENT_CONFIG);
+        modContainer.registerConfig(ModConfig.Type.SERVER, MOTMConfig.Server.SERVER_CONFIG);
     }
 
     // region mod bus events
 
     @SubscribeEvent
     private static void registerRegistries(final NewRegistryEvent event) {
-        event.register(MOTMRegistries.WAND_ABILITIES);
+        MOTMRegistries.register(event);
     }
 
     @SubscribeEvent
     public static void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
-        MOTMUtil.generateWandItems();
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.accept(MOTMItems.SOULSTEEL_AXE.get());
             event.accept(MOTMItems.SOULSTEEL_SWORD.get());
@@ -114,30 +100,20 @@ public class MagicOfTheMind {
             event.accept(MOTMItems.SOULSTEEL_CHESTPLATE.get());
             event.accept(MOTMItems.SOULSTEEL_LEGGINGS.get());
             event.accept(MOTMItems.SOULSTEEL_BOOTS.get());
-            event.acceptAll(MOTMUtil.CUSTOM_WANDS.values());
-            event.acceptAll(MOTMUtil.CUSTOM_WAND_CORES.values());
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(MOTMItems.SOULSTEEL_AXE.get());
             event.accept(MOTMItems.SOULSTEEL_HOE.get());
             event.accept(MOTMItems.SOULSTEEL_PICKAXE.get());
             event.accept(MOTMItems.SOULSTEEL_SHOVEL.get());
-            event.accept(MOTMItems.CTHULHU_EYE.get());
         } else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(MOTMItems.PALANTIR.get());
-            event.accept(MOTMItems.POTION_DISTILLERY.get());
-            event.accept(MOTMItems.WAND_TABLE.get());
-        } else if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
-            event.accept(MOTMItems.POTION_DISTILLERY.get());
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(MOTMItems.HANDLE.get());
             event.accept(MOTMItems.CLOUD_BOTTLE.get());
             event.accept(MOTMItems.SOUL_BOTTLE.get());
             event.accept(MOTMItems.SOULSTEEL_INGOT.get());
-        } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
-            event.accept(MOTMItems.WIZARD_SPAWN_EGG.get());
-            event.accept(MOTMItems.BOSS_WIZARD_SPAWN_EGG.get());
         }
     }
 
@@ -162,7 +138,6 @@ public class MagicOfTheMind {
                 new MOTMItemTagsProvider(packOutput, registries, blockTags.contentsGetter(), existingFileHelper));
 
         gen.addProvider(event.includeServer(), new MOTMRecipeProvider(packOutput, registries));
-        gen.addProvider(event.includeServer(), new EyeConversionProvider(packOutput));
 
         gen.addProvider(event.includeServer(), new MOTMBiomeTagsProvider(packOutput, registries, existingFileHelper));
         gen.addProvider(event.includeServer(), new MOTMEntityTypeTagsProvider(packOutput, registries, existingFileHelper));
@@ -175,49 +150,21 @@ public class MagicOfTheMind {
     }
 
     @SubscribeEvent
-    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MOTMBlockEntities.POTION_DISTILLERY.get(),
-                PotionDistilleryBlockEntity::getItemHandler);
-    }
+    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {}
 
     @SubscribeEvent
-    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-        event.put(MOTMEntityTypes.WIZARD.get(), WizardEntity.createAttributes().build());
-        event.put(MOTMEntityTypes.BOSS_WIZARD.get(), BossWizardEntity.createAttributes().build());
-    }
+    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {}
 
     // endregion
 
     // region forge bus events
 
     @SubscribeEvent
-    public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {
-        if (!event.has(EntityType.PLAYER, MOTMAttributes.MANA)) {
-            event.add(EntityType.PLAYER, MOTMAttributes.MANA);
-        }
-    }
-
-    @SubscribeEvent
-    public static void registerReloadListeners(final AddReloadListenerEvent event) {
-        EyeConversionManager.INSTANCE = new EyeConversionManager();
-        event.addListener(EyeConversionManager.INSTANCE);
-    }
+    public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {}
 
     @SubscribeEvent
     public static void registerBrewingRecipes(final RegisterBrewingRecipesEvent event) {
         MOTMPotions.registerPotionMixes(event);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerTick(final PlayerTickEvent.Post event) {
-        if (event.getEntity().tickCount % 20 == 0) {
-            AttributeInstance manaAttribute = event.getEntity().getAttribute(MOTMAttributes.MANA);
-            Mana mana = event.getEntity().getData(MOTMAttachmentTypes.MANA);
-
-            mana.setMaxManaStored(Mth.floor(manaAttribute.getValue()));
-            mana.addMana(1, false);
-            event.getEntity().setData(MOTMAttachmentTypes.MANA, mana);
-        }
     }
 
     @SubscribeEvent

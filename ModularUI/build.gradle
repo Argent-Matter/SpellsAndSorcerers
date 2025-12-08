@@ -84,6 +84,7 @@ afterEvaluate {
     tasks.withType(ShadowJar).configureEach {
         enableAutoRelocation = true
         relocationPrefix = "${maven_group}.shadow"
+        relocate("org.mariuszgromada.math", "${maven_group}.shadow.mxparser")
     }
 }
 

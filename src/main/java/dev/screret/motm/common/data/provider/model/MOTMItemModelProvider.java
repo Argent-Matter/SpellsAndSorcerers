@@ -35,8 +35,5 @@ public class MOTMItemModelProvider extends ItemModelProvider {
         handheldItem(MOTMItems.SOULSTEEL_PICKAXE.get());
         handheldItem(MOTMItems.SOULSTEEL_AXE.get());
         handheldItem(MOTMItems.SOULSTEEL_HOE.get());
-
-        spawnEggItem(MOTMItems.WIZARD_SPAWN_EGG.get());
-        spawnEggItem(MOTMItems.BOSS_WIZARD_SPAWN_EGG.get());
     }
 }

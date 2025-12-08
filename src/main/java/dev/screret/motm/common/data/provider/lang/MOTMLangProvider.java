@@ -1,6 +1,5 @@
 package dev.screret.motm.common.data.provider.lang;
 
-import dev.screret.motm.api.ability.WandAbility;
 import dev.screret.motm.common.data.util.LangUtil;
 import dev.screret.motm.data.*;
 
@@ -42,17 +41,11 @@ public class MOTMLangProvider extends LanguageProvider {
     protected void addTranslations() {
         // region menus
         addCreativeTab(MOTMCreativeTabs.CREATIVE_TAB, "Magic of the Mind");
-        add("group.motm.wands", "Wands");
-        add("group.motm.wand_cores", "Wand Cores");
 
-        add("container.motm.wand_table", "Wand Table");
         // endregion
 
         // region blocks
-        addBlock(MOTMBlocks.WAND_TABLE, "Wand Table");
-        addBlock(MOTMBlocks.SUMMONING_CIRCLE, "Summoning Circle");
         addBlock(MOTMBlocks.PALANTIR, "Palantír");
-        addBlock(MOTMBlocks.POTION_DISTILLERY, "Potion Distillery");
 
         addBlock(MOTMBlocks.SOULSTEEL_BLOCK, "Block of Soulsteel");
         addBlock(MOTMBlocks.GLINT_ORE, "Glint Ore");
@@ -62,7 +55,6 @@ public class MOTMLangProvider extends LanguageProvider {
         addItem(MOTMItems.HANDLE, "Handle");
         addItem(MOTMItems.SOUL_BOTTLE, "Bottle o' Souls");
         addItem(MOTMItems.CLOUD_BOTTLE, "Bottled Clouds");
-        addItem(MOTMItems.CTHULHU_EYE, "Eye of Cthulhu");
         addItem(MOTMItems.GLINT, "Glint");
 
         addItem(MOTMItems.SOULSTEEL_INGOT, "Soulsteel Ingot");
@@ -77,43 +69,19 @@ public class MOTMLangProvider extends LanguageProvider {
         addItem(MOTMItems.SOULSTEEL_AXE, "Soulsteel Axe");
         addItem(MOTMItems.SOULSTEEL_HOE, "Soulsteel Hoe");
 
-        addItem(MOTMItems.WAND, "Wand of %s");
-        add("tooltip.motm.joiner.last", "and ");
-        addItem(MOTMItems.WAND_CORE, "%s Core");
-
         addItem(MOTMItems.THE_ONE_RING, "The One Ring");
         addMultiline("item.motm.the_one_ring.tooltip", """
                 One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them.
                 You might find it hard to take off.
                 """);
-
-        addItem(MOTMItems.WIZARD_SPAWN_EGG, "Wizard Spawn Egg");
-        addItem(MOTMItems.BOSS_WIZARD_SPAWN_EGG, "Necromantic Sorcerer Spawn Egg");
-        // endregion
-
-        // region wand abilities
-        addAbility(MOTMWandAbilities.DUMMY, "Nothing");
-        addAbility(MOTMWandAbilities.SHOOT_HOLD_DOWN, "Continuous");
-        addAbility(MOTMWandAbilities.SHOOT_LIGHTNING, "Sparky");
-        addAbility(MOTMWandAbilities.DAMAGE, "Hurting");
-        addAbility(MOTMWandAbilities.EXPLODE, "Explosion");
-        addAbility(MOTMWandAbilities.LIGHTNING, "Lightning");
-        addAbility(MOTMWandAbilities.HEAL, "Healing");
-        addAbility(MOTMWandAbilities.HEAL_SELF, "Self-healing");
-        add("ability.motm.sight", "Sight");
-        add("ability.motm.transmutation", "Transmutation");
-        addAbility(MOTMWandAbilities.SMALL_FIREBALL, "Small Fireballs");
-        addAbility(MOTMWandAbilities.LARGE_FIREBALL, "Fireballs");
         // endregion
 
         // region entities
-        addEntityType(MOTMEntityTypes.WIZARD, "Wizard");
-        addEntityType(MOTMEntityTypes.BOSS_WIZARD, "Necromantic Sorcerer");
+
         // endregion
 
         // region effects & attributes
-        add("attribute.name.motm.generic.mana", "Mana");
-        addEffect(MOTMMobEffects.MANA, "Mana Boost");
+
         // endregion
     }
 
@@ -154,14 +122,6 @@ public class MOTMLangProvider extends LanguageProvider {
                     "' doesn't have a translatable name!");
         }
         add(contents.getKey(), name);
-    }
-
-    public void addAbility(Supplier<? extends WandAbility<?>> key, String name) {
-        add(key.get(), name);
-    }
-
-    public void add(WandAbility<?> key, String name) {
-        add(key.getDescriptionId(), name);
     }
 
     public void addAttribute(Supplier<? extends Attribute> key, String name) {

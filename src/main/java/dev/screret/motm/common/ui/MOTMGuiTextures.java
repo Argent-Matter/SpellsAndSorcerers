@@ -36,7 +36,6 @@ public interface MOTMGuiTextures {
     UITexture PROGRESS_BAR_SLICE = progressBar("gui/progress_bar/progress_bar_slice");
 
     // MISC
-    UITexture MANA_BAR = progressBar("gui/overlay/mana_bar", 80, 10);
 
     // spotless:on
 

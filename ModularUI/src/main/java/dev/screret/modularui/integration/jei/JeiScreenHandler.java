@@ -11,6 +11,7 @@ import dev.screret.modularui.utils.Rectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
@@ -44,8 +45,8 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         this.clazz = clazz;
     }
 
-    public static <T extends Screen & IMuiScreen,
-            T2 extends AbstractContainerScreen<?> & IMuiScreen> void register(Class<T> clazz,
+    public static <T extends Screen & IMuiScreen, M extends AbstractContainerMenu,
+            T2 extends AbstractContainerScreen<M> & IMuiScreen> void register(Class<T> clazz,
                                                                               IGuiHandlerRegistration registration) {
         if (AbstractContainerScreen.class.isAssignableFrom(clazz)) {
             // noinspection unchecked
@@ -110,15 +111,17 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         return currentIngredient;
     }
 
-    public static class ContainerScreen<T extends AbstractContainerScreen<?> & IMuiScreen> extends JeiScreenHandler<T>
-                                       implements IGuiContainerHandler<T> {
+    public static class ContainerScreen<T extends AbstractContainerMenu, T1 extends AbstractContainerScreen<T> & IMuiScreen>
+                                       extends JeiScreenHandler<T1>
+                                       implements IGuiContainerHandler<T1> {
 
         @SuppressWarnings("unchecked")
-        public static <T extends AbstractContainerScreen<?> & IMuiScreen> ContainerScreen<T> ofContainer(Class<T> clazz) {
-            return (ContainerScreen<T>) CACHE.computeIfAbsent(clazz, clz -> new ContainerScreen<>((Class<T>) clz));
+        public static <M extends AbstractContainerMenu,
+                T extends AbstractContainerScreen<M> & IMuiScreen> ContainerScreen<M, T> ofContainer(Class<T> clazz) {
+            return (ContainerScreen<M, T>) CACHE.computeIfAbsent(clazz, clz -> new ContainerScreen<>((Class<T>) clz));
         }
 
-        private ContainerScreen(Class<T> clazz) {
+        private ContainerScreen(Class<T1> clazz) {
             super(clazz);
         }
 
@@ -129,7 +132,7 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         }
 
         @Override
-        public List<Rect2i> getGuiExtraAreas(T screen) {
+        public List<Rect2i> getGuiExtraAreas(T1 screen) {
             return screen.getScreen().getContext()
                     .getRecipeViewerSettings().getAllExclusionAreas()
                     .stream().map(Rectangle::asRect2i)
@@ -137,7 +140,7 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         }
 
         @Override
-        public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(T screen, double mouseX, double mouseY) {
+        public Optional<IClickableIngredient<?>> getClickableIngredientUnderMouse(T1 screen, double mouseX, double mouseY) {
             IGuiElement hovered = screen.getScreen().getContext().getTopHovered();
             if (hovered instanceof IngredientProvider<?> provider) {
                 var override = provider.ingredientOverride();

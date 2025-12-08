@@ -1,8 +1,6 @@
 package dev.screret.motm.data;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.common.menu.container.PotionDistilleryMenu;
-import dev.screret.motm.common.menu.container.WandTableMenu;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.flag.FeatureFlags;
@@ -18,8 +16,6 @@ public class MOTMMenuTypes {
     // spotless:off
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, MagicOfTheMind.MOD_ID);
 
-    public static final Supplier<MenuType<WandTableMenu>> WAND_TABLE = MENU_TYPES.register("wand_table", createSimple(WandTableMenu::new));
-    public static final Supplier<MenuType<PotionDistilleryMenu>> POTION_DISTILLERY = MENU_TYPES.register("potion_distillery", create(PotionDistilleryMenu::new));
 
     // spotless:on
 

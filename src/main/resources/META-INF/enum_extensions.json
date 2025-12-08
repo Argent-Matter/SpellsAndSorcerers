@@ -1,13 +1,5 @@
 {
     "entries": [
-        {
-            "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
-            "name": "MOTM_USE_WAND",
-            "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
-            "parameters": {
-                "class": "dev/screret/motm/data/inject/MOTMEnumProxies",
-                "field": "POSE_USE_WAND_PROXY"
-            }
-        }
+
     ]
 }

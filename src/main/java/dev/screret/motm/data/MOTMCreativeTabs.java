@@ -1,6 +1,5 @@
 package dev.screret.motm.data;
 
-import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,10 +18,8 @@ public class MOTMCreativeTabs {
 
     public static final Supplier<CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("motm", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + MagicOfTheMind.MOD_ID))
-            .icon(() -> MOTMItems.WAND.get().getDefaultInstance())
+            .icon(() -> MOTMItems.SOUL_BOTTLE.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.acceptAll(MOTMUtil.CUSTOM_WANDS.values());
-                output.acceptAll(MOTMUtil.CUSTOM_WAND_CORES.values());
                 for (DeferredHolder<Item, ? extends Item> item : MOTMItems.ITEMS.getEntries()) {
                     output.accept(item.get());
                 }

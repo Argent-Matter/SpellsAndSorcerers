@@ -11,11 +11,8 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,37 +27,12 @@ public class MOTMRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull RecipeOutput provider) {
-        MOTMWandRecipes.buildRecipes(provider);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MOTMItems.WAND_TABLE.get())
-                .define('B', Items.BLAZE_POWDER)
-                .define('#', Blocks.END_STONE_BRICKS)
-                .define('D', Items.EMERALD)
-                .pattern(" B ")
-                .pattern("D#D")
-                .pattern("###")
-                .unlockedBy("has_endstone", has(Blocks.END_STONE))
-                .unlockedBy("has_wand_core", has(MOTMItems.WAND_CORE.get()))
-                .unlockedBy("has_wand", has(MOTMItems.WAND.get()))
-                .save(provider, MOTMUtil.id("wand_table"));
-
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MOTMItems.SOULSTEEL_INGOT.get())
                 .requires(MOTMTags.Items.GLINT_GEMS)
                 .requires(MOTMTags.Items.GLINT_GEMS)
                 .requires(MOTMItems.SOUL_BOTTLE.get(), 2)
                 .group("soulsteel_ingot")
                 .unlockedBy("has_glint", has(MOTMItems.GLINT.get()))
-                .save(provider);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MOTMItems.PALANTIR.get())
-                .define('E', MOTMItems.CTHULHU_EYE.get())
-                .define('G', Tags.Items.GLASS_BLOCKS_TINTED)
-                .define('B', Items.POLISHED_BLACKSTONE_BRICKS)
-                .pattern("GGG")
-                .pattern("GEG")
-                .pattern("BBB")
-                .unlockedBy("has_eye", has(MOTMItems.CTHULHU_EYE.get()))
-                .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS_TINTED))
                 .save(provider);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MOTMItems.SOULSTEEL_BOOTS.get())
