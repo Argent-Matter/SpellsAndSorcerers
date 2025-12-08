@@ -37,17 +37,6 @@ public class MOTMRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_glint", has(MOTMItems.GLINT.get()))
                 .save(provider);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MOTMItems.PALANTIR.get())
-                .define('E', MOTMItems.CTHULHU_EYE.get())
-                .define('G', Tags.Items.GLASS_BLOCKS_TINTED)
-                .define('B', Items.POLISHED_BLACKSTONE_BRICKS)
-                .pattern("GGG")
-                .pattern("GEG")
-                .pattern("BBB")
-                .unlockedBy("has_eye", has(MOTMItems.CTHULHU_EYE.get()))
-                .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS_TINTED))
-                .save(provider);
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MOTMItems.SOULSTEEL_BOOTS.get())
                 .define('X', MOTMTags.Items.SOULSTEEL_INGOTS).pattern("X X").pattern("X X")
                 .unlockedBy("has_diamond", has(MOTMTags.Items.SOULSTEEL_INGOTS)).save(provider);

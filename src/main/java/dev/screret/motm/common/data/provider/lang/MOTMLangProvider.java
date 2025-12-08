@@ -55,7 +55,6 @@ public class MOTMLangProvider extends LanguageProvider {
         addItem(MOTMItems.HANDLE, "Handle");
         addItem(MOTMItems.SOUL_BOTTLE, "Bottle o' Souls");
         addItem(MOTMItems.CLOUD_BOTTLE, "Bottled Clouds");
-        addItem(MOTMItems.CTHULHU_EYE, "Eye of Cthulhu");
         addItem(MOTMItems.GLINT, "Glint");
 
         addItem(MOTMItems.SOULSTEEL_INGOT, "Soulsteel Ingot");
