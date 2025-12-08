@@ -44,8 +44,9 @@ public class JeiScreenHandler<T extends Screen & IMuiScreen> extends RecipeViewe
         this.clazz = clazz;
     }
 
-    public static <T extends Screen & IMuiScreen, T2 extends AbstractContainerScreen<?> & IMuiScreen> void register(Class<T> clazz,
-                                                                                                                    IGuiHandlerRegistration registration) {
+    public static <T extends Screen & IMuiScreen,
+            T2 extends AbstractContainerScreen<?> & IMuiScreen> void register(Class<T> clazz,
+                                                                              IGuiHandlerRegistration registration) {
         if (AbstractContainerScreen.class.isAssignableFrom(clazz)) {
             // noinspection unchecked
             ContainerScreen.ofContainer((Class<T2>) clazz).register(registration);

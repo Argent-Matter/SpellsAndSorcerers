@@ -47,6 +47,7 @@ public abstract class ModularUIRecipeCategory<T extends Recipe<?>, W extends IWi
                 .expireAfterAccess(10, TimeUnit.SECONDS)
                 .maximumSize(10)
                 .build(new CacheLoader<>() {
+
                     @Override
                     public ModularScreen load(T recipe) {
                         W widget = wrapperFunction.apply(recipe);
@@ -64,7 +65,8 @@ public abstract class ModularUIRecipeCategory<T extends Recipe<?>, W extends IWi
         return this.modularScreenCache.getUnchecked(recipe);
     }
 
-    private static <T> void addJEISlot(IRecipeLayoutBuilder builder, IngredientProvider<T> widget, RecipeIngredientRole role, int index) {
+    private static <T> void addJEISlot(IRecipeLayoutBuilder builder, IngredientProvider<T> widget,
+                                       RecipeIngredientRole role, int index) {
         var type = ModularUIJeiPlugin.getRuntime().getIngredientManager()
                 .getIngredientTypeChecked(widget.ingredientClass());
         if (type.isEmpty()) {
@@ -76,9 +78,9 @@ public abstract class ModularUIRecipeCategory<T extends Recipe<?>, W extends IWi
 
         slotBuilder.addIngredients(type.get(), widget.getIngredients().getStacks());
         slotBuilder.setCustomRenderer(type.get(), new IIngredientRenderer<>() {
+
             @Override
-            public void render(GuiGraphics guiGraphics, T ingredient) {
-            }
+            public void render(GuiGraphics guiGraphics, T ingredient) {}
 
             @SuppressWarnings("removal")
             @Override
@@ -206,5 +208,4 @@ public abstract class ModularUIRecipeCategory<T extends Recipe<?>, W extends IWi
                     Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
         }
     }
-
 }

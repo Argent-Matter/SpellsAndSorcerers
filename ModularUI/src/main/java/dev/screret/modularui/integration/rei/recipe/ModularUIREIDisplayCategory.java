@@ -10,7 +10,8 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 
 import java.util.List;
 
-public abstract class ModularUIREIDisplayCategory<T extends Recipe<?>, W extends IWidget, D extends ModularUIREIDisplay<T, W>> implements DisplayCategory<D> {
+public abstract class ModularUIREIDisplayCategory<T extends Recipe<?>, W extends IWidget, D extends ModularUIREIDisplay<T, W>>
+                                                 implements DisplayCategory<D> {
 
     @Override
     public List<Widget> setupDisplay(D display, Rectangle bounds) {

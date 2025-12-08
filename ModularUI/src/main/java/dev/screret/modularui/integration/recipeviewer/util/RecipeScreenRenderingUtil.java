@@ -46,7 +46,6 @@ public class RecipeScreenRenderingUtil {
     @ApiStatus.Internal
     public static void drawScreenForeground(GuiGraphics guiGraphics, ModularScreen screen,
                                             int mouseX, int mouseY, float partialTick) {
-
         screen.getContext().setGraphics(guiGraphics);
         screen.getContext().updateState(mouseX, mouseY, partialTick);
         screen.getContext().graphicsPose().pushPose();

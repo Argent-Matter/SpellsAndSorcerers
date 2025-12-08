@@ -24,7 +24,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -53,7 +52,7 @@ public class REIStackConverter {
 
         @Override
         public EntryIngredient convertTo(EntryList<ItemStack> stack, float chance,
-                                                  UnaryOperator<ItemStack> mapper) {
+                                         UnaryOperator<ItemStack> mapper) {
             if (stack.isEmpty()) {
                 return EntryIngredient.empty();
             }
@@ -94,7 +93,7 @@ public class REIStackConverter {
 
         @Override
         public EntryIngredient convertTo(EntryList<FluidStack> stack, float chance,
-                                                  UnaryOperator<FluidStack> mapper) {
+                                         UnaryOperator<FluidStack> mapper) {
             if (stack.isEmpty()) {
                 return EntryIngredient.empty();
             }
