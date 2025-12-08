@@ -4,7 +4,6 @@ import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.common.item.*;
 
 import net.minecraft.world.item.*;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -49,7 +48,8 @@ public class MOTMItems {
     }
 
     private static Supplier<MOTMArmorItem> makeSoulsteelArmorItem(ArmorItem.Type type) {
-        return () -> new MOTMArmorItem(MOTMArmorMaterials.SOULSTEEL, type, fireResistantProps().durability(type.getDurability(40)));
+        return () -> new MOTMArmorItem(MOTMArmorMaterials.SOULSTEEL, type,
+                fireResistantProps().durability(type.getDurability(40)));
     }
 
     private static <I extends TieredItem> Supplier<I> makeSoulsteelToolItem(BiFunction<Tier, Item.Properties, I> func) {

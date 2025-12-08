@@ -1,12 +1,10 @@
 package dev.screret.motm.client.event;
 
-import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.client.renderer.blockentity.PalantirBERenderer;
 import dev.screret.motm.data.*;
 
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -19,8 +17,7 @@ public class ClientEventListeners {
     // region mod bus events
 
     @SubscribeEvent
-    public static void registerScreens(final RegisterMenuScreensEvent event) {
-    }
+    public static void registerScreens(final RegisterMenuScreensEvent event) {}
 
     @SubscribeEvent
     public static void registerParticles(final RegisterParticleProvidersEvent event) {

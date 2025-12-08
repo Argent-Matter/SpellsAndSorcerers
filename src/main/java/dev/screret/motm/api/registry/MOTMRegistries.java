@@ -4,7 +4,5 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 public class MOTMRegistries {
 
-    public static void register(NewRegistryEvent event) {
-
-    }
+    public static void register(NewRegistryEvent event) {}
 }

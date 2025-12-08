@@ -1,6 +1,5 @@
 package dev.screret.motm.data;
 
-import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 
 import net.minecraft.core.registries.BuiltInRegistries;
