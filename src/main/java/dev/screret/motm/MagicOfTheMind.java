@@ -1,6 +1,5 @@
 package dev.screret.motm;
 
-import dev.screret.motm.api.capability.mana.Mana;
 import dev.screret.motm.api.registry.MOTMRegistries;
 import dev.screret.motm.common.data.EyeConversionManager;
 import dev.screret.motm.common.data.provider.conversion.EyeConversionProvider;
@@ -20,9 +19,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -42,7 +38,6 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import org.apache.logging.log4j.LogManager;
@@ -170,11 +165,7 @@ public class MagicOfTheMind {
     // region forge bus events
 
     @SubscribeEvent
-    public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {
-        if (!event.has(EntityType.PLAYER, MOTMAttributes.MANA)) {
-            event.add(EntityType.PLAYER, MOTMAttributes.MANA);
-        }
-    }
+    public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {}
 
     @SubscribeEvent
     public static void registerReloadListeners(final AddReloadListenerEvent event) {
@@ -185,18 +176,6 @@ public class MagicOfTheMind {
     @SubscribeEvent
     public static void registerBrewingRecipes(final RegisterBrewingRecipesEvent event) {
         MOTMPotions.registerPotionMixes(event);
-    }
-
-    @SubscribeEvent
-    public static void onPlayerTick(final PlayerTickEvent.Post event) {
-        if (event.getEntity().tickCount % 20 == 0) {
-            AttributeInstance manaAttribute = event.getEntity().getAttribute(MOTMAttributes.MANA);
-            Mana mana = event.getEntity().getData(MOTMAttachmentTypes.MANA);
-
-            mana.setMaxManaStored(Mth.floor(manaAttribute.getValue()));
-            mana.addMana(1, false);
-            event.getEntity().setData(MOTMAttachmentTypes.MANA, mana);
-        }
     }
 
     @SubscribeEvent

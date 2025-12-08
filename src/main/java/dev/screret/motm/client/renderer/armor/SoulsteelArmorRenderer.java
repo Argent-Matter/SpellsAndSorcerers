@@ -1,4 +1,4 @@
-package dev.screret.mitm.client.renderer.armor;
+package dev.screret.motm.client.renderer.armor;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.common.item.MOTMArmorItem;

@@ -82,8 +82,7 @@ public class MOTMLangProvider extends LanguageProvider {
         // endregion
 
         // region effects & attributes
-        add("attribute.name.motm.generic.mana", "Mana");
-        addEffect(MOTMMobEffects.MANA, "Mana Boost");
+
         // endregion
     }
 

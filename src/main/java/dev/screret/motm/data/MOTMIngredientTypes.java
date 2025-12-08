@@ -9,8 +9,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 public class MOTMIngredientTypes {
 
     // spotless:off
-    public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, MagicOfTheMind.MOD_ID);
+    public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, MagicOfTheMind.MOD_ID);
 
     // spotless:on
 }

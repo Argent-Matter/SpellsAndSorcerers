@@ -2,7 +2,6 @@ package dev.screret.motm.client.event;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.client.gui.overlay.ManaBarOverlay;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.client.renderer.blockentity.PalantirBERenderer;
 import dev.screret.motm.data.*;
@@ -34,9 +33,7 @@ public class ClientEventListeners {
     }
 
     @SubscribeEvent
-    public static void registerGuiOverlay(final RegisterGuiLayersEvent event) {
-        event.registerAbove(ResourceLocation.withDefaultNamespace("armor_level"), MOTMUtil.id("mana"), new ManaBarOverlay());
-    }
+    public static void registerGuiOverlay(final RegisterGuiLayersEvent event) {}
 
     @SubscribeEvent
     public static void registerItemColors(final RegisterColorHandlersEvent.Item event) {}
