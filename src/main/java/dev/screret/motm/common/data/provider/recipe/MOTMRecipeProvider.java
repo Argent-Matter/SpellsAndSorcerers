@@ -30,8 +30,6 @@ public class MOTMRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull RecipeOutput provider) {
-        MOTMWandRecipes.buildRecipes(provider);
-
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MOTMItems.SOULSTEEL_INGOT.get())
                 .requires(MOTMTags.Items.GLINT_GEMS)
                 .requires(MOTMTags.Items.GLINT_GEMS)
