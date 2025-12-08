@@ -90,13 +90,17 @@ public abstract class WandAbility<T extends WandAbility<T>> {
         return component != null && component.poweredUp();
     }
 
-    public ResourceLocation getKey() {
+    public ResourceLocation getId() {
         return MOTMRegistries.WAND_ABILITIES.getKey(this);
+    }
+
+    public String getDescriptionId() {
+        return this.getId().toLanguageKey("ability");
     }
 
     @Override
     public String toString() {
-        return getKey().toString();
+        return getId().toString();
     }
 
     public WandAbilityInstance getBasicInstance() {

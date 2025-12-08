@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class WandCoreItem extends Item {
 
-    public static final String ABILITY_KEY = "ability";
-
     public WandCoreItem() {
         super(new Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
     }
@@ -23,7 +21,7 @@ public class WandCoreItem extends Item {
         String name = "ability.motm.dummy";
         WandAbilityInstance component = stack.get(MOTMDataComponents.WAND_CORE);
         if (component != null) {
-            name = component.getId().toLanguageKey(ABILITY_KEY);
+            name = component.getDescriptionId();
         }
         return Component.translatable(this.getDescriptionId(stack), Component.translatable(name));
     }

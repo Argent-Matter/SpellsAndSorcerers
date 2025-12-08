@@ -5,8 +5,7 @@ import dev.screret.motm.api.registry.MOTMRegistries;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,27 +16,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
+public class WandAbilityInstance {
 
     // spotless:off
     public static final Codec<WandAbilityInstance> CODEC = Codec.recursive("WandAbilityInstance", wrapped -> {
@@ -60,22 +55,23 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     // spotless:on
 
     @Getter
-    private WandAbility<?> ability;
+    private final WandAbility<?> ability;
     @Getter
-    private List<WandAbilityInstance> children;
+    @Unmodifiable
+    private final List<WandAbilityInstance> children;
 
     public WandAbilityInstance(WandAbility<?> ability, WandAbilityInstance @Nullable... children) {
-        this.ability = ability;
-        this.children = children == null ? new ArrayList<>() : Arrays.stream(children).collect(Collectors.toList());
+        this(ability, children == null ? null : List.of(children));
     }
 
     public WandAbilityInstance(WandAbility<?> ability, @Nullable List<WandAbilityInstance> children) {
         this.ability = ability;
-        this.children = children == null ? new ArrayList<>() : new ArrayList<>(children);
+        this.children = children == null ? Collections.emptyList() : List.copyOf(children);
     }
 
-    public WandAbilityInstance(CompoundTag nbt, HolderLookup.Provider registries) {
-        this.deserializeNBT(registries, nbt);
+    public static WandAbilityInstance fromNbt(CompoundTag nbt, HolderLookup.Provider registries) {
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        return WandAbilityInstance.CODEC.parse(ops, nbt).getOrThrow(IllegalArgumentException::new);
     }
 
     public InteractionResultHolder<ItemStack> execute(Level level, LivingEntity user, ItemStack stack, WrappedVec3 currentPos,
@@ -95,7 +91,11 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
     }
 
     public ResourceLocation getId() {
-        return ability.getKey();
+        return ability.getId();
+    }
+
+    public String getDescriptionId() {
+        return ability.getDescriptionId();
     }
 
     public boolean isHoldable() {
@@ -127,34 +127,6 @@ public class WandAbilityInstance implements INBTSerializable<CompoundTag> {
             }
         }
         return total + ability.getUseDuration();
-    }
-
-    @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("ability", getId().toString());
-        ListTag children = new ListTag();
-        if (this.children != null) {
-            for (WandAbilityInstance child : this.children) {
-                children.add(child.serializeNBT(registries));
-            }
-        }
-        tag.put("children", children);
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider registries, CompoundTag nbt) {
-        if (this.children == null) {
-            this.children = new ArrayList<>();
-        }
-        this.ability = MOTMRegistries.WAND_ABILITIES.get(ResourceLocation.parse(nbt.getString("ability")));
-        ListTag children = nbt.getList("children", Tag.TAG_COMPOUND);
-        for (int i = 0; i < children.size(); ++i) {
-            var child = children.getCompound(i);
-            WandAbilityInstance a = new WandAbilityInstance(child, registries);
-            this.children.add(a);
-        }
     }
 
     @Override

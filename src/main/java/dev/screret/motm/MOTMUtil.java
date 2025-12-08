@@ -63,7 +63,7 @@ public class MOTMUtil {
     }
 
     public static ItemStack addWand(WandAbility<?> primary, @Nullable WandAbility<?> secondary) {
-        return CUSTOM_WANDS.put(primary.getKey(), createWand(primary, secondary));
+        return CUSTOM_WANDS.put(primary.getId(), createWand(primary, secondary));
     }
 
     public static ItemStack addWand(WandAbilityInstance main, @Nullable WandAbilityInstance crouch) {
@@ -78,7 +78,7 @@ public class MOTMUtil {
         var coreStack = new ItemStack(MOTMItems.WAND_CORE.get());
         coreStack.set(MOTMDataComponents.WAND_CORE, new WandAbilityInstance(ability));
 
-        return CUSTOM_WAND_CORES.put(ability.getKey(), coreStack);
+        return CUSTOM_WAND_CORES.put(ability.getId(), coreStack);
     }
 
     public static Optional<WandAbilityInstance> getMainAbilityFromStack(ItemStack stack) {

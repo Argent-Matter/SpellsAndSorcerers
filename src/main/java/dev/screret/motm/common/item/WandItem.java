@@ -57,7 +57,7 @@ public class WandItem extends Item {
     protected Component addNamePart(WandAbilityInstance ability) {
         MutableComponent name = Component.empty();
 
-        String langKey = ability.getId().toLanguageKey("ability");
+        String langKey = ability.getDescriptionId();
         if (Language.getInstance().has(langKey)) {
             name = Component.translatable(langKey);
         }

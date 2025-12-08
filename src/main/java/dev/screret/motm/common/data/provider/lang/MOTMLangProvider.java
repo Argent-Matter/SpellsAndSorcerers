@@ -10,6 +10,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -91,7 +92,7 @@ public class MOTMLangProvider extends LanguageProvider {
         // endregion
 
         // region wand abilities
-        addAbility(MOTMWandAbilities.DUMMY, "Absolutely No");
+        addAbility(MOTMWandAbilities.DUMMY, "Nothing");
         addAbility(MOTMWandAbilities.SHOOT_HOLD_DOWN, "Continuous");
         addAbility(MOTMWandAbilities.SHOOT_LIGHTNING, "Sparky");
         addAbility(MOTMWandAbilities.DAMAGE, "Hurting");
@@ -110,7 +111,8 @@ public class MOTMLangProvider extends LanguageProvider {
         addEntityType(MOTMEntityTypes.BOSS_WIZARD, "Necromantic Sorcerer");
         // endregion
 
-        // effects
+        // region effects & attributes
+        add("attribute.name.motm.generic.mana", "Mana");
         addEffect(MOTMMobEffects.MANA, "Mana Boost");
         // endregion
     }
@@ -159,7 +161,15 @@ public class MOTMLangProvider extends LanguageProvider {
     }
 
     public void add(WandAbility<?> key, String name) {
-        add(key.getKey().toLanguageKey("ability"), name);
+        add(key.getDescriptionId(), name);
+    }
+
+    public void addAttribute(Supplier<? extends Attribute> key, String name) {
+        add(key.get(), name);
+    }
+
+    public void add(Attribute key, String name) {
+        add(key.getDescriptionId(), name);
     }
 
     /**

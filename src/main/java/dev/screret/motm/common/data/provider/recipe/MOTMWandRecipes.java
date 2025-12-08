@@ -101,11 +101,11 @@ public class MOTMWandRecipes {
     }
 
     public static ShapedWandRecipeBuilder getShaped(WandAbility ability) {
-        return new ShapedWandRecipeBuilder(MOTMUtil.CUSTOM_WANDS.get(ability.getKey()));
+        return new ShapedWandRecipeBuilder(MOTMUtil.CUSTOM_WANDS.get(ability.getId()));
     }
 
     public static ShapelessWandRecipeBuilder getShapeless(WandAbility ability) {
-        return new ShapelessWandRecipeBuilder(MOTMUtil.CUSTOM_WANDS.get(ability.getKey()));
+        return new ShapelessWandRecipeBuilder(MOTMUtil.CUSTOM_WANDS.get(ability.getId()));
     }
 
     public static ShapelessWandRecipeBuilder getShapeless(ItemStack wand) {
@@ -113,7 +113,7 @@ public class MOTMWandRecipes {
     }
 
     public static ItemStack getWandCore(WandAbility ability) {
-        return MOTMUtil.CUSTOM_WAND_CORES.get(ability.getKey());
+        return MOTMUtil.CUSTOM_WAND_CORES.get(ability.getId());
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... items) {
@@ -142,7 +142,7 @@ public class MOTMWandRecipes {
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> hasCore(WandAbility ability) {
-        return has(MOTMUtil.CUSTOM_WAND_CORES.get(ability.getKey()));
+        return has(MOTMUtil.CUSTOM_WAND_CORES.get(ability.getId()));
     }
 
     private static void addWandUpgradeRecipes(RecipeOutput output) {
