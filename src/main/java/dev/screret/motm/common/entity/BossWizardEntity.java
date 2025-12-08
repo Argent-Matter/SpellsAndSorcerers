@@ -2,7 +2,6 @@ package dev.screret.motm.common.entity;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.api.ability.WandAbilityInstance;
-import dev.screret.motm.common.block.entity.SummoningCircleBlockEntity;
 import dev.screret.motm.common.entity.goal.ShootEnemyGoal;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.MOTMWandAbilities;
@@ -150,9 +149,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     @Override
     protected void customServerAiStep() {
         if (this.getInvulnerableTicks() > 0) {
-            if (!(this.level().getBlockEntity(this.spawnPos) instanceof SummoningCircleBlockEntity)) {
-                this.discard();
-            }
             if (this.level().getBlockState(this.spawnPos.above(2)) != Blocks.AIR.defaultBlockState()) {
                 this.level().setBlockAndUpdate(this.spawnPos.above(2), Blocks.AIR.defaultBlockState());
                 this.level().setBlockAndUpdate(this.spawnPos.above(), Blocks.AIR.defaultBlockState());

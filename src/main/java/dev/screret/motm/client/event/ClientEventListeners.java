@@ -4,17 +4,13 @@ import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.registry.MOTMRegistries;
 import dev.screret.motm.client.gui.overlay.ManaBarOverlay;
-import dev.screret.motm.client.gui.screen.PotionDistilleryScreen;
-import dev.screret.motm.client.gui.screen.WandTableScreen;
 import dev.screret.motm.client.model.item.WandItemClientExtensions;
 import dev.screret.motm.client.model.item.WandModel;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.client.renderer.blockentity.PalantirBERenderer;
-import dev.screret.motm.client.renderer.blockentity.SummoningCircleBERenderer;
 import dev.screret.motm.client.renderer.entity.BossWizardRenderer;
 import dev.screret.motm.client.renderer.entity.WizardRenderer;
 import dev.screret.motm.common.ability.SubAbility;
-import dev.screret.motm.common.block.SummoningCircleBlock;
 import dev.screret.motm.data.*;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -34,8 +30,6 @@ public class ClientEventListeners {
 
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {
-        event.register(MOTMMenuTypes.WAND_TABLE.get(), WandTableScreen::new);
-        event.register(MOTMMenuTypes.POTION_DISTILLERY.get(), PotionDistilleryScreen::new);
     }
 
     @SubscribeEvent
@@ -48,7 +42,6 @@ public class ClientEventListeners {
         event.registerEntityRenderer(MOTMEntityTypes.WIZARD.get(), WizardRenderer::new);
         event.registerEntityRenderer(MOTMEntityTypes.BOSS_WIZARD.get(), BossWizardRenderer::new);
 
-        event.registerBlockEntityRenderer(MOTMBlockEntities.SUMMONING_CIRCLE.get(), context -> new SummoningCircleBERenderer());
         event.registerBlockEntityRenderer(MOTMBlockEntities.PALANTIR.get(), context -> new PalantirBERenderer());
     }
 
@@ -95,10 +88,7 @@ public class ClientEventListeners {
     }
 
     @SubscribeEvent
-    public static void registerBlockColors(final RegisterColorHandlersEvent.Block event) {
-        event.register((state, level, pos, layer) -> state.getValue(SummoningCircleBlock.COLOR).getTextureDiffuseColor(),
-                MOTMBlocks.SUMMONING_CIRCLE.get());
-    }
+    public static void registerBlockColors(final RegisterColorHandlersEvent.Block event) {}
 
     @SubscribeEvent
     public static void registerClientExtensions(final RegisterClientExtensionsEvent event) {

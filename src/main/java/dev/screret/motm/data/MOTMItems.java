@@ -17,11 +17,9 @@ public class MOTMItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.Items.createItems(MagicOfTheMind.MOD_ID);
 
     // BLOCK ITEMS
-    public static final DeferredItem<BlockItem> WAND_TABLE = ITEMS.registerSimpleBlockItem(MOTMBlocks.WAND_TABLE);
     public static final DeferredItem<BlockItem> PALANTIR = ITEMS.registerSimpleBlockItem(MOTMBlocks.PALANTIR, fireResistantProps().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.registerSimpleBlockItem("soulsteel_block", MOTMBlocks.SOULSTEEL_BLOCK);
     public static final DeferredItem<BlockItem> GLINT_ORE = ITEMS.registerSimpleBlockItem(MOTMBlocks.GLINT_ORE);
-    public static final DeferredItem<BlockItem> POTION_DISTILLERY = ITEMS.registerSimpleBlockItem(MOTMBlocks.POTION_DISTILLERY);
 
     // WANDS
     public static final DeferredItem<WandItem> WAND = ITEMS.register("wand", WandItem::new);

@@ -32,18 +32,6 @@ public class MOTMRecipeProvider extends RecipeProvider {
     protected void buildRecipes(@NotNull RecipeOutput provider) {
         MOTMWandRecipes.buildRecipes(provider);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MOTMItems.WAND_TABLE.get())
-                .define('B', Items.BLAZE_POWDER)
-                .define('#', Blocks.END_STONE_BRICKS)
-                .define('D', Items.EMERALD)
-                .pattern(" B ")
-                .pattern("D#D")
-                .pattern("###")
-                .unlockedBy("has_endstone", has(Blocks.END_STONE))
-                .unlockedBy("has_wand_core", has(MOTMItems.WAND_CORE.get()))
-                .unlockedBy("has_wand", has(MOTMItems.WAND.get()))
-                .save(provider, MOTMUtil.id("wand_table"));
-
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MOTMItems.SOULSTEEL_INGOT.get())
                 .requires(MOTMTags.Items.GLINT_GEMS)
                 .requires(MOTMTags.Items.GLINT_GEMS)

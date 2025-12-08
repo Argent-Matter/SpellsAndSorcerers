@@ -2,7 +2,6 @@ package dev.screret.motm;
 
 import dev.screret.motm.api.capability.mana.Mana;
 import dev.screret.motm.api.registry.MOTMRegistries;
-import dev.screret.motm.common.block.entity.PotionDistilleryBlockEntity;
 import dev.screret.motm.common.data.EyeConversionManager;
 import dev.screret.motm.common.data.provider.conversion.EyeConversionProvider;
 import dev.screret.motm.common.data.provider.lang.MOTMLangProvider;
@@ -126,10 +125,6 @@ public class MagicOfTheMind {
             event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(MOTMItems.PALANTIR.get());
-            event.accept(MOTMItems.POTION_DISTILLERY.get());
-            event.accept(MOTMItems.WAND_TABLE.get());
-        } else if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {
-            event.accept(MOTMItems.POTION_DISTILLERY.get());
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(MOTMItems.HANDLE.get());
             event.accept(MOTMItems.CLOUD_BOTTLE.get());
@@ -175,10 +170,7 @@ public class MagicOfTheMind {
     }
 
     @SubscribeEvent
-    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, MOTMBlockEntities.POTION_DISTILLERY.get(),
-                PotionDistilleryBlockEntity::getItemHandler);
-    }
+    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {}
 
     @SubscribeEvent
     public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {

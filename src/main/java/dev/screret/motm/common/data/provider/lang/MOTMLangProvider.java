@@ -45,14 +45,10 @@ public class MOTMLangProvider extends LanguageProvider {
         add("group.motm.wands", "Wands");
         add("group.motm.wand_cores", "Wand Cores");
 
-        add("container.motm.wand_table", "Wand Table");
         // endregion
 
         // region blocks
-        addBlock(MOTMBlocks.WAND_TABLE, "Wand Table");
-        addBlock(MOTMBlocks.SUMMONING_CIRCLE, "Summoning Circle");
         addBlock(MOTMBlocks.PALANTIR, "Palantír");
-        addBlock(MOTMBlocks.POTION_DISTILLERY, "Potion Distillery");
 
         addBlock(MOTMBlocks.SOULSTEEL_BLOCK, "Block of Soulsteel");
         addBlock(MOTMBlocks.GLINT_ORE, "Glint Ore");

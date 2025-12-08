@@ -5,8 +5,6 @@ import dev.screret.motm.common.recipe.wand.WandRecipe;
 import dev.screret.motm.data.MOTMDataComponents;
 import dev.screret.motm.data.MOTMItems;
 import dev.screret.motm.data.MOTMRecipeTypes;
-import dev.screret.motm.integration.rei.wand.DefaultWandDisplay;
-import dev.screret.motm.integration.rei.wand.WandRecipeCategory;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
