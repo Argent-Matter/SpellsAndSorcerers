@@ -27,11 +27,6 @@ import java.util.stream.Collectors;
 public class MOTMReiPlugin implements REIClientPlugin {
 
     @Override
-    public String getPluginProviderName() {
-        return "motm_rei_plugin";
-    }
-
-    @Override
     public void registerCategories(CategoryRegistry registry) {
         registry.add(new WandRecipeCategory());
     }
