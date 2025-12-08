@@ -22,11 +22,6 @@ public class MOTMTags {
         public static final TagKey<Item> SOULSTEEL_NUGGETS = commonTag("nuggets/soulsteel");
         public static final TagKey<Item> SOULSTEEL_BLOCKS = commonTag("storage_blocks/soulsteel");
 
-        public static final TagKey<Item> BOSS_SUMMON_ITEMS = tag("boss_summon_items");
-
-        public static final TagKey<Item> ENCHANTABLE_WITH_QUICK_CHARGE = tag("enchantable_with/quick_charge");
-        public static final TagKey<Item> ENCHANTABLE_WITH_POWER = tag("enchantable_with/power");
-
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(MOTMUtil.id(name));
         }

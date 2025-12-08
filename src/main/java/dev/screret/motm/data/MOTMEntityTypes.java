@@ -1,14 +1,11 @@
 package dev.screret.motm.data;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.common.entity.BossWizardEntity;
-import dev.screret.motm.common.entity.WizardEntity;
 import dev.screret.motm.common.item.OneRingItem;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -16,15 +13,6 @@ public class MOTMEntityTypes {
 
     // spotless:off
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MagicOfTheMind.MOD_ID);
-
-    public static final DeferredHolder<EntityType<?>, EntityType<WizardEntity>> WIZARD = ENTITY_TYPES.register("wizard",
-            () -> EntityType.Builder.of(WizardEntity::new, MobCategory.MONSTER)
-                    .sized(0.6F, 1.95F).clientTrackingRange(8)
-                    .build("motm_wizard"));
-    public static final DeferredHolder<EntityType<?>, EntityType<BossWizardEntity>> BOSS_WIZARD = ENTITY_TYPES.register("boss_wizard",
-            () -> EntityType.Builder.of(BossWizardEntity::new, MobCategory.MONSTER)
-                    .fireImmune().immuneTo(Blocks.WITHER_ROSE).sized(0.7F, 2.4F).clientTrackingRange(8)
-                    .build("motm_boss_wizard"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<OneRingItem.RingItemEntity>> RING_ITEM = ENTITY_TYPES.register("the_one_ring",
             () -> EntityType.Builder.of(OneRingItem.RingItemEntity::new, MobCategory.MISC)

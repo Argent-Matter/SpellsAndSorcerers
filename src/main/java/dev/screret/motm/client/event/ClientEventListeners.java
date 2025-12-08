@@ -5,8 +5,6 @@ import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.client.gui.overlay.ManaBarOverlay;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.client.renderer.blockentity.PalantirBERenderer;
-import dev.screret.motm.client.renderer.entity.BossWizardRenderer;
-import dev.screret.motm.client.renderer.entity.WizardRenderer;
 import dev.screret.motm.data.*;
 
 import net.minecraft.resources.ResourceLocation;
@@ -32,9 +30,6 @@ public class ClientEventListeners {
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(MOTMEntityTypes.WIZARD.get(), WizardRenderer::new);
-        event.registerEntityRenderer(MOTMEntityTypes.BOSS_WIZARD.get(), BossWizardRenderer::new);
-
         event.registerBlockEntityRenderer(MOTMBlockEntities.PALANTIR.get(), context -> new PalantirBERenderer());
     }
 

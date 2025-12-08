@@ -22,7 +22,5 @@ public class MOTMEntityTypeTagsProvider extends EntityTypeTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.@NotNull Provider registries) {
-        this.tag(EntityTypeTags.ILLAGER).add(MOTMEntityTypes.WIZARD.get()).add(MOTMEntityTypes.BOSS_WIZARD.get());
-    }
+    protected void addTags(HolderLookup.@NotNull Provider registries) {}
 }

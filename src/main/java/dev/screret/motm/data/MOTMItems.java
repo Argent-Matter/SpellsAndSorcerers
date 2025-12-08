@@ -32,11 +32,6 @@ public class MOTMItems {
 
     public static final DeferredItem<OneRingItem> THE_ONE_RING = ITEMS.register("the_one_ring", OneRingItem::new);
 
-    public static final DeferredItem<DeferredSpawnEggItem> WIZARD_SPAWN_EGG = ITEMS.registerItem("wizard_spawn_egg",
-            p -> new DeferredSpawnEggItem(MOTMEntityTypes.WIZARD, 0x002017, 0x959b9b, p));
-    public static final DeferredItem<DeferredSpawnEggItem> BOSS_WIZARD_SPAWN_EGG = ITEMS.registerItem("boss_wizard_spawn_egg",
-            p -> new DeferredSpawnEggItem(MOTMEntityTypes.BOSS_WIZARD, 0x9a080f, 0x959b9b, p));
-
     public static final DeferredItem<MOTMArmorItem> SOULSTEEL_HELMET = ITEMS.register("soulsteel_helmet", makeSoulsteelArmorItem(ArmorItem.Type.HELMET));
     public static final DeferredItem<MOTMArmorItem> SOULSTEEL_CHESTPLATE = ITEMS.register("soulsteel_chestplate", makeSoulsteelArmorItem(ArmorItem.Type.CHESTPLATE));
     public static final DeferredItem<MOTMArmorItem> SOULSTEEL_LEGGINGS = ITEMS.register("soulsteel_leggings", makeSoulsteelArmorItem(ArmorItem.Type.LEGGINGS));

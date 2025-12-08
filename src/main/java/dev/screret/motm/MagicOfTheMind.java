@@ -8,8 +8,6 @@ import dev.screret.motm.common.data.provider.lang.MOTMLangProvider;
 import dev.screret.motm.common.data.provider.model.*;
 import dev.screret.motm.common.data.provider.recipe.MOTMRecipeProvider;
 import dev.screret.motm.common.data.provider.tag.*;
-import dev.screret.motm.common.entity.BossWizardEntity;
-import dev.screret.motm.common.entity.WizardEntity;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.*;
 import dev.screret.motm.data.MOTMIngredientTypes;
@@ -125,9 +123,6 @@ public class MagicOfTheMind {
             event.accept(MOTMItems.CLOUD_BOTTLE.get());
             event.accept(MOTMItems.SOUL_BOTTLE.get());
             event.accept(MOTMItems.SOULSTEEL_INGOT.get());
-        } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
-            event.accept(MOTMItems.WIZARD_SPAWN_EGG.get());
-            event.accept(MOTMItems.BOSS_WIZARD_SPAWN_EGG.get());
         }
     }
 
@@ -168,10 +163,7 @@ public class MagicOfTheMind {
     public static void registerCapabilities(final RegisterCapabilitiesEvent event) {}
 
     @SubscribeEvent
-    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-        event.put(MOTMEntityTypes.WIZARD.get(), WizardEntity.createAttributes().build());
-        event.put(MOTMEntityTypes.BOSS_WIZARD.get(), BossWizardEntity.createAttributes().build());
-    }
+    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {}
 
     // endregion
 

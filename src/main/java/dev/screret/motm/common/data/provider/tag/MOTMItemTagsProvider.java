@@ -24,8 +24,6 @@ public class MOTMItemTagsProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         tag(MOTMTags.Items.GLASS_BOTTLES).add(Items.GLASS_BOTTLE);
-        tag(MOTMTags.Items.BOSS_SUMMON_ITEMS).add(Items.GLOWSTONE_DUST, Items.LAPIS_BLOCK,
-                Items.ZOMBIE_HEAD);
         tag(MOTMTags.Items.GLINT_ORES).add(MOTMItems.GLINT_ORE.get());
         tag(MOTMTags.Items.GLINT_GEMS).add(MOTMItems.GLINT.get());
         tag(MOTMTags.Items.SOULSTEEL_INGOTS).add(MOTMItems.SOULSTEEL_INGOT.get());

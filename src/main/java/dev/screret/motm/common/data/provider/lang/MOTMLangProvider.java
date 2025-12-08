@@ -75,14 +75,10 @@ public class MOTMLangProvider extends LanguageProvider {
                 One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them.
                 You might find it hard to take off.
                 """);
-
-        addItem(MOTMItems.WIZARD_SPAWN_EGG, "Wizard Spawn Egg");
-        addItem(MOTMItems.BOSS_WIZARD_SPAWN_EGG, "Necromantic Sorcerer Spawn Egg");
         // endregion
 
         // region entities
-        addEntityType(MOTMEntityTypes.WIZARD, "Wizard");
-        addEntityType(MOTMEntityTypes.BOSS_WIZARD, "Necromantic Sorcerer");
+
         // endregion
 
         // region effects & attributes
