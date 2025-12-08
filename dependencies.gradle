@@ -3,12 +3,11 @@ dependencies {
     if (enableJarJarDependencies) {
         jarJar(api(deps.geckoLib.get()))
         jarJar(api(deps.smartBrainLib.get()))
-        jarJar(api(project(':ModularUI')) { transitive = false })
     } else {
         api(deps.geckoLib)
         api(deps.smartBrainLib)
-        api(project(':ModularUI'))
     }
+    jarJar(api(project(':ModularUI')) { transitive = false })
 
     // Recipe Viewers
     compileOnly(deps.bundles.jei)

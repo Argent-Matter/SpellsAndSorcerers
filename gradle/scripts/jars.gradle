@@ -1,7 +1,8 @@
-tasks.register('slimJar', Jar) {
-    dependsOn("classes")
-    archiveClassifier = "slim"
+shadowJar {
     from sourceSets.main.output
+    configurations = [project.configurations.includedLibrary]
+    minimize {}
+    archiveClassifier = ""
 }
 
 // Add sources jar to components.java

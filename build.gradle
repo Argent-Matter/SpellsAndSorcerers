@@ -5,10 +5,12 @@ plugins {
     id 'maven-publish'
 
     alias libs.plugins.modDevGradle
-    //alias libs.plugins.shadow
+    alias libs.plugins.shadow
     alias libs.plugins.spotless
     alias libs.plugins.lombok
 }
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 group = maven_group
 // Formats the mod version to include the loader, Minecraft version, and '-SNAPSHOT-<timestamp>' if enabled.
@@ -61,6 +63,17 @@ configurations {
     renderNurseCfg {
         canBeConsumed = false
     }
+
+    includedLibrary {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
+tasks.register('slimJar', ShadowJar) {
+    dependsOn("classes")
+    archiveClassifier = "slim"
+    from sourceSets.main.output
 }
 
 apply from: "$rootDir/gradle/scripts/jars.gradle"
@@ -71,6 +84,12 @@ apply from: "$rootDir/gradle/scripts/resources.gradle"
 apply from: "$rootDir/gradle/scripts/publishing.gradle"
 apply from: "$rootDir/gradle/scripts/spotless.gradle"
 
+afterEvaluate {
+    tasks.withType(ShadowJar).configureEach {
+        enableAutoRelocation = true
+        relocationPrefix = "${maven_group}.shadow"
+    }
+}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
