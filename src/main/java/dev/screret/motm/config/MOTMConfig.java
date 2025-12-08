@@ -6,31 +6,25 @@ public class MOTMConfig {
 
     public static class Client {
 
-        public static final ModConfigSpec clientSpec;
+        private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+        public static final ModConfigSpec CLIENT_CONFIG;
 
-        private static void setupConfig(ModConfigSpec.Builder builder) {
-            builder.comment("Magic of the Mind Client Configuration");
-        }
+        // add config fields here
 
         static {
-            ModConfigSpec.Builder configBuilder = new ModConfigSpec.Builder();
-            setupConfig(configBuilder);
-            clientSpec = configBuilder.build();
+            CLIENT_CONFIG = BUILDER.build();
         }
     }
 
     public static class Server {
 
-        public static final ModConfigSpec serverSpec;
+        private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+        public static final ModConfigSpec SERVER_CONFIG;
 
-        private static void setupConfig(ModConfigSpec.Builder builder) {
-            builder.comment("Magic of the Mind Server Configuration");
-        }
+        // add config fields here
 
         static {
-            ModConfigSpec.Builder configBuilder = new ModConfigSpec.Builder();
-            setupConfig(configBuilder);
-            serverSpec = configBuilder.build();
+            SERVER_CONFIG = BUILDER.build();
         }
     }
 }

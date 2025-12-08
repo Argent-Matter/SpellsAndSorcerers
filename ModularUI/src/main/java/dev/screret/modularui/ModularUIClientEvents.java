@@ -1,6 +1,7 @@
 package dev.screret.modularui;
 
 import dev.screret.modularui.client.screen.ContainerScreenWrapper;
+import dev.screret.modularui.client.screen.ModularContainerMenu;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,6 +13,6 @@ public class ModularUIClientEvents {
 
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {
-        event.register(ModularUI.MODULAR_CONTAINER.get(), ContainerScreenWrapper::new);
+        event.<ModularContainerMenu, ContainerScreenWrapper>register(ModularUI.MODULAR_CONTAINER.get(), ContainerScreenWrapper::new);
     }
 }

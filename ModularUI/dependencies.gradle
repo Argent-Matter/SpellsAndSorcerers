@@ -1,6 +1,6 @@
 dependencies {
     // Math Parser
-    implementation(includedLibrary(libs.mxparser.get()))
+    jarJar(implementation(libs.mxparser.get()))
     additionalRuntimeClasspath(libs.mxparser.get())
 
     // Recipe Viewers

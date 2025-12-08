@@ -80,8 +80,8 @@ public class MagicOfTheMind {
 
         MOTMCreativeTabs.CREATIVE_TABS.register(modEventBus);
 
-        modContainer.registerConfig(ModConfig.Type.CLIENT, MOTMConfig.Client.clientSpec);
-        modContainer.registerConfig(ModConfig.Type.SERVER, MOTMConfig.Server.serverSpec);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, MOTMConfig.Client.CLIENT_CONFIG);
+        modContainer.registerConfig(ModConfig.Type.SERVER, MOTMConfig.Server.SERVER_CONFIG);
     }
 
     // region mod bus events
