@@ -73,11 +73,10 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     private static final EntityDataAccessor<Integer> INVULNERABLE_TICKS = SynchedEntityData.defineId(BossWizardEntity.class,
             EntityDataSerializers.INT);
     private static final int MAX_INVULNERABLE_TICKS = 75;
-    public static final WandAbilityInstance DUMMY_SPELL = new WandAbilityInstance(MOTMWandAbilities.DUMMY.get());
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected int spellCastingTickCount;
-    private WandAbilityInstance currentSpell = DUMMY_SPELL;
+    private @Nullable WandAbilityInstance currentSpell = null;
     private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.GREEN,
             BossEvent.BossBarOverlay.PROGRESS);
     private BlockPos spawnPos;
@@ -247,21 +246,29 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("InvulTime", this.getInvulnerableTicks());
-        compound.put("CurrentSpell", this.currentSpell.serializeNBT(this.registryAccess()));
-        compound.put("SpawnPos", this.newIntList(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()));
+        compound.putInt("invulnerable_ticks", this.getInvulnerableTicks());
+        if (this.currentSpell != null) {
+            compound.put("current_spell", WandAbilityInstance.CODEC
+                    .encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), this.currentSpell)
+                    .getOrThrow());
+        }
+        compound.put("spawn_pos", NbtUtils.writeBlockPos(this.spawnPos));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.setInvulnerableTicks(compound.getInt("InvulTime"));
-        currentSpell = new WandAbilityInstance(compound.getCompound("CurrentSpell"), this.registryAccess());
+        this.setInvulnerableTicks(compound.getInt("invulnerable_ticks"));
+        if (compound.contains("current_spell")) {
+            this.currentSpell = WandAbilityInstance.CODEC
+                    .parse(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), compound.get("current_spell"))
+                    .result().orElse(null);
+        }
+        NbtUtils.readBlockPos(compound, "spawn_pos").ifPresent(pos -> this.spawnPos = pos);
+
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
-        var spawnPosTag = compound.getList("SpawnPos", Tag.TAG_INT);
-        this.spawnPos = new BlockPos(spawnPosTag.getInt(0), spawnPosTag.getInt(1), spawnPosTag.getInt(2));
     }
 
     public int getInvulnerableTicks() {
@@ -281,15 +288,17 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     public boolean isCastingSpell() {
         if (this.level().isClientSide) {
-            return currentSpell != DUMMY_SPELL;
+            return currentSpell != null;
         } else {
             return this.spellCastingTickCount > 0;
         }
     }
 
-    public void setCastingSpell(WandAbilityInstance currentSpell) {
+    public void setCastingSpell(@Nullable WandAbilityInstance currentSpell) {
         this.currentSpell = currentSpell;
-        this.setIsAttacking(true);
+        if (currentSpell != null) {
+            this.setIsAttacking(true);
+        }
     }
 
     public SoundEvent getCastingSound() {
@@ -328,8 +337,10 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
 
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
-        currentSpell.execute(this.level(), this, this.getMainHandItem(),
-                new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
+        if (currentSpell != null) {
+            currentSpell.execute(this.level(), this, this.getMainHandItem(),
+                    new WandAbilityInstance.WrappedVec3(this.getEyePosition()), 50);
+        }
     }
 
     @Override
@@ -357,16 +368,6 @@ public class BossWizardEntity extends Monster implements RangedAttackMob, GeoEnt
         enchantRegistry.get(Enchantments.QUICK_CHARGE).ifPresent(holder -> wandItem.enchant(holder, 3));
 
         return wandItem;
-    }
-
-    protected ListTag newIntList(int... numbers) {
-        ListTag listtag = new ListTag();
-
-        for (int number : numbers) {
-            listtag.add(IntTag.valueOf(number));
-        }
-
-        return listtag;
     }
 
     class WizardDoNothingGoal extends Goal {
