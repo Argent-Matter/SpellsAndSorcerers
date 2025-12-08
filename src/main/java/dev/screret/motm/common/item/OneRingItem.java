@@ -164,7 +164,7 @@ public class OneRingItem extends Item implements ICurioItem {
         }
 
         @Override
-        public boolean isInvulnerableTo(@NotNull DamageSource source) {
+        public boolean isInvulnerableTo(DamageSource source) {
             return source.is(DamageTypeTags.IS_EXPLOSION) || super.isInvulnerableTo(source);
         }
 
@@ -183,7 +183,7 @@ public class OneRingItem extends Item implements ICurioItem {
             if (thrower != null) {
                 newEntity.setThrower(thrower);
             }
-            newEntity.setTarget(((ItemEntityAccessor) original).getTarget());
+            newEntity.setTarget(original.getTarget());
             newEntity.setPickUpDelay(((ItemEntityAccessor) original).getPickupDelay());
 
             // also make it never despawn
