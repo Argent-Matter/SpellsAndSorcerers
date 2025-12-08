@@ -1,6 +1,5 @@
 package dev.screret.motm.common.recipe.wand;
 
-import dev.screret.motm.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.motm.data.MOTMRecipeTypes;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -30,9 +29,9 @@ public class ShapedWandRecipe implements WandRecipe {
     @Getter(AccessLevel.PRIVATE)
     private final ShapedRecipePattern pattern;
     @Getter(AccessLevel.PRIVATE)
-    private final WandAbilityIngredient result;
+    private final ItemStack result;
 
-    public ShapedWandRecipe(String group, ShapedRecipePattern pattern, WandAbilityIngredient result) {
+    public ShapedWandRecipe(String group, ShapedRecipePattern pattern, ItemStack result) {
         this.group = group;
         this.result = result;
         this.pattern = pattern;
@@ -45,7 +44,7 @@ public class ShapedWandRecipe implements WandRecipe {
 
     @Override
     public ItemStack assemble(CraftingInput container, HolderLookup.Provider registries) {
-        return this.result.getStack();
+        return this.result.copy();
     }
 
     @Override
@@ -55,7 +54,7 @@ public class ShapedWandRecipe implements WandRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return result.getStack();
+        return result.copy();
     }
 
     @Override
@@ -79,12 +78,12 @@ public class ShapedWandRecipe implements WandRecipe {
         public static final MapCodec<ShapedWandRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedWandRecipe::getGroup),
                 ShapedRecipePattern.MAP_CODEC.forGetter(ShapedWandRecipe::getPattern),
-                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(ShapedWandRecipe::getResult)
+                ItemStack.SINGLE_ITEM_CODEC.fieldOf("result").forGetter(ShapedWandRecipe::getResult)
         ).apply(instance, ShapedWandRecipe::new));
         private static final StreamCodec<RegistryFriendlyByteBuf, ShapedWandRecipe> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, ShapedWandRecipe::getGroup,
                 ShapedRecipePattern.STREAM_CODEC, ShapedWandRecipe::getPattern,
-                WandAbilityIngredient.STREAM_CODEC, ShapedWandRecipe::getResult,
+                ItemStack.STREAM_CODEC, ShapedWandRecipe::getResult,
                 ShapedWandRecipe::new
         );
         // spotless:off

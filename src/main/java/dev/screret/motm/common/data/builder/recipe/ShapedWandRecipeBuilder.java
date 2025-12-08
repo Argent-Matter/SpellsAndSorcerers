@@ -1,6 +1,5 @@
 package dev.screret.motm.common.data.builder.recipe;
 
-import dev.screret.motm.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.motm.common.recipe.wand.ShapedWandRecipe;
 
 import net.minecraft.advancements.*;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShapedWandRecipeBuilder implements RecipeBuilder {
 
-    private final WandAbilityIngredient result;
+    private final ItemStack result;
     private final List<String> rows = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private final Advancement.Builder advancement = Advancement.Builder.advancement();
@@ -35,12 +34,8 @@ public class ShapedWandRecipeBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
-    public ShapedWandRecipeBuilder(WandAbilityIngredient result) {
-        this.result = result;
-    }
-
     public ShapedWandRecipeBuilder(ItemStack result) {
-        this.result = WandAbilityIngredient.fromStack(result);
+        this.result = result;
     }
 
     /**
@@ -104,7 +99,7 @@ public class ShapedWandRecipeBuilder implements RecipeBuilder {
 
     @Override
     public Item getResult() {
-        return this.result.getStack().getItem();
+        return this.result.getItem();
     }
 
     @Override

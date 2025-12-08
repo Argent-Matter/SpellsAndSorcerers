@@ -1,6 +1,5 @@
 package dev.screret.motm.common.recipe.wand;
 
-import dev.screret.motm.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.motm.data.MOTMRecipeTypes;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -33,9 +32,9 @@ public class ShapelessWandRecipe implements WandRecipe {
     @Getter
     private final NonNullList<Ingredient> ingredients;
     @Getter(AccessLevel.PRIVATE)
-    private final WandAbilityIngredient result;
+    private final ItemStack result;
 
-    public ShapelessWandRecipe(String group, NonNullList<Ingredient> ingredients, WandAbilityIngredient result) {
+    public ShapelessWandRecipe(String group, NonNullList<Ingredient> ingredients, ItemStack result) {
         this.group = group;
         this.result = result;
         this.ingredients = ingredients;
@@ -83,7 +82,7 @@ public class ShapelessWandRecipe implements WandRecipe {
 
     @Override
     public ItemStack assemble(CraftingInput container, HolderLookup.Provider registries) {
-        return this.result.getStack();
+        return this.result.copy();
     }
 
     @Override
@@ -93,7 +92,7 @@ public class ShapelessWandRecipe implements WandRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return result.getStack();
+        return result.copy();
     }
 
     @Override
@@ -124,7 +123,7 @@ public class ShapelessWandRecipe implements WandRecipe {
                             }
                             }, DataResult::success)
                         .forGetter(ShapelessWandRecipe::getIngredients),
-                WandAbilityIngredient.CODEC.fieldOf("result").forGetter(ShapelessWandRecipe::getResult)
+                ItemStack.SINGLE_ITEM_CODEC.fieldOf("result").forGetter(ShapelessWandRecipe::getResult)
         ).apply(instance, ShapelessWandRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, NonNullList<Ingredient>> INGREDIENT_STREAM_CODEC = ByteBufCodecs.collection(
@@ -132,7 +131,7 @@ public class ShapelessWandRecipe implements WandRecipe {
         private static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWandRecipe> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, ShapelessWandRecipe::getGroup,
                 INGREDIENT_STREAM_CODEC, ShapelessWandRecipe::getIngredients,
-                WandAbilityIngredient.STREAM_CODEC, ShapelessWandRecipe::getResult,
+                ItemStack.STREAM_CODEC, ShapelessWandRecipe::getResult,
                 ShapelessWandRecipe::new
         );
         // spotless:on

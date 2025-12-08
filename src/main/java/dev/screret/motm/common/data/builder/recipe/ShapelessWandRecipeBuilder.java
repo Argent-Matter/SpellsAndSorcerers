@@ -1,6 +1,5 @@
 package dev.screret.motm.common.data.builder.recipe;
 
-import dev.screret.motm.common.recipe.ingredient.WandAbilityIngredient;
 import dev.screret.motm.common.recipe.wand.ShapelessWandRecipe;
 
 import net.minecraft.advancements.*;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShapelessWandRecipeBuilder implements RecipeBuilder {
 
-    private final WandAbilityIngredient result;
+    private final ItemStack result;
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private final Advancement.Builder advancement = Advancement.Builder.advancement();
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
@@ -31,7 +30,7 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
     private String group;
 
     public ShapelessWandRecipeBuilder(ItemStack result) {
-        this.result = WandAbilityIngredient.fromStack(result);
+        this.result = result;
     }
 
     /**
@@ -99,7 +98,7 @@ public class ShapelessWandRecipeBuilder implements RecipeBuilder {
 
     @Override
     public Item getResult() {
-        return this.result.getStack().getItem();
+        return this.result.getItem();
     }
 
     @Override
