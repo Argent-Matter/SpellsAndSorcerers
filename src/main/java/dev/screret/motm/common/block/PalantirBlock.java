@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class PalantirBlock extends BaseEntityBlock {
 
+    public static final MapCodec<PalantirBlock> CODEC = MapCodec.unit(PalantirBlock::new);
+
     private static final VoxelShape BASE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 2.0D, 12.0D);
     private static final VoxelShape TOP = Block.box(5.0D, 2.0D, 5.0D, 11.0D, 8.0D, 11.0D);
     protected static final VoxelShape SHAPE = Shapes.or(BASE, TOP);
@@ -41,7 +43,7 @@ public class PalantirBlock extends BaseEntityBlock {
 
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
-        return MapCodec.unit(PalantirBlock::new);
+        return CODEC;
     }
 
     @Override
@@ -52,11 +54,12 @@ public class PalantirBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return MOTMBlockEntities.PALANTIR.get().create(pos, state);
+        return new PalantirBlockEntity(pos, state);
     }
 
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-                                                                  BlockEntityType<T> blockEntityType) {
+    @Override
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                                            BlockEntityType<T> blockEntityType) {
         return level.isClientSide ?
                 createTickerHelper(blockEntityType, MOTMBlockEntities.PALANTIR.get(), PalantirBlockEntity::eyeAnimationTick) :
                 null;
