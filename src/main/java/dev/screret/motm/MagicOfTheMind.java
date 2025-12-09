@@ -75,8 +75,6 @@ public class MagicOfTheMind {
 
         MOTMCreativeTabs.CREATIVE_TABS.register(modEventBus);
 
-        MOTMHeightProviders.HEIGHT_PROVIDER_TYPES.register(modEventBus);
-
         modContainer.registerConfig(ModConfig.Type.CLIENT, MOTMConfig.Client.CLIENT_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, MOTMConfig.Server.SERVER_CONFIG);
     }
