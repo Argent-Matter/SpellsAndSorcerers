@@ -2,8 +2,8 @@ package dev.screret.motm.common.item;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.common.data.util.LangUtil;
-import dev.screret.motm.data.MOTMEntityTypes;
 import dev.screret.motm.core.mixin.accessor.ItemEntityAccessor;
+import dev.screret.motm.data.MOTMEntityTypes;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;

@@ -14,13 +14,17 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 @EventBusSubscriber(modid = MagicOfTheMind.MOD_ID)
 public class MOTMRegistries {
 
-    public static final ResourceKey<Registry<MemoryScene>> MEMORY_SCENE_REGISTRY = ResourceKey
-            .createRegistryKey(MOTMUtil.id("memory_scene"));
+    // spotless:off
+    public static final ResourceKey<Registry<MemoryScene>> MEMORY_SCENE_REGISTRY = ResourceKey.createRegistryKey(MOTMUtil.id("memory_scene"));
+
+    // spotless:on
 
     @SubscribeEvent
     public static void registerStaticRegistries(NewRegistryEvent event) {}
 
     @SubscribeEvent
-    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {}
-
+    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(MEMORY_SCENE_REGISTRY, MemoryScene.CODEC, MemoryScene.CODEC,
+                builder -> builder.onAdd((registry, id, key, value) -> {}));
+    }
 }
