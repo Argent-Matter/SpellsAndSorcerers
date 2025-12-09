@@ -1,3 +1,5 @@
 {
-
+    "net/minecraft/world/level/levelgen/structure/structures/JigsawStructure": [
+        "dev/screret/motm/core/ext/IJigsawStructureExtension"
+    ]
 }

@@ -1,6 +1,5 @@
 package dev.screret.motm;
 
-import dev.screret.motm.api.registry.MOTMRegistries;
 import dev.screret.motm.common.data.provider.lang.MOTMLangProvider;
 import dev.screret.motm.common.data.provider.model.*;
 import dev.screret.motm.common.data.provider.recipe.MOTMRecipeProvider;
@@ -35,7 +34,6 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,9 +56,6 @@ public class MagicOfTheMind {
 
         MOTMBlocks.BLOCKS.register(modEventBus);
         MOTMItems.ITEMS.register(modEventBus);
-
-        // MOTMEnchantments.ENCHANTS.register(modEventBus);
-        // MOTMEnchantments.ENCHANTS_MINECRAFT.register(modEventBus);
 
         MOTMRecipeTypes.RECIPE_TYPES.register(modEventBus);
         MOTMRecipeTypes.RECIPE_SERIALIZERS.register(modEventBus);
@@ -87,12 +82,7 @@ public class MagicOfTheMind {
     // region mod bus events
 
     @SubscribeEvent
-    private static void registerRegistries(final NewRegistryEvent event) {
-        MOTMRegistries.register(event);
-    }
-
-    @SubscribeEvent
-    public static void addItemsVanillaTabs(final BuildCreativeModeTabContentsEvent event) {
+    public static void addVanillaTabItems(final BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.accept(MOTMItems.SOULSTEEL_AXE.get());
             event.accept(MOTMItems.SOULSTEEL_SWORD.get());

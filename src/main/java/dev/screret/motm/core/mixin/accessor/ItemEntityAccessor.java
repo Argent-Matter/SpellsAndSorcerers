@@ -1,4 +1,4 @@
-package dev.screret.motm.mixin.accessor;
+package dev.screret.motm.core.mixin.accessor;
 
 import net.minecraft.world.entity.item.ItemEntity;
 
