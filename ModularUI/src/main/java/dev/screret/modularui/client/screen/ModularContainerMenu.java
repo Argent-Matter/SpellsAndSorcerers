@@ -64,7 +64,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     public ModularContainerMenu(int containerId, Inventory playerInv, @Nullable FriendlyByteBuf data) {
         this(containerId);
         // TODO: Better integration with menu types for custom containers and screens.
-        throw new IllegalArgumentException("Do not open the modular container the forge way. Use an UIFactory!");
+        throw new IllegalArgumentException("Do not open the modular container the vanilla way. Use an UIFactory!");
     }
 
     @ApiStatus.Internal

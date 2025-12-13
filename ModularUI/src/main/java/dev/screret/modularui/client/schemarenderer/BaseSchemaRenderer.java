@@ -234,7 +234,7 @@ public class BaseSchemaRenderer implements IDrawable {
             // The order comes from LevelRenderer#renderLevel
 
             renderBlocks(RenderType.solid());
-            // FORGE: fix flickering leaves when mods mess up the blurMipmap settings
+            // NEO: fix flickering leaves when mods mess up the blurMipmap settings
             Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)
                     .setBlurMipmap(false, Minecraft.getInstance().options.mipmapLevels().get() > 0);
             renderBlocks(RenderType.cutoutMipped());

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Custom EntryStack -> vanilla/forge/mod stack converters
+ * Custom EntryStack -> vanilla/neoforge/mod stack converters
  */
 public class REIStackConverter {
 

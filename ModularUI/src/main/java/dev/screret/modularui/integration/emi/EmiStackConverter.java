@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Custom {@link EmiStack} <-> vanilla/forge/mod stack converters
+ * Custom {@link EmiStack} <-> vanilla/neoforge/mod stack converters
  */
 public class EmiStackConverter {
 

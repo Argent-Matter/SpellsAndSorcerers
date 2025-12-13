@@ -92,7 +92,7 @@ public class GuiManager {
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         factory.writeGuiData(guiData, buffer);
         PacketDistributor.sendToPlayer(player, new OpenGuiPacket<>(windowId, factory, buffer));
-        // open the menu // this mimics forge behaviour
+        // open the menu // this mimics vanilla behaviour
         ((ServerPlayerAccessor) player).invokeInitMenu(menu);
         player.containerMenu = menu;
         // finally invoke event

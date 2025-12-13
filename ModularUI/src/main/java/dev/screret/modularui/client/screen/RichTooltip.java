@@ -174,7 +174,7 @@ public class RichTooltip implements IRichTextBuilder<RichTooltip> {
         context.getGraphics().pose().translate(0, 0, 400);
         GuiDraw.drawTooltipBackground(context, stack, components, area.x, area.y, area.width, area.height, this);
 
-        // MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, area.x, area.y,
+        // NeoForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, area.x, area.y,
         // TextRenderer.getFont(), area.width, area.height));
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
