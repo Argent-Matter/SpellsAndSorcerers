@@ -43,7 +43,7 @@ import java.util.concurrent.CompletableFuture;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(MagicOfTheMind.MOD_ID)
-@EventBusSubscriber(modid = MagicOfTheMind.MOD_ID)
+@EventBusSubscriber
 public class MagicOfTheMind {
 
     public static final String MOD_ID = "motm";
@@ -147,7 +147,7 @@ public class MagicOfTheMind {
 
     // endregion
 
-    // region forge bus events
+    // region game bus events
 
     @SubscribeEvent
     public static void registerVanillaEntityAttributes(final EntityAttributeModificationEvent event) {}

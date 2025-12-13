@@ -1,18 +1,25 @@
-package dev.screret.motm.client.event;
+package dev.screret.motm.client;
 
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.client.renderer.blockentity.PalantirBERenderer;
-import dev.screret.motm.data.*;
+import dev.screret.motm.data.MOTMBlockEntities;
+import dev.screret.motm.data.MOTMParticles;
 
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
-@EventBusSubscriber(modid = MagicOfTheMind.MOD_ID, value = Dist.CLIENT)
-public class ClientEventListeners {
+@Mod(value = MagicOfTheMind.MOD_ID, dist = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
+public class MagicOfTheMindClient {
+
+    public MagicOfTheMindClient(IEventBus modEventBus, ModContainer modContainer) {}
 
     // region mod bus events
 
@@ -43,7 +50,7 @@ public class ClientEventListeners {
 
     // endregion
 
-    // region forge bus events
+    // region game bus events
 
     // endregion
 }
