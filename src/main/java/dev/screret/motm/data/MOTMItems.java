@@ -1,6 +1,7 @@
 package dev.screret.motm.data;
 
 import dev.screret.motm.MagicOfTheMind;
+import dev.screret.motm.api.item.SimpleGeoBlockItem;
 import dev.screret.motm.common.item.*;
 
 import net.minecraft.world.item.*;
@@ -16,7 +17,7 @@ public class MOTMItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.Items.createItems(MagicOfTheMind.MOD_ID);
 
     // BLOCK ITEMS
-    public static final DeferredItem<BlockItem> PALANTIR = ITEMS.registerSimpleBlockItem(MOTMBlocks.PALANTIR, fireResistantProps().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<BlockItem> PALANTIR = ITEMS.registerItem("palantir", p -> new SimpleGeoBlockItem(MOTMBlocks.PALANTIR.get(), p), fireResistantProps().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.registerSimpleBlockItem("soulsteel_block", MOTMBlocks.SOULSTEEL_BLOCK);
     public static final DeferredItem<BlockItem> GLINT_ORE = ITEMS.registerSimpleBlockItem(MOTMBlocks.GLINT_ORE);
 

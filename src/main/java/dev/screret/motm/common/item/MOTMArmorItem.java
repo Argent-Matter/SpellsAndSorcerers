@@ -53,8 +53,7 @@ public class MOTMArmorItem extends ArmorItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(
-                DefaultAnimations.genericIdleController(this));
+        controllers.add(DefaultAnimations.genericIdleController(this));
     }
 
     @Override

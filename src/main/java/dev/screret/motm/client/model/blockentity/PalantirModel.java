@@ -19,7 +19,7 @@ public class PalantirModel extends DefaultedBlockGeoModel<PalantirBlockEntity> {
 
     @Override
     public RenderType getRenderType(PalantirBlockEntity animatable, ResourceLocation texture) {
-        return RenderType.entityTranslucent(getTextureResource(animatable));
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
