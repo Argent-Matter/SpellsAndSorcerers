@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "motm:item/wand_core0",
-    "layer1": "motm:item/wand_core1"
-  }
-}
