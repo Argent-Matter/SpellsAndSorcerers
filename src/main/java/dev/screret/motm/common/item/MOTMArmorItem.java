@@ -1,6 +1,7 @@
 package dev.screret.motm.common.item;
 
-import dev.screret.motm.client.renderer.armor.SoulsteelArmorRenderer;
+import dev.screret.motm.MOTMUtil;
+import dev.screret.motm.api.model.DefaultedGeoArmorModel;
 
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -39,13 +40,15 @@ public class MOTMArmorItem extends ArmorItem implements GeoItem {
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
 
-            private GeoArmorRenderer<?> renderer;
+            private GeoArmorRenderer<MOTMArmorItem> renderer;
 
             @Override
             public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T entity, ItemStack stack,
                                                                                  @Nullable EquipmentSlot slot,
                                                                                  @Nullable HumanoidModel<T> original) {
-                if (this.renderer == null) this.renderer = new SoulsteelArmorRenderer();
+                if (this.renderer == null) {
+                    this.renderer = new GeoArmorRenderer<>(new DefaultedGeoArmorModel<>(MOTMUtil.id("soulsteel_armor")));
+                }
                 return this.renderer;
             }
         });
