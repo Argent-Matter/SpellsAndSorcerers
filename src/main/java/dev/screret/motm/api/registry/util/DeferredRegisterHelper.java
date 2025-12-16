@@ -1,4 +1,4 @@
-package dev.screret.motm.api.util.registries;
+package dev.screret.motm.api.registry.util;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;

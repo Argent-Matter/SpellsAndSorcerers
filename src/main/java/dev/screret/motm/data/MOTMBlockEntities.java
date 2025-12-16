@@ -1,8 +1,8 @@
 package dev.screret.motm.data;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.api.util.registries.DeferredBlockEntity;
-import dev.screret.motm.api.util.registries.DeferredRegisterHelper;
+import dev.screret.motm.api.registry.util.DeferredBlockEntity;
+import dev.screret.motm.api.registry.util.DeferredRegisterHelper;
 import dev.screret.motm.common.block.entity.PalantirBlockEntity;
 import dev.screret.motm.common.block.entity.PortStoneBlockEntity;
 

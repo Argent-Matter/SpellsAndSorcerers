@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package dev.screret.motm.api.util.registries;
+package dev.screret.motm.api.registry.util;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

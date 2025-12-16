@@ -29,8 +29,7 @@ public class PalantirBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(
-                DefaultAnimations.genericIdleController(this));
+        controllers.add(DefaultAnimations.genericIdleController(this));
     }
 
     @Override
