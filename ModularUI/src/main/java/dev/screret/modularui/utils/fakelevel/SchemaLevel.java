@@ -189,6 +189,10 @@ public class SchemaLevel extends Level implements ISchema {
         filledBlocks.add(pos.asLong());
     }
 
+    public Iterable<Entity> getAllEntities() {
+        return this.getEntities().getAll();
+    }
+
     @Override
     public Level getLevel() {
         return this;
