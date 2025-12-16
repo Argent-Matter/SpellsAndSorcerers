@@ -83,6 +83,12 @@ public class MOTMLangProvider extends LanguageProvider {
         // region effects & attributes
 
         // endregion
+
+        // region misc
+
+        add("message.motm.structure_load_error", "Could not load structure %s from the server as it does not exist.");
+
+        // endregion
     }
 
     // override the normal add() method to add to our map instead so we can skip the replacement check
