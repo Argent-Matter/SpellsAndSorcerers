@@ -24,7 +24,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,12 +42,10 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 public class Memory implements StatelessGeoSingletonAnimatable {
 
-    public static final String ANIMATION_DIR = "animations/" + MagicOfTheMind.MOD_ID + "/memory";
-    public static final FileToIdConverter ANIMATION_ID_CONVERTER = new FileToIdConverter(ANIMATION_DIR, ".animation.json");
-
     // spotless:off
     public static final Codec<Memory> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("animation_name").forGetter(Memory::getAnimationName),
+            ResourceLocation.CODEC.fieldOf("model_name").forGetter(Memory::getModelName),
             ResourceLocation.CODEC.optionalFieldOf("initial_structure").forGetter(Memory::getInitialStructure)
     ).apply(instance, Memory::new));
     public static final Codec<Holder<Memory>> CODEC = RegistryFileCodec.create(MOTMRegistries.MEMORY_REGISTRY, DIRECT_CODEC);
@@ -58,27 +55,31 @@ public class Memory implements StatelessGeoSingletonAnimatable {
     @Getter
     private final ResourceLocation animationName;
     @Getter
+    private final ResourceLocation modelName;
+    @Getter
     private final Optional<ResourceLocation> initialStructure;
 
     /**
      * Create a new memory instance.
      * The asset path should be the truncated relative path from the base folder.
      * 
-     * @param animationName animation path relative to {@code <namespace>:animations/motm/memory/ }
+     * @param name animation/model location relative to {@code <namespace>:animations|geo/motm/memory/}
      */
-    public Memory(ResourceLocation animationName) {
-        this(animationName, Optional.empty());
+    public Memory(ResourceLocation name) {
+        this(name, name, Optional.empty());
     }
 
     /**
      * Create a new memory instance.
      * The asset path should be the truncated relative path from the base folder.
      *
-     * @param animationName    The animation file relative to {@code <namespace>:animations/motm/memory/ }
-     * @param initialStructure The structure file to load initially or {@link Optional#empty()} if one isn't wanted.
+     * @param animationName    The animation location relative to {@code <namespace>:animations/motm/memory/}
+     * @param modelName        The model location relative to  {@code <namespace>:geo/motm/memory/}
+     * @param initialStructure The structure file to load initially, or {@link Optional#empty()} if one isn't wanted.
      */
-    public Memory(ResourceLocation animationName, Optional<ResourceLocation> initialStructure) {
+    public Memory(ResourceLocation animationName, ResourceLocation modelName, Optional<ResourceLocation> initialStructure) {
         this.animationName = animationName;
+        this.modelName = modelName;
         this.initialStructure = initialStructure;
 
         SingletonGeoAnimatable.registerSyncedAnimatable(this);

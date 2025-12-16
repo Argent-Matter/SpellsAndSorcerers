@@ -1,11 +1,13 @@
 package dev.screret.motm.common.memory;
 
 import dev.screret.motm.MOTMUtil;
+import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.memory.Memory;
 import dev.screret.motm.common.memory.animation.MemoryAnimationProcessor;
 
 import software.bernie.geckolib.model.GeoModel;
 
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 
 import lombok.Getter;
@@ -20,8 +22,12 @@ import lombok.Getter;
  */
 public class MemoryGeoModel extends GeoModel<Memory> {
 
-    public static final ResourceLocation MEMORY_MODEL_NAME = MOTMUtil.id("geo/motm/memory/memory.geo.json");
     public static final ResourceLocation MEMORY_TEXTURE_NAME = MOTMUtil.id("textures/block/empty.png");
+
+    // spotless:off
+    public static final FileToIdConverter ANIMATION_ID_CONVERTER = new FileToIdConverter("animations/" + MagicOfTheMind.MOD_ID + "/memory", ".animation.json");
+    public static final FileToIdConverter MODEL_ID_CONVERTER = new FileToIdConverter("geo/" + MagicOfTheMind.MOD_ID + "/memory", ".geo.json");
+    // spotless:on
 
     public static final MemoryGeoModel INSTANCE = new MemoryGeoModel();
 
@@ -30,7 +36,7 @@ public class MemoryGeoModel extends GeoModel<Memory> {
 
     @Override
     public ResourceLocation getModelResource(Memory animatable) {
-        return MEMORY_MODEL_NAME;
+        return MODEL_ID_CONVERTER.idToFile(animatable.getModelName());
     }
 
     @Override
@@ -40,6 +46,6 @@ public class MemoryGeoModel extends GeoModel<Memory> {
 
     @Override
     public ResourceLocation getAnimationResource(Memory animatable) {
-        return Memory.ANIMATION_ID_CONVERTER.idToFile(animatable.getAnimationName());
+        return ANIMATION_ID_CONVERTER.idToFile(animatable.getAnimationName());
     }
 }
