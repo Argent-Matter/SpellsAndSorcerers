@@ -1,11 +1,10 @@
 dependencies {
     // JIJ dependencies
+    var geckoLibDependency = api(deps.geckoLib.get())
+    var smartBrainLibDependency = api(deps.smartBrainLib.get())
     if (enableJarJarDependencies) {
-        jarJar(api(deps.geckoLib.get()))
-        jarJar(api(deps.smartBrainLib.get()))
-    } else {
-        api(deps.geckoLib)
-        api(deps.smartBrainLib)
+        jarJar(geckoLibDependency)
+        jarJar(smartBrainLibDependency)
     }
     jarJar(api(project(':ModularUI')) { transitive = false })
 

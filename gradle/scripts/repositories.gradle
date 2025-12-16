@@ -16,7 +16,6 @@ repositories {
         forRepository { maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" } }
         filter {
             includeGroupAndSubgroups("software.bernie")
-            includeGroup("com.eliotlash.mclib")
         }
     }
     exclusiveContent {
