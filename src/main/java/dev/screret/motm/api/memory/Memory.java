@@ -35,6 +35,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -55,6 +56,8 @@ public class Memory implements StatelessGeoSingletonAnimatable {
 
     @Getter
     private final ResourceLocation animationName;
+    @Getter
+    private final Optional<ResourceLocation> initialStructure;
 
     /**
      * Create a new memory instance.
@@ -63,7 +66,19 @@ public class Memory implements StatelessGeoSingletonAnimatable {
      * @param animationName animation path relative to {@code <namespace>:animations/motm/memory/ }
      */
     public Memory(ResourceLocation animationName) {
+        this(animationName, Optional.empty());
+    }
+
+    /**
+     * Create a new memory instance.
+     * The asset path should be the truncated relative path from the base folder.
+     *
+     * @param animationName    The animation file relative to {@code <namespace>:animations/motm/memory/ }
+     * @param initialStructure The structure file to load initially or {@link Optional#empty()} if one isn't wanted.
+     */
+    public Memory(ResourceLocation animationName, Optional<ResourceLocation> initialStructure) {
         this.animationName = animationName;
+        this.initialStructure = initialStructure;
 
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }

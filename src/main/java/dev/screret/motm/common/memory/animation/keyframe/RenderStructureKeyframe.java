@@ -9,7 +9,6 @@ import software.bernie.geckolib.animation.keyframe.event.CustomInstructionKeyfra
 
 import net.minecraft.CrashReport;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -40,6 +39,7 @@ public record RenderStructureKeyframe(ResourceLocation structureName) implements
         future.whenComplete((structure, error) -> {
             if (error != null) {
                 Minecraft.getInstance().delayCrash(CrashReport.forThrowable(error, "Rendering memory structure"));
+                return;
             }
             if (MemoryRenderer.INSTANCE.hasActiveMemory()) {
                 MemoryRenderer.INSTANCE.loadStructure(this.structureName, structure);

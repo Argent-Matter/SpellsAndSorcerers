@@ -1,5 +1,6 @@
 package dev.screret.motm;
 
+import dev.screret.motm.api.registry.MOTMRegistries;
 import dev.screret.motm.common.data.provider.lang.*;
 import dev.screret.motm.common.data.provider.model.*;
 import dev.screret.motm.common.data.provider.recipe.*;
@@ -116,11 +117,12 @@ public class MagicOfTheMind {
         PackOutput packOutput = gen.getPackOutput();
         CompletableFuture<HolderLookup.Provider> registries = event.getLookupProvider();
 
-        DatapackBuiltinEntriesProvider provider = gen.addProvider(true, new DatapackBuiltinEntriesProvider(
-                packOutput, registries, new RegistrySetBuilder()
-                        .add(Registries.ENCHANTMENT, MOTMEnchantments::bootstrap),
-                Set.of(MagicOfTheMind.MOD_ID)));
-        registries = provider.getRegistryProvider();
+        registries = gen.addProvider(true, new DatapackBuiltinEntriesProvider(packOutput, registries,
+                new RegistrySetBuilder()
+                        .add(Registries.ENCHANTMENT, MOTMEnchantments::bootstrap)
+                        .add(MOTMRegistries.MEMORY_REGISTRY, MOTMMemories::bootstrap),
+                Set.of(MagicOfTheMind.MOD_ID)))
+                .getRegistryProvider();
 
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         MOTMBlockTagsProvider blockTags = new MOTMBlockTagsProvider(packOutput, registries, existingFileHelper);
