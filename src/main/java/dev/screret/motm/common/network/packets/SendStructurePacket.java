@@ -19,7 +19,8 @@ import io.netty.buffer.ByteBuf;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public record SendStructurePacket(ResourceLocation structureName, Optional<StructureTemplate> structure) implements CustomPacketPayload {
+public record SendStructurePacket(ResourceLocation structureName, Optional<StructureTemplate> structure)
+        implements CustomPacketPayload {
 
     // spotless:off
     public static final ResourceLocation ID = MOTMUtil.id("send_structure");
@@ -43,12 +44,14 @@ public record SendStructurePacket(ResourceLocation structureName, Optional<Struc
         // on client
 
         if (this.structure.isPresent()) {
-            CompletableFuture<StructureTemplate> future = ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getIfPresent(this.structureName);
+            CompletableFuture<StructureTemplate> future = ClientMemoryCache.MEMORY_STRUCTURE_CACHE
+                    .getIfPresent(this.structureName);
             if (future != null) {
                 future.complete(this.structure.get());
             } else {
                 // if it doesn't exist (anymore), set a new value
-                ClientMemoryCache.MEMORY_STRUCTURE_CACHE.put(this.structureName, CompletableFuture.completedFuture(this.structure.get()));
+                ClientMemoryCache.MEMORY_STRUCTURE_CACHE.put(this.structureName,
+                        CompletableFuture.completedFuture(this.structure.get()));
             }
         } else {
             player.sendSystemMessage(Component.translatableEscape("message.motm.structure_load_error", this.structureName));

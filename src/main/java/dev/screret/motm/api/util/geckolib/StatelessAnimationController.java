@@ -10,6 +10,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 public class StatelessAnimationController<T extends GeoAnimatable> extends AnimationController<T> {
+
     @Nullable
     protected RawAnimation currentAnim = null;
 

@@ -88,7 +88,8 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
 
     @Override
     public void actuallyRender(PoseStack poseStack, Memory animatable, BakedGeoModel model, @Nullable RenderType renderType,
-                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender, float partialTick,
+                               MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender,
+                               float partialTick,
                                int packedLight, int packedOverlay, int colour) {
         // disable hitboxes while rendering the fake entities
         EntityRenderDispatcher entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -135,7 +136,8 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
 
         // skip rendering the actual bone's cubes here.
 
-        renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+        renderChildBones(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight,
+                packedOverlay, colour);
 
         poseStack.popPose();
     }

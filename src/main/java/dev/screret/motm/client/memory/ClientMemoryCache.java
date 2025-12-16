@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public final class ClientMemoryCache {
 
-    public static final LoadingCache<ResourceLocation, CompletableFuture<StructureTemplate>> MEMORY_STRUCTURE_CACHE = CacheBuilder.newBuilder()
+    public static final LoadingCache<ResourceLocation, CompletableFuture<StructureTemplate>> MEMORY_STRUCTURE_CACHE = CacheBuilder
+            .newBuilder()
             .softValues()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(CacheLoader.from(structure -> {

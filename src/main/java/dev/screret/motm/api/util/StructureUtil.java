@@ -49,11 +49,11 @@ import static net.minecraft.world.level.levelgen.structure.templatesystem.Struct
 public class StructureUtil {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final Direction[] ALL_DIRECTIONS_EXCEPT_DOWN = {Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-
+    public static final Direction[] ALL_DIRECTIONS_EXCEPT_DOWN = { Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH,
+            Direction.WEST };
 
     public static boolean placeInWorld(StructureTemplate structure, Level level, BlockPos offset, BlockPos pos,
-                                StructurePlaceSettings settings, RandomSource random, int flags) {
+                                       StructurePlaceSettings settings, RandomSource random, int flags) {
         StructureTemplateAccessor accessor = (StructureTemplateAccessor) structure;
 
         if (accessor.motm$getPalettes().isEmpty()) {
@@ -63,7 +63,8 @@ public class StructureUtil {
         if (size.getX() < 1 || size.getY() < 1 || size.getZ() < 1) {
             return false;
         }
-        List<StructureTemplate.StructureBlockInfo> blockInfos = settings.getRandomPalette(accessor.motm$getPalettes(), offset).blocks();
+        List<StructureTemplate.StructureBlockInfo> blockInfos = settings.getRandomPalette(accessor.motm$getPalettes(), offset)
+                .blocks();
         if (blockInfos.isEmpty() && (settings.isIgnoreEntities() || accessor.motm$getEntityInfoList().isEmpty())) {
             return false;
         }
@@ -75,7 +76,8 @@ public class StructureUtil {
         int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
 
-        for (StructureTemplate.StructureBlockInfo blockInfo : processBlockInfos(level, offset, pos, settings, blockInfos, structure)) {
+        for (StructureTemplate.StructureBlockInfo blockInfo : processBlockInfos(level, offset, pos, settings, blockInfos,
+                structure)) {
             BlockPos blockpos = blockInfo.pos();
             if (bounds != null && !bounds.isInside(blockpos)) {
                 continue;
@@ -225,8 +227,10 @@ public class StructureUtil {
 
     public static void addEntitiesToWorld(StructureTemplate template, Level level, BlockPos blockPos,
                                           StructurePlaceSettings settings) {
-        for(StructureTemplate.StructureEntityInfo entityInfo : processEntityInfos(template, level, blockPos, settings, ((StructureTemplateAccessor) template).motm$getEntityInfoList())) {
-            BlockPos entityBlockPos = entityInfo.blockPos; // FORGE: Position will have already been transformed by processEntityInfos
+        for (StructureTemplate.StructureEntityInfo entityInfo : processEntityInfos(template, level, blockPos, settings,
+                ((StructureTemplateAccessor) template).motm$getEntityInfoList())) {
+            BlockPos entityBlockPos = entityInfo.blockPos; // FORGE: Position will have already been transformed by
+                                                           // processEntityInfos
             if (settings.getBoundingBox() == null || settings.getBoundingBox().isInside(entityBlockPos)) {
                 CompoundTag nbt = entityInfo.nbt.copy();
                 Vec3 pos = entityInfo.pos; // FORGE: Position will have already been transformed by processEntityInfos
@@ -236,7 +240,8 @@ public class StructureUtil {
                     float rotation = entity.rotate(settings.getRotation());
                     rotation += entity.mirror(settings.getMirror()) - entity.getYRot();
                     entity.moveTo(pos.x, pos.y, pos.z, rotation, entity.getXRot());
-                    if (settings.shouldFinalizeEntities() && level instanceof ServerLevelAccessor serverLevel && entity instanceof Mob mob) {
+                    if (settings.shouldFinalizeEntities() && level instanceof ServerLevelAccessor serverLevel &&
+                            entity instanceof Mob mob) {
                         mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(BlockPos.containing(pos)),
                                 MobSpawnType.STRUCTURE, null);
                     }
@@ -252,16 +257,16 @@ public class StructureUtil {
                                                                                  StructurePlaceSettings settings,
                                                                                  List<StructureTemplate.StructureEntityInfo> entityInfos) {
         List<StructureTemplate.StructureEntityInfo> processedEntityInfos = Lists.newArrayList();
-        for(StructureTemplate.StructureEntityInfo entityInfo : entityInfos) {
+        for (StructureTemplate.StructureEntityInfo entityInfo : entityInfos) {
             Vec3 pos = transformedVec3d(settings, entityInfo.pos).add(Vec3.atLowerCornerOf(blockPos));
             BlockPos relative = calculateRelativePosition(settings, entityInfo.blockPos).offset(blockPos);
             StructureTemplate.StructureEntityInfo info = new StructureTemplate.StructureEntityInfo(pos, relative, entityInfo.nbt);
             for (StructureProcessor proc : settings.getProcessors()) {
                 info = proc.processEntity(level, blockPos, entityInfo, info, settings, template);
-                //noinspection ConstantValue
+                // noinspection ConstantValue
                 if (info == null) break;
             }
-            //noinspection ConstantValue
+            // noinspection ConstantValue
             if (info != null) processedEntityInfos.add(info);
         }
         return processedEntityInfos;

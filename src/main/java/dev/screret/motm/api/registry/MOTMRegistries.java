@@ -2,8 +2,8 @@ package dev.screret.motm.api.registry;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.api.memory.MemoryStructure;
 import dev.screret.motm.api.memory.Memory;
+import dev.screret.motm.api.memory.MemoryStructure;
 import dev.screret.motm.api.memory.animation.MemoryKeyframe;
 
 import net.minecraft.core.Registry;

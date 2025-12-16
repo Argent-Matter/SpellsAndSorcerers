@@ -25,17 +25,20 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LevelMemoryStorage {
 
-    public static final Codec<LevelMemoryStorage> CODEC = Codec.mapPair(BlockPos.CODEC.fieldOf("pos"), Memory.CODEC.fieldOf("memory"))
+    public static final Codec<LevelMemoryStorage> CODEC = Codec
+            .mapPair(BlockPos.CODEC.fieldOf("pos"), Memory.CODEC.fieldOf("memory"))
             .codec().listOf()
             .xmap(entries -> (Long2ReferenceMap<Holder<Memory>>) entries.stream()
-                            .map(pair -> Pair.of(pair.getFirst().asLong(), pair.getSecond()))
-                            .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond, LevelMemoryStorage::uniqueKeysMerger, Long2ReferenceOpenHashMap::new)),
+                    .map(pair -> Pair.of(pair.getFirst().asLong(), pair.getSecond()))
+                    .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond, LevelMemoryStorage::uniqueKeysMerger,
+                            Long2ReferenceOpenHashMap::new)),
                     map -> map.long2ReferenceEntrySet().stream()
                             .map(entry -> Pair.of(BlockPos.of(entry.getLongKey()), entry.getValue()))
                             .toList())
             .xmap(LevelMemoryStorage::new, LevelMemoryStorage::getMemories);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LevelMemoryStorage> STREAM_CODEC = StreamCodec.ofMember(LevelMemoryStorage::encode, LevelMemoryStorage::decode);
+    public static final StreamCodec<RegistryFriendlyByteBuf, LevelMemoryStorage> STREAM_CODEC = StreamCodec
+            .ofMember(LevelMemoryStorage::encode, LevelMemoryStorage::decode);
 
     @Getter(AccessLevel.PRIVATE)
     public final Long2ReferenceMap<Holder<Memory>> memories = new Long2ReferenceOpenHashMap<>();

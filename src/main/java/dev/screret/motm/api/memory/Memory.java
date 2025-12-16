@@ -59,6 +59,7 @@ public class Memory implements StatelessGeoSingletonAnimatable {
     /**
      * Create a new memory instance.
      * The asset path should be the truncated relative path from the base folder.
+     * 
      * @param animationName animation path relative to {@code <namespace>:animations/motm/memory/ }
      */
     public Memory(ResourceLocation animationName) {
@@ -140,9 +141,12 @@ public class Memory implements StatelessGeoSingletonAnimatable {
     // endregion
 
     @SuppressWarnings("unchecked")
-    public static AnimationController<GeoAnimatable> makeAnimationController(Memory animatable, String animation, long animatableID) {
+    public static AnimationController<GeoAnimatable> makeAnimationController(Memory animatable, String animation,
+                                                                             long animatableID) {
         return new StatelessAnimationController(animatable, animation)
-                .setCustomInstructionKeyframeHandler((AnimationController.CustomKeyframeHandler<GeoAnimatable>) (AnimationController.CustomKeyframeHandler<?>) new MemoryKeyframeHandler(animatableID));
+                .setCustomInstructionKeyframeHandler(
+                        (AnimationController.CustomKeyframeHandler<GeoAnimatable>) (AnimationController.CustomKeyframeHandler<?>) new MemoryKeyframeHandler(
+                                animatableID));
     }
 
     @Override
@@ -154,7 +158,8 @@ public class Memory implements StatelessGeoSingletonAnimatable {
             return;
         }
 
-        String animKey = animation.getStageCount() == 1 ? animation.getAnimationStages().getFirst().animationName() : animation.toString();
+        String animKey = animation.getStageCount() == 1 ? animation.getAnimationStages().getFirst().animationName() :
+                animation.toString();
         AnimationController<?> controller = animatableManager.getAnimationControllers()
                 .computeIfAbsent(animKey, anim -> makeAnimationController(instance, anim, animatableId));
 

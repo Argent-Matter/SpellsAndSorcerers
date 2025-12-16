@@ -2,8 +2,8 @@ package dev.screret.motm.data.memory;
 
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.memory.animation.MemoryKeyframe;
-import dev.screret.motm.common.memory.animation.keyframe.EntityTrackerKeyframe;
 import dev.screret.motm.api.registry.MOTMRegistries;
+import dev.screret.motm.common.memory.animation.keyframe.EntityTrackerKeyframe;
 import dev.screret.motm.common.memory.animation.keyframe.RenderStructureKeyframe;
 
 import net.minecraft.core.component.DataComponentType;

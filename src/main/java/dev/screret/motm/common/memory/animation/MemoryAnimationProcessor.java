@@ -32,7 +32,7 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
      *
      * @param animatable            The animatable object relevant to the animation being played
      * @param model                 The model currently being processed
-     * @param animatableManager            The AnimatableManager instance being used for this animation processor
+     * @param animatableManager     The AnimatableManager instance being used for this animation processor
      * @param animTime              The internal tick counter kept by the {@link AnimatableManager} for this animatable
      * @param state                 An {@link AnimationState} instance applied to this render frame
      * @param crashWhenCantFindBone Whether to crash if unable to find a required bone, or to continue with the remaining bones
@@ -54,7 +54,8 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
             ((AnimationControllerAccessor) controller).motm$setIsJustStarting(animatableManager.isFirstTick());
 
             state.withController(controller);
-            controller.process(model, state, ((AnimationProcessorAccessor) this).motm$getBones(), boneSnapshots, animTime, crashWhenCantFindBone);
+            controller.process(model, state, ((AnimationProcessorAccessor) this).motm$getBones(), boneSnapshots, animTime,
+                    crashWhenCantFindBone);
 
             for (BoneAnimationQueue boneAnimation : controller.getBoneAnimationQueues().values()) {
                 GeoBone bone = boneAnimation.bone();
@@ -84,8 +85,7 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
                     entity.travel(new Vec3(
                             posX - snapshot.getOffsetX(),
                             posY - snapshot.getOffsetY(),
-                            posZ - snapshot.getOffsetZ())
-                    );
+                            posZ - snapshot.getOffsetZ()));
                     bone.updatePosition((float) posX, (float) posY, (float) posZ);
                     snapshot.updateOffset(bone.getPosX(), bone.getPosY(), bone.getPosZ());
                     snapshot.startPosAnim();
@@ -105,7 +105,8 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
                 if (saveSnapshot.isPosAnimInProgress()) {
                     saveSnapshot.stopPosAnim(animTime);
                 }
-                double percentageReset = resetTickLength == 0 ? 1 : Math.min((animTime - saveSnapshot.getLastResetPositionTick()) / resetTickLength, 1);
+                double percentageReset = resetTickLength == 0 ? 1 :
+                        Math.min((animTime - saveSnapshot.getLastResetPositionTick()) / resetTickLength, 1);
                 bone.setPosX((float) Mth.lerp(percentageReset, saveSnapshot.getOffsetX(), initialSnapshot.getOffsetX()));
                 bone.setPosY((float) Mth.lerp(percentageReset, saveSnapshot.getOffsetY(), initialSnapshot.getOffsetY()));
                 bone.setPosZ((float) Mth.lerp(percentageReset, saveSnapshot.getOffsetZ(), initialSnapshot.getOffsetZ()));
@@ -120,7 +121,8 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
     }
 
     /**
-     * Create new bone {@link BoneSnapshot} based on the bone's initial snapshot for the currently registered {@link GeoBone GeoBones},
+     * Create new bone {@link BoneSnapshot} based on the bone's initial snapshot for the currently registered {@link GeoBone
+     * GeoBones},
      * filtered by the bones already present in the master snapshots map
      *
      * @param snapshots The master bone snapshots map from the related {@link AnimatableManager}

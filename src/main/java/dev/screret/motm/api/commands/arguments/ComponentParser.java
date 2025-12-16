@@ -33,18 +33,15 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 public class ComponentParser<T, V, B, R> {
+
     static final DynamicCommandExceptionType ERROR_UNKNOWN_COMPONENT = new DynamicCommandExceptionType(
-            componentType -> Component.translatableEscape("arguments.item.component.unknown", componentType)
-    );
+            componentType -> Component.translatableEscape("arguments.item.component.unknown", componentType));
     static final Dynamic2CommandExceptionType ERROR_MALFORMED_COMPONENT = new Dynamic2CommandExceptionType(
-            (componentType, error) -> Component.translatableEscape("arguments.item.component.malformed", componentType, error)
-    );
+            (componentType, error) -> Component.translatableEscape("arguments.item.component.malformed", componentType, error));
     static final SimpleCommandExceptionType ERROR_EXPECTED_COMPONENT = new SimpleCommandExceptionType(
-            Component.translatable("arguments.item.component.expected")
-    );
+            Component.translatable("arguments.item.component.expected"));
     static final DynamicCommandExceptionType ERROR_REPEATED_COMPONENT = new DynamicCommandExceptionType(
-            componentType -> Component.translatableEscape("arguments.item.component.repeated", componentType)
-    );
+            componentType -> Component.translatableEscape("arguments.item.component.repeated", componentType));
     private static final Function<SuggestionsBuilder, CompletableFuture<Suggestions>> SUGGEST_NOTHING = SuggestionsBuilder::buildFuture;
 
     public static final char SYNTAX_START_COMPONENTS = '[';
@@ -84,19 +81,23 @@ public class ComponentParser<T, V, B, R> {
 
     public static <T> ComponentParser.DataComponents<T> dataComponents(HolderLookup.Provider registries,
                                                                        Registry<DataComponentType<? extends T>> componentTypeRegistry,
-                                                                       boolean requireListStartEnd, boolean allowComponentRemoval) {
+                                                                       boolean requireListStartEnd,
+                                                                       boolean allowComponentRemoval) {
         return ComponentParser.dataComponents(registries.createSerializationContext(NbtOps.INSTANCE), componentTypeRegistry,
                 requireListStartEnd, allowComponentRemoval);
     }
 
-    public static <T> ComponentParser.DataComponents<T> noContextDataComponents(Registry<DataComponentType<? extends T>> componentTypeRegistry,
-                                                                                boolean requireListStartEnd, boolean allowComponentRemoval) {
+    public static <
+            T> ComponentParser.DataComponents<T> noContextDataComponents(Registry<DataComponentType<? extends T>> componentTypeRegistry,
+                                                                         boolean requireListStartEnd,
+                                                                         boolean allowComponentRemoval) {
         return ComponentParser.dataComponents(NbtOps.INSTANCE, componentTypeRegistry, requireListStartEnd, allowComponentRemoval);
     }
 
     public static <T> ComponentParser.DataComponents<T> dataComponents(DynamicOps<Tag> nbtOps,
                                                                        Registry<DataComponentType<? extends T>> componentTypeRegistry,
-                                                                       boolean requireListStartEnd, boolean allowComponentRemoval) {
+                                                                       boolean requireListStartEnd,
+                                                                       boolean allowComponentRemoval) {
         return new ComponentParser.DataComponents<>(nbtOps, componentTypeRegistry, requireListStartEnd, allowComponentRemoval);
     }
 
@@ -135,13 +136,13 @@ public class ComponentParser<T, V, B, R> {
 
         try {
             state.parse();
-        } catch (CommandSyntaxException ignored) {
-        }
+        } catch (CommandSyntaxException ignored) {}
 
         return suggestions.resolveSuggestions(builder, reader);
     }
 
     protected class State {
+
         private final StringReader reader;
         private final Visitor<T, V> visitor;
 
@@ -152,7 +153,8 @@ public class ComponentParser<T, V, B, R> {
 
         public void parse() throws CommandSyntaxException {
             this.visitor.visitSuggestions(this::suggestStartComponents);
-            if (this.reader.canRead() && (!ComponentParser.this.requireListStartEnd || this.reader.peek() == SYNTAX_START_COMPONENTS)) {
+            if (this.reader.canRead() &&
+                    (!ComponentParser.this.requireListStartEnd || this.reader.peek() == SYNTAX_START_COMPONENTS)) {
                 this.visitor.visitSuggestions(SUGGEST_NOTHING);
                 this.readComponents();
             }
@@ -169,7 +171,8 @@ public class ComponentParser<T, V, B, R> {
 
             while (this.reader.canRead() && this.reader.peek() != SYNTAX_END_COMPONENTS) {
                 this.reader.skipWhitespace();
-                if (this.reader.canRead() && (ComponentParser.this.allowComponentRemoval && this.reader.peek() == SYNTAX_REMOVED_COMPONENT)) {
+                if (this.reader.canRead() &&
+                        (ComponentParser.this.allowComponentRemoval && this.reader.peek() == SYNTAX_REMOVED_COMPONENT)) {
                     this.reader.skip();
                     this.visitor.visitSuggestions(this::suggestComponent);
                     T type = readType(this.reader);
@@ -291,13 +294,13 @@ public class ComponentParser<T, V, B, R> {
                             ResourceLocation location = entry.getKey().location();
                             builder.suggest(location + suffix);
                         }
-                    }
-            );
+                    });
             return builder.buildFuture();
         }
     }
 
     protected static class SuggestionsVisitor<K, V> implements Visitor<K, V> {
+
         private Function<SuggestionsBuilder, CompletableFuture<Suggestions>> suggestions = SUGGEST_NOTHING;
 
         @Override
@@ -347,7 +350,8 @@ public class ComponentParser<T, V, B, R> {
         void remove(B builder, T type);
     }
 
-    public static class DataComponents<T> extends ComponentParser<DataComponentType<? extends T>, Object, DataComponentPatch.Builder, DataComponentPatch> {
+    public static class DataComponents<
+            T> extends ComponentParser<DataComponentType<? extends T>, Object, DataComponentPatch.Builder, DataComponentPatch> {
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
         public DataComponents(DynamicOps<Tag> nbtOps, Registry<DataComponentType<? extends T>> componentTypeRegistry,

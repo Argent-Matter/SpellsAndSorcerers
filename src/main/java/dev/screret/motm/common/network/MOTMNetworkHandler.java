@@ -10,9 +10,9 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber
 public class MOTMNetworkHandler {
-    
+
     public static final String NETWORK_VERSION = "1";
-    
+
     @SubscribeEvent
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(NETWORK_VERSION);
