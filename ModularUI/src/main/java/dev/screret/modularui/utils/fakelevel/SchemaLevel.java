@@ -11,6 +11,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.InactiveProfiler;
@@ -29,7 +30,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.DataLayer;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
@@ -90,7 +90,7 @@ public class SchemaLevel extends Level implements ISchema {
     @Getter
     private final Scoreboard scoreboard = new Scoreboard();
     @Getter
-    private final ChunkSource chunkSource = new DummyChunkSource(this);
+    private final DummyChunkSource chunkSource = new DummyChunkSource(this);
     private final Holder<Biome> biome;
     private final DataLayer defaultDataLayer;
 
@@ -176,7 +176,7 @@ public class SchemaLevel extends Level implements ISchema {
     }
 
     @Override
-    public @NotNull Iterator<Map.Entry<BlockPos, BlockState>> iterator() {
+    public Iterator<Map.Entry<BlockPos, BlockState>> iterator() {
         return getFilledBlocks()
                 .map(pos -> Map.entry(pos, this.getBlockState(pos)))
                 .iterator();
