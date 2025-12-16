@@ -5,6 +5,7 @@ import dev.screret.motm.api.item.SimpleGeoBlockItem;
 import dev.screret.motm.common.item.*;
 
 import net.minecraft.world.item.*;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -43,6 +44,8 @@ public class MOTMItems {
     public static final DeferredItem<PickaxeItem> SOULSTEEL_PICKAXE = ITEMS.register("soulsteel_pickaxe", makeSoulsteelToolItem(PickaxeItem::new));
     public static final DeferredItem<AxeItem> SOULSTEEL_AXE = ITEMS.register("soulsteel_axe", makeSoulsteelToolItem(AxeItem::new));
     public static final DeferredItem<HoeItem> SOULSTEEL_HOE = ITEMS.register("soulsteel_hoe", makeSoulsteelToolItem(HoeItem::new));
+
+    public static final DeferredItem<DeferredSpawnEggItem> ELDERLING_SPAWN_EGG = ITEMS.registerItem("elderling_spawn_egg", p -> new DeferredSpawnEggItem(MOTMEntityTypes.ELDERLING, 0x5b841b, 0xdfc453, p));
 
     // spotless:on
 

@@ -1,13 +1,18 @@
 package dev.screret.motm.client;
 
+import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.client.model.blockentity.PalantirModel;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.data.MOTMBlockEntities;
+import dev.screret.motm.data.MOTMEntityTypes;
 import dev.screret.motm.data.MOTMParticles;
 
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import net.minecraft.world.entity.Entity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,6 +42,9 @@ public class MagicOfTheMindClient {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(MOTMBlockEntities.PALANTIR.get(),
                 context -> new GeoBlockRenderer<>(new PalantirModel()));
+
+        event.registerEntityRenderer(MOTMEntityTypes.ELDERLING.get(),
+                context -> new GeoEntityRenderer<>(context, new DefaultedEntityGeoModel<>(MOTMUtil.id("elderling"), true)));
     }
 
     @SubscribeEvent
