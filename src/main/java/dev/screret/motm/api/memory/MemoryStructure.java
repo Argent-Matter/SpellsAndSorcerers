@@ -26,7 +26,7 @@ import java.util.Optional;
 /**
  * This is currently just a stub class until I implement the whole system for animated NPCs in memories
  */
-public class MemoryScene {
+public class MemoryStructure {
 
     // spotless:off
     private static final int MAX_MEMORY_STRUCTURE_RADIUS = 256;
@@ -40,7 +40,7 @@ public class MemoryScene {
             Codec.list(PoolAliasBinding.CODEC).optionalFieldOf("pool_aliases", List.of()).forGetter(JigsawStructure::motm$getPoolAliases),
             DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(JigsawStructure::motm$getDimensionPadding),
             LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(JigsawStructure::motm$getLiquidSettings)
-    ).apply(instance, MemoryScene::makeMemoryStructure));
+    ).apply(instance, MemoryStructure::makeMemoryStructure));
 
     public static JigsawStructure makeMemoryStructure(Holder<StructureTemplatePool> startPool, Optional<ResourceLocation> startJigsawName,
                                                       int maxDepth, Optional<Heightmap.Types> projectStartToHeightmap,
@@ -49,15 +49,15 @@ public class MemoryScene {
                 projectStartToHeightmap, MAX_MEMORY_STRUCTURE_RADIUS, poolAliases, dimensionPadding, liquidSettings);
     }
 
-    public static final Codec<MemoryScene> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            JIGSAW_CODEC.fieldOf("structure").forGetter(MemoryScene::getStructure)
-    ).apply(instance, MemoryScene::new));
+    public static final Codec<MemoryStructure> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            JIGSAW_CODEC.fieldOf("structure").forGetter(MemoryStructure::getStructure)
+    ).apply(instance, MemoryStructure::new));
     // spotless:on
 
     @Getter
     private final JigsawStructure structure;
 
-    public MemoryScene(JigsawStructure structure) {
+    public MemoryStructure(JigsawStructure structure) {
         this.structure = structure;
     }
 }

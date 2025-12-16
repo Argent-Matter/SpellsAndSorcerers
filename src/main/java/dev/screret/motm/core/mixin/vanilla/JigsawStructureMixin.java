@@ -1,4 +1,4 @@
-package dev.screret.motm.core.mixin.accessor;
+package dev.screret.motm.core.mixin.vanilla;
 
 import dev.screret.motm.core.ext.IJigsawStructureExtension;
 

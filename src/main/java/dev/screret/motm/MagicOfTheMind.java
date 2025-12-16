@@ -1,12 +1,12 @@
 package dev.screret.motm;
 
-import dev.screret.motm.common.data.provider.lang.MOTMLangProvider;
+import dev.screret.motm.common.data.provider.lang.*;
 import dev.screret.motm.common.data.provider.model.*;
-import dev.screret.motm.common.data.provider.recipe.MOTMRecipeProvider;
+import dev.screret.motm.common.data.provider.recipe.*;
 import dev.screret.motm.common.data.provider.tag.*;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.*;
-import dev.screret.motm.data.MOTMIngredientTypes;
+import dev.screret.motm.data.memory.*;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -41,7 +41,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(MagicOfTheMind.MOD_ID)
 @EventBusSubscriber
 public class MagicOfTheMind {
@@ -74,6 +73,8 @@ public class MagicOfTheMind {
         MOTMParticles.PARTICLES.register(modEventBus);
 
         MOTMCreativeTabs.CREATIVE_TABS.register(modEventBus);
+
+        MOTMMemoryAnimationKeyframeTypes.MEMORY_ANIMATION_KEYFRAME_TYPES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, MOTMConfig.Client.CLIENT_CONFIG);
         modContainer.registerConfig(ModConfig.Type.SERVER, MOTMConfig.Server.SERVER_CONFIG);

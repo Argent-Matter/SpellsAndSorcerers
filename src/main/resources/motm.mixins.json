@@ -5,9 +5,13 @@
     "compatibilityLevel": "JAVA_17",
     "refmap": "motm.refmap.json",
     "mixins": [
-        "accessor.ItemEntityAccessor",
-        "accessor.JigsawStructureMixin",
-        "accessor.MobEffectAccessor"
+        "geckolib.AnimatableManagerAccessor",
+        "geckolib.AnimationControllerAccessor",
+        "geckolib.AnimationProcessorAccessor",
+        "vanilla.ItemEntityAccessor",
+        "vanilla.JigsawStructureMixin",
+        "vanilla.MobEffectAccessor",
+        "vanilla.StructureTemplateAccessor"
     ],
     "client": [
     ],
