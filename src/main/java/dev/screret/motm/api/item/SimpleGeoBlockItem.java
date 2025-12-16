@@ -36,8 +36,7 @@ public class SimpleGeoBlockItem extends BlockItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(
-                DefaultAnimations.genericIdleController(this));
+        controllers.add(DefaultAnimations.genericIdleController(this));
     }
 
     @Override

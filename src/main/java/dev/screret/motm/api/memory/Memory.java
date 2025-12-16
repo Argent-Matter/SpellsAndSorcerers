@@ -74,7 +74,7 @@ public class Memory implements StatelessGeoSingletonAnimatable {
      * The asset path should be the truncated relative path from the base folder.
      *
      * @param animationName    The animation location relative to {@code <namespace>:animations/motm/memory/}
-     * @param modelName        The model location relative to  {@code <namespace>:geo/motm/memory/}
+     * @param modelName        The model location relative to {@code <namespace>:geo/motm/memory/}
      * @param initialStructure The structure file to load initially, or {@link Optional#empty()} if one isn't wanted.
      */
     public Memory(ResourceLocation animationName, ResourceLocation modelName, Optional<ResourceLocation> initialStructure) {

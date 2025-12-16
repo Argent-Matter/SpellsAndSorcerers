@@ -135,8 +135,6 @@ public class MagicOfTheMind {
         gen.addProvider(event.includeServer(), new MOTMBiomeTagsProvider(packOutput, registries, existingFileHelper));
         gen.addProvider(event.includeServer(), new MOTMEntityTypeTagsProvider(packOutput, registries, existingFileHelper));
 
-        // gen.addProvider(event.includeServer(), new ModBlockstateProvider(gen, existingFileHelper));
-
         gen.addProvider(event.includeClient(), new MOTMLangProvider(packOutput, MagicOfTheMind.MOD_ID, "en_us"));
         gen.addProvider(event.includeClient(), new MOTMBlockStateProvider(packOutput, existingFileHelper));
         gen.addProvider(event.includeClient(), new MOTMItemModelProvider(packOutput, existingFileHelper));
