@@ -16,6 +16,7 @@ import software.bernie.geckolib.renderer.GeoObjectRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
+import net.minecraft.CrashReport;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -28,6 +29,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
@@ -48,6 +50,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jetbrains.annotations.Nullable;
@@ -82,6 +85,17 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
         this.currentMemory = memory;
         this.entities.clear();
         this.animatable = memory.value();
+
+        this.animatable.getInitialStructure().ifPresent(name -> ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getUnchecked(name)
+                .whenComplete((structure, error) -> {
+                    if (error != null) {
+                        Minecraft.getInstance().delayCrash(CrashReport.forThrowable(error, "Rendering memory structure"));
+                        return;
+                    }
+                    if (this.hasActiveMemory()) {
+                        this.loadStructure(name, structure);
+                    }
+                }));
     }
 
     public void loadStructure(ResourceLocation name, StructureTemplate memoryStructure) {
@@ -110,11 +124,14 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
             for (String tag : entity.getTags()) {
                 this.entities.computeIfAbsent(tag, $ -> new HashSet<>()).add(entity);
             }
+            if (entity instanceof Mob mob) {
+                mob.setNoAi(true);
+            }
         }
     }
 
     public boolean hasActiveMemory() {
-        return this.currentMemory != null;
+        return this.animatable != null;
     }
 
     private void resetFakeLevel() {
