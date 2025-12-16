@@ -1,4 +1,5 @@
 plugins {
+    id 'java'
     id 'java-library'
     id 'eclipse'
     id 'idea'
@@ -30,35 +31,30 @@ sourceSets {
 
     client {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += main.output
     }
 
     test {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += main.output
     }
 
     extra {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += main.output
     }
 
     clientExtra {
-        compileClasspath += client.output + extra.compileClasspath
-        runtimeClasspath += client.output + client.runtimeClasspath + extra.runtimeClasspath
+        compileClasspath += client.output
+        runtimeClasspath += client.output
     }
 }
 
 configurations {
-    // set these as unresolvable so we don't accidentally force all dependents to use them with us
-    clientRuntimeOnly.canBeResolved = false
-    extraRuntimeOnly.canBeResolved = false
-    clientExtraRuntimeOnly.canBeResolved = false
-
     runtimeClasspath.extendsFrom localRuntime
-    extraRuntimeClasspath.extendsFrom extraLocalRuntime
-    clientRuntimeClasspath.extendsFrom clientLocalRuntime
-    extraClientRuntimeClasspath.extendsFrom clientExtraLocalRuntime
+    extraRuntimeClasspath.extendsFrom runtimeClasspath, extraLocalRuntime
+    clientRuntimeClasspath.extendsFrom runtimeClasspath, clientLocalRuntime
+    extraClientRuntimeClasspath.extendsFrom clientRuntimeClasspath, extraLocalRuntime, clientExtraLocalRuntime
 
     renderNurseCfg {
         canBeConsumed = false
