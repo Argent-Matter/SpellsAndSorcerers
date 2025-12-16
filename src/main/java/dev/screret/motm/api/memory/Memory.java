@@ -48,7 +48,8 @@ public class Memory implements StatelessGeoSingletonAnimatable {
 
     // spotless:off
     public static final Codec<Memory> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("animation_name").forGetter(Memory::getAnimationName)
+            ResourceLocation.CODEC.fieldOf("animation_name").forGetter(Memory::getAnimationName),
+            ResourceLocation.CODEC.optionalFieldOf("initial_structure").forGetter(Memory::getInitialStructure)
     ).apply(instance, Memory::new));
     public static final Codec<Holder<Memory>> CODEC = RegistryFileCodec.create(MOTMRegistries.MEMORY_REGISTRY, DIRECT_CODEC);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Memory>> STREAM_CODEC = ByteBufCodecs.holderRegistry(MOTMRegistries.MEMORY_REGISTRY);

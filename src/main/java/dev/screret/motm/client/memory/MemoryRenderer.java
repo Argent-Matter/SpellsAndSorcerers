@@ -50,7 +50,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jetbrains.annotations.Nullable;
@@ -83,9 +82,9 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
     public void startMemory(BlockPos pos, Holder<Memory> memory) {
         this.currentPos = pos;
         this.currentMemory = memory;
-        this.entities.clear();
         this.animatable = memory.value();
 
+        this.entities.clear();
         this.animatable.getInitialStructure().ifPresent(name -> ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getUnchecked(name)
                 .whenComplete((structure, error) -> {
                     if (error != null) {
@@ -96,6 +95,16 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
                         this.loadStructure(name, structure);
                     }
                 }));
+    }
+
+    /**
+     * End the currently playing memory immediately.
+     */
+    public void endCurrentMemory() {
+        this.animatable = null;
+        this.currentMemory = null;
+
+        this.resetFakeLevel();
     }
 
     public void loadStructure(ResourceLocation name, StructureTemplate memoryStructure) {
@@ -236,7 +245,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
         poseStack.pushPose();
         poseStack.last().pose().translate(camera.getPosition().toVector3f().negate());
 
-        renderer.render(event.getPoseStack(), renderer.animatable, null, RenderType.TRANSLUCENT, null,
+        renderer.render(poseStack, renderer.animatable, null, RenderType.TRANSLUCENT, null,
                 LightTexture.FULL_SKY, event.getPartialTick().getGameTimeDeltaPartialTick(false));
 
         poseStack.popPose();

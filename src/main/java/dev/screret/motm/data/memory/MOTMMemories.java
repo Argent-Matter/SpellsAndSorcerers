@@ -23,7 +23,7 @@ public class MOTMMemories {
     // region utility functions
 
     private static void registerMemory(BootstrapContext<Memory> context, ResourceKey<Memory> key) {
-        registerMemory(context, key, null);
+        registerMemory(context, key, key.location());
     }
 
     private static void registerMemory(BootstrapContext<Memory> context, ResourceKey<Memory> key,
