@@ -1,8 +1,8 @@
 package dev.screret.motm.api.memory;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.api.memory.animation.MemoryKeyframeHandler;
 import dev.screret.motm.api.registry.MOTMRegistries;
+import dev.screret.motm.common.memory.MemoryKeyframeHandler;
 
 import software.bernie.geckolib.GeckoLibServices;
 import software.bernie.geckolib.animatable.GeoAnimatable;

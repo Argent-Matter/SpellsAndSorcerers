@@ -2,7 +2,6 @@ package dev.screret.motm.common.memory.animation;
 
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.memory.Memory;
-import dev.screret.motm.client.memory.ActiveMemory;
 import dev.screret.motm.client.memory.MemoryRenderer;
 import dev.screret.motm.core.mixin.geckolib.AnimatableManagerAccessor;
 import dev.screret.motm.core.mixin.geckolib.AnimationControllerAccessor;
@@ -15,11 +14,15 @@ import software.bernie.geckolib.animation.state.BoneSnapshot;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
 
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
 
 public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
 
@@ -34,15 +37,16 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
      * @param model                 The model currently being processed
      * @param animatableManager     The AnimatableManager instance being used for this animation processor
      * @param animTime              The internal tick counter kept by the {@link AnimatableManager} for this animatable
-     * @param state                 An {@link AnimationState} instance applied to this render frame
+     * @param animationState        An {@link AnimationState} instance applied to this render frame
      * @param crashWhenCantFindBone Whether to crash if unable to find a required bone, or to continue with the remaining bones
      */
     public void tickAnimation(Memory animatable, GeoModel<Memory> model, AnimatableManager<Memory> animatableManager,
-                              double animTime, AnimationState<Memory> state, boolean crashWhenCantFindBone) {
-        ActiveMemory currentMemory = MemoryRenderer.INSTANCE.getCurrentMemory();
+                              double animTime, AnimationState<Memory> animationState, boolean crashWhenCantFindBone) {
+        Holder<Memory> currentMemory = MemoryRenderer.INSTANCE.getCurrentMemory();
         if (currentMemory == null) {
             return;
         }
+
         Map<String, BoneSnapshot> boneSnapshots = updateBoneSnapshots(animatableManager.getBoneSnapshotCollection());
 
         for (AnimationController<Memory> controller : animatableManager.getAnimationControllers().values()) {
@@ -53,20 +57,15 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
 
             ((AnimationControllerAccessor) controller).motm$setIsJustStarting(animatableManager.isFirstTick());
 
-            state.withController(controller);
-            controller.process(model, state, ((AnimationProcessorAccessor) this).motm$getBones(), boneSnapshots, animTime,
+            animationState.withController(controller);
+            controller.process(model, animationState, ((AnimationProcessorAccessor) this).motm$getBones(), boneSnapshots,
+                    animTime,
                     crashWhenCantFindBone);
+
+            double adjustedTick = ((AnimationControllerAccessor) controller).motm$adjustTick(animTime);
 
             for (BoneAnimationQueue boneAnimation : controller.getBoneAnimationQueues().values()) {
                 GeoBone bone = boneAnimation.bone();
-                String entityMarker = bone.getName();
-                LivingEntity entity = currentMemory.entities().get(entityMarker);
-                if (entity == null) {
-                    // log & skip invalid entities
-                    MagicOfTheMind.LOGGER.warn("Invalid entity marker (bone name) {} in memory {}",
-                            entityMarker, currentMemory.memory().getKey().location());
-                    continue;
-                }
 
                 BoneSnapshot snapshot = boneSnapshots.get(bone.getName());
                 BoneSnapshot initialSnapshot = bone.getInitialSnapshot();
@@ -76,20 +75,33 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
                 AnimationPoint posZPoint = boneAnimation.positionZQueue().poll();
 
                 if (posXPoint != null && posYPoint != null && posZPoint != null) {
-                    entity.setDiscardFriction(true);
                     double posX = EasingType.lerpWithOverride(posXPoint, null);
                     double posY = EasingType.lerpWithOverride(posYPoint, null);
                     double posZ = EasingType.lerpWithOverride(posZPoint, null);
-                    // calculate relative movement for the entity based on the last keyframe's movement
-                    // if we don't do this, the entities will get out of sync with the animation after the first keyframe.
-                    entity.travel(new Vec3(
-                            posX - snapshot.getOffsetX(),
-                            posY - snapshot.getOffsetY(),
-                            posZ - snapshot.getOffsetZ()));
+
                     bone.updatePosition((float) posX, (float) posY, (float) posZ);
                     snapshot.updateOffset(bone.getPosX(), bone.getPosY(), bone.getPosZ());
                     snapshot.startPosAnim();
                     bone.markPositionAsChanged();
+
+                    Set<Entity> entities = MemoryRenderer.INSTANCE.getEntities().get(bone.getName());
+                    if (!checkEntitiesNotNull(entities, bone.getName(), currentMemory, crashWhenCantFindBone)) {
+                        continue;
+                    }
+                    for (Entity entity : entities) {
+                        // only update entities' positions every full tick.
+                        if (!Mth.equal(adjustedTick, 0.0d)) {
+                            continue;
+                        }
+                        if (entity instanceof LivingEntity livingEntity) {
+                            livingEntity.setDiscardFriction(true);
+                        }
+                        // set relative movement for the entity based on the keyframe's relative movement
+                        // if we don't do this, the entities will get out of sync with the animation after the first keyframe.
+                        entity.setDeltaMovement(posX - posXPoint.animationStartValue(),
+                                posY - posYPoint.animationStartValue(),
+                                posZ - posZPoint.animationStartValue());
+                    }
                 }
             }
         }
@@ -107,11 +119,20 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
                 }
                 double percentageReset = resetTickLength == 0 ? 1 :
                         Math.min((animTime - saveSnapshot.getLastResetPositionTick()) / resetTickLength, 1);
-                bone.setPosX((float) Mth.lerp(percentageReset, saveSnapshot.getOffsetX(), initialSnapshot.getOffsetX()));
-                bone.setPosY((float) Mth.lerp(percentageReset, saveSnapshot.getOffsetY(), initialSnapshot.getOffsetY()));
-                bone.setPosZ((float) Mth.lerp(percentageReset, saveSnapshot.getOffsetZ(), initialSnapshot.getOffsetZ()));
+                double backX = Mth.lerp(percentageReset, saveSnapshot.getOffsetX(), initialSnapshot.getOffsetX());
+                double backY = Mth.lerp(percentageReset, saveSnapshot.getOffsetY(), initialSnapshot.getOffsetY());
+                double backZ = Mth.lerp(percentageReset, saveSnapshot.getOffsetZ(), initialSnapshot.getOffsetZ());
+                bone.updatePosition((float) backX, (float) backY, (float) backZ);
+
                 if (percentageReset >= 1) {
                     saveSnapshot.updateOffset(bone.getPosX(), bone.getPosY(), bone.getPosZ());
+                }
+                Set<Entity> entities = MemoryRenderer.INSTANCE.getEntities().get(bone.getName());
+                if (!checkEntitiesNotNull(entities, bone.getName(), currentMemory, crashWhenCantFindBone)) {
+                    continue;
+                }
+                for (Entity entity : entities) {
+                    entity.setPos(backX, backY, backZ);
                 }
             }
         }
@@ -135,5 +156,21 @@ public class MemoryAnimationProcessor extends AnimationProcessor<Memory> {
         }
 
         return snapshots;
+    }
+
+    private static boolean checkEntitiesNotNull(@Nullable Set<Entity> entities, String boneName, Holder<Memory> memory,
+                                                boolean crashWhenCantFindBone) {
+        // log & skip invalid entities
+        if (entities == null) {
+            if (crashWhenCantFindBone) {
+                throw new RuntimeException("Invalid entity tag (bone name) %s in memory %s (no entities have that tag)"
+                        .formatted(boneName, memory.getKey().location()));
+            } else {
+                MagicOfTheMind.LOGGER.warn("Invalid entity tag (bone name) {} in memory {} (no entities have that tag)",
+                        boneName, memory.getKey().location());
+            }
+            return false;
+        }
+        return true;
     }
 }

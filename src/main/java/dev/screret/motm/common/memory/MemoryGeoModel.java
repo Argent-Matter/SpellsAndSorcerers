@@ -1,4 +1,4 @@
-package dev.screret.motm.api.memory.animation;
+package dev.screret.motm.common.memory;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.api.memory.Memory;

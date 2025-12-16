@@ -1,4 +1,4 @@
-package dev.screret.motm.api.util;
+package dev.screret.motm.api.util.worldgen;
 
 import dev.screret.motm.core.mixin.vanilla.StructureTemplateAccessor;
 
@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.material.FluidState;
@@ -32,7 +31,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
 
-import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,8 +50,27 @@ public class StructureUtil {
     public static final Direction[] ALL_DIRECTIONS_EXCEPT_DOWN = { Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH,
             Direction.WEST };
 
+    public static boolean placeInWorld(StructureTemplate structure, Level level, BlockPos pos,
+                                       ExtendedStructurePlaceSettings settings) {
+        return placeInWorld(structure, level, pos, pos, settings, level.getRandom(), Block.UPDATE_CLIENTS);
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
     public static boolean placeInWorld(StructureTemplate structure, Level level, BlockPos offset, BlockPos pos,
-                                       StructurePlaceSettings settings, RandomSource random, int flags) {
+                                       ExtendedStructurePlaceSettings settings, RandomSource random, int flags) {
+        boolean placedSomething = false;
+
+        if (!settings.isIgnoreBlocks() && addBlocksToWorld(structure, level, offset, pos, settings, random, flags)) {
+            placedSomething = true;
+        }
+        if (!settings.isIgnoreEntities() && addEntitiesToWorld(structure, level, offset, settings)) {
+            placedSomething = true;
+        }
+        return placedSomething;
+    }
+
+    public static boolean addBlocksToWorld(StructureTemplate structure, Level level, BlockPos offset, BlockPos pos,
+                                           ExtendedStructurePlaceSettings settings, RandomSource random, int flags) {
         StructureTemplateAccessor accessor = (StructureTemplateAccessor) structure;
 
         if (accessor.motm$getPalettes().isEmpty()) {
@@ -63,21 +80,19 @@ public class StructureUtil {
         if (size.getX() < 1 || size.getY() < 1 || size.getZ() < 1) {
             return false;
         }
-        List<StructureTemplate.StructureBlockInfo> blockInfos = settings.getRandomPalette(accessor.motm$getPalettes(), offset)
-                .blocks();
-        if (blockInfos.isEmpty() && (settings.isIgnoreEntities() || accessor.motm$getEntityInfoList().isEmpty())) {
+        List<StructureBlockInfo> blocks = settings.getRandomPalette(accessor.motm$getPalettes(), offset).blocks();
+        if (blocks.isEmpty()) {
             return false;
         }
 
         BoundingBox bounds = settings.getBoundingBox();
-        List<BlockPos> waterloggedBlocks = new ArrayList<>(settings.shouldApplyWaterlogging() ? blockInfos.size() : 0);
-        List<BlockPos> fluidBlocks = new ArrayList<>(settings.shouldApplyWaterlogging() ? blockInfos.size() : 0);
-        List<Pair<BlockPos, CompoundTag>> allBlocks = new ArrayList<>(blockInfos.size());
+        List<BlockPos> waterloggedBlocks = new ArrayList<>(settings.shouldApplyWaterlogging() ? blocks.size() : 0);
+        List<BlockPos> fluidBlocks = new ArrayList<>(settings.shouldApplyWaterlogging() ? blocks.size() : 0);
+        List<Pair<BlockPos, CompoundTag>> allBlocks = new ArrayList<>(blocks.size());
         int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
 
-        for (StructureTemplate.StructureBlockInfo blockInfo : processBlockInfos(level, offset, pos, settings, blockInfos,
-                structure)) {
+        for (StructureBlockInfo blockInfo : processBlockInfos(level, offset, pos, settings, blocks, structure)) {
             BlockPos blockpos = blockInfo.pos();
             if (bounds != null && !bounds.isInside(blockpos)) {
                 continue;
@@ -184,38 +199,35 @@ public class StructureUtil {
                 }
             }
         }
-
-        if (!settings.isIgnoreEntities()) {
-            addEntitiesToWorld(structure, level, offset, settings);
-        }
-
         return true;
     }
 
-    public static List<StructureTemplate.StructureBlockInfo> processBlockInfos(LevelReader level, BlockPos offset, BlockPos pos,
-                                                                               StructurePlaceSettings settings,
-                                                                               List<StructureTemplate.StructureBlockInfo> blockInfos,
-                                                                               @Nullable StructureTemplate template) {
-        List<StructureTemplate.StructureBlockInfo> originalBlockInfos = new ArrayList<>();
-        List<StructureTemplate.StructureBlockInfo> processedBlockInfos = new ArrayList<>();
+    public static List<StructureBlockInfo> processBlockInfos(LevelReader level, BlockPos offset, BlockPos pos,
+                                                             ExtendedStructurePlaceSettings settings,
+                                                             List<StructureBlockInfo> blockInfos,
+                                                             @Nullable StructureTemplate template) {
+        List<StructureBlockInfo> originalBlockInfos = new ArrayList<>();
+        List<StructureBlockInfo> processedBlockInfos = new ArrayList<>();
 
-        for (StructureTemplate.StructureBlockInfo blockInfo : blockInfos) {
-            BlockPos relative = calculateRelativePosition(settings, blockInfo.pos()).offset(offset);
-            StructureTemplate.StructureBlockInfo processed = new StructureTemplate.StructureBlockInfo(relative,
-                    blockInfo.state(), blockInfo.nbt() != null ? blockInfo.nbt().copy() : null);
+        for (StructureBlockInfo block : blockInfos) {
+            BlockPos relative = calculateRelativePosition(settings, block.pos()).offset(offset);
+            StructureBlockInfo processed = new StructureBlockInfo(relative, block.state(),
+                    block.nbt() != null ? block.nbt().copy() : null);
 
-            for (StructureProcessor processor : settings.getProcessors()) {
-                processed = processor.process(level, offset, pos, blockInfo, processed, settings, template);
-                if (processed == null) break;
+            if (settings.shouldRunProcessors()) {
+                for (StructureProcessor processor : settings.getProcessors()) {
+                    processed = processor.process(level, offset, pos, block, processed, settings, template);
+                    if (processed == null) break;
+                }
             }
 
             if (processed != null) {
                 processedBlockInfos.add(processed);
-                originalBlockInfos.add(blockInfo);
+                originalBlockInfos.add(block);
             }
         }
 
-        if (level instanceof ServerLevelAccessor serverLevel) {
+        if (settings.shouldRunProcessors() && level instanceof ServerLevelAccessor serverLevel) {
             for (StructureProcessor structureprocessor : settings.getProcessors()) {
                 processedBlockInfos = structureprocessor.finalizeProcessing(serverLevel, offset, pos,
                         originalBlockInfos, processedBlockInfos, settings);
@@ -225,54 +237,66 @@ public class StructureUtil {
         return processedBlockInfos;
     }
 
-    public static void addEntitiesToWorld(StructureTemplate template, Level level, BlockPos blockPos,
-                                          StructurePlaceSettings settings) {
-        for (StructureTemplate.StructureEntityInfo entityInfo : processEntityInfos(template, level, blockPos, settings,
-                ((StructureTemplateAccessor) template).motm$getEntityInfoList())) {
-            BlockPos entityBlockPos = entityInfo.blockPos; // FORGE: Position will have already been transformed by
-                                                           // processEntityInfos
+    public static boolean addEntitiesToWorld(StructureTemplate template, Level level, BlockPos blockPos,
+                                             ExtendedStructurePlaceSettings settings) {
+        List<StructureEntityInfo> entities = ((StructureTemplateAccessor) template).motm$getEntityInfoList();
+        if (entities.isEmpty()) {
+            return false;
+        }
+        entities = processEntityInfos(template, level, blockPos, settings, entities);
+        if (entities.isEmpty()) {
+            return false;
+        }
+
+        for (StructureEntityInfo entity : entities) {
+            // FORGE: Position will have already been transformed by processEntityInfos
+            BlockPos entityBlockPos = entity.blockPos;
             if (settings.getBoundingBox() == null || settings.getBoundingBox().isInside(entityBlockPos)) {
-                CompoundTag nbt = entityInfo.nbt.copy();
-                Vec3 pos = entityInfo.pos; // FORGE: Position will have already been transformed by processEntityInfos
-                nbt.put("Pos", Vec3.CODEC.encodeStart(NbtOps.INSTANCE, pos).getOrThrow());
+                CompoundTag nbt = entity.nbt.copy();
+                nbt.put("Pos", Vec3.CODEC.encodeStart(NbtOps.INSTANCE, entity.pos).getOrThrow());
                 nbt.remove("UUID");
-                createEntityIgnoreException(level, nbt).ifPresent(entity -> {
-                    float rotation = entity.rotate(settings.getRotation());
-                    rotation += entity.mirror(settings.getMirror()) - entity.getYRot();
-                    entity.moveTo(pos.x, pos.y, pos.z, rotation, entity.getXRot());
+
+                createEntityIgnoreException(level, nbt).ifPresent(spawned -> {
+                    Vec3 position = entity.pos;
+                    float rotation = spawned.rotate(settings.getRotation());
+                    rotation += spawned.mirror(settings.getMirror()) - spawned.getYRot();
+                    spawned.moveTo(position, rotation, spawned.getXRot());
+
                     if (settings.shouldFinalizeEntities() && level instanceof ServerLevelAccessor serverLevel &&
-                            entity instanceof Mob mob) {
-                        mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(BlockPos.containing(pos)),
+                            spawned instanceof Mob mob) {
+                        mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(BlockPos.containing(position)),
                                 MobSpawnType.STRUCTURE, null);
                     }
-
-                    addFreshEntityWithPassengers(level, entity);
+                    addFreshEntityWithPassengers(level, spawned);
                 });
             }
         }
+        return true;
     }
 
-    public static List<StructureTemplate.StructureEntityInfo> processEntityInfos(StructureTemplate template,
-                                                                                 LevelAccessor level, BlockPos blockPos,
-                                                                                 StructurePlaceSettings settings,
-                                                                                 List<StructureTemplate.StructureEntityInfo> entityInfos) {
-        List<StructureTemplate.StructureEntityInfo> processedEntityInfos = Lists.newArrayList();
-        for (StructureTemplate.StructureEntityInfo entityInfo : entityInfos) {
-            Vec3 pos = transformedVec3d(settings, entityInfo.pos).add(Vec3.atLowerCornerOf(blockPos));
-            BlockPos relative = calculateRelativePosition(settings, entityInfo.blockPos).offset(blockPos);
-            StructureTemplate.StructureEntityInfo info = new StructureTemplate.StructureEntityInfo(pos, relative, entityInfo.nbt);
-            for (StructureProcessor proc : settings.getProcessors()) {
-                info = proc.processEntity(level, blockPos, entityInfo, info, settings, template);
-                // noinspection ConstantValue
-                if (info == null) break;
+    public static List<StructureEntityInfo> processEntityInfos(StructureTemplate template, LevelAccessor level, BlockPos blockPos,
+                                                               ExtendedStructurePlaceSettings settings,
+                                                               List<StructureEntityInfo> entities) {
+        List<StructureEntityInfo> processedEntities = new ArrayList<>();
+        for (StructureEntityInfo entity : entities) {
+            Vec3 pos = transformedVec3d(settings, entity.pos).add(Vec3.atLowerCornerOf(blockPos));
+            BlockPos relative = calculateRelativePosition(settings, entity.blockPos).offset(blockPos);
+            StructureEntityInfo processed = new StructureEntityInfo(pos, relative, entity.nbt.copy());
+
+            if (settings.shouldRunProcessors()) {
+                for (StructureProcessor proc : settings.getProcessors()) {
+                    processed = proc.processEntity(level, blockPos, entity, processed, settings, template);
+                    // noinspection ConstantValue
+                    if (processed == null) break;
+                }
             }
             // noinspection ConstantValue
-            if (info != null) processedEntityInfos.add(info);
+            if (processed != null) processedEntities.add(processed);
         }
-        return processedEntityInfos;
+        return processedEntities;
     }
 
-    public static Optional<Entity> createEntityIgnoreException(Level level, CompoundTag tag) {
+    private static Optional<Entity> createEntityIgnoreException(Level level, CompoundTag tag) {
         try {
             return EntityType.create(tag, level);
         } catch (Exception exception) {
@@ -280,7 +304,7 @@ public class StructureUtil {
         }
     }
 
-    public static void addFreshEntityWithPassengers(LevelAccessor level, Entity entity) {
+    private static void addFreshEntityWithPassengers(LevelAccessor level, Entity entity) {
         entity.getSelfAndPassengers().forEach(level::addFreshEntity);
     }
 }

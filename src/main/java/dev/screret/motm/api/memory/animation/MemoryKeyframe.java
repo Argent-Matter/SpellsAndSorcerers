@@ -4,7 +4,9 @@ import dev.screret.motm.api.memory.Memory;
 
 import software.bernie.geckolib.animation.keyframe.event.CustomInstructionKeyframeEvent;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface MemoryKeyframe {
 
-    void handleEvent(CustomInstructionKeyframeEvent<Memory> event, long animatableId);
+    void handleEvent(@NotNull CustomInstructionKeyframeEvent<Memory> event, long animatableId);
 }

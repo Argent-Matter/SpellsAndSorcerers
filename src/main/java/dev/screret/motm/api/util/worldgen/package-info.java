@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package dev.screret.motm.common.world.generation;
+package dev.screret.motm.api.util.worldgen;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

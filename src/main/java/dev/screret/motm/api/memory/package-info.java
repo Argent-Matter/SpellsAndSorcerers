@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package dev.screret.motm.api.memory.animation;
+package dev.screret.motm.api.memory;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

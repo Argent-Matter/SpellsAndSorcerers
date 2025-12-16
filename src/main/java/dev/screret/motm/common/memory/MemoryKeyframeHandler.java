@@ -1,8 +1,9 @@
-package dev.screret.motm.api.memory.animation;
+package dev.screret.motm.common.memory;
 
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.commands.arguments.ComponentParser;
 import dev.screret.motm.api.memory.Memory;
+import dev.screret.motm.api.memory.animation.MemoryKeyframe;
 import dev.screret.motm.api.registry.MOTMRegistries;
 
 import software.bernie.geckolib.animation.AnimationController;

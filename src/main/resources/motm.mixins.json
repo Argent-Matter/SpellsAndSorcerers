@@ -11,6 +11,7 @@
         "vanilla.ItemEntityAccessor",
         "vanilla.JigsawStructureMixin",
         "vanilla.MobEffectAccessor",
+        "vanilla.StructurePlaceSettingsAccessor",
         "vanilla.StructureTemplateAccessor"
     ],
     "client": [
