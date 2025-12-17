@@ -1,6 +1,5 @@
 package dev.screret.motm.common.item.component;
 
-
 import dev.screret.motm.common.block.entity.PortStoneBlockEntity.PortRune;
 
 import net.minecraft.network.codec.StreamCodec;

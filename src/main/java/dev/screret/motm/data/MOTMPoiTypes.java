@@ -23,7 +23,6 @@ public class MOTMPoiTypes {
 
     // spotless:on
 
-
     private static Set<BlockState> getBlockStates(Block block) {
         return ImmutableSet.copyOf(block.getStateDefinition().getPossibleStates());
     }

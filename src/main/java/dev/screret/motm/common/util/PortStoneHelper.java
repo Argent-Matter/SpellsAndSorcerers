@@ -33,13 +33,13 @@ public class PortStoneHelper {
     private static final int POI_SEARCH_RADIUS = 64;
     private static TicketController FORCELOADING_TICKET_CONTROLLER;
 
-
     public static final EnumSet<RelativeMovement> NONE_RELATIVE = EnumSet.noneOf(RelativeMovement.class);
 
     /**
      * Forceload a port stone at {@code pos}.
-     * @param level  The {@link ServerLevel} to forceload in.
-     * @param pos    The position of the (now loaded) block.
+     * 
+     * @param level The {@link ServerLevel} to forceload in.
+     * @param pos   The position of the (now loaded) block.
      * @return Whether loading was successful.
      */
     public static boolean forceLoadPortStone(ServerLevel level, BlockPos pos) {
@@ -54,8 +54,9 @@ public class PortStoneHelper {
 
     /**
      * Un-forceload a port stone at {@code pos}.
-     * @param level  The {@link ServerLevel} to forceload in.
-     * @param pos    The position of the (no longer loaded) block.
+     * 
+     * @param level The {@link ServerLevel} to forceload in.
+     * @param pos   The position of the (no longer loaded) block.
      * @return Whether removal was successful.
      */
     public static boolean unLoadPortStone(ServerLevel level, BlockPos pos) {
@@ -70,14 +71,18 @@ public class PortStoneHelper {
 
     /**
      * Finds the nearest portway entrance on the {@link Direction#getOpposite() entranceFace.getOpposite()} face of the block at
-     * {@link PortRune#destination() entrance.destination()} that can link to {@code entrance} and, if it isn't generated yet, generates it.
+     * {@link PortRune#destination() entrance.destination()} that can link to {@code entrance} and, if it isn't generated yet,
+     * generates it.
+     * 
      * @param currentLevel The {@link ServerLevel} to look for valid entrances/exits in.
      * @param entrancePos  The position that {@code entrance} is at.
-     * @param entranceFace The (horizontal) block face that {@code entrance} is on. Note that the exit must be on the opposite face.
+     * @param entranceFace The (horizontal) block face that {@code entrance} is on. Note that the exit must be on the opposite
+     *                     face.
      * @param entrance     The entrance to find a matching exit for.
      * @return A valid portway entrance, or {@link Optional#empty() Optional.empty()} if none were found.
      */
-    public static Optional<PortRune> findDestination(ServerLevel currentLevel, BlockPos entrancePos, Direction entranceFace, PortRune entrance) {
+    public static Optional<PortRune> findDestination(ServerLevel currentLevel, BlockPos entrancePos, Direction entranceFace,
+                                                     PortRune entrance) {
         GlobalPos destination = entrance.destination();
         final ServerLevel destinationLevel = getDestinationLevel(currentLevel.getServer(), destination);
         if (destinationLevel == null) {
@@ -85,9 +90,9 @@ public class PortStoneHelper {
         }
         final Direction destinationFace = entranceFace.getOpposite();
 
-        //noinspection deprecation
+        // noinspection deprecation
         return destinationLevel.getPoiManager().findAllClosestFirstWithType(poi -> poi.is(MOTMPoiTypes.PORT_STONE), p -> true,
-                        destination.pos(), POI_SEARCH_RADIUS, PoiManager.Occupancy.ANY)
+                destination.pos(), POI_SEARCH_RADIUS, PoiManager.Occupancy.ANY)
                 .map(poi -> destinationLevel.getBlockEntity(poi.getSecond(), MOTMBlockEntities.PORT_STONE.get()))
                 .flatMap(Optional::stream)
                 // TODO add condition for matching runes once those are added
