@@ -5,6 +5,7 @@ import dev.screret.motm.common.data.provider.lang.*;
 import dev.screret.motm.common.data.provider.model.*;
 import dev.screret.motm.common.data.provider.recipe.*;
 import dev.screret.motm.common.data.provider.tag.*;
+import dev.screret.motm.common.entity.Elderling;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.*;
 import dev.screret.motm.data.memory.*;
@@ -15,8 +16,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -85,27 +88,39 @@ public class MagicOfTheMind {
 
     @SubscribeEvent
     public static void addVanillaTabItems(final BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
-            event.accept(MOTMItems.SOULSTEEL_AXE.get());
-            event.accept(MOTMItems.SOULSTEEL_SWORD.get());
-            event.accept(MOTMItems.SOULSTEEL_HELMET.get());
-            event.accept(MOTMItems.SOULSTEEL_CHESTPLATE.get());
-            event.accept(MOTMItems.SOULSTEEL_LEGGINGS.get());
-            event.accept(MOTMItems.SOULSTEEL_BOOTS.get());
-        } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(MOTMItems.SOULSTEEL_AXE.get());
-            event.accept(MOTMItems.SOULSTEEL_HOE.get());
-            event.accept(MOTMItems.SOULSTEEL_PICKAXE.get());
-            event.accept(MOTMItems.SOULSTEEL_SHOVEL.get());
-        } else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
-        } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(MOTMItems.PALANTIR.get());
-        } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            event.accept(MOTMItems.HANDLE.get());
-            event.accept(MOTMItems.CLOUD_BOTTLE.get());
-            event.accept(MOTMItems.SOUL_BOTTLE.get());
-            event.accept(MOTMItems.SOULSTEEL_INGOT.get());
+        switch (event.getTabKey()) {
+            case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.COMBAT -> {
+                event.accept(MOTMItems.SOULSTEEL_AXE.get());
+                event.accept(MOTMItems.SOULSTEEL_SWORD.get());
+                event.accept(MOTMItems.SOULSTEEL_HELMET.get());
+                event.accept(MOTMItems.SOULSTEEL_CHESTPLATE.get());
+                event.accept(MOTMItems.SOULSTEEL_LEGGINGS.get());
+                event.accept(MOTMItems.SOULSTEEL_BOOTS.get());
+            }
+            case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.TOOLS_AND_UTILITIES -> {
+                event.accept(MOTMItems.SOULSTEEL_AXE.get());
+                event.accept(MOTMItems.SOULSTEEL_HOE.get());
+                event.accept(MOTMItems.SOULSTEEL_PICKAXE.get());
+                event.accept(MOTMItems.SOULSTEEL_SHOVEL.get());
+                event.accept(MOTMItems.THE_ONE_RING.get());
+            }
+            case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.BUILDING_BLOCKS -> {
+                event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
+            }
+            case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.FUNCTIONAL_BLOCKS -> {
+                event.accept(MOTMItems.PALANTIR.get());
+                event.accept(MOTMItems.PORT_STONE.get());
+            }
+            case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.INGREDIENTS -> {
+                event.accept(MOTMItems.HANDLE.get());
+                event.accept(MOTMItems.CLOUD_BOTTLE.get());
+                event.accept(MOTMItems.SOUL_BOTTLE.get());
+                event.accept(MOTMItems.SOULSTEEL_INGOT.get());
+            }
+            case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.SPAWN_EGGS -> {
+                event.accept(MOTMItems.ELDERLING_SPAWN_EGG.get());
+            }
+            default -> {}
         }
     }
 
@@ -144,7 +159,9 @@ public class MagicOfTheMind {
     public static void registerCapabilities(final RegisterCapabilitiesEvent event) {}
 
     @SubscribeEvent
-    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {}
+    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+        event.put(MOTMEntityTypes.ELDERLING.get(), Elderling.createAttributes().build());
+    }
 
     // endregion
 

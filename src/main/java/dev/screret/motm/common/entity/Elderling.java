@@ -1,5 +1,8 @@
 package dev.screret.motm.common.entity;
 
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -46,6 +49,15 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
 
     public Elderling(EntityType<? extends Elderling> type, Level level) {
         super(type, level);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 30)
+                .add(Attributes.ARMOR, 4)
+                .add(Attributes.MOVEMENT_SPEED, 0.8)
+                .add(Attributes.FOLLOW_RANGE, 64)
+                .add(Attributes.STEP_HEIGHT, 1.0);
     }
 
     @Override
@@ -97,6 +109,13 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
     // spotless:on
 
     @Override
+    protected void customServerAiStep() {
+        this.level().getProfiler().push("elderlingBrain");
+        tickBrain(this);
+        this.level().getProfiler().pop();
+    }
+
+    @Override
     protected void rewardTradeXp(MerchantOffer offer) {
         // TODO smarter XP rewards
         // this this copied from wandering traders.
@@ -125,10 +144,5 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
     @Override
     protected Brain.Provider<?> brainProvider() {
         return new SmartBrainProvider<>(this);
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        tickBrain(this);
     }
 }

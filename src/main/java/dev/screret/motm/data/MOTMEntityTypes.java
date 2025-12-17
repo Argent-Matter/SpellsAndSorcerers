@@ -15,17 +15,17 @@ public class MOTMEntityTypes {
     // spotless:off
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MagicOfTheMind.MOD_ID);
 
+    // TODO should Elderlings be 3 blocks tall, or smaller?
+    public static final DeferredHolder<EntityType<?>, EntityType<Elderling>> ELDERLING = ENTITY_TYPES.register("elderling",
+            () -> EntityType.Builder.of(Elderling::new, MobCategory.MISC)
+                    .sized(1.0f, 2.8f).eyeHeight(3.8125f)
+                    .clientTrackingRange(10)
+                    .build("motm_elderling"));
+
     public static final DeferredHolder<EntityType<?>, EntityType<OneRingItem.RingItemEntity>> RING_ITEM = ENTITY_TYPES.register("the_one_ring",
             () -> EntityType.Builder.of(OneRingItem.RingItemEntity::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(6).updateInterval(20).noSummon()
                     .build("motm_the_one_ring"));
-
-    // TODO should this be smaller?
-    public static final DeferredHolder<EntityType<?>, EntityType<Elderling>> ELDERLING = ENTITY_TYPES.register("elderling",
-            () -> EntityType.Builder.of(Elderling::new, MobCategory.MISC)
-                    .sized(1.0f, 3.0f).eyeHeight(3.8125f)
-                    .clientTrackingRange(10)
-                    .build("motm_elderling"));
 
     // spotless:on
 }
