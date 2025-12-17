@@ -1,11 +1,15 @@
 package dev.screret.motm.common.block;
 
 import dev.screret.motm.common.block.entity.PortStoneBlockEntity;
+import dev.screret.motm.common.block.entity.PortStoneBlockEntity.PortRune;
+import dev.screret.motm.common.util.PortStoneHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +25,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.phys.BlockHitResult;
 
 import com.mojang.serialization.MapCodec;
+
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -49,8 +57,29 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PortStoneBlockEntity(pos, state);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+                                               Player player, BlockHitResult hitResult) {
+        Direction clickedFace = hitResult.getDirection();
+        if (clickedFace.getAxis().isVertical()) {
+            // only allow entering on the horizontal faces
+            return InteractionResult.PASS;
+        }
+
+        BlockEntity be = level.getBlockEntity(pos);
+        if (!(be instanceof PortStoneBlockEntity portStone)) return InteractionResult.PASS;
+        Optional<PortRune> destination = portStone.getDestination(clickedFace);
+        if (destination.isPresent()) {
+            if (level instanceof ServerLevel serverLevel) {
+                DimensionTransition teleport = destination.get().makeTeleport(player, clickedFace, serverLevel);
+                if (teleport == null) {
+                    return InteractionResult.FAIL;
+                }
+                player.changeDimension(teleport);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Override
@@ -92,6 +121,19 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
         for (Part part : Part.ALL_EXCEPT_BOTTOM) {
             abovePos.setWithOffset(pos, 0, part.offsetFromBottom, 0);
             level.setBlockAndUpdate(abovePos, DoublePlantBlock.copyWaterloggedFrom(level, abovePos, state.setValue(PART, part)));
+        }
+
+        if (level instanceof ServerLevel serverLevel) {
+            PortStoneHelper.forceLoadPortStone(serverLevel, pos);
+        }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        super.onRemove(state, level, pos, newState, movedByPiston);
+
+        if (level instanceof ServerLevel serverLevel) {
+            PortStoneHelper.unLoadPortStone(serverLevel, pos);
         }
     }
 
@@ -145,6 +187,11 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
             case LAND, AIR -> state.getValue(TRIGGERED);
             case WATER -> false;
         };
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PortStoneBlockEntity(pos, state);
     }
 
     @SuppressWarnings("deprecation")
