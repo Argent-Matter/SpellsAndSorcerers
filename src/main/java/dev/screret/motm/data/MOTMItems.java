@@ -22,6 +22,8 @@ public class MOTMItems {
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.registerSimpleBlockItem("soulsteel_block", MOTMBlocks.SOULSTEEL_BLOCK);
     public static final DeferredItem<BlockItem> GLINT_ORE = ITEMS.registerSimpleBlockItem(MOTMBlocks.GLINT_ORE);
 
+    public static final DeferredItem<BlockItem> MEMORYSTONE = ITEMS.registerSimpleBlockItem("memorystone", MOTMBlocks.MEMORYSTONE);
+    public static final DeferredItem<BlockItem> UNAWAKENED_MEMORYSTONE = ITEMS.registerSimpleBlockItem("unawakened_memorystone", MOTMBlocks.UNAWAKENED_MEMORYSTONE);
     public static final DeferredItem<PortStoneBlockItem> PORT_STONE = ITEMS.registerItem("port_stone", PortStoneBlockItem::new);
 
     // OTHER ITEMS

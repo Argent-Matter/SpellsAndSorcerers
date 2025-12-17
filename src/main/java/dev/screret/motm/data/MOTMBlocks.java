@@ -1,6 +1,7 @@
 package dev.screret.motm.data;
 
 import dev.screret.motm.MagicOfTheMind;
+import dev.screret.motm.common.block.MemorystoneBlock;
 import dev.screret.motm.common.block.PalantirBlock;
 import dev.screret.motm.common.block.PortStoneBlock;
 
@@ -25,12 +26,21 @@ public class MOTMBlocks {
     public static final DeferredBlock<DropExperienceBlock> GLINT_ORE = BLOCKS.registerBlock("glint_ore", p -> new DropExperienceBlock(UniformInt.of(5, 10), p),
             BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(3, 9));
 
+    public static final DeferredBlock<MemorystoneBlock> MEMORYSTONE = BLOCKS.registerBlock("memorystone", MemorystoneBlock::new,
+            hardBlackBlockProperties().strength(12, 9));
+    // TODO (maybe) make it so this can be awakened somehow (turned into actual memorystone)
+    public static final DeferredBlock<Block> UNAWAKENED_MEMORYSTONE = BLOCKS.registerSimpleBlock("unawakened_memorystone",
+            hardBlackBlockProperties().strength(12, 9));
+
     public static final DeferredBlock<PortStoneBlock> PORT_STONE = BLOCKS.registerBlock("port_stone", PortStoneBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_BLACK)
-                    .instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops()
-                    .strength(75, 1600));
+            hardBlackBlockProperties().strength(75, 1600));
 
     // spotless:on
+
+    private static BlockBehaviour.Properties hardBlackBlockProperties() {
+        return BlockBehaviour.Properties.of()
+                .mapColor(MapColor.COLOR_BLACK)
+                .instrument(NoteBlockInstrument.BASEDRUM)
+                .requiresCorrectToolForDrops();
+    }
 }

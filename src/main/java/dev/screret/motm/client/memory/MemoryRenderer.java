@@ -58,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
  * {@link GeoRenderer} class for rendering {@link Memory MemoryAnimations}
  */
 @SuppressWarnings("UnstableApiUsage")
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class MemoryRenderer extends GeoObjectRenderer<Memory> {
 
     public static final MemoryRenderer INSTANCE = new MemoryRenderer();

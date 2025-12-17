@@ -2,6 +2,7 @@ package dev.screret.motm.common.network;
 
 import dev.screret.motm.common.network.packets.RequestStructurePacket;
 import dev.screret.motm.common.network.packets.SendStructurePacket;
+import dev.screret.motm.common.network.packets.StartMemoryPacket;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -19,6 +20,8 @@ public class MOTMNetworkHandler {
         // spotless:off
         registrar.playToServer(RequestStructurePacket.TYPE, RequestStructurePacket.CODEC, RequestStructurePacket::execute);
         registrar.playToClient(SendStructurePacket.TYPE, SendStructurePacket.CODEC, SendStructurePacket::execute);
+
+        registrar.playToClient(StartMemoryPacket.TYPE, StartMemoryPacket.CODEC, StartMemoryPacket::execute);
         // spotless:on
     }
 }

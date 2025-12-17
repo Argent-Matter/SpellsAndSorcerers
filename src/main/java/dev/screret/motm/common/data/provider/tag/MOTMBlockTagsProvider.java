@@ -22,11 +22,26 @@ public class MOTMBlockTagsProvider extends BlockTagsProvider {
         super(output, lookupProvider, MagicOfTheMind.MOD_ID, existingFileHelper);
     }
 
+    // spotless:off
     protected void addTags(HolderLookup.Provider registries) {
         tag(MOTMTags.Blocks.GLINT_ORES).add(MOTMBlocks.GLINT_ORE.get());
         tag(MOTMTags.Blocks.SOULSTEEL_BLOCKS).add(MOTMBlocks.SOULSTEEL_BLOCK.get());
 
-        tag(Tags.Blocks.NEEDS_NETHERITE_TOOL).add(MOTMBlocks.GLINT_ORE.get());
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(MOTMBlocks.GLINT_ORE.get());
+        tag(Tags.Blocks.NEEDS_NETHERITE_TOOL).add(
+                MOTMBlocks.GLINT_ORE.get()
+        );
+        tag(BlockTags.NEEDS_DIAMOND_TOOL).add(
+                MOTMBlocks.MEMORYSTONE.get(),
+                MOTMBlocks.UNAWAKENED_MEMORYSTONE.get(),
+                MOTMBlocks.PORT_STONE.get()
+        );
+
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
+                MOTMBlocks.GLINT_ORE.get(),
+                MOTMBlocks.MEMORYSTONE.get(),
+                MOTMBlocks.UNAWAKENED_MEMORYSTONE.get(),
+                MOTMBlocks.PORT_STONE.get()
+        );
     }
+    // spotless:on
 }
