@@ -41,7 +41,7 @@ public class MemorystoneBlockEntity extends BlockEntity {
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
 
         if (tag.contains("memory")) {
-            this.memory = Memory.CODEC.parse(ops, tag.get("memory")).getOrThrow();
+            this.memory = Memory.CODEC.parse(ops, tag.get("memory")).result().orElse(null);
         }
     }
 
