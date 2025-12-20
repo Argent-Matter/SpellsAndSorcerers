@@ -31,30 +31,30 @@ sourceSets {
 
     client {
         compileClasspath += main.output
-        runtimeClasspath += main.output
+        runtimeClasspath += main.output + main.runtimeClasspath
     }
 
     test {
         compileClasspath += main.output
-        runtimeClasspath += main.output
+        runtimeClasspath += main.output + main.runtimeClasspath
     }
 
     extra {
         compileClasspath += main.output
-        runtimeClasspath += main.output
+        runtimeClasspath += main.output + main.runtimeClasspath
     }
 
     clientExtra {
-        compileClasspath += client.output
-        runtimeClasspath += client.output
+        compileClasspath += client.output + extra.compileClasspath
+        runtimeClasspath += client.output + client.runtimeClasspath + extra.runtimeClasspath
     }
 }
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
-    extraRuntimeClasspath.extendsFrom runtimeClasspath, extraLocalRuntime
-    clientRuntimeClasspath.extendsFrom runtimeClasspath, clientLocalRuntime
-    extraClientRuntimeClasspath.extendsFrom clientRuntimeClasspath, extraLocalRuntime, clientExtraLocalRuntime
+    extraRuntimeClasspath.extendsFrom extraLocalRuntime
+    clientRuntimeClasspath.extendsFrom clientLocalRuntime
+    extraClientRuntimeClasspath.extendsFrom clientExtraLocalRuntime
 
     renderNurseCfg {
         canBeConsumed = false
