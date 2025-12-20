@@ -1,7 +1,7 @@
 {
     "variants": {
         "": {
-            "model": "motm:block/palantir"
+            "model": "motm:block/memorystone"
         }
     }
 }

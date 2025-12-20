@@ -52,13 +52,11 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
     private static final VoxelShape SHAPE_BOTTOM = Shapes.or(
             Block.box(0, 0, 0, 16, 2, 16),
             Block.box(1, 2, 1, 15, 3, 15),
-            SHAPE_MIDDLE
-    );
+            SHAPE_MIDDLE);
     private static final VoxelShape SHAPE_TOP = Shapes.or(
             Block.box(0, 13, 0, 16, 15, 16),
             Block.box(1, 15, 1, 15, 16, 15),
-            SHAPE_MIDDLE
-    );
+            SHAPE_MIDDLE);
 
     public PortStoneBlock(Properties properties) {
         super(properties);

@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "part=bottom": {
+            "model": "motm:block/port_stone_bottom"
+        },
+        "part=middle_1": {
+            "model": "motm:block/port_stone_middle_1"
+        },
+        "part=middle_2": {
+            "model": "motm:block/port_stone_middle_2"
+        },
+        "part=top": {
+            "model": "motm:block/port_stone_top"
+        }
+    }
+}
