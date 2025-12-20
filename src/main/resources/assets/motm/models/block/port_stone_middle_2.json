@@ -1,0 +1,21 @@
+{
+	"format_version": "1.9.0",
+	"parent": "block/block",
+	"textures": {
+		"memorystone": "motm:block/memorystone2"
+	},
+	"elements": [
+		{
+			"name": "pillar",
+			"from": [2, 0, 3],
+			"to": [14, 16, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 0, 2]},
+			"faces": {
+				"north": {"uv": [0, 1, 16, 12], "rotation": 90, "texture": "#memorystone", "cullface": "up"},
+				"east": {"uv": [0, 0, 11, 16], "texture": "#memorystone", "cullface": "up"},
+				"south": {"uv": [16, 1, 0, 13], "rotation": 90, "texture": "#memorystone", "cullface": "up"},
+				"west": {"uv": [4, 0, 15, 16], "rotation": 180, "texture": "#memorystone", "cullface": "up"}
+			}
+		}
+	]
+}
