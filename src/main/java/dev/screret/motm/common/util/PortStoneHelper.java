@@ -109,8 +109,10 @@ public class PortStoneHelper {
                     if (!rune.destination().pos().equals(entrancePos)) return !pair.getFirst().isFaceChecked(destinationFace);
                     return true;
                 })
+                // `findAllClosestFirstWithType` returns a stream that's sorted by distance
+                // so we can just get the first entry and assume it's the closest one.
                 .findFirst()
-                .flatMap(pair -> {
+                .map(pair -> {
                     PortRune rune = pair.getSecond();
                     // fix mismatched destinations
                     // already matched destinations won't get this far
@@ -119,7 +121,7 @@ public class PortStoneHelper {
                         rune = rune.withDestinationPos(entrancePos);
                         portStone.setRuneOnFace(destinationFace, rune);
                     }
-                    return Optional.of(rune);
+                    return rune;
                 });
     }
 
