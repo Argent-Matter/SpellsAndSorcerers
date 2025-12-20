@@ -14,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -27,6 +28,9 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import com.mojang.serialization.MapCodec;
 
@@ -42,6 +46,19 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
+
+    private static final VoxelShape SHAPE_MIDDLE = Block.box(2, 0, 2, 14, 16, 14);
+    private static final VoxelShape SHAPE_MIDDLE_2 = Block.box(2, 0, 3, 14, 16, 14);
+    private static final VoxelShape SHAPE_BOTTOM = Shapes.or(
+            Block.box(0, 0, 0, 16, 2, 16),
+            Block.box(1, 2, 1, 15, 3, 15),
+            SHAPE_MIDDLE
+    );
+    private static final VoxelShape SHAPE_TOP = Shapes.or(
+            Block.box(0, 13, 0, 16, 15, 16),
+            Block.box(1, 15, 1, 15, 16, 15),
+            SHAPE_MIDDLE
+    );
 
     public PortStoneBlock(Properties properties) {
         super(properties);
@@ -80,6 +97,16 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
         }
 
         return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(PART)) {
+            case BOTTOM -> SHAPE_BOTTOM;
+            case MIDDLE_1 -> SHAPE_MIDDLE;
+            case MIDDLE_2 -> SHAPE_MIDDLE_2;
+            case TOP -> SHAPE_TOP;
+        };
     }
 
     @Override
