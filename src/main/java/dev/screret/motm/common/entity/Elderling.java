@@ -53,7 +53,7 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
                 .add(Attributes.MAX_HEALTH, 30)
                 .add(Attributes.ARMOR, 4)
                 .add(Attributes.ATTACK_DAMAGE, 2.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.8)
+                .add(Attributes.MOVEMENT_SPEED, 0.7)
                 .add(Attributes.FOLLOW_RANGE, 64)
                 .add(Attributes.STEP_HEIGHT, 1.0);
     }
