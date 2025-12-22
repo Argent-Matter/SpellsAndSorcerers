@@ -2,7 +2,7 @@
 	"format_version": "1.9.0",
 	"parent": "block/block",
 	"textures": {
-		"memorystone": "motm:block/memorystone2"
+		"memorystone": "motm:block/memorystone"
 	},
 	"elements": [
 		{
@@ -11,10 +11,10 @@
 			"to": [14, 16, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [2, 0, 2]},
 			"faces": {
-				"north": {"uv": [16, 4, 0, 16], "rotation": 90, "texture": "#memorystone", "cullface": "up"},
-				"east": {"uv": [16, 0, 4, 16], "texture": "#memorystone", "cullface": "up"},
-				"south": {"uv": [0, 0, 12, 16], "rotation": 180, "texture": "#memorystone", "cullface": "up"},
-				"west": {"uv": [0, 0, 16, 12], "rotation": 270, "texture": "#memorystone", "cullface": "up"},
+				"north": {"uv": [16, 4, 0, 16], "rotation": 90, "texture": "#memorystone", "cullface": "north"},
+				"east": {"uv": [16, 0, 4, 16], "texture": "#memorystone", "cullface": "east"},
+				"south": {"uv": [0, 0, 12, 16], "rotation": 180, "texture": "#memorystone", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 12], "rotation": 270, "texture": "#memorystone", "cullface": "west"},
 				"up": {"uv": [0, 4, 12, 16], "texture": "#memorystone", "cullface": "up"}
 			}
 		}

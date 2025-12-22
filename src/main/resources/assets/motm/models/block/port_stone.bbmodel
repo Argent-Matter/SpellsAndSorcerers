@@ -502,8 +502,8 @@
 	],
 	"textures": [
 		{
-			"name": "memorystone2.png",
-			"relative_path": "../../textures/block/memorystone2.png",
+			"name": "memorystone.png",
+			"relative_path": "../../textures/block/memorystone.png",
 			"folder": "block",
 			"namespace": "motm",
 			"id": "memorystone",

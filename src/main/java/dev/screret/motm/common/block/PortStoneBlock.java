@@ -108,6 +108,11 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
     }
 
     @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState,
                                      LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         Part part = state.getValue(PART);
