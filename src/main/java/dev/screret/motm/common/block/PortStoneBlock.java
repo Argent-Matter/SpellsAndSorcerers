@@ -76,7 +76,7 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
                                                Player player, BlockHitResult hitResult) {
         Direction clickedFace = hitResult.getDirection();
         if (clickedFace.getAxis().isVertical()) {
-            // only allow entering on the horizontal faces
+            // only allow entering on horizontal faces
             return InteractionResult.PASS;
         }
 
@@ -117,7 +117,7 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
                                      LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         Part part = state.getValue(PART);
 
-        if (facing.getAxis() != Direction.Axis.Y || (part == Part.BOTTOM) != (facing == Direction.UP)) {
+        if (facing.getAxis() != Direction.Axis.Y || (part != Part.BOTTOM) == (facing == Direction.UP)) {
             if (part != Part.BOTTOM || facing != Direction.DOWN || state.canSurvive(level, currentPos)) {
                 return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
             }
@@ -128,6 +128,26 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
     }
 
     @Override
+    protected void updateIndirectNeighbourShapes(BlockState state, LevelAccessor level, BlockPos pos,
+                                                 int flags, int recursionLeft) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        BlockState newState = level.getBlockState(pos);
+        if (state.is(this) && !newState.is(this)) {
+            Part part = state.getValue(PART);
+            if (part != Part.TOP) {
+                mutable.setWithOffset(pos, Direction.UP);
+                level.neighborShapeChanged(Direction.DOWN, state, mutable.immutable(), pos, flags, recursionLeft);
+            }
+            if (part != Part.BOTTOM) {
+                mutable.setWithOffset(pos, Direction.DOWN);
+                level.neighborShapeChanged(Direction.UP, state, mutable.immutable(), pos, flags, recursionLeft);
+            }
+        }
+
+        super.updateIndirectNeighbourShapes(state, level, pos, flags, recursionLeft);
+    }
+
+    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();
@@ -135,7 +155,7 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
             return null;
         }
         // check if there's enough free space above the bottom block
-        BlockPos.MutableBlockPos mutable = pos.mutable();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (Part part : Part.ALL_EXCEPT_BOTTOM) {
             mutable.setWithOffset(pos, 0, part.offsetFromBottom, 0);
             if (!level.getBlockState(mutable).canBeReplaced(context)) {
@@ -147,12 +167,12 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockPos.MutableBlockPos abovePos = pos.mutable();
+        BlockPos.MutableBlockPos abovePos = new BlockPos.MutableBlockPos();
         for (Part part : Part.ALL_EXCEPT_BOTTOM) {
             abovePos.setWithOffset(pos, 0, part.offsetFromBottom, 0);
             level.setBlockAndUpdate(abovePos, DoublePlantBlock.copyWaterloggedFrom(level, abovePos, state.setValue(PART, part)));
         }
-
+        // this method is only called for the bottom block
         if (level instanceof ServerLevel serverLevel) {
             PortStoneHelper.forceLoadPortStone(serverLevel, pos);
         }
@@ -160,11 +180,11 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        super.onRemove(state, level, pos, newState, movedByPiston);
-
-        if (level instanceof ServerLevel serverLevel) {
+        if (state.getValue(PART) == Part.BOTTOM && level instanceof ServerLevel serverLevel) {
             PortStoneHelper.unLoadPortStone(serverLevel, pos);
         }
+        preventDropFromNonBottomPart(level, pos, state, null);
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
@@ -180,7 +200,7 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
             }
 
             BlockState belowState = level.getBlockState(pos.below(part.offsetFromBottom));
-            return belowState.is(this) && belowState.getValue(PART) == Part.BOTTOM;
+            return belowState.is(this);
         }
     }
 
@@ -192,14 +212,12 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
         return super.playerWillDestroy(level, pos, state, player);
     }
 
-    public static void preventDropFromNonBottomPart(Level level, BlockPos pos, BlockState state, Player player) {
+    public static void preventDropFromNonBottomPart(Level level, BlockPos pos, BlockState state, @Nullable Player player) {
         Part part = state.getValue(PART);
-        if (part == Part.BOTTOM) {
-            return;
-        }
-        BlockPos.MutableBlockPos below = pos.mutable();
-        for (int i = -part.offsetFromTop; i < part.offsetFromBottom - 1; i++) {
-            below.setWithOffset(pos, 0, -i, 0);
+
+        BlockPos.MutableBlockPos below = new BlockPos.MutableBlockPos();
+        for (int yO = part.offsetFromTop; yO >= -part.offsetFromBottom; yO--) {
+            below.setWithOffset(pos, 0, yO, 0);
             BlockState belowState = level.getBlockState(below);
             if (!belowState.is(state.getBlock()) || belowState.getValue(PART) == Part.BOTTOM) {
                 continue;
@@ -221,7 +239,10 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PortStoneBlockEntity(pos, state);
+        if (state.getValue(PART) == Part.BOTTOM) {
+            return new PortStoneBlockEntity(pos, state);
+        }
+        return null;
     }
 
     @SuppressWarnings("deprecation")
@@ -252,15 +273,6 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
         Part(int offsetFromBottom) {
             this.offsetFromBottom = offsetFromBottom;
             this.offsetFromTop = TOTAL_PART_AMOUNT - offsetFromBottom - 1;
-        }
-
-        public static Part getPartFromBottomOffset(int offsetFromBottom) {
-            return switch (offsetFromBottom) {
-                case 3 -> Part.TOP;
-                case 2 -> Part.MIDDLE_2;
-                case 1 -> Part.MIDDLE_1;
-                default -> Part.BOTTOM;
-            };
         }
 
         @Override

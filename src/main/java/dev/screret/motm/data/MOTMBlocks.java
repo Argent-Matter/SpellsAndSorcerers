@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -33,7 +34,7 @@ public class MOTMBlocks {
             hardBlackBlockProperties().strength(12, 9));
 
     public static final DeferredBlock<PortStoneBlock> PORT_STONE = BLOCKS.registerBlock("port_stone", PortStoneBlock::new,
-            hardBlackBlockProperties().strength(75, 1600));
+            hardBlackBlockProperties().strength(75, 1600).pushReaction(PushReaction.BLOCK));
 
     // spotless:on
 
