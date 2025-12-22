@@ -82,10 +82,9 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
     public void startMemory(BlockPos pos, Holder<Memory> memory) {
         this.currentPos = pos;
         this.currentMemory = memory;
-        this.animatable = memory.value();
 
         this.entities.clear();
-        this.animatable.getInitialStructure().ifPresent(name -> ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getUnchecked(name)
+        this.currentMemory.value().getInitialStructure().ifPresent(name -> ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getUnchecked(name)
                 .whenComplete((structure, error) -> {
                     if (error != null) {
                         Minecraft.getInstance().delayCrash(CrashReport.forThrowable(error, "Rendering memory structure"));
@@ -120,8 +119,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
                 .setLiquidSettings(LiquidSettings.APPLY_WATERLOGGING)
                 .setIgnoreBlocks(false).setIgnoreEntities(false)
                 .setKnownShape(true);
-        // load the structure into 0,0,0 and then render it elsewhere
-        if (!StructureUtil.placeInWorld(memoryStructure, this.fakeLevel, BlockPos.ZERO, settings)) {
+        if (!StructureUtil.placeInWorld(memoryStructure, this.fakeLevel, this.currentPos, settings)) {
             MagicOfTheMind.LOGGER.debug("Could not load memory structure {}", name);
             return;
         }
@@ -140,7 +138,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
     }
 
     public boolean hasActiveMemory() {
-        return this.animatable != null;
+        return this.currentMemory != null;
     }
 
     private void resetFakeLevel() {
@@ -158,13 +156,16 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
     public void actuallyRender(PoseStack poseStack, Memory animatable, BakedGeoModel model, @Nullable RenderType renderType,
                                MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, boolean isReRender,
                                float partialTick, int packedLight, int packedOverlay, int colour) {
+        if (this.entities.isEmpty()) {
+            return;
+        }
+
         // disable hitboxes while rendering the fake entities
         EntityRenderDispatcher entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
         boolean oldRenderHitboxes = entityRenderer.shouldRenderHitBoxes();
         entityRenderer.setRenderHitBoxes(false);
 
         poseStack.pushPose();
-        poseStack.translate(this.currentPos.getX(), this.currentPos.getY(), this.currentPos.getZ());
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer,
                 isReRender, partialTick, packedLight, packedOverlay, colour);
@@ -202,13 +203,14 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
             EntityRenderDispatcher entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
 
             for (Entity entity : entities) {
-                if (entityRenderer.shouldRender(entity, frustum, cameraPos.x, cameraPos.y, cameraPos.z)) {
-                    double xPos = Mth.lerp(partialTick, entity.xOld, entity.getX());
-                    double yPos = Mth.lerp(partialTick, entity.yOld, entity.getY());
-                    double zPos = Mth.lerp(partialTick, entity.zOld, entity.getZ());
-                    float yRot = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
-                    entityRenderer.render(entity, xPos, yPos, zPos, yRot, partialTick, poseStack, bufferSource, packedLight);
+                if (!entityRenderer.shouldRender(entity, frustum, cameraPos.x, cameraPos.y, cameraPos.z)) {
+                    continue;
                 }
+                double xPos = Mth.lerp(partialTick, entity.xOld, entity.getX());
+                double yPos = Mth.lerp(partialTick, entity.yOld, entity.getY());
+                double zPos = Mth.lerp(partialTick, entity.zOld, entity.getZ());
+                float yRot = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
+                entityRenderer.render(entity, xPos, yPos, zPos, yRot, partialTick, poseStack, bufferSource, packedLight);
             }
         } else {
             // log & skip invalid entities
@@ -245,7 +247,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
         poseStack.pushPose();
         poseStack.last().pose().translate(camera.getPosition().toVector3f().negate());
 
-        renderer.render(poseStack, renderer.animatable, null, RenderType.TRANSLUCENT, null,
+        renderer.render(poseStack, renderer.currentMemory.value(), null, RenderType.TRANSLUCENT, null,
                 LightTexture.FULL_SKY, event.getPartialTick().getGameTimeDeltaPartialTick(false));
 
         poseStack.popPose();

@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -113,8 +113,9 @@ public class ExtendedStructurePlaceSettings extends StructurePlaceSettings {
         return (ExtendedStructurePlaceSettings) super.setIgnoreEntities(ignoreEntities);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
-    public ExtendedStructurePlaceSettings setBoundingBox(BoundingBox boundingBox) {
+    public ExtendedStructurePlaceSettings setBoundingBox(@Nullable BoundingBox boundingBox) {
         return (ExtendedStructurePlaceSettings) super.setBoundingBox(boundingBox);
     }
 

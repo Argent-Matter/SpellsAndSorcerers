@@ -193,6 +193,22 @@ public class SchemaLevel extends Level implements ISchema {
         return this.getEntities().getAll();
     }
 
+    public void addEntity(Entity entity) {
+        // no event hook here tyvm
+        // if (NeoForge.EVENT_BUS.post(new EntityJoinLevelEvent(entity, this)).isCanceled()) return;
+        this.removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
+        this.entityStorage.addEntity(entity);
+        entity.onAddedToLevel();
+    }
+
+    public void removeEntity(int entityId, Entity.RemovalReason reason) {
+        Entity entity = this.getEntities().get(entityId);
+        if (entity != null) {
+            entity.setRemoved(reason);
+            entity.onClientRemoval();
+        }
+    }
+
     @Override
     public Level getLevel() {
         return this;
@@ -241,6 +257,12 @@ public class SchemaLevel extends Level implements ISchema {
     @Override
     protected LevelEntityGetter<Entity> getEntities() {
         return entityStorage.getEntityGetter();
+    }
+
+    @Override
+    public boolean addFreshEntity(Entity entity) {
+        this.addEntity(entity);
+        return true;
     }
 
     @Override

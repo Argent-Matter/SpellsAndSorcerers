@@ -1,5 +1,7 @@
 package dev.screret.motm.api.util.worldgen;
 
+import dev.screret.motm.MOTMUtil;
+import dev.screret.motm.common.util.ClientBouncer;
 import dev.screret.motm.core.mixin.vanilla.StructureTemplateAccessor;
 
 import net.minecraft.core.BlockPos;
@@ -305,6 +307,12 @@ public class StructureUtil {
     }
 
     private static void addFreshEntityWithPassengers(LevelAccessor level, Entity entity) {
-        entity.getSelfAndPassengers().forEach(level::addFreshEntity);
+        entity.getSelfAndPassengers().forEach(e -> {
+            if (MOTMUtil.isClientSide()) {
+                ClientBouncer.addEntity(level, e);
+            } else {
+                level.addFreshEntity(e);
+            }
+        });
     }
 }
