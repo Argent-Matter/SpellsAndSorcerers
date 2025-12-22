@@ -5,10 +5,12 @@ import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.model.DefaultedBlockGeoModel;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +32,8 @@ public class SimpleGeoBlockItem extends BlockItem implements GeoItem {
         consumer.accept(new GeoRenderProvider() {
 
             @Getter
-            private final BlockEntityWithoutLevelRenderer geoItemRenderer = new GeoItemRenderer<>(SimpleGeoBlockItem.this);
+            private final BlockEntityWithoutLevelRenderer geoItemRenderer = new GeoItemRenderer<>(
+                    new DefaultedBlockGeoModel<>(BuiltInRegistries.BLOCK.getKey(SimpleGeoBlockItem.this.getBlock())));
         });
     }
 
