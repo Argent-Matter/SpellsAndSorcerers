@@ -40,8 +40,8 @@ public class MemorystoneBlockEntity extends BlockEntity {
         super.saveAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
 
-        if (tag.contains("memory")) {
-            this.memory = Memory.CODEC.parse(ops, tag.get("memory")).result().orElse(null);
+        if (this.memory != null) {
+            tag.put("memory", Memory.CODEC.encodeStart(ops, this.memory).getOrThrow());
         }
     }
 
@@ -50,8 +50,8 @@ public class MemorystoneBlockEntity extends BlockEntity {
         super.loadAdditional(tag, registries);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
 
-        if (this.memory != null) {
-            tag.put("memory", Memory.CODEC.encodeStart(ops, this.memory).getOrThrow());
+        if (tag.contains("memory")) {
+            this.memory = Memory.CODEC.parse(ops, tag.get("memory")).result().orElse(null);
         }
     }
 
