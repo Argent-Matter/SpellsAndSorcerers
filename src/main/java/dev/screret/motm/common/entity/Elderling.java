@@ -17,10 +17,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.*;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
@@ -55,6 +52,7 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 30)
                 .add(Attributes.ARMOR, 4)
+                .add(Attributes.ATTACK_DAMAGE, 2.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.8)
                 .add(Attributes.FOLLOW_RANGE, 64)
                 .add(Attributes.STEP_HEIGHT, 1.0);
@@ -90,12 +88,16 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
         // These are the tasks that run when the mob isn't doing anything else (usually)
         return BrainActivityGroup.idleTasks(
                 new FirstApplicableBehaviour<>( // Run only one of the below behaviours, trying each one in order. Include the generic type because JavaC is silly
-                        new TargetOrRetaliate<>(),            // Set the attack target and walk target based on nearby entities
+                        new SetRetaliateTarget<>()            // Set the attack target and walk target based on nearby entities
+                                .alertAlliesWhen((owner, ally) -> true),
                         new SetPlayerLookTarget<>(),          // Set the look target for the nearest player
-                        new SetRandomLookTarget<>()),         // Set a random look target
+                        new SetRandomLookTarget<>()           // Set a random look target
+                ),
                 new OneRandomBehaviour<>(                // Run a random task from the below options
                         new SetRandomWalkTarget<>(),          // Set a random walk target to a nearby position
-                        new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60))) // Do nothing for 1.5->3 seconds
+                        new Idle<>()                          // Do nothing for 1.5->3 seconds
+                                .runFor(entity -> entity.getRandom().nextInt(30, 60))
+                )
         );
     }
 
