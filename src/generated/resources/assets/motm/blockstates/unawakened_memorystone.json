@@ -1,7 +1,36 @@
 {
     "variants": {
-        "": {
-            "model": "motm:block/unawakened_memorystone"
-        }
+        "": [
+            {
+                "model": "motm:block/unawakened_memorystone"
+            },
+            {
+                "model": "motm:block/unawakened_memorystone",
+                "y": 90
+            },
+            {
+                "model": "motm:block/unawakened_memorystone",
+                "y": 180
+            },
+            {
+                "model": "motm:block/unawakened_memorystone",
+                "y": 270
+            },
+            {
+                "model": "motm:block/unawakened_memorystone_mirrored"
+            },
+            {
+                "model": "motm:block/unawakened_memorystone_mirrored",
+                "y": 90
+            },
+            {
+                "model": "motm:block/unawakened_memorystone_mirrored",
+                "y": 180
+            },
+            {
+                "model": "motm:block/unawakened_memorystone_mirrored",
+                "y": 270
+            }
+        ]
     }
 }

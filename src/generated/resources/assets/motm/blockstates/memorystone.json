@@ -1,7 +1,36 @@
 {
     "variants": {
-        "": {
-            "model": "motm:block/memorystone"
-        }
+        "": [
+            {
+                "model": "motm:block/memorystone"
+            },
+            {
+                "model": "motm:block/memorystone",
+                "y": 90
+            },
+            {
+                "model": "motm:block/memorystone",
+                "y": 180
+            },
+            {
+                "model": "motm:block/memorystone",
+                "y": 270
+            },
+            {
+                "model": "motm:block/memorystone_mirrored"
+            },
+            {
+                "model": "motm:block/memorystone_mirrored",
+                "y": 90
+            },
+            {
+                "model": "motm:block/memorystone_mirrored",
+                "y": 180
+            },
+            {
+                "model": "motm:block/memorystone_mirrored",
+                "y": 270
+            }
+        ]
     }
 }
