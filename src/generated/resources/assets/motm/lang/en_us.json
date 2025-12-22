@@ -1,7 +1,11 @@
 {
     "block.motm.glint_ore": "Glint Ore",
+    "block.motm.memorystone": "Memorystone",
     "block.motm.palantir": "Palantír",
+    "block.motm.port_stone": "Port Stone",
+    "block.motm.port_stone.undiscovered": "Mysterious Obelisk",
     "block.motm.soulsteel_block": "Block of Soulsteel",
+    "block.motm.unawakened_memorystone": "Unawakened Memorystone",
     "item.motm.cloud_bottle": "Bottled Clouds",
     "item.motm.glint": "Glint",
     "item.motm.handle": "Handle",
@@ -21,5 +25,6 @@
     "item.motm.the_one_ring.tooltip.0": "One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them.",
     "item.motm.the_one_ring.tooltip.1": "You might find it hard to take off.",
     "itemGroup.motm": "Magic of the Mind",
-    "message.motm.structure_load_error": "Could not load structure %s from the server as it does not exist."
+    "motm.message.free_from_memory": "You're free from the memories of times gone by...",
+    "motm.message.structure_load_error": "Could not load structure %s from the server as it does not exist."
 }

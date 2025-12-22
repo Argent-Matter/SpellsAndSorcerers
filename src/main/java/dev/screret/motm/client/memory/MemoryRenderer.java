@@ -16,9 +16,11 @@ import software.bernie.geckolib.renderer.GeoObjectRenderer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.util.RenderUtil;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.CrashReport;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -26,12 +28,14 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
@@ -39,6 +43,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -63,7 +68,10 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
 
     public static final MemoryRenderer INSTANCE = new MemoryRenderer();
 
+    public static final int MAX_DISTANCE_FROM_MEMORY_BOUNDS = 8;
+
     protected BlockPos currentPos;
+    protected @Nullable BoundingBox currentStructureBounds;
     @Getter
     protected Holder<Memory> currentMemory;
     @Getter
@@ -84,16 +92,16 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
         this.currentMemory = memory;
 
         this.entities.clear();
-        this.currentMemory.value().getInitialStructure().ifPresent(name -> ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getUnchecked(name)
+        ClientMemoryCache.MEMORY_STRUCTURE_CACHE.getUnchecked(this.currentMemory.value().getInitialStructure())
                 .whenComplete((structure, error) -> {
                     if (error != null) {
                         Minecraft.getInstance().delayCrash(CrashReport.forThrowable(error, "Rendering memory structure"));
                         return;
                     }
                     if (this.hasActiveMemory()) {
-                        this.loadStructure(name, structure);
+                        this.loadStructure(this.currentMemory.value().getInitialStructure(), structure);
                     }
-                }));
+                });
     }
 
     /**
@@ -102,6 +110,8 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
     public void endCurrentMemory() {
         this.animatable = null;
         this.currentMemory = null;
+        this.currentStructureBounds = null;
+        this.currentPos = null;
 
         this.resetFakeLevel();
     }
@@ -124,6 +134,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
             return;
         }
         MagicOfTheMind.LOGGER.debug("Loaded memory structure {}", name);
+        this.currentStructureBounds = memoryStructure.getBoundingBox(settings, this.currentPos);
 
         for (Entity entity : this.fakeLevel.getAllEntities()) {
             // map the entity to a bone by all of its tags
@@ -230,7 +241,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
     private static final AtomicReference<Frustum> CURRENT_FRUSTUM = new AtomicReference<>();
 
     @SubscribeEvent
-    public static void onRenderLevel(RenderLevelStageEvent event) {
+    public static void renderMemory(RenderLevelStageEvent event) {
         if (!event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS)) {
             return;
         }
@@ -251,6 +262,26 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
                 LightTexture.FULL_SKY, event.getPartialTick().getGameTimeDeltaPartialTick(false));
 
         poseStack.popPose();
+    }
+
+    @SubscribeEvent
+    public static void escapeMemory(ClientTickEvent.Pre event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        MemoryRenderer renderer = MemoryRenderer.INSTANCE;
+        if (!renderer.hasActiveMemory()) return;
+
+        BoundingBox structureBounds = renderer.currentStructureBounds;
+        if (structureBounds == null) return;
+        structureBounds = structureBounds.inflatedBy(MAX_DISTANCE_FROM_MEMORY_BOUNDS);
+
+        // if player is outside the current memory's boundaries, stop it
+        if (!structureBounds.isInside(player.blockPosition())) {
+            renderer.endCurrentMemory();
+            player.sendSystemMessage(Component.translatable("motm.message.free_from_memory")
+                    .withStyle(ChatFormatting.DARK_PURPLE));
+        }
     }
 
     @SubscribeEvent

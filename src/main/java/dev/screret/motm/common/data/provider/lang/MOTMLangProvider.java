@@ -46,6 +46,11 @@ public class MOTMLangProvider extends LanguageProvider {
 
         // region blocks
         addBlock(MOTMBlocks.PALANTIR, "Palantír");
+        addBlock(MOTMBlocks.MEMORYSTONE, "Memorystone");
+        addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE, "Unawakened Memorystone");
+        addBlock(MOTMBlocks.PORT_STONE, "Port Stone");
+        // TODO add discovery system; use this
+        add("block.motm.port_stone.undiscovered", "Mysterious Obelisk");
 
         addBlock(MOTMBlocks.SOULSTEEL_BLOCK, "Block of Soulsteel");
         addBlock(MOTMBlocks.GLINT_ORE, "Glint Ore");
@@ -86,7 +91,8 @@ public class MOTMLangProvider extends LanguageProvider {
 
         // region misc
 
-        add("message.motm.structure_load_error", "Could not load structure %s from the server as it does not exist.");
+        add("motm.message.structure_load_error", "Could not load structure %s from the server as it does not exist.");
+        add("motm.message.free_from_memory", "You're free from the memories of times gone by...");
 
         // endregion
     }

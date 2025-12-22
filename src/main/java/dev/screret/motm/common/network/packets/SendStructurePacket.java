@@ -54,7 +54,7 @@ public record SendStructurePacket(ResourceLocation structureName, Optional<Struc
                         CompletableFuture.completedFuture(this.structure.get()));
             }
         } else {
-            player.sendSystemMessage(Component.translatableEscape("message.motm.structure_load_error", this.structureName));
+            player.sendSystemMessage(Component.translatableEscape("motm.message.structure_load_error", this.structureName));
         }
     }
 
