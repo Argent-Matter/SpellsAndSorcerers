@@ -3,7 +3,6 @@ package dev.screret.motm.api.registry;
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.memory.Memory;
-import dev.screret.motm.api.memory.MemoryStructure;
 import dev.screret.motm.api.memory.animation.MemoryKeyframe;
 
 import net.minecraft.core.Registry;
@@ -19,7 +18,6 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 public class MOTMRegistries {
 
     // spotless:off
-    public static final ResourceKey<Registry<MemoryStructure>> MEMORY_STRUCTURE_REGISTRY = ResourceKey.createRegistryKey(MOTMUtil.id("memory/structure"));
     public static final ResourceKey<Registry<DataComponentType<? extends MemoryKeyframe>>> MEMORY_ANIMATION_KEYFRAME_TYPE_REGISTRY = ResourceKey.createRegistryKey(MOTMUtil.id("memory/animation_keyframe_type"));
     public static final ResourceKey<Registry<Memory>> MEMORY_REGISTRY = ResourceKey.createRegistryKey(MOTMUtil.id("memory"));
 
@@ -35,7 +33,6 @@ public class MOTMRegistries {
 
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(MEMORY_STRUCTURE_REGISTRY, MemoryStructure.DIRECT_CODEC, MemoryStructure.DIRECT_CODEC);
         event.dataPackRegistry(MEMORY_REGISTRY, Memory.DIRECT_CODEC, Memory.DIRECT_CODEC);
     }
 }
