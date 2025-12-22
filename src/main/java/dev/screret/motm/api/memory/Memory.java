@@ -46,7 +46,7 @@ public class Memory implements StatelessGeoSingletonAnimatable {
     public static final Codec<Memory> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("animation_name").forGetter(Memory::getAnimationName),
             ResourceLocation.CODEC.fieldOf("model_name").forGetter(Memory::getModelName),
-            ResourceLocation.CODEC.optionalFieldOf("initial_structure").forGetter(Memory::getInitialStructure)
+            ResourceLocation.CODEC.fieldOf("initial_structure").forGetter(Memory::getInitialStructure)
     ).apply(instance, Memory::new));
     public static final Codec<Holder<Memory>> CODEC = RegistryFileCodec.create(MOTMRegistries.MEMORY_REGISTRY, DIRECT_CODEC);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Memory>> STREAM_CODEC = ByteBufCodecs.holderRegistry(MOTMRegistries.MEMORY_REGISTRY);
@@ -57,16 +57,16 @@ public class Memory implements StatelessGeoSingletonAnimatable {
     @Getter
     private final ResourceLocation modelName;
     @Getter
-    private final Optional<ResourceLocation> initialStructure;
+    private final ResourceLocation initialStructure;
 
     /**
      * Create a new memory instance.
      * The asset path should be the truncated relative path from the base folder.
      * 
-     * @param name animation/model location relative to {@code <namespace>:animations|geo/motm/memory/}
+     * @param name animation/model/structure location relative to {@code <namespace>:animations|geo/motm/memory/}
      */
     public Memory(ResourceLocation name) {
-        this(name, name, Optional.empty());
+        this(name, name, name);
     }
 
     /**
@@ -75,9 +75,9 @@ public class Memory implements StatelessGeoSingletonAnimatable {
      *
      * @param animationName    The animation location relative to {@code <namespace>:animations/motm/memory/}
      * @param modelName        The model location relative to {@code <namespace>:geo/motm/memory/}
-     * @param initialStructure The structure file to load initially, or {@link Optional#empty()} if one isn't wanted.
+     * @param initialStructure The structure file to load initially.
      */
-    public Memory(ResourceLocation animationName, ResourceLocation modelName, Optional<ResourceLocation> initialStructure) {
+    public Memory(ResourceLocation animationName, ResourceLocation modelName, ResourceLocation initialStructure) {
         this.animationName = animationName;
         this.modelName = modelName;
         this.initialStructure = initialStructure;

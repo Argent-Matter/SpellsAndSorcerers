@@ -22,7 +22,7 @@ public class MOTMMemories {
 
     private static void registerSimple(BootstrapContext<Memory> context, ResourceKey<Memory> key) {
         ResourceLocation name = key.location();
-        context.register(key, new Memory(name, name, Optional.of(name)));
+        context.register(key, new Memory(name));
     }
 
     private static ResourceKey<Memory> createMemoryKey(String name) {
