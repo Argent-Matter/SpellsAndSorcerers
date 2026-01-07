@@ -8,8 +8,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Optional;
-
 public class MOTMMemories {
 
     public static final ResourceKey<Memory> TEST_1 = createMemoryKey("test_1");

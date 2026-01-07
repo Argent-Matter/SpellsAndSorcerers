@@ -5,7 +5,6 @@ import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.memory.Memory;
 import dev.screret.motm.common.memory.animation.MemoryAnimationProcessor;
 
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.model.GeoModel;
 
 import net.minecraft.resources.FileToIdConverter;
