@@ -1,5 +1,6 @@
 package dev.screret.motm.common.entity;
 
+import lombok.Getter;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -42,7 +43,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class Elderling extends AbstractVillager implements GeoEntity, SmartBrainOwner<Elderling> {
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    @Getter
+    private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
 
     public Elderling(EntityType<? extends Elderling> type, Level level) {
         super(type, level);
@@ -137,11 +139,6 @@ public class Elderling extends AbstractVillager implements GeoEntity, SmartBrain
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         // TODO implement children
         return null;
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
     }
 
     @Override

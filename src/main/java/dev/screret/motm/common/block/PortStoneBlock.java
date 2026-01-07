@@ -189,18 +189,20 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        Part part = state.getValue(PART);
-        if (part == Part.BOTTOM) {
+        // This function is called during world gen and placement before this block is set,
+        // so if we are not 'here', assume it's the pre-check.
+        if (!state.is(this)) {
+            return super.canSurvive(state, level, pos);
+        }
+
+        Part expectedPart = state.getValue(PART).partBelow();
+        if (expectedPart == null) {
+            // there isn't a part below Part.BOTTOM, so that gets handled like any other block.
             return super.canSurvive(state, level, pos);
         } else {
-            // This function is called during world gen and placement before this block is set,
-            // so if we are not 'here', assume it's the pre-check.
-            if (!state.is(this)) {
-                return super.canSurvive(state, level, pos);
-            }
-
-            BlockState belowState = level.getBlockState(pos.below(part.offsetFromBottom));
-            return belowState.is(this);
+            // all parts except BOTTOM require the preceding part to exist below them
+            BlockState belowState = level.getBlockState(pos.below());
+            return belowState.is(this) && belowState.getValue(PART) == expectedPart;
         }
     }
 
@@ -273,6 +275,15 @@ public class PortStoneBlock extends BaseEntityBlock implements SimpleWaterlogged
         Part(int offsetFromBottom) {
             this.offsetFromBottom = offsetFromBottom;
             this.offsetFromTop = TOTAL_PART_AMOUNT - offsetFromBottom - 1;
+        }
+
+        public @Nullable Part partBelow() {
+            return switch (this) {
+                case BOTTOM -> null;
+                case MIDDLE_1 -> BOTTOM;
+                case MIDDLE_2 -> MIDDLE_1;
+                case TOP -> MIDDLE_2;
+            };
         }
 
         @Override
