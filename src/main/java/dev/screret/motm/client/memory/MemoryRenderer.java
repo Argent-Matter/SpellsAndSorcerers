@@ -10,6 +10,7 @@ import dev.screret.motm.api.util.worldgen.StructureUtil;
 import dev.screret.motm.client.util.BufferSourceUtil;
 import dev.screret.motm.common.memory.MemoryGeoModel;
 
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoObjectRenderer;
@@ -68,6 +69,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
 
     public static final MemoryRenderer INSTANCE = new MemoryRenderer();
 
+    public static final RawAnimation MEMORY_ANIMATION = RawAnimation.begin().thenLoop("memory");
     public static final int MAX_DISTANCE_FROM_MEMORY_BOUNDS = 8;
 
     protected BlockPos currentPos;
@@ -101,6 +103,8 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
                     if (this.hasActiveMemory()) {
                         this.loadStructure(this.currentMemory.value().getInitialStructure(), structure);
                     }
+                    assert Minecraft.getInstance().player != null;
+                    this.currentMemory.value().playAnimation(MEMORY_ANIMATION, Minecraft.getInstance().player, pos);
                 });
     }
 

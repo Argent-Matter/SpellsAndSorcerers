@@ -39,6 +39,10 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @apiNote Every animation file <strong>must</strong> have a single animation named {@code "memory"}.
+ *          Any other animations will not load.
+ */
 @SuppressWarnings("UnstableApiUsage")
 public class Memory implements StatelessGeoSingletonAnimatable {
 
