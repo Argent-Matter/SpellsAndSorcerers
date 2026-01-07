@@ -1,7 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
 
-def isRootProject = project == rootProject
-
 neoForge {
     // Specify NeoForge version
     version = libs.versions.neoForge.get()
@@ -37,7 +35,7 @@ neoForge {
         // define mod <-> source bindings
         "${project.properties.mod_id}" {
             sourceSet(sourceSets.main)
-            if (isRootProject) {
+            if (project == rootProject) {
                 sourceSet(sourceSets.client)
                 sourceSet(sourceSets.test)
                 sourceSet(sourceSets.extra)
@@ -46,7 +44,7 @@ neoForge {
         }
     }
 
-    if (!isRootProject) {
+    if (project != rootProject) {
         // only add the run configurations to the root project, remove them from subprojects
         runs {
             removeIf { true }

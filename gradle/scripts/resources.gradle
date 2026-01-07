@@ -2,9 +2,11 @@
 String suffix = System.getenv("VERSION_SUFFIX")
 String version_toml = "$version" + (suffix ? "+$suffix" : "")
 
-tasks.register('printVersion') {
-    doLast {
-        println mod_version
+if (project == rootProject) {
+    tasks.register('printVersion') {
+        doLast {
+            println mod_version
+        }
     }
 }
 
