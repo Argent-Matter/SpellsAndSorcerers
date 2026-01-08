@@ -63,9 +63,14 @@ enumExtensions = "META-INF/enum_extensions.json"
 [[dependencies.${mod_id}]]
     modId = "modularui"
     type = "required"
+    embedded = true
     versionRange = "[${modularui_version}]"
     ordering = "NONE"
     side = "BOTH"
+    [dependencies.${mod_id}.mc-publish]
+        ignore = true
+        modrinth = "modularui"
+        curseforge = "modularui"
 
 [[dependencies.${mod_id}]]
     modId = "kubejs"
