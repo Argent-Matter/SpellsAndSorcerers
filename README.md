@@ -11,8 +11,7 @@
 
 
 ## Magic of the Mind
-Magic of the Mind ('motm' for short) is a magic mod about discovery, powerful telepathy and the dangers of touching unknown substances.
-It also has **highly** customizable staffs with abilities that chain together in a multitude of ways!
+Magic of the Mind ('MotM' for short) is a magic mod about discovery, powerful telepathy and the dangers of touching unknown substances.
 
 You can find mysterious obelisks scattered around in long gone civilizations' ruins! Where might they take you?  
 Discover their writings on the magic's possibilities and limits!
