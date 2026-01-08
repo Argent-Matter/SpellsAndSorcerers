@@ -67,6 +67,6 @@ jobs:
           prerelease: true
           body: |
             The latest build of Magic of the Mind for Minecraft ${{ github.ref_name }}.
-            Please report any [issues](https://github.com/Argent-Matter/SpellsAndSorcerers/issues).
+            Please report any [issues](https://github.com/Argent-Matter/MagicOfTheMind/issues).
             ${{ steps.changelog.outputs.changelog }}
           files: build/libs/*.jar
