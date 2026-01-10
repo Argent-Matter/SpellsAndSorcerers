@@ -1,6 +1,7 @@
 package dev.screret.modularui;
 
 import dev.screret.modularui.client.screen.ModularContainerMenu;
+import dev.screret.modularui.test.ModularUITestingRegistration;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -50,6 +51,10 @@ public class ModularUI {
         MENU_TYPES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, ModularUIConfig.CONFIG, MOD_ID + ".toml");
+
+        if (isDev()) {
+            ModularUITestingRegistration.register(modEventBus);
+        }
     }
 
     public static ResourceLocation id(String path) {
