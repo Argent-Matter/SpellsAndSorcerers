@@ -94,4 +94,51 @@ public class MathHelper {
         }
         return max;
     }
+
+    public static float min(float @Nullable... values) {
+        if (values == null || values.length == 0) throw new IllegalArgumentException();
+        if (values.length == 1) return values[0];
+        if (values.length == 2) return Math.min(values[0], values[1]);
+        float min = Float.MAX_VALUE;
+        for (float i : values) {
+            if (i < min) {
+                min = i;
+            }
+        }
+        return min;
+    }
+
+    public static float max(float @Nullable... values) {
+        if (values == null || values.length == 0) throw new IllegalArgumentException();
+        if (values.length == 1) return values[0];
+        if (values.length == 2) return Math.max(values[0], values[1]);
+        float max = Float.MIN_VALUE;
+        for (float i : values) {
+            if (i > max) {
+                max = i;
+            }
+        }
+        return max;
+    }
+
+    public static float arithmeticGeometricMean(float a, float b) {
+        return arithmeticGeometricMean(a, b, 5);
+    }
+
+    public static float arithmeticGeometricMean(float a, float b, int iterations) {
+        a = (a + b) / 2;
+        b = Mth.sqrt(a * b);
+        if (--iterations == 0) return a;
+        return arithmeticGeometricMean(a, b, iterations);
+    }
+
+    public static double rescaleLinear(double v, double fromMin, double fromMax, double toMin, double toMax) {
+        v = (v - fromMin) / (fromMax - fromMin); // reverse lerp
+        return toMin + (toMax - toMin) * v; // forward lerp
+    }
+
+    public static float rescaleLinear(float v, float fromMin, float fromMax, float toMin, float toMax) {
+        v = (v - fromMin) / (fromMax - fromMin); // reverse lerp
+        return toMin + (toMax - toMin) * v; // forward lerp
+    }
 }

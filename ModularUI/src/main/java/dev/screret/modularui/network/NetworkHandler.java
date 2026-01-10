@@ -1,8 +1,7 @@
 package dev.screret.modularui.network;
 
 import dev.screret.modularui.ModularUI;
-import dev.screret.modularui.network.packets.OpenGuiPacket;
-import dev.screret.modularui.network.packets.SyncHandlerPacket;
+import dev.screret.modularui.network.packets.*;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,6 +19,9 @@ public class NetworkHandler {
         // spotless:off
         registrar.playBidirectional(OpenGuiPacket.TYPE, OpenGuiPacket.CODEC, OpenGuiPacket::execute);
         registrar.playBidirectional(SyncHandlerPacket.TYPE, SyncHandlerPacket.CODEC, SyncHandlerPacket::execute);
+        registrar.playBidirectional(CloseAllGuisPacket.TYPE, CloseAllGuisPacket.CODEC, CloseAllGuisPacket::execute);
+        registrar.playBidirectional(CloseGuiPacket.TYPE, CloseGuiPacket.CODEC, CloseGuiPacket::execute);
+        registrar.playBidirectional(ReopenGuiPacket.TYPE, ReopenGuiPacket.CODEC, ReopenGuiPacket::execute);
         // spotless:on
     }
 }

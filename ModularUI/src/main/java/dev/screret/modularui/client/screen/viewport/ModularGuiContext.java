@@ -50,6 +50,7 @@ public class ModularGuiContext extends GuiContext {
     private final HoveredIterable hoveredWidgets;
 
     private LocatedElement<IDraggable> draggable;
+    private int dragStartX = 0, dragStartY = 0;
     private int lastButton = -1;
     private long lastClickTime = 0;
     private int lastDragX, lastDragY;
@@ -86,7 +87,7 @@ public class ModularGuiContext extends GuiContext {
     }
 
     public @Nullable IWidget getTopHovered() {
-        return this.hovered.isEmpty() ? null : this.hovered.get(0).getElement();
+        return this.hovered.isEmpty() ? null : this.hovered.getFirst().getElement();
     }
 
     @UnmodifiableView
@@ -245,7 +246,7 @@ public class ModularGuiContext extends GuiContext {
     @ApiStatus.Internal
     public boolean onMousePressed(double mouseX, double mouseY, int button) {
         if ((button == 0 || button == 1) && isMouseItemEmpty() && hasDraggable()) {
-            dropDraggable();
+            dropDraggable(true);
             return true;
         }
         return false;
@@ -255,18 +256,19 @@ public class ModularGuiContext extends GuiContext {
     public boolean onMouseReleased(double mouseX, double mouseY, int button) {
         if (button == this.lastButton && isMouseItemEmpty() && hasDraggable()) {
             long time = Util.getMillis();
-            if (time - this.lastClickTime < 200) return false;
-            dropDraggable();
+            dropDraggable((this.dragStartX == getAbsMouseX() && this.dragStartY == getAbsMouseY()) ||
+                    (time - this.lastClickTime) < 100);
             return true;
         }
         return false;
     }
 
     @ApiStatus.Internal
-    public void dropDraggable() {
+    public void dropDraggable(boolean shouldCancel) {
         this.draggable.applyMatrix(this);
         this.draggable.getElement()
-                .onDragEnd(this.draggable.getElement().canDropHere(getAbsMouseX(), getAbsMouseY(), getTopHovered()));
+                .onDragEnd(!shouldCancel &&
+                        this.draggable.getElement().canDropHere(getAbsMouseX(), getAbsMouseY(), getTopHovered()));
         // TODO: getTopHovered correct here?
         this.draggable.getElement().setMoving(false);
         this.draggable.unapplyMatrix(this);
@@ -297,9 +299,9 @@ public class ModularGuiContext extends GuiContext {
             }
             if (draggable.getElement().onDragStart(button)) {
                 draggable.getElement().setMoving(true);
-
                 this.draggable = draggable;
-                this.lastButton = button;
+                this.dragStartX = getAbsMouseX();
+                this.dragStartY = getAbsMouseY();
                 this.lastClickTime = Util.getMillis();
                 return true;
             }

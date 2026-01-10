@@ -2,6 +2,7 @@ package dev.screret.modularui.widgets;
 
 import dev.screret.modularui.api.ITheme;
 import dev.screret.modularui.api.IThemeApi;
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.api.widget.IGuiAction;
 import dev.screret.modularui.api.widget.Interactable;
 import dev.screret.modularui.drawable.GuiTextures;
@@ -41,14 +42,19 @@ public class ButtonWidget<W extends ButtonWidget<W>> extends SingleChildWidget<W
     private InteractionSyncHandler syncHandler;
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        this.syncHandler = castIfTypeElseNull(syncHandler, InteractionSyncHandler.class);
-        return this.syncHandler != null;
+    public WidgetThemeEntry<?> getWidgetThemeInternal(ITheme theme) {
+        return theme.getButtonTheme();
     }
 
     @Override
-    public WidgetThemeEntry<?> getWidgetThemeInternal(ITheme theme) {
-        return theme.getButtonTheme();
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue.isTypeOrEmpty(InteractionSyncHandler.class);
+    }
+
+    @Override
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.syncHandler = syncOrValue.castNullable(InteractionSyncHandler.class);
     }
 
     public void playClickSound() {
@@ -165,8 +171,7 @@ public class ButtonWidget<W extends ButtonWidget<W>> extends SingleChildWidget<W
     }
 
     public W syncHandler(InteractionSyncHandler interactionSyncHandler) {
-        this.syncHandler = interactionSyncHandler;
-        setSyncHandler(interactionSyncHandler);
+        setSyncOrValue(ISyncOrValue.orEmpty(interactionSyncHandler));
         return getThis();
     }
 

@@ -5,6 +5,7 @@ import dev.screret.modularui.api.IJsonSerializable;
 import dev.screret.modularui.api.drawable.IDrawable;
 import dev.screret.modularui.client.screen.viewport.GuiContext;
 import dev.screret.modularui.theme.WidgetTheme;
+import dev.screret.modularui.utils.Color;
 import dev.screret.modularui.utils.Interpolations;
 import dev.screret.modularui.utils.serialization.json.JsonHelper;
 import dev.screret.modularui.widget.sizer.Area;
@@ -48,6 +49,8 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
     @Nullable
     public final ColorType colorType;
     public final boolean nonOpaque;
+
+    private int colorOverride = 0;
 
     /**
      * Creates a drawable texture
@@ -157,6 +160,15 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
                 this.u1, this.v1);
     }
 
+    @Override
+    public void applyColor(int themeColor) {
+        if (this.colorOverride != 0) {
+            Color.setGlColor(this.colorOverride);
+        } else {
+            IDrawable.super.applyColor(themeColor);
+        }
+    }
+
     public void drawSubArea(GuiContext context, float x, float y, float width, float height, float uStart, float vStart,
                             float uEnd,
                             float vEnd, WidgetTheme widgetTheme) {
@@ -210,6 +222,10 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         } else if (JsonHelper.getBoolean(json, false, "canApplyTheme")) {
             builder.canApplyTheme();
         }
+        int colorOverride = JsonHelper.getColor(json, 0, "colorOverride");
+        if (colorOverride != 0) {
+            builder.colorOverride(colorOverride);
+        }
         return builder.build();
     }
 
@@ -227,6 +243,16 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
         json.addProperty("v1", this.v1);
         if (this.colorType != null) json.addProperty("colorType", this.colorType.getName());
         return true;
+    }
+
+    protected UITexture copy() {
+        return new UITexture(this.location, this.u0, this.v0, this.u1, this.v1, this.colorType);
+    }
+
+    public UITexture withColorOverride(int color) {
+        UITexture t = copy();
+        t.colorOverride = color;
+        return t;
     }
 
     private static int defaultImageWidth = 16, defaultImageHeight = 16;
@@ -277,6 +303,11 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
          */
         @Setter
         private boolean nonOpaque = false;
+        /**
+         * Sets this texture's color override. It'll replace the theme color when drawn.
+         */
+        @Setter
+        private int colorOverride = 0;
 
         /**
          * @param mod  mod location of the image to draw
@@ -481,6 +512,7 @@ public class UITexture implements IDrawable, IJsonSerializable<UITexture> {
          */
         public UITexture build() {
             UITexture texture = create();
+            texture.colorOverride = this.colorOverride;
             if (this.name == null) {
                 String[] p = texture.location.getPath().split("/");
                 p = p[p.length - 1].split("\\.");

@@ -1,27 +1,27 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.IPacketWriter;
-import dev.screret.modularui.network.packets.SyncHandlerPacket;
-
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.VarInt;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
+import dev.screret.modularui.api.value.ISyncOrValue;
+import dev.screret.modularui.network.ModularNetwork;
+import dev.screret.modularui.network.ModularNetworkSide;
 
 import lombok.Getter;
-
-import java.util.Objects;
-
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Base class for handling syncing of widgets.
  * A sync handler must exist on client and server.
  * It must be configured exactly the same to avoid issues.
  */
-public abstract class SyncHandler {
+public abstract class SyncHandler implements ISyncOrValue {
 
     private PanelSyncManager syncManager;
     /**
@@ -64,6 +64,7 @@ public abstract class SyncHandler {
      * @param id             an internal denominator to identify this package
      * @param bufferConsumer the package builder
      */
+    @OnlyIn(Dist.CLIENT)
     public final void syncToServer(int id, @NotNull IPacketWriter<? super RegistryFriendlyByteBuf> bufferConsumer) {
         IPacketWriter<? super RegistryFriendlyByteBuf> writer = buffer -> {
             VarInt.write(buffer, id);
@@ -83,11 +84,7 @@ public abstract class SyncHandler {
             VarInt.write(buffer, id);
             bufferConsumer.write(buffer);
         };
-        if (getSyncManager().isClient()) {
-            sendToServer(getSyncManager().getPanelName(), writer, this);
-        } else {
-            sendToClient(getSyncManager().getPanelName(), writer, this);
-        }
+        send(ModularNetwork.get(getSyncManager().isClient()), getSyncManager().getPanelName(), writer, this);
     }
 
     /**
@@ -124,6 +121,7 @@ public abstract class SyncHandler {
      * @param buf package
      */
     @ApiStatus.OverrideOnly
+    @OnlyIn(Dist.CLIENT)
     public abstract void readOnClient(int id, RegistryFriendlyByteBuf buf);
 
     /**
@@ -160,24 +158,31 @@ public abstract class SyncHandler {
         return this.syncManager;
     }
 
-    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
-                                    SyncHandler syncHandler) {
-        Objects.requireNonNull(writer);
-        Objects.requireNonNull(syncHandler);
-        if (!syncHandler.isValid()) {
-            throw new IllegalStateException();
-        }
-        PacketDistributor.sendToPlayer((ServerPlayer) syncHandler.syncManager.getPlayer(),
-                new SyncHandlerPacket(panel, syncHandler.getKey(), false, writer));
+    public final boolean isRegistered() {
+        return isValid() && this.syncManager.hasSyncHandler(this);
     }
 
-    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
-                                    SyncHandler syncHandler) {
+    @Override
+    public boolean isSyncHandler() {
+        return true;
+    }
+
+    private static void send(ModularNetworkSide network, String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
+                             SyncHandler syncHandler) {
         Objects.requireNonNull(writer);
         Objects.requireNonNull(syncHandler);
         if (!syncHandler.isValid()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Not initialized sync handlers can't send packets!");
         }
-        PacketDistributor.sendToServer(new SyncHandlerPacket(panel, syncHandler.getKey(), false, writer));
+        network.sendSyncHandlerPacket(panel, syncHandler, writer, syncHandler.syncManager.getPlayer());
+    }
+
+    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+        send(ModularNetwork.SERVER, panel, writer, syncHandler);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+        send(ModularNetwork.CLIENT, panel, writer, syncHandler);
     }
 }

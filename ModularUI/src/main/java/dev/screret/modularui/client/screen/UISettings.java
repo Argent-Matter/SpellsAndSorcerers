@@ -1,5 +1,6 @@
 package dev.screret.modularui.client.screen;
 
+import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.RecipeViewerSettings;
 import dev.screret.modularui.api.UIFactory;
 import dev.screret.modularui.factory.GuiData;
@@ -8,6 +9,8 @@ import dev.screret.modularui.factory.PosGuiData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import lombok.Getter;
 
@@ -21,6 +24,8 @@ public class UISettings {
     public static final double DEFAULT_INTERACT_RANGE = 8.0;
 
     private IntFunction<ModularContainerMenu> containerCreator;
+    @OnlyIn(Dist.CLIENT)
+    private GuiCreator guiSupplier;
     private Predicate<Player> canInteractWith;
     @Getter
     private String theme;
@@ -94,11 +99,27 @@ public class UISettings {
         return containerCreator.apply(containerId);
     }
 
-    public boolean hasContainer() {
+    @ApiStatus.Internal
+    @OnlyIn(Dist.CLIENT)
+    public IMuiScreen createGui(ModularContainerMenu container, ModularScreen screen) {
+        return guiSupplier.create(container, screen);
+    }
+
+    public boolean hasCustomContainer() {
         return containerCreator != null;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public boolean hasCustomGui() {
+        return guiSupplier != null;
     }
 
     public boolean canPlayerInteractWithUI(Player player) {
         return canInteractWith == null || canInteractWith.test(player);
+    }
+
+    public interface GuiCreator {
+
+        IMuiScreen create(ModularContainerMenu container, ModularScreen screen);
     }
 }

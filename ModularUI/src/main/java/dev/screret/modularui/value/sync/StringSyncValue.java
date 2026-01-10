@@ -1,29 +1,23 @@
 package dev.screret.modularui.value.sync;
 
-import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
 import dev.screret.modularui.network.NetworkUtils;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StringSyncValue extends ValueSyncHandler<ByteBuf, String> implements IStringSyncValue<ByteBuf, String> {
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-    private final Supplier<String> getter;
-    private final Consumer<String> setter;
-    private String cache;
+public class StringSyncValue extends AbstractGenericSyncValue<ByteBuf, String> implements IStringSyncValue<ByteBuf, String> {
 
-    public StringSyncValue(@NotNull Supplier<String> getter, @Nullable Consumer<String> setter) {
-        this.getter = Objects.requireNonNull(getter);
-        this.setter = setter;
-        this.cache = getter.get();
+    public StringSyncValue(Supplier<String> getter, Consumer<String> setter) {
+        super(String.class, getter, setter);
     }
 
     public StringSyncValue(@NotNull Supplier<String> getter) {
@@ -39,66 +33,36 @@ public class StringSyncValue extends ValueSyncHandler<ByteBuf, String> implement
     @Contract("null, _, null, _ -> fail")
     public StringSyncValue(@Nullable Supplier<String> clientGetter, @Nullable Consumer<String> clientSetter,
                            @Nullable Supplier<String> serverGetter, @Nullable Consumer<String> serverSetter) {
-        if (clientGetter == null && serverGetter == null) {
-            throw new NullPointerException("Client or server getter must not be null!");
-        }
-        if (ModularUI.isClientThread()) {
-            this.getter = clientGetter != null ? clientGetter : serverGetter;
-            this.setter = clientSetter != null ? clientSetter : serverSetter;
-        } else {
-            this.getter = serverGetter != null ? serverGetter : clientGetter;
-            this.setter = serverSetter != null ? serverSetter : clientSetter;
-        }
-        this.cache = this.getter.get();
+        super(String.class, clientGetter, clientSetter, serverGetter, serverSetter);
     }
 
     @Override
-    public String getValue() {
-        return this.cache;
+    protected String createDeepCopyOf(String value) {
+        return value;
+    }
+
+    @Override
+    protected boolean areEqual(String a, String b) {
+        return Objects.equals(a, b);
+    }
+
+    @Override
+    protected void serialize(ByteBuf buffer, String value) {
+        NetworkUtils.writeStringSafe(buffer, value, Short.MAX_VALUE - 74);
+    }
+
+    @Override
+    protected String deserialize(ByteBuf buffer) {
+        return NetworkUtils.readStringSafe(buffer);
     }
 
     @Override
     public String getStringValue() {
-        return this.cache;
-    }
-
-    @Override
-    public void setValue(String value, boolean setSource, boolean sync) {
-        setStringValue(value, setSource, sync);
+        return getValue();
     }
 
     @Override
     public void setStringValue(String value, boolean setSource, boolean sync) {
-        this.cache = value;
-        if (setSource && this.setter != null) {
-            this.setter.accept(value);
-        }
-        if (sync) {
-            sync(0, this::write);
-        }
-    }
-
-    @Override
-    public boolean updateCacheFromSource(boolean isFirstSync) {
-        if (isFirstSync || !Objects.equals(this.getter.get(), this.cache)) {
-            setValue(this.getter.get(), false, false);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void notifyUpdate() {
-        setValue(this.getter.get(), false, true);
-    }
-
-    @Override
-    public void write(ByteBuf buffer) {
-        NetworkUtils.writeStringSafe(buffer, getValue(), Short.MAX_VALUE - 74);
-    }
-
-    @Override
-    public void read(ByteBuf buffer) {
-        setValue(NetworkUtils.readStringSafe(buffer), true, false);
+        setValue(value, setSource, sync);
     }
 }

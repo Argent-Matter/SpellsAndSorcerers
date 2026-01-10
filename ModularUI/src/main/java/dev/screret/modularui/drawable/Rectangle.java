@@ -1,5 +1,7 @@
 package dev.screret.modularui.drawable;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.animation.IAnimatable;
 import dev.screret.modularui.api.IJsonSerializable;
 import dev.screret.modularui.api.drawable.IDrawable;
@@ -17,6 +19,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.joml.Matrix4f;
 
 import java.util.function.IntConsumer;
 
@@ -26,12 +29,13 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
     private int cornerRadius, colorTL, colorTR, colorBL, colorBR;
     @Setter
     private int cornerSegments;
+    private float borderThickness;
     @Getter
     @Setter
     private boolean canApplyTheme = false;
 
     public Rectangle() {
-        setColor(0xFFFFFFFF);
+        color(0xFFFFFFFF);
         this.cornerRadius = 0;
         this.cornerSegments = 6;
     }
@@ -40,12 +44,15 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
         return this.colorTL;
     }
 
-    public Rectangle setCornerRadius(int cornerRadius) {
+    public Rectangle cornerRadius(int cornerRadius) {
         this.cornerRadius = Math.max(0, cornerRadius);
+        if (this.borderThickness > 0 && cornerRadius > 0) {
+            ModularUI.LOGGER.error("Hollow rectangles currently can't have a corner radius.");
+        }
         return this;
     }
 
-    public Rectangle setColor(int colorTL, int colorTR, int colorBL, int colorBR) {
+    public Rectangle color(int colorTL, int colorTR, int colorBL, int colorBR) {
         this.colorTL = colorTL;
         this.colorTR = colorTR;
         this.colorBL = colorBL;
@@ -53,36 +60,76 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
         return this;
     }
 
-    public Rectangle setVerticalGradient(int colorTop, int colorBottom) {
-        return setColor(colorTop, colorTop, colorBottom, colorBottom);
+    public Rectangle verticalGradient(int colorTop, int colorBottom) {
+        return color(colorTop, colorTop, colorBottom, colorBottom);
     }
 
-    public Rectangle setHorizontalGradient(int colorLeft, int colorRight) {
-        return setColor(colorLeft, colorRight, colorLeft, colorRight);
+    public Rectangle horizontalGradient(int colorLeft, int colorRight) {
+        return color(colorLeft, colorRight, colorLeft, colorRight);
     }
 
-    public Rectangle setColor(int color) {
-        return setColor(color, color, color, color);
+    public Rectangle color(int color) {
+        return color(color, color, color, color);
+    }
+
+    public Rectangle solid() {
+        this.borderThickness = 0;
+        return this;
+    }
+
+    public Rectangle hollow(float borderThickness) {
+        this.borderThickness = borderThickness;
+        if (borderThickness > 0 && this.cornerRadius > 0) {
+            ModularUI.LOGGER.error("Hollow rectangles currently can't have a corner radius.");
+        }
+        return this;
+    }
+
+    public Rectangle hollow() {
+        return hollow(1);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void draw(GuiContext context, int x0, int y0, int width, int height, WidgetTheme widgetTheme) {
         applyColor(widgetTheme.getColor());
-        if (this.cornerRadius <= 0) {
-            GuiDraw.drawRect(context.getGraphics(), x0, y0, width, height,
-                    this.colorTL, this.colorTR, this.colorBL, this.colorBR);
-            return;
+        if (this.borderThickness <= 0) {
+            if (this.cornerRadius <= 0) {
+                GuiDraw.drawRect(context.getGraphics(), x0, y0, width, height,
+                        this.colorTL, this.colorTR, this.colorBL, this.colorBR);
+                return;
+            }
+            GuiDraw.drawRoundedRect(context.getGraphics(), x0, y0, width, height,
+                    this.colorTL, this.colorTR, this.colorBL, this.colorBR,
+                    this.cornerRadius, this.cornerSegments);
+        } else {
+            float d = this.borderThickness;
+            float x1 = x0 + width, y1 = y0 + height;
+
+            Matrix4f pose = context.getGraphics().pose().last().pose();
+            VertexConsumer bufferbuilder = context.getGraphics().bufferSource()
+                    .getBuffer(ModularUIRenderTypes.guiTriangleStrip());
+            v(pose, bufferbuilder, x0, y0, this.colorTL);
+            v(pose, bufferbuilder, x1 - d, y0 + d, this.colorTR);
+            v(pose, bufferbuilder, x1, y0, this.colorTR);
+            v(pose, bufferbuilder, x1 - d, y1 - d, this.colorBR);
+            v(pose, bufferbuilder, x1, y1, this.colorBR);
+            v(pose, bufferbuilder, x0 + d, y1 - d, this.colorBL);
+            v(pose, bufferbuilder, x0, y1, this.colorBL);
+            v(pose, bufferbuilder, x0 + d, y0 + d, this.colorTL);
+            v(pose, bufferbuilder, x0, y0, this.colorTL);
+            v(pose, bufferbuilder, x1 - d, y0 + d, this.colorTR);
         }
-        GuiDraw.drawRoundedRect(context.getGraphics(), x0, y0, width, height,
-                this.colorTL, this.colorTR, this.colorBL, this.colorBR,
-                this.cornerRadius, this.cornerSegments);
+    }
+
+    private static void v(Matrix4f pose, VertexConsumer buffer, float x, float y, int c) {
+        buffer.addVertex(pose, x, y, 0).setColor(c);
     }
 
     @Override
     public void loadFromJson(JsonObject json) {
         if (json.has("color")) {
-            setColor(Color.ofJson(json.get("color")));
+            color(Color.ofJson(json.get("color")));
         }
         if (json.has("colorTop")) {
             int c = Color.ofJson(json.get("colorTop"));
@@ -110,6 +157,13 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
         setColor(json, val -> this.colorBR = val, "colorBottomRight", "colorBR");
         this.cornerRadius = JsonHelper.getInt(json, 0, "cornerRadius");
         this.cornerSegments = JsonHelper.getInt(json, 10, "cornerSegments");
+        if (JsonHelper.getBoolean(json, false, "solid")) {
+            this.borderThickness = 0;
+        } else if (JsonHelper.getBoolean(json, false, "hollow")) {
+            this.borderThickness = 1;
+        } else {
+            this.borderThickness = JsonHelper.getFloat(json, 0, "borderThickness");
+        }
     }
 
     @Override
@@ -120,6 +174,7 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
         json.addProperty("colorBR", this.colorBR);
         json.addProperty("cornerRadius", this.cornerRadius);
         json.addProperty("cornerSegments", this.cornerSegments);
+        json.addProperty("borderThickness", this.borderThickness);
         return true;
     }
 
@@ -144,8 +199,8 @@ public class Rectangle implements IDrawable, IJsonSerializable<Rectangle>, IAnim
     @Override
     public Rectangle copyOrImmutable() {
         return new Rectangle()
-                .setColor(this.colorTL, this.colorTR, this.colorBL, this.colorBR)
-                .setCornerRadius(this.cornerRadius)
+                .color(this.colorTL, this.colorTR, this.colorBL, this.colorBR)
+                .cornerRadius(this.cornerRadius)
                 .cornerSegments(this.cornerSegments)
                 .canApplyTheme(this.canApplyTheme);
     }

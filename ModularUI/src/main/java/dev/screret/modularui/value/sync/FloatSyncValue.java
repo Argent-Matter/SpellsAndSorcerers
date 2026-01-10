@@ -9,14 +9,15 @@ import dev.screret.modularui.utils.FloatSupplier;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
-                            IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {
+        IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {
 
     private final FloatSupplier getter;
     private final FloatConsumer setter;
@@ -75,9 +76,8 @@ public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -122,5 +122,10 @@ public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
     @Override
     public void setDoubleValue(double value, boolean setSource, boolean sync) {
         setFloatValue((float) value, setSource, sync);
+    }
+
+    @Override
+    public Class<Float> getValueType() {
+        return Float.class;
     }
 }

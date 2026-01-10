@@ -4,21 +4,19 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.IEnumValue;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
 
-import net.minecraft.network.VarInt;
-
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import net.minecraft.network.VarInt;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T>
-                          implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T> implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
 
     @Getter
     protected final Class<T> enumClass;
@@ -72,9 +70,8 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, 
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -98,7 +95,7 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, 
 
     @Override
     public void read(ByteBuf buffer) {
-        setValue(enumClass.getEnumConstants()[VarInt.read(buffer)], true, false);
+        setIntValue(VarInt.read(buffer), true, false);
     }
 
     @Override
@@ -109,5 +106,10 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, 
     @Override
     public int getIntValue() {
         return this.cache.ordinal();
+    }
+
+    @Override
+    public Class<T> getValueType() {
+        return this.enumClass;
     }
 }

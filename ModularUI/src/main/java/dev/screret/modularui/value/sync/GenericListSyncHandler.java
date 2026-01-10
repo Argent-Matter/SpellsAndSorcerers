@@ -3,13 +3,16 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.utils.ICopy;
 import dev.screret.modularui.utils.serialization.network.IEquals;
 
+import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamDecoder;
 import net.minecraft.network.codec.StreamEncoder;
 
-import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,17 +21,14 @@ import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class GenericListSyncHandler<B extends ByteBuf, T> extends GenericCollectionSyncHandler<B, T, List<T>> {
 
     private final ObjectList<T> cache = new ObjectArrayList<>();
 
     public GenericListSyncHandler(@NotNull Supplier<List<T>> getter, @Nullable Consumer<List<T>> setter,
                                   @NotNull StreamDecoder<B, T> deserializer,
-                                  @NotNull StreamEncoder<B, T> serializer, @Nullable IEquals<T> equals,
-                                  @Nullable ICopy<T> copy) {
+                                  @NotNull StreamEncoder<B, T> serializer,
+                                  @Nullable IEquals<T> equals, @Nullable ICopy<T> copy) {
         super(getter, setter, deserializer, serializer, equals, copy);
     }
 
@@ -64,6 +64,12 @@ public class GenericListSyncHandler<B extends ByteBuf, T> extends GenericCollect
         onSetCache(getValue(), true, false);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<List<T>> getValueType() {
+        return (Class<List<T>>) (Object) List.class;
+    }
+
     public static <B extends ByteBuf, T> Builder<B, T> builder() {
         return new Builder<>();
     }
@@ -80,22 +86,13 @@ public class GenericListSyncHandler<B extends ByteBuf, T> extends GenericCollect
             return this;
         }
 
-        @Override
-        public @NotNull Builder<B, T> equals(IEquals<T> equals) {
-            super.equals(equals);
-            return this;
-        }
-
         public GenericListSyncHandler<B, T> build() {
-            if (this.getter == null) {
+            if (this.getter == null)
                 throw new NullPointerException("Getter in GenericListSyncHandler must not be null");
-            }
-            if (this.deserializer == null) {
+            if (this.deserializer == null)
                 throw new NullPointerException("Deserializer in GenericListSyncHandler must not be null");
-            }
-            if (this.serializer == null) {
+            if (this.serializer == null)
                 throw new NullPointerException("Serializer in GenericListSyncHandler must not be null");
-            }
             return new GenericListSyncHandler<>(this.getter, this.setter, this.deserializer, this.serializer,
                     this.equals, this.copy);
         }

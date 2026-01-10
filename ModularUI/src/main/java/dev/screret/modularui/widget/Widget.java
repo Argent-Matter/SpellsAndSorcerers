@@ -6,6 +6,7 @@ import dev.screret.modularui.api.IUIHolder;
 import dev.screret.modularui.api.drawable.IDrawable;
 import dev.screret.modularui.api.layout.IResizeable;
 import dev.screret.modularui.api.layout.IViewportStack;
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.api.value.IValue;
 import dev.screret.modularui.api.widget.*;
 import dev.screret.modularui.client.screen.ModularPanel;
@@ -16,6 +17,7 @@ import dev.screret.modularui.factory.GuiData;
 import dev.screret.modularui.theme.WidgetTheme;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.theme.WidgetThemeKey;
+import dev.screret.modularui.value.sync.ISyncRegistrar;
 import dev.screret.modularui.value.sync.ModularSyncManager;
 import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.value.sync.ValueSyncHandler;
@@ -110,7 +112,6 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
      * {@link IUIHolder#buildUI(GuiData, dev.screret.modularui.value.sync.PanelSyncManager, dev.screret.modularui.client.screen.UISettings)}
      * since it's called on server and client. Otherwise, this will not work.
      */
-    @Setter
     @Nullable
     private SyncHandler syncHandler;
     // rendering
@@ -173,7 +174,6 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
             this.parent = parent;
             this.panel = parent.getPanel();
             this.context = parent.getContext();
-            getArea().setPanelLayer(this.panel.getArea().getPanelLayer());
             getArea().z(parent.getArea().z() + 1);
             if (this.guiActionListeners != null) {
                 for (IGuiAction action : this.guiActionListeners) {
@@ -216,20 +216,21 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     public void afterInit() {}
 
     /**
-     * Retrieves, initialises and verifies a linked sync handler.
-     * Custom logic should be handled in {@link #isValidSyncHandler(SyncHandler)}.
+     * Retrieves, verifies and initialises a linked sync handler.
+     * Custom logic should be handled in {@link #setSyncOrValue(ISyncOrValue)}.
      */
     @Override
     public void initialiseSyncHandler(ModularSyncManager syncManager, boolean late) {
-        if (this.syncKey != null) {
-            this.syncHandler = syncManager.getSyncHandler(getPanel().getName(), this.syncKey);
+        SyncHandler handler = this.syncHandler;
+        if (handler == null && this.syncKey != null) {
+            handler = syncManager.getSyncHandler(getPanel().getName(), this.syncKey);
+            if (handler == null && !syncManager.getMainPSM().getPanelName().equals(getPanel().getName())) {
+                handler = syncManager.getMainPSM().getSyncHandlerFromMapKey(this.syncKey);
+            }
         }
-        if ((this.syncKey != null || this.syncHandler != null) && !isValidSyncHandler(this.syncHandler)) {
-            String type = this.syncHandler == null ? null : this.syncHandler.getClass().getName();
-            this.syncHandler = null;
-            throw new IllegalStateException("SyncHandler of type " + type + " is not valid for " +
-                    getClass().getName() + ", with key " + this.syncKey);
-        }
+        if (handler != null) setSyncOrValue(handler);
+        else this.syncHandler = null;
+
         if (this.syncHandler instanceof ValueSyncHandler<?, ?> valueSyncHandler &&
                 valueSyncHandler.getChangeListener() == null) {
             valueSyncHandler.setChangeListener(this::markTooltipDirty);
@@ -844,7 +845,7 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
      */
     @Override
     public W syncHandler(String name, int id) {
-        this.syncKey = ModularSyncManager.makeSyncKey(name, id);
+        this.syncKey = ISyncRegistrar.makeSyncKey(name, id);
         return getThis();
     }
 
@@ -859,13 +860,14 @@ public class Widget<W extends Widget<W>> implements IWidget, IPositioned<W>, ITo
     }
 
     /**
-     * Used for widgets to set a value handler. Can also be a sync handler
+     * Used for widgets to set a sync or value handler.
      */
-    protected void setValue(IValue<?> value) {
-        this.value = value;
-        if (value instanceof SyncHandler syncHandler1) {
-            setSyncHandler(syncHandler1);
-        }
+    @MustBeInvokedByOverriders
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        if (!syncOrValue.isSyncHandler() && !syncOrValue.isValueHandler()) return;
+        checkValidSyncOrValue(syncOrValue);
+        if (syncOrValue instanceof SyncHandler syncHandler1) this.syncHandler = syncHandler1;
+        if (syncOrValue instanceof IValue<?> value1) this.value = value1;
     }
 
     // -------------

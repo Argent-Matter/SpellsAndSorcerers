@@ -3,6 +3,7 @@ package dev.screret.modularui.widgets;
 import dev.screret.modularui.api.GuiAxis;
 import dev.screret.modularui.api.drawable.IDrawable;
 import dev.screret.modularui.api.value.IDoubleValue;
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.api.widget.IGuiAction;
 import dev.screret.modularui.api.widget.Interactable;
 import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class SliderWidget extends Widget<SliderWidget> implements Interactable {
 
     private IDoubleValue<?> doubleValue;
-    private IDrawable stopperDrawable = new Rectangle().setColor(Color.withAlpha(Color.WHITE.main, 0.4f));
+    private IDrawable stopperDrawable = new Rectangle().color(Color.withAlpha(Color.WHITE.main, 0.4f));
     private IDrawable handleDrawable = GuiTextures.MC_BUTTON;
     private GuiAxis axis = GuiAxis.X;
     private DoubleList stopper;
@@ -70,9 +71,14 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        this.doubleValue = castIfTypeElseNull(syncHandler, IDoubleValue.class);
-        return this.doubleValue != null;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue.isTypeOrEmpty(IDoubleValue.class);
+    }
+
+    @Override
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.doubleValue = syncOrValue.castNullable(IDoubleValue.class);
     }
 
     @Override
@@ -193,8 +199,7 @@ public class SliderWidget extends Widget<SliderWidget> implements Interactable {
     }
 
     public SliderWidget value(IDoubleValue<?> value) {
-        this.doubleValue = value;
-        setValue(value);
+        setSyncOrValue(ISyncOrValue.orEmpty(value));
         return this;
     }
 

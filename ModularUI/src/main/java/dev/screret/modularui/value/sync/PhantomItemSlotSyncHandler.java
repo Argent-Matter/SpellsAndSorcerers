@@ -4,6 +4,7 @@ import dev.screret.modularui.utils.MouseData;
 import dev.screret.modularui.widgets.slot.ModularSlot;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.ApiStatus;
  * Wraps a slot and handles interactions for phantom slots.
  * Use {@link ModularSlot} directly.
  */
-public class PhantomItemSlotSH extends ItemSlotSH {
+public class PhantomItemSlotSyncHandler extends ItemSlotSyncHandler {
 
     public static final int SYNC_CLICK = 100;
     public static final int SYNC_SCROLL = 101;
@@ -22,8 +23,9 @@ public class PhantomItemSlotSH extends ItemSlotSH {
     private ItemStack lastStoredPhantomItem = ItemStack.EMPTY;
 
     @ApiStatus.Internal
-    public PhantomItemSlotSH(ModularSlot slot) {
+    public PhantomItemSlotSyncHandler(ModularSlot slot) {
         super(slot);
+        ((Slot) slot).index = -1;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class PhantomItemSlotSH extends ItemSlotSH {
     }
 
     public void updateFromClient(ItemStack stack) {
-        syncToServer(SYNC_ITEM_SIMPLE, (RegistryFriendlyByteBuf buf) -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, stack));
+        syncToServer(SYNC_ITEM_SIMPLE, buf -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, stack));
     }
 
     protected void phantomClick(MouseData mouseData) {

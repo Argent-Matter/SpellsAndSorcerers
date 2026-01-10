@@ -5,6 +5,7 @@ import dev.screret.modularui.widgets.slot.ModularSlot;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 
 import java.util.function.*;
@@ -44,5 +45,9 @@ public class SyncHandlers {
     public static <T extends Enum<T>> EnumSyncValue<T> enumValue(Class<T> clazz, Supplier<T> getter,
                                                                  Consumer<T> setter) {
         return new EnumSyncValue<>(clazz, getter, setter);
+    }
+
+    public static <B extends ByteBuf, T> GenericSyncValue.Builder<B, T> generic(Class<T> type) {
+        return new GenericSyncValue.Builder<>(type);
     }
 }

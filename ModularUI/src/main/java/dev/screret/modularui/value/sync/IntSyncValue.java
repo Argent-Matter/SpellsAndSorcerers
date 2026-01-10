@@ -4,22 +4,22 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IDoubleSyncValue;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.Objects;
-import java.util.function.IntConsumer;
-import java.util.function.IntSupplier;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
+
 public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
-                          implements IIntSyncValue<ByteBuf, Integer>, IDoubleSyncValue<ByteBuf, Integer>,
-                          IStringSyncValue<ByteBuf, Integer> {
+        implements IIntSyncValue<ByteBuf, Integer>, IDoubleSyncValue<ByteBuf, Integer>,
+        IStringSyncValue<ByteBuf, Integer> {
 
     private int cache;
     private final IntSupplier getter;
@@ -78,9 +78,8 @@ public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -109,7 +108,7 @@ public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
 
     @Override
     public void write(ByteBuf buffer) {
-        VarInt.write(buffer, this.cache);
+        VarInt.write(buffer, getIntValue());
     }
 
     @Override
@@ -125,5 +124,10 @@ public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
     @Override
     public String getStringValue() {
         return String.valueOf(this.cache);
+    }
+
+    @Override
+    public Class<Integer> getValueType() {
+        return Integer.class;
     }
 }

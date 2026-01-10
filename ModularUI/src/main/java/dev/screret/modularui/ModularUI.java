@@ -1,6 +1,7 @@
 package dev.screret.modularui;
 
 import dev.screret.modularui.client.screen.ModularContainerMenu;
+import dev.screret.modularui.test.ModularUITestingRegistration;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -49,6 +51,10 @@ public class ModularUI {
         MENU_TYPES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, ModularUIConfig.CONFIG, MOD_ID + ".toml");
+
+        if (isDev()) {
+            ModularUITestingRegistration.register(modEventBus);
+        }
     }
 
     public static ResourceLocation id(String path) {
@@ -74,6 +80,20 @@ public class ModularUI {
      */
     public static boolean isClientSide() {
         return FMLEnvironment.dist.isClient();
+    }
+
+    /**
+     * @return whether we're running in a production environment
+     */
+    public static boolean isProd() {
+        return FMLLoader.isProduction();
+    }
+
+    /**
+     * @return whether we're not running in a production environment
+     */
+    public static boolean isDev() {
+        return !isProd();
     }
 
     public enum Mods {

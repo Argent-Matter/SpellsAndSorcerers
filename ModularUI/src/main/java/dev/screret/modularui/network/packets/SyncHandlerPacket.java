@@ -4,6 +4,7 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.IPacketWriter;
 import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.client.screen.ModularScreen;
+import dev.screret.modularui.network.ModularNetwork;
 import dev.screret.modularui.network.NetworkUtils;
 import dev.screret.modularui.value.sync.ModularSyncManager;
 
@@ -21,7 +22,7 @@ import io.netty.buffer.Unpooled;
 
 import org.jetbrains.annotations.Nullable;
 
-public record SyncHandlerPacket(String panel, String key, boolean action,
+public record SyncHandlerPacket(int networkId, String panel, String key, boolean action,
                                 @Nullable("Nullable on the sending side") RegistryFriendlyByteBuf packet,
                                 @Nullable("Nullable on the receiving side") IPacketWriter<? super RegistryFriendlyByteBuf> packetWriter)
         implements CustomPacketPayload {
@@ -31,16 +32,17 @@ public record SyncHandlerPacket(String panel, String key, boolean action,
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncHandlerPacket> CODEC = StreamCodec
             .ofMember(SyncHandlerPacket::encode, SyncHandlerPacket::decode);
 
-    public SyncHandlerPacket(String panel, String key, boolean action,
+    public SyncHandlerPacket(int networkId, String panel, String key, boolean action,
                              IPacketWriter<? super RegistryFriendlyByteBuf> packetWriter) {
-        this(panel, key, action, null, packetWriter);
+        this(networkId, panel, key, action, null, packetWriter);
     }
 
-    public SyncHandlerPacket(String panel, String key, boolean action, RegistryFriendlyByteBuf packet) {
-        this(panel, key, action, packet, null);
+    public SyncHandlerPacket(int networkId, String panel, String key, boolean action, RegistryFriendlyByteBuf packet) {
+        this(networkId, panel, key, action, packet, null);
     }
 
     public void encode(RegistryFriendlyByteBuf buf) {
+        buf.writeVarInt(this.networkId);
         NetworkUtils.writeStringSafe(buf, this.panel);
         NetworkUtils.writeStringSafe(buf, this.key, 64, true);
         buf.writeBoolean(this.action);
@@ -60,44 +62,26 @@ public record SyncHandlerPacket(String panel, String key, boolean action,
     }
 
     public static SyncHandlerPacket decode(RegistryFriendlyByteBuf buf) {
+        int networkId = buf.readVarInt();
         String panel = NetworkUtils.readStringSafe(buf);
         String key = NetworkUtils.readStringSafe(buf);
         boolean action = buf.readBoolean();
         RegistryFriendlyByteBuf packet = RegistryFriendlyByteBuf.decorator(buf.registryAccess(), buf.getConnectionType())
                 .apply(NetworkUtils.readFriendlyByteBuf(buf));
 
-        return new SyncHandlerPacket(panel, key, action, packet);
+        return new SyncHandlerPacket(networkId, panel, key, action, packet);
     }
 
     public void execute(IPayloadContext context) {
         if (context.flow() == PacketFlow.CLIENTBOUND) {
-            ModularScreen screen = ModularScreen.getCurrent();
-            if (screen != null) {
-                executeFromManager(screen.getSyncManager());
-            }
-        } else if (context.flow() == PacketFlow.SERVERBOUND) {
-            AbstractContainerMenu menu = context.player().containerMenu;
-            if (menu instanceof ModularContainerMenu modularMenu) {
-                executeFromManager(modularMenu.getSyncManager());
-            }
-        }
-    }
-
-    private void executeFromManager(ModularSyncManager syncManager) {
-        if (this.packet == null) {
-            ModularUI.LOGGER.error("Failed to process packet for sync handler {} in panel {}", this.key, this.panel);
-            return;
-        }
-        try {
-            int id = this.action ? 0 : this.packet.readVarInt();
-            syncManager.receiveWidgetUpdate(this.panel, this.key, this.action, id, this.packet);
-        } catch (IndexOutOfBoundsException e) {
-            ModularUI.LOGGER.error("Failed to read packet for sync handler {} in panel {}", this.key, this.panel);
+            ModularNetwork.CLIENT.receivePacket(this);
+        } else {
+            ModularNetwork.SERVER.receivePacket(this);
         }
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<SyncHandlerPacket> type() {
         return TYPE;
     }
 }

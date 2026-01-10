@@ -6,13 +6,13 @@ import dev.screret.modularui.api.value.sync.IStringSyncValue;
 
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-
-import java.util.Objects;
-import java.util.function.BooleanSupplier;
-
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.BooleanSupplier;
 
 public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
                               implements IBoolSyncValue<ByteBuf, Boolean>, IStringSyncValue<ByteBuf, Boolean> {
@@ -74,9 +74,8 @@ public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -111,5 +110,10 @@ public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
     @Override
     public String getStringValue() {
         return String.valueOf(this.cache);
+    }
+
+    @Override
+    public Class<Boolean> getValueType() {
+        return Boolean.class;
     }
 }

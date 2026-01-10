@@ -4,6 +4,7 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.schema.ISchema;
 import dev.screret.modularui.utils.BlockPosUtil;
 import dev.screret.modularui.utils.RegistryAccessContainer;
+import dev.screret.modularui.utils.sides.SidedAccessHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -45,7 +46,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -61,7 +61,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ParametersAreNonnullByDefault
@@ -317,11 +316,7 @@ public class SchemaLevel extends Level implements ISchema {
 
     @Override
     public RecipeManager getRecipeManager() {
-        if (ModularUI.isClientThread()) {
-            return ClientCallWrapper.getClientRecipeManager();
-        } else {
-            return ServerLifecycleHooks.getCurrentServer().getRecipeManager();
-        }
+        return SidedAccessHelper.getRecipeManager();
     }
 
     @Override
@@ -341,7 +336,7 @@ public class SchemaLevel extends Level implements ISchema {
     public void gameEvent(Holder<GameEvent> gameEvent, Vec3 pos, GameEvent.Context context) {}
 
     @Override
-    public float getShade(@NotNull Direction direction, boolean shade) {
+    public float getShade(Direction direction, boolean shade) {
         if (!shade) {
             return 1.0f;
         } else {

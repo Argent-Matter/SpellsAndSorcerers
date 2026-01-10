@@ -22,14 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 public final class InventoryTypes {
 
-    /*
-     * public static final ItemEntry<TestItem> TEST_ITEM = REGISTRATE.item("mui_test_item", TestItem::new)
-     * .tab(GTCreativeModeTabs.ITEM.getKey())
-     * .setData(ProviderType.LANG, NonNullBiConsumer.noop())
-     * .setData(ProviderType.ITEM_MODEL, NonNullBiConsumer.noop())
-     * .register();
-     */
-
     @ApiStatus.Internal
     public static void init() {
         NeoForge.EVENT_BUS.addListener(InventoryTypes::onKeyInput);

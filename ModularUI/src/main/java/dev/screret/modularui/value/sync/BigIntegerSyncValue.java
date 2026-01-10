@@ -6,17 +6,17 @@ import dev.screret.modularui.utils.serialization.network.ByteBufAdapters;
 
 import io.netty.buffer.ByteBuf;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.math.BigInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class BigIntegerSyncValue extends GenericSyncValue<ByteBuf, BigInteger> implements IStringValue<BigInteger> {
 
     public BigIntegerSyncValue(@NotNull Supplier<BigInteger> getter, @Nullable Consumer<BigInteger> setter) {
-        super(getter, setter, ByteBufAdapters.BIG_INT, ICopy.immutable());
+        super(BigInteger.class, getter, setter, ByteBufAdapters.BIG_INT, ICopy.immutable());
     }
 
     @Override

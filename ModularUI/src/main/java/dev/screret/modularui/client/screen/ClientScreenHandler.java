@@ -16,6 +16,7 @@ import dev.screret.modularui.core.mixins.client.AbstractContainerScreenAccessor;
 import dev.screret.modularui.core.mixins.client.ScreenAccessor;
 import dev.screret.modularui.drawable.GuiDraw;
 import dev.screret.modularui.integration.recipeviewer.handlers.RecipeViewerHandler;
+import dev.screret.modularui.network.ModularNetwork;
 import dev.screret.modularui.overlay.OverlayManager;
 import dev.screret.modularui.overlay.OverlayStack;
 import dev.screret.modularui.utils.Color;
@@ -84,11 +85,6 @@ public class ClientScreenHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onOpenScreen(ScreenEvent.Opening event) {
         onGuiChanged(event.getCurrentScreen(), event.getNewScreen());
-    }
-
-    @SubscribeEvent
-    public static void onCloseScreen(ScreenEvent.Closing event) {
-        onGuiChanged(event.getScreen(), null);
     }
 
     @SubscribeEvent
@@ -290,6 +286,8 @@ public class ClientScreenHandler {
         } else if (newScreen == null) {
             // closing -> clear stack and dispose every screen
             invalidateMuiStack();
+            // only when all screens are closed dispose all containers in the stack
+            ModularNetwork.CLIENT.closeAll();
         }
 
         OverlayManager.onOpenScreen(newScreen);
@@ -298,7 +296,7 @@ public class ClientScreenHandler {
     private static void invalidateCurrentScreen() {
         // reset mouse inputs, relevant when screen gets reopened
         if (lastMui != null) {
-            lastMui.getScreen().getPanelManager().closeAll();
+            lastMui.getScreen().getPanelManager().closeScreen();
             lastMui = null;
         }
         currentScreen = null;
@@ -357,15 +355,14 @@ public class ClientScreenHandler {
 
     private static void onClose() {
         if (currentScreen.getContext().hasDraggable()) {
-            currentScreen.getContext().dropDraggable();
+            currentScreen.getContext().dropDraggable(true);
         } else {
             currentScreen.getPanelManager().closeTopPanel();
         }
     }
 
     public static void dragSlot(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        ModularGuiContext ctx = currentScreen.getContext();
-        getMCScreen().mouseDragged(ctx.getMouseX(), ctx.getMouseY(), button, dragX, dragY);
+        getMCScreen().mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     public static void clickSlot(ModularScreen ms, Slot slot) {
@@ -577,10 +574,11 @@ public class ClientScreenHandler {
             Area area = hovered.getArea();
             IWidget parent = hovered.getParent();
 
-            GuiDraw.drawBorder(graphics, 0, 0, area.width, area.height, color, scale);
+            GuiDraw.drawBorderOutsideXYWH(graphics, 0, 0, area.width, area.height, scale, color);
             if (hovered.hasParent()) {
-                GuiDraw.drawBorder(graphics, -area.rx, -area.ry, parent.getArea().width, parent.getArea().height,
-                        Color.withAlpha(color, 0.3f), scale);
+                GuiDraw.drawBorderOutsideXYWH(graphics, -area.rx, -area.ry, parent.getArea().width,
+                        parent.getArea().height,
+                        scale, Color.withAlpha(color, 0.3f));
             }
             graphics.pose().popPose();
             locatedHovered.unapplyMatrix(context);

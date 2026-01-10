@@ -2,7 +2,6 @@ package dev.screret.modularui.api;
 
 import dev.screret.modularui.client.screen.ModularPanel;
 import dev.screret.modularui.client.screen.SecondaryPanel;
-import dev.screret.modularui.value.sync.ItemSlotSH;
 import dev.screret.modularui.value.sync.PanelSyncHandler;
 import dev.screret.modularui.value.sync.PanelSyncManager;
 
@@ -72,8 +71,23 @@ public interface IPanelHandler {
     void closePanelInternal();
 
     /**
+     * Toggles this panel open or closed. Delegates to {@link #openPanel()} and {@link #closePanel()}.
+     *
+     * @return {@code true} if the panel was opened, {@code false} if it was closed
+     */
+    default boolean togglePanel() {
+        if (isPanelOpen()) {
+            closePanel();
+            return false;
+        } else {
+            openPanel();
+            return true;
+        }
+    }
+
+    /**
      * Deletes the current cached panel. Should not be used frequently.
-     * This only works on panels which don't have {@link ItemSlotSH} sync handlers.
+     * This only works on panels which don't have {@link ItemSlotSyncHandler} sync handlers.
      *
      * @throws UnsupportedOperationException if this handler has ItemSlot sync handlers
      */

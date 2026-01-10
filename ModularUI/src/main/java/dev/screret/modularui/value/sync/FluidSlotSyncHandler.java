@@ -1,8 +1,12 @@
 package dev.screret.modularui.value.sync;
 
-import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.utils.FluidTankHandler;
 import dev.screret.modularui.utils.MouseData;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.sounds.SoundEvent;
@@ -16,17 +20,12 @@ import net.neoforged.neoforge.fluids.*;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Accessors(fluent = true, chain = true)
 public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteBuf, FluidStack> {
 
-    public static final int SYNC_FLUID = 0;
     public static final int SYNC_CLICK = 1;
     public static final int SYNC_SCROLL = 2;
     public static final int SYNC_CONTROLS_AMOUNT = 3;
@@ -63,21 +62,15 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
                 this.fluidTank.fill(value.copy(), IFluidHandler.FluidAction.EXECUTE);
             }
         }
-        if (sync) {
-            if (ModularUI.isClientThread()) {
-                syncToServer(SYNC_FLUID, this::write);
-            } else {
-                syncToClient(SYNC_FLUID, this::write);
-            }
-        }
         onValueChanged();
+        if (sync) sync();
     }
 
     public boolean needsSync() {
         FluidStack current = this.fluidTank.getFluid();
         if (current == this.cache) return false;
         if (current.isEmpty() && this.cache.isEmpty()) return true;
-        return !FluidStack.isSameFluidSameComponents(current, this.cache);
+        return !FluidStack.matches(current, this.cache);
     }
 
     @Override
@@ -87,6 +80,11 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Class<FluidStack> getValueType() {
+        return FluidStack.class;
     }
 
     @Override
@@ -106,7 +104,7 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
 
     @Override
     public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
-        if (id == SYNC_FLUID) {
+        if (id == SYNC_VALUE) {
             read(buf);
         } else if (id == SYNC_CONTROLS_AMOUNT) {
             this.controlsAmount = buf.readBoolean();
@@ -115,7 +113,7 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
 
     @Override
     public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
-        if (id == SYNC_FLUID) {
+        if (id == SYNC_VALUE) {
             if (this.phantom) {
                 read(buf);
             }
@@ -207,16 +205,16 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
         Player player = getSyncManager().getPlayer();
         ItemStack currentStack = player.containerMenu.getCarried();
         FluidStack currentFluid = this.fluidTank.getFluid();
-        IFluidHandlerItem fluidHandler = currentStack.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem fluidHandlerItem = currentStack.getCapability(Capabilities.FluidHandler.ITEM);
 
-        if (mouseData.mouseButton() == 0) {
-            if (currentStack.isEmpty() || fluidHandler == null) {
+        if (mouseData.mouseButton() == InputConstants.MOUSE_BUTTON_LEFT) {
+            if (currentStack.isEmpty() || fluidHandlerItem == null) {
                 if (this.canDrainSlot) {
                     this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : 1000,
                             IFluidHandler.FluidAction.EXECUTE);
                 }
             } else {
-                FluidStack cellFluid = fluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+                FluidStack cellFluid = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
                 if ((this.controlsAmount || currentFluid.isEmpty()) && !cellFluid.isEmpty()) {
                     if (this.canFillSlot) {
                         if (!this.controlsAmount) {
@@ -233,7 +231,7 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
                     }
                 }
             }
-        } else if (mouseData.mouseButton() == 1) {
+        } else if (mouseData.mouseButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (this.canFillSlot) {
                 if (!currentFluid.isEmpty()) {
                     if (this.controlsAmount) {
@@ -247,7 +245,7 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
                     this.fluidTank.fill(toFill, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
-        } else if (mouseData.mouseButton() == 2 && !currentFluid.isEmpty() && this.canDrainSlot) {
+        } else if (mouseData.mouseButton() == InputConstants.MOUSE_BUTTON_MIDDLE && !currentFluid.isEmpty() && this.canDrainSlot) {
             this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : FluidType.BUCKET_VOLUME,
                     IFluidHandler.FluidAction.EXECUTE);
         }

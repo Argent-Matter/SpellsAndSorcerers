@@ -17,10 +17,13 @@ import dev.screret.modularui.widgets.layout.Row;
 import dev.screret.modularui.widgets.textfield.TextFieldWidget;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ColorPickerDialog extends Dialog<Integer> {
 
-    private static final IDrawable handleBackground = new Rectangle().setColor(Color.WHITE.main);
+    private static final IDrawable handleBackground = new Rectangle().color(Color.WHITE.main);
 
     private int color;
     private int red;
@@ -94,6 +97,7 @@ public class ColorPickerDialog extends Dialog<Integer> {
                         .mainAxisAlignment(Alignment.MainAxis.SPACE_BETWEEN)
                         .child(new ButtonWidget<>()
                                 .heightRel(1f).width(50)
+                                // TODO make translatable
                                 .overlay(IKey.str("Cancel"))
                                 .onMousePressed((mouseX, mouseY, button) -> {
                                     closeIfOpen();
@@ -101,6 +105,7 @@ public class ColorPickerDialog extends Dialog<Integer> {
                                 }))
                         .child(new ButtonWidget<>()
                                 .heightRel(1f).width(50)
+                                // TODO make translatable
                                 .overlay(IKey.str("Confirm"))
                                 .onMousePressed((mouseX, mouseY, button) -> {
                                     closeWith(this.color);
@@ -108,7 +113,7 @@ public class ColorPickerDialog extends Dialog<Integer> {
                                 }))));
     }
 
-    private IWidget createRGBPage(IWidget alphaSlider) {
+    private IWidget createRGBPage(@Nullable Supplier<IWidget> alphaSlider) {
         return new Column()
                 .sizeRel(1f, 1f)
                 .child(new Row()
@@ -135,7 +140,7 @@ public class ColorPickerDialog extends Dialog<Integer> {
                 .childIf(alphaSlider != null, alphaSlider);
     }
 
-    private IWidget createHSVPage(IWidget alphaSlider) {
+    private IWidget createHSVPage(@Nullable Supplier<IWidget> alphaSlider) {
         return new Column()
                 .sizeRel(1f, 1f)
                 .child(new Row()
@@ -171,15 +176,17 @@ public class ColorPickerDialog extends Dialog<Integer> {
                 .sliderSize(2, 8);
     }
 
-    private IWidget createAlphaSlider(String s) {
-        return controlAlpha ? new Row()
+    private @Nullable Supplier<IWidget> createAlphaSlider(String s) {
+        if (!controlAlpha) {
+            return null;
+        }
+        return () -> new Row()
                 .widthRel(1f).height(12)
                 .child(IKey.str("A: ").asWidget().heightRel(1f))
                 .child(createSlider(this.sliderBackgroundA)
                         .name("alpha " + s)
                         .bounds(0, 255)
-                        .value(new DoubleValue.Dynamic(() -> this.alpha, this::updateAlpha))) :
-                null;
+                        .value(new DoubleValue.Dynamic(() -> this.alpha, this::updateAlpha)));
     }
 
     private String validateRawColor(String raw) {
@@ -265,13 +272,13 @@ public class ColorPickerDialog extends Dialog<Integer> {
         int gs = Color.withGreen(color, 0), ge = Color.withGreen(color, 255);
         int bs = Color.withBlue(color, 0), be = Color.withBlue(color, 255);
         int as = Color.withAlpha(color, 0), ae = Color.withAlpha(color, 255);
-        this.sliderBackgroundR.setHorizontalGradient(rs, re);
-        this.sliderBackgroundG.setHorizontalGradient(gs, ge);
-        this.sliderBackgroundB.setHorizontalGradient(bs, be);
-        this.sliderBackgroundA.setHorizontalGradient(as, ae);
-        this.sliderBackgroundS.setHorizontalGradient(Color.withHSVSaturation(color, 0f),
+        this.sliderBackgroundR.horizontalGradient(rs, re);
+        this.sliderBackgroundG.horizontalGradient(gs, ge);
+        this.sliderBackgroundB.horizontalGradient(bs, be);
+        this.sliderBackgroundA.horizontalGradient(as, ae);
+        this.sliderBackgroundS.horizontalGradient(Color.withHSVSaturation(color, 0f),
                 Color.withHSVSaturation(color, 1f));
-        this.sliderBackgroundV.setHorizontalGradient(Color.withValue(color, 0f), Color.withValue(color, 1f));
-        this.preview.setColor(color);
+        this.sliderBackgroundV.horizontalGradient(Color.withValue(color, 0f), Color.withValue(color, 1f));
+        this.preview.color(color);
     }
 }
