@@ -1,6 +1,7 @@
 package dev.screret.modularui.network;
 
 import dev.screret.modularui.ModularUI;
+import dev.screret.modularui.network.packets.CloseAllGuisPacket;
 import dev.screret.modularui.network.packets.OpenGuiPacket;
 import dev.screret.modularui.network.packets.SyncHandlerPacket;
 
@@ -20,6 +21,7 @@ public class NetworkHandler {
         // spotless:off
         registrar.playBidirectional(OpenGuiPacket.TYPE, OpenGuiPacket.CODEC, OpenGuiPacket::execute);
         registrar.playBidirectional(SyncHandlerPacket.TYPE, SyncHandlerPacket.CODEC, SyncHandlerPacket::execute);
+        registrar.playBidirectional(CloseAllGuisPacket.TYPE, CloseAllGuisPacket.CODEC, CloseAllGuisPacket::execute);
         // spotless:on
     }
 }

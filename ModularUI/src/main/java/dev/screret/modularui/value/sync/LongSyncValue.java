@@ -4,22 +4,17 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
 import dev.screret.modularui.api.value.sync.ILongSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-
-import net.minecraft.network.VarLong;
-
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public class LongSyncValue extends ValueSyncHandler<ByteBuf, Long>
-                           implements ILongSyncValue<ByteBuf, Long>, IIntSyncValue<ByteBuf, Long>,
-                           IStringSyncValue<ByteBuf, Long> {
+public class LongSyncValue extends ValueSyncHandler<Long>
+                           implements ILongSyncValue<Long>, IIntSyncValue<Long>, IStringSyncValue<Long> {
 
     private final LongSupplier getter;
     private final LongConsumer setter;
@@ -78,9 +73,8 @@ public class LongSyncValue extends ValueSyncHandler<ByteBuf, Long>
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -98,13 +92,13 @@ public class LongSyncValue extends ValueSyncHandler<ByteBuf, Long>
     }
 
     @Override
-    public void write(ByteBuf buffer) {
-        VarLong.write(buffer, getLongValue());
+    public void write(FriendlyByteBuf buffer) {
+        buffer.writeVarLong(getLongValue());
     }
 
     @Override
-    public void read(ByteBuf buffer) {
-        setValue(VarLong.read(buffer), true, false);
+    public void read(FriendlyByteBuf buffer) {
+        setValue(buffer.readVarLong(), true, false);
     }
 
     @Override
@@ -125,5 +119,10 @@ public class LongSyncValue extends ValueSyncHandler<ByteBuf, Long>
     @Override
     public String getStringValue() {
         return String.valueOf(this.cache);
+    }
+
+    @Override
+    public Class<Long> getValueType() {
+        return Long.class;
     }
 }

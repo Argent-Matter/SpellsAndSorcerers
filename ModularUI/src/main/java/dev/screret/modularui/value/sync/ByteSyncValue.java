@@ -3,14 +3,12 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IByteSyncValue;
 import dev.screret.modularui.value.ByteValue;
-
 import io.netty.buffer.ByteBuf;
-
-import java.util.Objects;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class ByteSyncValue extends ValueSyncHandler<ByteBuf, Byte> implements IByteSyncValue<ByteBuf, Byte> {
 
@@ -89,13 +87,17 @@ public class ByteSyncValue extends ValueSyncHandler<ByteBuf, Byte> implements IB
         if (setSource && this.setter != null) {
             this.setter.setByte(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
     public byte getByteValue() {
         return this.cache;
+    }
+
+    @Override
+    public Class<Byte> getValueType() {
+        return Byte.class;
     }
 }

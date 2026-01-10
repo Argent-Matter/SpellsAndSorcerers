@@ -1,11 +1,8 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.ISyncedAction;
-
-import net.minecraft.network.RegistryFriendlyByteBuf;
-
 import lombok.Getter;
-
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 
 public class SyncedAction {
@@ -22,7 +19,7 @@ public class SyncedAction {
         this.executeServer = executeServer;
     }
 
-    public boolean invoke(boolean client, @NotNull RegistryFriendlyByteBuf packet) {
+    public boolean invoke(boolean client, @NotNull FriendlyByteBuf packet) {
         if (isExecute(client)) {
             this.action.invoke(packet);
             return true;

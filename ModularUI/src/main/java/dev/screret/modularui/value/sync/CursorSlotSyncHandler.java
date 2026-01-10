@@ -1,22 +1,20 @@
 package dev.screret.modularui.value.sync;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class CursorSlotSyncHandler extends SyncHandler {
 
     public void sync() {
-        sync(0, (RegistryFriendlyByteBuf buffer) -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer,
-                getSyncManager().getPlayer().containerMenu.getCarried()));
+        sync(0, buffer -> buffer.writeItem(getSyncManager().getPlayer().containerMenu.getCarried()));
     }
 
     @Override
-    public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
-        getSyncManager().getPlayer().containerMenu.setCarried(ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
+    public void readOnClient(int id, FriendlyByteBuf buf) {
+        getSyncManager().getPlayer().containerMenu.setCarried(buf.readItem());
     }
 
     @Override
-    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
-        getSyncManager().getPlayer().containerMenu.setCarried(ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
+    public void readOnServer(int id, FriendlyByteBuf buf) {
+        getSyncManager().getPlayer().containerMenu.setCarried(buf.readItem());
     }
 }

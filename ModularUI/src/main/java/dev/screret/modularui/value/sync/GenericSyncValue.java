@@ -1,176 +1,236 @@
 package dev.screret.modularui.value.sync;
 
-import dev.screret.modularui.utils.ICopy;
-import dev.screret.modularui.utils.serialization.network.ByteBufAdapters;
-import dev.screret.modularui.utils.serialization.network.IByteBufAdapter;
-import dev.screret.modularui.utils.serialization.network.IEquals;
-
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamDecoder;
-import net.minecraft.network.codec.StreamEncoder;
+import com.gregtechceu.gtceu.utils.EqualityTest;
+import com.gregtechceu.gtceu.utils.ICopy;
+import com.gregtechceu.gtceu.utils.serialization.network.ByteBufAdapters;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufAdapter;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufDeserializer;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufSerializer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-
-import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+public class GenericSyncValue<T> extends AbstractGenericSyncValue<T> {
 
-public class GenericSyncValue<B extends ByteBuf, T> extends ValueSyncHandler<B, T> {
-
-    public static GenericSyncValue<RegistryFriendlyByteBuf, ItemStack> forItem(@NotNull Supplier<ItemStack> getter,
-                                                                               @Nullable Consumer<ItemStack> setter) {
+    public static GenericSyncValue<ItemStack> forItem(@NotNull Supplier<ItemStack> getter,
+                                                      @Nullable Consumer<ItemStack> setter) {
         return new GenericSyncValue<>(getter, setter, ByteBufAdapters.ITEM_STACK);
     }
 
-    public static GenericSyncValue<RegistryFriendlyByteBuf, FluidStack> forFluid(@NotNull Supplier<FluidStack> getter,
-                                                                                 @Nullable Consumer<FluidStack> setter) {
+    public static GenericSyncValue<FluidStack> forFluid(@NotNull Supplier<FluidStack> getter,
+                                                        @Nullable Consumer<FluidStack> setter) {
         return new GenericSyncValue<>(getter, setter, ByteBufAdapters.FLUID_STACK);
     }
 
-    private final Supplier<T> getter;
-    private final Consumer<T> setter;
-    private final StreamDecoder<B, T> decoder;
-    private final StreamEncoder<B, T> encoder;
-    private final IEquals<T> equals;
+    private final IByteBufDeserializer<T> deserializer;
+    private final IByteBufSerializer<T> serializer;
+    private final EqualityTest<T> equals;
     private final ICopy<T> copy;
-    private T cache;
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
                             @Nullable Consumer<T> setter,
-                            @NotNull IByteBufAdapter<B, T> adapter) {
+                            @NotNull IByteBufAdapter<T> adapter) {
         this(getter, setter, adapter, adapter, adapter, null);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
                             @Nullable Consumer<T> setter,
-                            @NotNull IByteBufAdapter<B, T> adapter,
+                            @NotNull IByteBufAdapter<T> adapter,
                             @Nullable ICopy<T> copy) {
         this(getter, setter, adapter, adapter, adapter, copy);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
                             @Nullable Consumer<T> setter,
-                            @NotNull StreamDecoder<B, T> decoder,
-                            @NotNull StreamEncoder<B, T> encoder) {
-        this(getter, setter, decoder, encoder, null, null);
+                            @NotNull IByteBufDeserializer<T> deserializer,
+                            @NotNull IByteBufSerializer<T> serializer) {
+        this(getter, setter, deserializer, serializer, null, null);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
                             @Nullable Consumer<T> setter,
-                            @NotNull StreamDecoder<B, T> decoder,
-                            @NotNull StreamEncoder<B, T> encoder,
+                            @NotNull IByteBufDeserializer<T> deserializer,
+                            @NotNull IByteBufSerializer<T> serializer,
                             @Nullable ICopy<T> copy) {
-        this(getter, setter, decoder, encoder, null, copy);
+        this(getter, setter, deserializer, serializer, null, copy);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
-                            @NotNull IByteBufAdapter<B, T> adapter) {
+                            @NotNull IByteBufAdapter<T> adapter) {
         this(getter, null, adapter, adapter, adapter, null);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
-                            @NotNull IByteBufAdapter<B, T> adapter,
+                            @NotNull IByteBufAdapter<T> adapter,
                             @Nullable ICopy<T> copy) {
         this(getter, null, adapter, adapter, adapter, copy);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
-                            @NotNull StreamDecoder<B, T> decoder,
-                            @NotNull StreamEncoder<B, T> encoder) {
-        this(getter, null, decoder, encoder, null, null);
+                            @NotNull IByteBufDeserializer<T> deserializer,
+                            @NotNull IByteBufSerializer<T> serializer) {
+        this(getter, null, deserializer, serializer, null, null);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
-                            @NotNull StreamDecoder<B, T> decoder,
-                            @NotNull StreamEncoder<B, T> encoder,
+                            @NotNull IByteBufDeserializer<T> deserializer,
+                            @NotNull IByteBufSerializer<T> serializer,
                             @Nullable ICopy<T> copy) {
-        this(getter, null, decoder, encoder, null, copy);
+        this(getter, null, deserializer, serializer, null, copy);
     }
 
+    @ApiStatus.ScheduledForRemoval(inVersion = "3.2.0")
+    @Deprecated
     public GenericSyncValue(@NotNull Supplier<T> getter,
                             @Nullable Consumer<T> setter,
-                            @NotNull StreamDecoder<B, T> decoder,
-                            @NotNull StreamEncoder<B, T> encoder,
-                            @Nullable IEquals<T> equals,
+                            @NotNull IByteBufDeserializer<T> deserializer,
+                            @NotNull IByteBufSerializer<T> serializer,
+                            @Nullable EqualityTest<T> equals,
                             @Nullable ICopy<T> copy) {
-        this.getter = Objects.requireNonNull(getter);
-        this.cache = getter.get();
-        this.setter = setter;
-        this.decoder = Objects.requireNonNull(decoder);
-        this.encoder = Objects.requireNonNull(encoder);
-        this.equals = equals == null ? Objects::equals : IEquals.wrapNullSafe(equals);
-        this.copy = copy == null ? ICopy.ofSerializer(encoder, decoder) : copy;
+        this(null, getter, setter, deserializer, serializer, equals, copy);
+    }
+
+    public GenericSyncValue(@NotNull Class<T> type,
+                            @NotNull Supplier<T> getter,
+                            @Nullable Consumer<T> setter,
+                            @NotNull IByteBufAdapter<T> adapter,
+                            @Nullable ICopy<T> copy) {
+        this(type, getter, setter, adapter, adapter, adapter, copy);
+    }
+
+    public GenericSyncValue(@NotNull Class<T> type,
+                            @NotNull Supplier<T> getter,
+                            @Nullable Consumer<T> setter,
+                            @NotNull IByteBufAdapter<T> adapter) {
+        this(type, getter, setter, adapter, adapter, adapter, null);
+    }
+
+    public GenericSyncValue(@NotNull Class<T> type,
+                            @NotNull Supplier<T> getter,
+                            @Nullable Consumer<T> setter,
+                            @NotNull IByteBufDeserializer<T> deserializer,
+                            @NotNull IByteBufSerializer<T> serializer,
+                            @Nullable EqualityTest<T> equals,
+                            @Nullable ICopy<T> copy) {
+        super(type, getter, setter);
+        this.deserializer = Objects.requireNonNull(deserializer);
+        this.serializer = Objects.requireNonNull(serializer);
+        this.equals = equals == null ? Objects::equals : EqualityTest.wrapNullSafe(equals);
+        this.copy = copy == null ? ICopy.ofSerializer(serializer, deserializer) : copy;
     }
 
     @Override
-    public T getValue() {
-        return this.cache;
+    protected T createDeepCopyOf(T value) {
+        return this.copy.createDeepCopy(value);
     }
 
     @Override
-    public void setValue(T value, boolean setSource, boolean sync) {
-        this.cache = this.copy.createDeepCopy(value);
-        if (setSource && this.setter != null) {
-            this.setter.accept(value);
-        }
-        if (sync) {
-            // noinspection unchecked
-            sync(0, buffer -> this.write((B) buffer));
-        }
+    protected boolean areEqual(T a, T b) {
+        return this.equals.areEqual(a, b);
     }
 
     @Override
-    public boolean updateCacheFromSource(boolean isFirstSync) {
-        T t = this.getter.get();
-        if (isFirstSync || !this.equals.areEqual(this.cache, t)) {
-            setValue(t, false, false);
-            return true;
-        }
-        return false;
+    protected void serialize(FriendlyByteBuf buffer, T value) {
+        this.serializer.serialize(buffer, value);
     }
 
     @Override
-    public void notifyUpdate() {
-        setValue(this.getter.get(), false, true);
-    }
-
-    @Override
-    public void write(B buffer) {
-        this.encoder.encode(buffer, this.cache);
-    }
-
-    @Override
-    public void read(B buffer) {
-        setValue(this.decoder.decode(buffer), true, false);
+    protected T deserialize(FriendlyByteBuf buffer) {
+        return this.deserializer.deserialize(buffer);
     }
 
     @SuppressWarnings("unchecked")
-    public @Nullable Class<? extends T> getType() {
-        if (this.cache != null) {
-            return (Class<? extends T>) this.cache.getClass();
-        }
-        T t = this.getter.get();
-        if (t != null) {
-            return (Class<? extends T>) t.getClass();
-        }
-        return null;
+    public <V> GenericSyncValue<V> cast() {
+        return (GenericSyncValue<V>) this;
     }
 
-    public boolean isOfType(Class<?> expectedType) {
-        Class<? extends T> type = getType();
-        if (type == null) {
-            throw new IllegalStateException("Could not infer type of GenericSyncValue since value is null!");
-        }
-        return expectedType.isAssignableFrom(type);
-    }
+    public static class Builder<T> {
 
-    @SuppressWarnings("unchecked")
-    public <I extends ByteBuf, V> GenericSyncValue<I, V> cast() {
-        return (GenericSyncValue<I, V>) this;
+        private final Class<T> type;
+        private Supplier<T> getter;
+        private Consumer<T> setter;
+        private IByteBufDeserializer<T> deserializer;
+        private IByteBufSerializer<T> serializer;
+        private EqualityTest<T> equals;
+        private ICopy<T> copy;
+
+        public Builder(Class<T> type) {
+            this.type = type;
+        }
+
+        public Builder<T> getter(Supplier<T> getter) {
+            this.getter = getter;
+            return this;
+        }
+
+        public Builder<T> setter(Consumer<T> setter) {
+            this.setter = setter;
+            return this;
+        }
+
+        public Builder<T> deserializer(IByteBufDeserializer<T> deserializer) {
+            this.deserializer = deserializer;
+            return this;
+        }
+
+        public Builder<T> serializer(IByteBufSerializer<T> serializer) {
+            this.serializer = serializer;
+            return this;
+        }
+
+        public Builder<T> equals(EqualityTest<T> equals) {
+            this.equals = equals;
+            return this;
+        }
+
+        public Builder<T> equalsDefault() {
+            return equals(EqualityTest.defaultTester());
+        }
+
+        public Builder<T> equalsReference() {
+            return equals((a, b) -> a == b);
+        }
+
+        public Builder<T> copy(ICopy<T> copy) {
+            this.copy = copy;
+            return this;
+        }
+
+        public Builder<T> copyImmutable() {
+            return copy(ICopy.immutable());
+        }
+
+        public Builder<T> adapter(IByteBufAdapter<T> adapter) {
+            return deserializer(adapter)
+                    .serializer(adapter)
+                    .equals(adapter);
+        }
+
+        public GenericSyncValue<T> build() {
+            return new GenericSyncValue<>(type, getter, setter, deserializer, serializer, equals, copy);
+        }
     }
 }

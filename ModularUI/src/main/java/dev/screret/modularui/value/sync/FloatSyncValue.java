@@ -4,19 +4,17 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IDoubleSyncValue;
 import dev.screret.modularui.api.value.sync.IFloatSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-import dev.screret.modularui.utils.FloatConsumer;
-import dev.screret.modularui.utils.FloatSupplier;
-
-import io.netty.buffer.ByteBuf;
-
-import java.util.Objects;
-
+import com.gregtechceu.gtceu.utils.FloatConsumer;
+import com.gregtechceu.gtceu.utils.FloatSupplier;
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
-                            IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {
+import java.util.Objects;
+
+public class FloatSyncValue extends ValueSyncHandler<Float> implements
+                            IFloatSyncValue<Float>, IDoubleSyncValue<Float>, IStringSyncValue<Float> {
 
     private final FloatSupplier getter;
     private final FloatConsumer setter;
@@ -75,9 +73,8 @@ public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -95,12 +92,12 @@ public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
     }
 
     @Override
-    public void write(ByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         buffer.writeFloat(getFloatValue());
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(FriendlyByteBuf buffer) {
         setFloatValue(buffer.readFloat(), true, false);
     }
 
@@ -122,5 +119,10 @@ public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
     @Override
     public void setDoubleValue(double value, boolean setSource, boolean sync) {
         setFloatValue((float) value, setSource, sync);
+    }
+
+    @Override
+    public Class<Float> getValueType() {
+        return Float.class;
     }
 }

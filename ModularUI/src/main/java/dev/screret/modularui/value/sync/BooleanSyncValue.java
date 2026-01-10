@@ -3,19 +3,17 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IBoolSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-
-import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-
-import java.util.Objects;
-import java.util.function.BooleanSupplier;
-
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
-                              implements IBoolSyncValue<ByteBuf, Boolean>, IStringSyncValue<ByteBuf, Boolean> {
+import java.util.Objects;
+import java.util.function.BooleanSupplier;
+
+public class BooleanSyncValue extends ValueSyncHandler<Boolean>
+                              implements IBoolSyncValue<Boolean>, IStringSyncValue<Boolean> {
 
     private final BooleanSupplier getter;
     private final BooleanConsumer setter;
@@ -74,9 +72,8 @@ public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -94,12 +91,12 @@ public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
     }
 
     @Override
-    public void write(ByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         buffer.writeBoolean(getBoolValue());
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(FriendlyByteBuf buffer) {
         setBoolValue(buffer.readBoolean(), true, false);
     }
 
@@ -111,5 +108,10 @@ public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
     @Override
     public String getStringValue() {
         return String.valueOf(this.cache);
+    }
+
+    @Override
+    public Class<Boolean> getValueType() {
+        return Boolean.class;
     }
 }

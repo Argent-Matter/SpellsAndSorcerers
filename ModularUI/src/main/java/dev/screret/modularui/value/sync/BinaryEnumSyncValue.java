@@ -1,20 +1,17 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.value.sync.IBoolSyncValue;
-
-import io.netty.buffer.ByteBuf;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 /**
  * Accepts enums which have exactly two elements. Can act as {@link IBoolSyncValue}.
  */
-public class BinaryEnumSyncValue<T extends Enum<T>> extends EnumSyncValue<T> implements IBoolSyncValue<ByteBuf, T> {
+public class BinaryEnumSyncValue<T extends Enum<T>> extends EnumSyncValue<T> implements IBoolSyncValue<T> {
 
     public BinaryEnumSyncValue(@NotNull Class<T> enumClass, @NotNull Supplier<T> getter, @Nullable Consumer<T> setter) {
         super(enumClass, getter, setter);

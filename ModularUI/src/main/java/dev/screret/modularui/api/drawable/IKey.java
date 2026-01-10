@@ -157,11 +157,21 @@ public interface IKey extends IDrawable, IJsonSerializable<IKey> {
     /**
      * Creates a dynamic text key.
      *
-     * @param getter string supplier
+     * @param supplier string supplier
      * @return dynamic text key
      */
-    static IKey dynamic(@NotNull Supplier<@NotNull Component> getter) {
-        return new DynamicKey(getter);
+    static IKey dynamic(@NotNull Supplier<@NotNull Component> supplier) {
+        return dynamicKey(() -> IKey.lang(supplier.get()));
+    }
+
+    /**
+     * Creates a dynamic text key.
+     *
+     * @param supp key supplier
+     * @return dynamic text key
+     */
+    static IKey dynamicKey(@NotNull Supplier<@NotNull IKey> supp) {
+        return new DynamicKey(supp);
     }
 
     /**

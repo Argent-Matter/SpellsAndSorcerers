@@ -1,11 +1,10 @@
 package dev.screret.modularui.api;
 
+import dev.screret.modularui.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -15,30 +14,32 @@ import java.util.List;
 
 public class MCHelper {
 
+    @OnlyIn(Dist.CLIENT)
     public static Minecraft getMc() {
         return Minecraft.getInstance();
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static Player getPlayer() {
         return getMc().player;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static boolean closeScreen() {
-        Player player = getMc().player;
-        if (player != null) {
-            player.closeContainer();
-            return true;
-        }
         getMc().popGuiLayer();
         return false;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void popScreen(boolean openParentOnClose, Screen parent) {
         Player player = MCHelper.getPlayer();
         if (player != null) {
-            prepareCloseContainer(player);
+            // container should not just be closed here
+            // instead they are kept in a stack until all screens are closed
+            // prepareCloseContainer(player);
             if (openParentOnClose) {
                 Minecraft.getInstance().setScreen(parent);
+                ModularNetwork.CLIENT.reopenSyncerOf(parent);
             } else {
                 Minecraft.getInstance().setScreen(null);
             }
@@ -46,14 +47,6 @@ public class MCHelper {
             // we are currently not in a world and want to display the previous screen
             Minecraft.getInstance().setScreen(parent);
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private static void prepareCloseContainer(Player currentPlayer) {
-        LocalPlayer player = (LocalPlayer) currentPlayer;
-        player.connection.send(new ServerboundContainerClosePacket(player.containerMenu.containerId));
-        player.containerMenu = player.inventoryMenu;
-        player.inventoryMenu.setCarried(ItemStack.EMPTY);
     }
 
     public static void setScreen(Screen screen) {
@@ -64,10 +57,12 @@ public class MCHelper {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static Screen getCurrentScreen() {
         return getMc().screen;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static Font getFont() {
         return getMc().font;
     }

@@ -1,11 +1,13 @@
 package dev.screret.modularui.drawable.text;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.screret.modularui.api.drawable.ITextLine;
 import dev.screret.modularui.client.screen.viewport.GuiContext;
 import dev.screret.modularui.core.mixins.client.StringSplitterAccessor;
 import dev.screret.modularui.utils.Alignment;
 import dev.screret.modularui.widget.sizer.Area;
-
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
@@ -15,10 +17,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,7 +242,7 @@ public class TextRenderer {
 
     protected int getStartY(float maxHeight, float height) {
         if (this.alignment.y > 0 && maxHeight > 0 && height != maxHeight) {
-            return (int) (this.y + (maxHeight * this.alignment.y) - height * this.alignment.y);
+            return this.y + Math.round(maxHeight * this.alignment.y) - Math.round(height * this.alignment.y);
         }
         return this.y;
     }
@@ -255,7 +253,8 @@ public class TextRenderer {
 
     protected int getStartX(float maxWidth, float lineWidth) {
         if (this.alignment.x > 0 && maxWidth > 0) {
-            return Math.max(this.x, (int) (this.x + (maxWidth * this.alignment.x) - lineWidth * this.alignment.x));
+            return Math.max(this.x,
+                    this.x + Math.round(maxWidth * this.alignment.x) - Math.round(lineWidth * this.alignment.x));
         }
         return this.x;
     }

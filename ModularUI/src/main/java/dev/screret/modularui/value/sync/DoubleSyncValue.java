@@ -4,20 +4,17 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IDoubleSyncValue;
 import dev.screret.modularui.api.value.sync.IFloatSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public class DoubleSyncValue extends ValueSyncHandler<ByteBuf, Double>
-                             implements IDoubleSyncValue<ByteBuf, Double>, IFloatSyncValue<ByteBuf, Double>,
-                             IStringSyncValue<ByteBuf, Double> {
+public class DoubleSyncValue extends ValueSyncHandler<Double>
+                             implements IDoubleSyncValue<Double>, IFloatSyncValue<Double>, IStringSyncValue<Double> {
 
     private final DoubleSupplier getter;
     private final DoubleConsumer setter;
@@ -76,9 +73,8 @@ public class DoubleSyncValue extends ValueSyncHandler<ByteBuf, Double>
         if (setSource && this.setter != null) {
             this.setter.accept(value);
         }
-        if (sync) {
-            sync(0, this::write);
-        }
+        onValueChanged();
+        if (sync) sync();
     }
 
     @Override
@@ -96,12 +92,12 @@ public class DoubleSyncValue extends ValueSyncHandler<ByteBuf, Double>
     }
 
     @Override
-    public void write(ByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         buffer.writeDouble(getDoubleValue());
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(FriendlyByteBuf buffer) {
         setDoubleValue(buffer.readDouble(), true, false);
     }
 
@@ -123,5 +119,10 @@ public class DoubleSyncValue extends ValueSyncHandler<ByteBuf, Double>
     @Override
     public void setFloatValue(float value, boolean setSource, boolean sync) {
         setDoubleValue(value, setSource, sync);
+    }
+
+    @Override
+    public Class<Double> getValueType() {
+        return Double.class;
     }
 }

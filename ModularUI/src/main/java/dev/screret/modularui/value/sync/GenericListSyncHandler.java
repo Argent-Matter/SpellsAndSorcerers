@@ -1,15 +1,14 @@
 package dev.screret.modularui.value.sync;
 
-import dev.screret.modularui.utils.ICopy;
-import dev.screret.modularui.utils.serialization.network.IEquals;
-
-import net.minecraft.network.VarInt;
-import net.minecraft.network.codec.StreamDecoder;
-import net.minecraft.network.codec.StreamEncoder;
-
-import io.netty.buffer.ByteBuf;
+import com.gregtechceu.gtceu.utils.EqualityTest;
+import com.gregtechceu.gtceu.utils.ICopy;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufDeserializer;
+import com.gregtechceu.gtceu.utils.serialization.network.IByteBufSerializer;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,16 +17,13 @@ import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public class GenericListSyncHandler<B extends ByteBuf, T> extends GenericCollectionSyncHandler<B, T, List<T>> {
+public class GenericListSyncHandler<T> extends GenericCollectionSyncHandler<T, List<T>> {
 
     private final ObjectList<T> cache = new ObjectArrayList<>();
 
     public GenericListSyncHandler(@NotNull Supplier<List<T>> getter, @Nullable Consumer<List<T>> setter,
-                                  @NotNull StreamDecoder<B, T> deserializer,
-                                  @NotNull StreamEncoder<B, T> serializer, @Nullable IEquals<T> equals,
+                                  @NotNull IByteBufDeserializer<T> deserializer,
+                                  @NotNull IByteBufSerializer<T> serializer, @Nullable EqualityTest<T> equals,
                                   @Nullable ICopy<T> copy) {
         super(getter, setter, deserializer, serializer, equals, copy);
     }
@@ -55,47 +51,48 @@ public class GenericListSyncHandler<B extends ByteBuf, T> extends GenericCollect
     }
 
     @Override
-    public void read(B buffer) {
+    public void read(FriendlyByteBuf buffer) {
         this.cache.clear();
-        int size = VarInt.read(buffer);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < buffer.readVarInt(); i++) {
             this.cache.add(deserializeValue(buffer));
         }
         onSetCache(getValue(), true, false);
     }
 
-    public static <B extends ByteBuf, T> Builder<B, T> builder() {
+    @Override
+    public Class<List<T>> getValueType() {
+        return (Class<List<T>>) (Object) List.class;
+    }
+
+    public static <T> Builder<T> builder() {
         return new Builder<>();
     }
 
-    public static class Builder<B extends ByteBuf, T> extends GenericCollectionSyncHandler.Builder<B, T, List<T>, Builder<B, T>> {
+    public static class Builder<T> extends GenericCollectionSyncHandler.Builder<T, List<T>, Builder<T>> {
 
-        public Builder<B, T> getterArray(Supplier<T[]> getter) {
+        public Builder<T> getterArray(Supplier<T[]> getter) {
             getter(() -> Arrays.asList(getter.get()));
             return this;
         }
 
-        public Builder<B, T> setterArray(Consumer<T[]> setter, IntFunction<T[]> arrayFactory) {
+        public Builder<T> setterArray(Consumer<T[]> setter, IntFunction<T[]> arrayFactory) {
             setter(c -> setter.accept(c.toArray(arrayFactory.apply(c.size()))));
             return this;
         }
 
         @Override
-        public @NotNull Builder<B, T> equals(IEquals<T> equals) {
+        public Builder<T> equals(EqualityTest<T> equals) {
             super.equals(equals);
             return this;
         }
 
-        public GenericListSyncHandler<B, T> build() {
-            if (this.getter == null) {
+        public GenericListSyncHandler<T> build() {
+            if (this.getter == null)
                 throw new NullPointerException("Getter in GenericListSyncHandler must not be null");
-            }
-            if (this.deserializer == null) {
+            if (this.deserializer == null)
                 throw new NullPointerException("Deserializer in GenericListSyncHandler must not be null");
-            }
-            if (this.serializer == null) {
+            if (this.serializer == null)
                 throw new NullPointerException("Serializer in GenericListSyncHandler must not be null");
-            }
             return new GenericListSyncHandler<>(this.getter, this.setter, this.deserializer, this.serializer,
                     this.equals, this.copy);
         }

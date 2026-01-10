@@ -1,7 +1,9 @@
 package dev.screret.modularui.drawable;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.screret.modularui.client.screen.viewport.GuiContext;
 
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import com.google.gson.JsonObject;
@@ -26,6 +28,7 @@ public class TiledUITexture extends UITexture {
             super.draw(context, x, y, width, height);
             return;
         }
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         GuiDraw.drawTiledTexture(context.getLastGraphicsPose(), this.location, x, y, width, height,
                 this.u0, this.v0, this.u1, this.v1,
                 this.imageWidth, this.imageHeight, 0);
@@ -38,5 +41,15 @@ public class TiledUITexture extends UITexture {
             json.addProperty("tiled", true);
         }
         return true;
+    }
+
+    @Override
+    protected TiledUITexture copy() {
+        return new TiledUITexture(location, u0, v0, u1, v1, imageWidth, imageHeight, colorType, nonOpaque);
+    }
+
+    @Override
+    public TiledUITexture withColorOverride(int color) {
+        return (TiledUITexture) super.withColorOverride(color);
     }
 }

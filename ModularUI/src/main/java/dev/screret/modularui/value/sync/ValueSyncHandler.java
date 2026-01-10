@@ -1,44 +1,43 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.value.sync.IValueSyncHandler;
-
-import net.minecraft.network.RegistryFriendlyByteBuf;
-
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 public abstract class ValueSyncHandler<B extends ByteBuf, T> extends SyncHandler implements IValueSyncHandler<B, T> {
+
+    public static final int SYNC_VALUE = 0;
 
     @Getter
     @Setter
     private Runnable changeListener;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
-        // B the lowest B can be is RegistryFriendlyByteBuf so this *should* work
-        read((B) buf);
-        onValueChanged();
+        if (id == SYNC_VALUE) read(buf);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
-        // B the lowest B can be is RegistryFriendlyByteBuf so this *should* work
-        read((B) buf);
-        onValueChanged();
+        if (id == SYNC_VALUE) read(buf);
     }
 
-    @SuppressWarnings("unchecked")
+    protected void sync() {
+        sync(SYNC_VALUE, this::write);
+    }
+
     @Override
     public void detectAndSendChanges(boolean init) {
-        if (updateCacheFromSource(init)) {
-            // B the lowest B can be is RegistryFriendlyByteBuf so this *should* work
-            syncToClient(0, buf -> this.write((B) buf));
-        }
+        if (updateCacheFromSource(init)) sync();
     }
 
+    /**
+     * Called when the cached value of this sync handler updates. Implementations need to call this inside
+     * {@link #setValue(Object, boolean, boolean)}.
+     */
     protected void onValueChanged() {
         if (this.changeListener != null) {
             this.changeListener.run();

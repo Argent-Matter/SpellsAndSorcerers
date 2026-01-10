@@ -94,7 +94,7 @@ public class UISettings {
         return containerCreator.apply(containerId);
     }
 
-    public boolean hasContainer() {
+    public boolean hasCustomContainer() {
         return containerCreator != null;
     }
 
