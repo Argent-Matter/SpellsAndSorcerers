@@ -2,11 +2,12 @@ package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.utils.MouseData;
 import dev.screret.modularui.widgets.slot.ModularSlot;
-import net.minecraft.network.FriendlyByteBuf;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.api.distmarker.Dist;
+
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -48,7 +49,7 @@ public class PhantomItemSlotSyncHandler extends ItemSlotSyncHandler {
     }
 
     @Override
-    public void readOnServer(int id, FriendlyByteBuf buf) {
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
         super.readOnServer(id, buf);
         if (id == SYNC_CLICK) {
             phantomClick(MouseData.readPacket(buf));
@@ -56,12 +57,13 @@ public class PhantomItemSlotSyncHandler extends ItemSlotSyncHandler {
             phantomScroll(MouseData.readPacket(buf));
         } else if (id == SYNC_ITEM_SIMPLE) {
             if (!isPhantom()) return;
-            phantomClick(new MouseData(Dist.DEDICATED_SERVER, 0, false, false, false), buf.readItem());
+            phantomClick(new MouseData(Dist.DEDICATED_SERVER, 0, false, false, false),
+                    ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
         }
     }
 
     public void updateFromClient(ItemStack stack) {
-        syncToServer(SYNC_ITEM_SIMPLE, buf -> buf.writeItem(stack));
+        syncToServer(SYNC_ITEM_SIMPLE, buf -> ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, stack));
     }
 
     protected void phantomClick(MouseData mouseData) {
@@ -72,7 +74,7 @@ public class PhantomItemSlotSyncHandler extends ItemSlotSyncHandler {
         ItemStack slotStack = getSlot().getItem();
         ItemStack stackToPut;
         if (!cursorStack.isEmpty() && !slotStack.isEmpty() &&
-                !ItemHandlerHelper.canItemStacksStack(cursorStack, slotStack)) {
+                !ItemStack.isSameItemSameComponents(cursorStack, slotStack)) {
             if (!isItemValid(cursorStack)) return;
             stackToPut = cursorStack.copy();
             if (mouseData.mouseButton() == 1) {

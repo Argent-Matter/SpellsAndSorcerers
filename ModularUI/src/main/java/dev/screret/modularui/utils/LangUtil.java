@@ -1,11 +1,21 @@
 package dev.screret.modularui.utils;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class LangUtil {
@@ -111,5 +121,30 @@ public final class LangUtil {
      */
     public static String subKey(String key, int index) {
         return key + "." + index;
+    }
+
+    public static Component getFluidModName(FluidStack fluidStack) {
+        String namespace = BuiltInRegistries.FLUID.getKey(fluidStack.getFluid()).getNamespace();
+        return getFormattedModName(namespace);
+    }
+
+    public static Component getFormattedModName(String namespace) {
+        return Component.literal(getModName(namespace)).withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC);
+    }
+
+    public static String getModName(String namespace) {
+        if (namespace.equals("c")) {
+            return "Common";
+        }
+
+        Optional<? extends ModContainer> container = ModList.get().getModContainerById(namespace);
+        if (container.isPresent()) {
+            return container.get().getModInfo().getDisplayName();
+        }
+        container = ModList.get().getModContainerById(namespace.replace('_', '-'));
+        if (container.isPresent()) {
+            return container.get().getModInfo().getDisplayName();
+        }
+        return FormattingUtil.capitalizeFully(namespace.replace('_', ' '));
     }
 }

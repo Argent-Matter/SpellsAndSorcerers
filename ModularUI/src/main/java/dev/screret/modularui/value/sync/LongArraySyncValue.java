@@ -1,13 +1,16 @@
 package dev.screret.modularui.value.sync;
 
-import com.gregtechceu.gtceu.utils.serialization.network.ByteBufAdapters;
+import dev.screret.modularui.utils.serialization.network.ByteBufAdapters;
+
+import io.netty.buffer.ByteBuf;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class LongArraySyncValue extends GenericSyncValue<long[]> {
+public class LongArraySyncValue extends GenericSyncValue<ByteBuf, long[]> {
 
     public LongArraySyncValue(@NotNull Supplier<long[]> getter, @Nullable Consumer<long[]> setter) {
         super(long[].class, getter, setter, ByteBufAdapters.LONG_ARR, long[]::clone);

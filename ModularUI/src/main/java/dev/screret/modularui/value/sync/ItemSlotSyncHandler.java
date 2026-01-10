@@ -3,9 +3,9 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.widgets.slot.ModularSlot;
 import dev.screret.modularui.widgets.slot.PlayerSlotType;
 import lombok.Getter;
-import net.minecraft.network.FriendlyByteBuf;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -53,7 +53,7 @@ public class ItemSlotSyncHandler extends SyncHandler {
         if (itemStack.isEmpty() && this.lastStoredItem.isEmpty()) return;
         boolean onlyAmountChanged = false;
         if (init ||
-                !ItemHandlerHelper.canItemStacksStack(this.lastStoredItem, itemStack) ||
+                !ItemStack.isSameItemSameComponents(this.lastStoredItem, itemStack) ||
                 (onlyAmountChanged = itemStack.getCount() != this.lastStoredItem.getCount())) {
             onSlotUpdate(itemStack, onlyAmountChanged, false, init);
             if (onlyAmountChanged) {
@@ -65,7 +65,7 @@ public class ItemSlotSyncHandler extends SyncHandler {
             final boolean forceSync = false;
             syncToClient(SYNC_ITEM, buffer -> {
                 buffer.writeBoolean(finalOnlyAmountChanged);
-                buffer.writeItem(itemStack);
+                ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, itemStack);
                 buffer.writeBoolean(init);
                 buffer.writeBoolean(forceSync);
             });
@@ -73,10 +73,10 @@ public class ItemSlotSyncHandler extends SyncHandler {
     }
 
     @Override
-    public void readOnClient(int id, FriendlyByteBuf buf) {
+    public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
         if (id == SYNC_ITEM) {
             boolean onlyAmountChanged = buf.readBoolean();
-            this.lastStoredItem = buf.readItem();
+            this.lastStoredItem = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
             onSlotUpdate(this.lastStoredItem, onlyAmountChanged, true, buf.readBoolean());
             if (buf.readBoolean()) {
                 // force sync
@@ -88,7 +88,7 @@ public class ItemSlotSyncHandler extends SyncHandler {
     }
 
     @Override
-    public void readOnServer(int id, FriendlyByteBuf buf) {
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
         if (id == SYNC_ENABLED) {
             setEnabled(buf.readBoolean(), false);
         }
@@ -114,7 +114,7 @@ public class ItemSlotSyncHandler extends SyncHandler {
         this.lastStoredItem = stack.isEmpty() ? ItemStack.EMPTY : stack;
         syncToClient(SYNC_ITEM, buffer -> {
             buffer.writeBoolean(onlyAmountChanged);
-            buffer.writeItem(stack);
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, stack);
             buffer.writeBoolean(init);
             buffer.writeBoolean(forceSync);
         });

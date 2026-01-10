@@ -52,7 +52,7 @@ public class ByteBufAdapters {
         }
 
         @Override
-        public void encode(@NotNull ByteBuf buffer, long[] u) {
+        public void encode(@NotNull ByteBuf buffer, long @NotNull [] u) {
             VarInt.write(buffer, u.length);
             for (long i : u) {
                 buffer.writeLong(i);

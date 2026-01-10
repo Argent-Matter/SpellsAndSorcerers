@@ -1,5 +1,6 @@
 package dev.screret.modularui.widgets;
 
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.api.widget.IWidget;
 import dev.screret.modularui.value.sync.DynamicSyncHandler;
 import dev.screret.modularui.value.sync.SyncHandler;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A widget which can update its child based on a function in {@link DynamicSyncHandler}.
@@ -27,10 +29,15 @@ public class DynamicSyncedWidget<W extends DynamicSyncedWidget<W>> extends Widge
     private IWidget child;
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        this.syncHandler = castIfTypeElseNull(syncHandler, DynamicSyncHandler.class,
-                t -> t.attachDynamicWidgetListener(this::updateChild));
-        return this.syncHandler != null;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue.isTypeOrEmpty(DynamicSyncHandler.class);
+    }
+
+    @Override
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.syncHandler = syncOrValue.castNullable(DynamicSyncHandler.class);
+        if (this.syncHandler != null) this.syncHandler.attachDynamicWidgetListener(this::updateChild);
     }
 
     @Override
@@ -55,10 +62,8 @@ public class DynamicSyncedWidget<W extends DynamicSyncedWidget<W>> extends Widge
         }
     }
 
-    public W syncHandler(DynamicSyncHandler syncHandler) {
-        this.syncHandler = syncHandler;
-        setSyncHandler(syncHandler);
-        syncHandler.attachDynamicWidgetListener(this::updateChild);
+    public W syncHandler(@Nullable DynamicSyncHandler syncHandler) {
+        setSyncOrValue(ISyncOrValue.orEmpty(syncHandler));
         return getThis();
     }
 

@@ -1,6 +1,7 @@
 package dev.screret.modularui.api;
 
-import dev.screret.modularui.network.NetworkHandler;
+import dev.screret.modularui.network.ModularNetwork;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,25 +13,21 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class MCHelper {
 
-    @OnlyIn(Dist.CLIENT)
     public static Minecraft getMc() {
         return Minecraft.getInstance();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static Player getPlayer() {
         return getMc().player;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static boolean closeScreen() {
+    public static void closeScreen() {
         getMc().popGuiLayer();
-        return false;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static void popScreen(boolean openParentOnClose, Screen parent) {
         Player player = MCHelper.getPlayer();
         if (player != null) {
@@ -57,12 +54,10 @@ public class MCHelper {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static Screen getCurrentScreen() {
         return getMc().screen;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static Font getFont() {
         return getMc().font;
     }

@@ -2,10 +2,11 @@ package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.IPanelHandler;
 import dev.screret.modularui.api.widget.ISynced;
+import dev.screret.modularui.client.screen.ModularPanel;
+import dev.screret.modularui.client.screen.ModularScreen;
 import dev.screret.modularui.widget.WidgetTree;
-import com.gregtechceu.gtceu.client.mui.screen.ModularPanel;
-import com.gregtechceu.gtceu.client.mui.screen.ModularScreen;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -154,7 +155,7 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
     }
 
     @Override
-    public void readOnClient(int i, FriendlyByteBuf packetBuffer) {
+    public void readOnClient(int i, RegistryFriendlyByteBuf packetBuffer) {
         if (i == SYNC_OPEN) {
             openPanel(false);
         } else if (i == SYNC_CLOSE) {
@@ -165,7 +166,7 @@ public final class PanelSyncHandler extends SyncHandler implements IPanelHandler
     }
 
     @Override
-    public void readOnServer(int i, FriendlyByteBuf packetBuffer) {
+    public void readOnServer(int i, RegistryFriendlyByteBuf packetBuffer) {
         if (i == SYNC_NOTIFY_OPEN) {
             openPanel(false);
             syncToClient(SYNC_OPEN);

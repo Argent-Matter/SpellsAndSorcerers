@@ -10,7 +10,7 @@ import dev.screret.modularui.utils.serialization.json.JsonHelper;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 
-public class Scrollbar implements IDrawable, IJsonSerializable {
+public class Scrollbar implements IDrawable, IJsonSerializable<Scrollbar> {
 
     public static final Scrollbar DEFAULT = new Scrollbar(false);
     public static final Scrollbar VANILLA = new Scrollbar(true);

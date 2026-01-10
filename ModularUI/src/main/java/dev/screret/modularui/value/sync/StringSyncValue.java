@@ -1,7 +1,10 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-import com.gregtechceu.gtceu.utils.NetworkUtils;
+import dev.screret.modularui.network.NetworkUtils;
+
+import io.netty.buffer.ByteBuf;
+
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +14,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class StringSyncValue extends AbstractGenericSyncValue<String> implements IStringSyncValue<String> {
+public class StringSyncValue extends AbstractGenericSyncValue<ByteBuf, String> implements IStringSyncValue<ByteBuf, String> {
 
     public StringSyncValue(Supplier<String> getter, Consumer<String> setter) {
         super(String.class, getter, setter);
@@ -44,12 +47,12 @@ public class StringSyncValue extends AbstractGenericSyncValue<String> implements
     }
 
     @Override
-    protected void serialize(FriendlyByteBuf buffer, String value) {
+    protected void serialize(ByteBuf buffer, String value) {
         NetworkUtils.writeStringSafe(buffer, value, Short.MAX_VALUE - 74);
     }
 
     @Override
-    protected String deserialize(FriendlyByteBuf buffer) {
+    protected String deserialize(ByteBuf buffer) {
         return NetworkUtils.readStringSafe(buffer);
     }
 

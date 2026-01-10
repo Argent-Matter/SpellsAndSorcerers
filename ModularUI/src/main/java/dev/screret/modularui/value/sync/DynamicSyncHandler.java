@@ -2,8 +2,13 @@ package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.IPacketWriter;
 import dev.screret.modularui.api.widget.IWidget;
+import dev.screret.modularui.utils.sides.SidedAccessHelper;
 import dev.screret.modularui.widget.WidgetTree;
-import net.minecraft.network.FriendlyByteBuf;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import io.netty.buffer.Unpooled;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,18 +25,18 @@ public class DynamicSyncHandler extends SyncHandler {
     private IWidgetProvider widgetProvider;
     private Consumer<IWidget> onWidgetUpdate;
 
-    private IPacketWriter lastRejectedPacket;
+    private IPacketWriter<? super RegistryFriendlyByteBuf> lastRejectedPacket;
     private IWidget lastRejectedWidget;
 
     @Override
-    public void readOnClient(int id, FriendlyByteBuf buf) {
+    public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
         if (id == 0) {
             updateWidget(parseWidget(buf));
         }
     }
 
     @Override
-    public void readOnServer(int id, FriendlyByteBuf buf) {
+    public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
         if (id == 0) {
             // do nothing with the widget on server side
             parseWidget(buf);
@@ -47,7 +52,7 @@ public class DynamicSyncHandler extends SyncHandler {
         }
     }
 
-    private IWidget parseWidget(FriendlyByteBuf buf) {
+    private IWidget parseWidget(RegistryFriendlyByteBuf buf) {
         getSyncManager().allowTemporarySyncHandlerRegistration(true);
         IWidget widget = this.widgetProvider.createWidget(getSyncManager(), buf);
         getSyncManager().allowTemporarySyncHandlerRegistration(false);
@@ -83,7 +88,7 @@ public class DynamicSyncHandler extends SyncHandler {
      *
      * @param packetWriter data to pass to the function
      */
-    public void notifyUpdate(IPacketWriter packetWriter) {
+    public void notifyUpdate(IPacketWriter<? super RegistryFriendlyByteBuf> packetWriter) {
         if (!isValid()) {
             // sync handler not yet initialised
             // store for later
@@ -91,7 +96,9 @@ public class DynamicSyncHandler extends SyncHandler {
             this.lastRejectedPacket = packetWriter;
             return;
         }
-        IWidget widget = parseWidget(packetWriter.toPacket());
+        RegistryFriendlyByteBuf buffer = SidedAccessHelper.makeRegistryByteBuf(Unpooled.buffer());
+        packetWriter.write(buffer);
+        IWidget widget = parseWidget(buffer);
         if (getSyncManager().isClient()) {
             updateWidget(widget);
         }
@@ -138,6 +145,6 @@ public class DynamicSyncHandler extends SyncHandler {
          * @return a new widget or null if widget shouldn't be updated
          */
         @Nullable
-        IWidget createWidget(PanelSyncManager syncManager, FriendlyByteBuf buf);
+        IWidget createWidget(PanelSyncManager syncManager, RegistryFriendlyByteBuf buf);
     }
 }

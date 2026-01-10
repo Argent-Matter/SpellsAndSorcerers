@@ -1,21 +1,25 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.ModularUI;
+import dev.screret.modularui.api.IPacketWriter;
 import dev.screret.modularui.api.IPanelHandler;
 import dev.screret.modularui.api.ISyncedAction;
+import dev.screret.modularui.client.screen.ModularContainerMenu;
+import dev.screret.modularui.network.ModularNetwork;
+import dev.screret.modularui.utils.sides.SidedAccessHelper;
 import dev.screret.modularui.widgets.slot.ModularSlot;
 import dev.screret.modularui.widgets.slot.SlotGroup;
-import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
-import com.gregtechceu.gtceu.common.network.ModularNetwork;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import lombok.Getter;
-import net.minecraft.network.FriendlyByteBuf;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -121,7 +125,7 @@ public class PanelSyncManager implements ISyncRegistrar<PanelSyncManager> {
     }
 
     @ApiStatus.Internal
-    public void receiveWidgetUpdate(String mapKey, boolean action, int id, FriendlyByteBuf buf) {
+    public void receiveWidgetUpdate(String mapKey, boolean action, int id, RegistryFriendlyByteBuf buf) {
         if (action) {
             invokeSyncedAction(mapKey, buf);
             return;
@@ -139,7 +143,7 @@ public class PanelSyncManager implements ISyncRegistrar<PanelSyncManager> {
         }
     }
 
-    private boolean invokeSyncedAction(String mapKey, FriendlyByteBuf buf) {
+    private boolean invokeSyncedAction(String mapKey, RegistryFriendlyByteBuf buf) {
         SyncedAction syncedAction = this.syncedActions.get(mapKey);
         if (syncedAction == null) {
             ModularUI.LOGGER.warn("SyncAction '{}' does not exist for panel '{}'!.", mapKey, panelName);
@@ -156,6 +160,12 @@ public class PanelSyncManager implements ISyncRegistrar<PanelSyncManager> {
         }
         // true if the action should be executed on the other side
         return syncedAction.isExecute(!this.client);
+    }
+
+    private boolean invokeSyncedAction(String mapKey, IPacketWriter<? super RegistryFriendlyByteBuf> writer) {
+        RegistryFriendlyByteBuf buf = SidedAccessHelper.makeRegistryByteBuf(Unpooled.buffer(), getPlayer());
+        writer.write(buf);
+        return invokeSyncedAction(mapKey, buf);
     }
 
     public ItemStack getCursorItem() {
@@ -211,19 +221,6 @@ public class PanelSyncManager implements ISyncRegistrar<PanelSyncManager> {
         Objects.requireNonNull(syncHandler, "Sync Handler must not be null");
         putSyncValue(name, id, syncHandler);
         return this;
-    }
-
-    /**
-     * @deprecated replaced by {@link #syncedPanel(String, boolean, PanelSyncHandler.IPanelBuilder)}
-     */
-    @ApiStatus.ScheduledForRemoval(inVersion = "3.3.0")
-    @Deprecated
-    public IPanelHandler panel(String key, PanelSyncHandler.IPanelBuilder panelBuilder, boolean subPanel) {
-        SyncHandler sh = this.subPanels.get(key);
-        if (sh != null) return (IPanelHandler) sh;
-        PanelSyncHandler syncHandler = new PanelSyncHandler(panelBuilder, subPanel);
-        this.subPanels.put(key, syncHandler);
-        return syncHandler;
     }
 
     /**
@@ -326,21 +323,15 @@ public class PanelSyncManager implements ISyncRegistrar<PanelSyncManager> {
         return this;
     }
 
-    public void callSyncedAction(String mapKey, FriendlyByteBuf packet) {
-        if (invokeSyncedAction(mapKey, packet)) {
-            ModularNetwork.get(isClient()).sendActionPacket(getModularSyncManager(), this.panelName, mapKey, packet,
-                    getPlayer());
+    public void callSyncedAction(String mapKey, IPacketWriter<? super RegistryFriendlyByteBuf> writer) {
+        if (invokeSyncedAction(mapKey, writer)) {
+            ModularNetwork.get(isClient())
+                    .sendActionPacket(getModularSyncManager(), this.panelName, mapKey, writer, getPlayer());
         }
     }
 
-    public void callSyncedAction(String mapKey, Consumer<FriendlyByteBuf> packetBuilder) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-        packetBuilder.accept(packet);
-        callSyncedAction(mapKey, packet);
-    }
-
     public void callSyncedAction(String mapKey) {
-        callSyncedAction(mapKey, new FriendlyByteBuf(Unpooled.buffer(0)));
+        callSyncedAction(mapKey, buf -> {});
     }
 
     @Override

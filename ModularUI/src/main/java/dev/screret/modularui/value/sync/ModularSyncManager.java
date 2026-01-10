@@ -3,21 +3,23 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.IPanelHandler;
 import dev.screret.modularui.api.ISyncedAction;
+import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.widgets.slot.PlayerSlotGroup;
 import dev.screret.modularui.widgets.slot.SlotGroup;
-import com.gregtechceu.gtceu.client.mui.screen.ModularContainerMenu;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -142,13 +144,13 @@ public class ModularSyncManager implements ISyncRegistrar<ModularSyncManager> {
     }
 
     @ApiStatus.Internal
-    public void receiveWidgetUpdate(String panelName, String mapKey, boolean action, int id, FriendlyByteBuf buf) {
+    public void receiveWidgetUpdate(String panelName, String mapKey, boolean action, int id, RegistryFriendlyByteBuf buf) {
         PanelSyncManager psm = this.panelSyncManagerMap.get(panelName);
         if (psm != null) {
             psm.receiveWidgetUpdate(mapKey, action, id, buf);
         } else if (!this.panelHistory.contains(panelName)) {
-            ModularUI.LOGGER.throwing(new IllegalStateException(
-                    "A packet was send to panel '\" + panelName + \"' which was not opened yet!"));
+            ModularUI.LOGGER.throwing(
+                    new IllegalStateException("A packet was send to panel '\" + panelName + \"' which was not opened yet!"));
         }
         // else the panel was open at some point
         // we simply discard the packet silently and assume the packet was correctly send, but the panel closed earlier

@@ -5,11 +5,11 @@ import dev.screret.modularui.core.mixins.client.AbstractContainerMenuAccessor;
 import dev.screret.modularui.factory.GuiData;
 import dev.screret.modularui.network.NetworkUtils;
 import dev.screret.modularui.value.sync.ModularSyncManager;
-import dev.screret.modularui.value.sync.PanelSyncManager;
 import dev.screret.modularui.widgets.slot.ModularSlot;
 import dev.screret.modularui.widgets.slot.SlotGroup;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -68,11 +68,11 @@ public class ModularContainerMenu extends AbstractContainerMenu {
     }
 
     @ApiStatus.Internal
-    public void construct(Player player, PanelSyncManager panelSyncManager, UISettings settings, String mainPanelName,
+    public void construct(Player player, ModularSyncManager msm, UISettings settings, String mainPanelName,
                           GuiData guiData) {
         this.player = player;
-        this.syncManager = new ModularSyncManager(this);
-        this.syncManager.construct(mainPanelName, panelSyncManager);
+        this.syncManager = msm;
+        this.syncManager.construct(this, mainPanelName);
         this.settings = settings;
         this.guiData = guiData;
         sortShiftClickSlots();
@@ -108,14 +108,19 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         return (AbstractContainerMenuAccessor) this;
     }
 
-    @MustBeInvokedByOverriders
-    @Override
-    public void removed(@NotNull Player player) {
-        super.removed(player);
-        if (this.syncManager != null) {
-            this.syncManager.onClose();
-        }
-    }
+    public void opened() {}
+
+    /**
+     * Called when this container closes.
+     * <p>
+     * This is different to {@link AbstractContainerMenu#removed(Player)}, since that one is also called from
+     * {@link AbstractContainerScreen#removed()}, which means it is called even when the container may still exist.
+     * That happens when a temporary client screen takes over (like EMI, JEI, etc.).
+     * This is only called when the container actually closes.
+     */
+    public void closed() {}
+
+    public void disposed() {}
 
     @MustBeInvokedByOverriders
     @Override
@@ -127,7 +132,7 @@ public class ModularContainerMenu extends AbstractContainerMenu {
         this.init = false;
     }
 
-    @ApiStatus.Internal
+    @MustBeInvokedByOverriders
     public void onUpdate() {
         // detectAndSendChanges is potentially called multiple times per tick, while this method is called exactly once
         // per tick
@@ -281,8 +286,9 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                     if (!heldStack.isEmpty() && clickedSlot.mayPlace(heldStack)) {
                         int stackCount = mouseButton == LEFT_MOUSE ? heldStack.getCount() : 1;
 
-                        if (stackCount > clickedSlot.getMaxStackSize(heldStack)) {
-                            stackCount = clickedSlot.getMaxStackSize(heldStack);
+                        int lim = clickedSlot.getMaxStackSize(heldStack);
+                        if (stackCount > lim) {
+                            stackCount = lim;
                         }
 
                         clickedSlot.setByPlayer(heldStack.split(stackCount));
@@ -299,8 +305,9 @@ public class ModularContainerMenu extends AbstractContainerMenu {
                         if (ItemStack.isSameItemSameComponents(slotStack, heldStack)) {
                             int stackCount = mouseButton == LEFT_MOUSE ? heldStack.getCount() : 1;
 
-                            if (stackCount > clickedSlot.getMaxStackSize(heldStack) - slotStack.getCount()) {
-                                stackCount = clickedSlot.getMaxStackSize(heldStack) - slotStack.getCount();
+                            int lim = clickedSlot.getMaxStackSize(heldStack) - slotStack.getCount();
+                            if (stackCount > lim) {
+                                stackCount = lim;
                             }
 
                             heldStack.shrink(stackCount);

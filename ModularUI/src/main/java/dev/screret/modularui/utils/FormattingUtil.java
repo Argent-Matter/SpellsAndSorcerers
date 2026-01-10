@@ -1,5 +1,6 @@
 package dev.screret.modularui.utils;
 
+import net.minecraft.CharPredicate;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -101,26 +102,150 @@ public class FormattingUtil {
     }
 
     /**
-     * Check if {@code string} has any uppercase characters.
-     *
-     * @param string the string to check
-     * @return if the string has any uppercase characters.
+     * apple_orange.juice => Apple Orange Juice
      */
-    public static boolean hasUpperCase(String string) {
-        for (int i = 0; i < string.length(); i++) {
-            char ch = string.charAt(i);
-            if (Character.isUpperCase(ch)) return true;
-        }
-        return false;
+    public static String toEnglishName(Object internalName) {
+        return Arrays.stream(internalName.toString().toLowerCase(Locale.ROOT).split("_-\\s\\."))
+                .map(StringUtils::capitalize)
+                .collect(Collectors.joining(" "));
+    }
+
+    // Capitalizing
+    /**
+     * Capitalizes all the whitespace separated words in a String.
+     * Only the first character of each word is changed. To convert the
+     * rest of each word to lowercase at the same time,
+     * use {@link #capitalizeFully(String)}.
+     *
+     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.
+     * A {@code null} input String returns {@code null}.
+     * Capitalization uses the Unicode title case, normally equivalent to
+     * upper case.</p>
+     *
+     * <pre>
+     * WordUtils.capitalize(null)        = null
+     * WordUtils.capitalize("")          = ""
+     * WordUtils.capitalize("i am FINE") = "I Am FINE"
+     * </pre>
+     *
+     * @param str  the String to capitalize, may be null
+     * @return capitalized String, {@code null} if input String is null
+     * @see #capitalizeFully(String)
+     */
+    public static String capitalize(final String str) {
+        return capitalize(str, null);
     }
 
     /**
-     * apple_orange.juice => Apple Orange (Juice)
+     * Capitalizes all the delimiter separated words in a String.
+     * Only the first character of each word is changed. To convert the
+     * rest of each word to lowercase at the same time,
+     * use {@link #capitalizeFully(String, CharPredicate)}.
+     *
+     * <p>The delimiters represent a set of characters understood to separate words.
+     * The first string character and the first non-delimiter character after a
+     * delimiter will be capitalized.</p>
+     *
+     * <p>A {@code null} input String returns {@code null}.
+     * Capitalization uses the Unicode title case, normally equivalent to
+     * upper case.</p>
+     *
+     * <pre>
+     * WordUtils.capitalize(null, *)            = null
+     * WordUtils.capitalize("", *)              = ""
+     * WordUtils.capitalize(*, new char[0])     = *
+     * WordUtils.capitalize("i am fine", null)  = "I Am Fine"
+     * WordUtils.capitalize("i aM.fine", {'.'}) = "I aM.Fine"
+     * </pre>
+     *
+     * @param str        the String to capitalize, may be null
+     * @param delimiters set of characters to determine capitalization, null means whitespace
+     * @return capitalized String, {@code null} if input String is null
+     * @see #capitalizeFully(String)
      */
-    public static String toEnglishName(Object internalName) {
-        return Arrays.stream(internalName.toString().toLowerCase(Locale.ROOT).split("_"))
-                .map(StringUtils::capitalize)
-                .collect(Collectors.joining(" "));
+    public static String capitalize(final String str, @Nullable CharPredicate delimiters) {
+        if (StringUtils.isEmpty(str)) {
+            return str;
+        }
+        final char[] buffer = str.toCharArray();
+        boolean capitalizeNext = true;
+        for (int i = 0; i < buffer.length; i++) {
+            final char ch = buffer[i];
+            if (isDelimiter(ch, delimiters)) {
+                capitalizeNext = true;
+            } else if (capitalizeNext) {
+                buffer[i] = Character.toTitleCase(ch);
+                capitalizeNext = false;
+            }
+        }
+        return new String(buffer);
+    }
+
+    /**
+     * Converts all the whitespace separated words in a String into capitalized words,
+     * that is each word is made up of a titlecase character and then a series of
+     * lowercase characters.
+     *
+     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.
+     * A {@code null} input String returns {@code null}.
+     * Capitalization uses the Unicode title case, normally equivalent to
+     * upper case.</p>
+     *
+     * <pre>
+     * WordUtils.capitalizeFully(null)        = null
+     * WordUtils.capitalizeFully("")          = ""
+     * WordUtils.capitalizeFully("i am FINE") = "I Am Fine"
+     * </pre>
+     *
+     * @param str the String to capitalize, may be null
+     * @return capitalized String, {@code null} if input String is null
+     */
+    public static String capitalizeFully(final String str) {
+        return capitalizeFully(str, null);
+    }
+
+    /**
+     * Converts all the delimiter separated words in a String into capitalized words,
+     * that is each word is made up of a titlecase character and then a series of
+     * lowercase characters.
+     *
+     * <p>The delimiters represent a set of characters understood to separate words.
+     * The first string character and the first non-delimiter character after a
+     * delimiter will be capitalized.</p>
+     *
+     * <p>A {@code null} input String returns {@code null}.
+     * Capitalization uses the Unicode title case, normally equivalent to
+     * upper case.</p>
+     *
+     * <pre>
+     * WordUtils.capitalizeFully(null, *)            = null
+     * WordUtils.capitalizeFully("", *)              = ""
+     * WordUtils.capitalizeFully(*, null)            = *
+     * WordUtils.capitalizeFully(*, new char[0])     = *
+     * WordUtils.capitalizeFully("i aM.fine", {'.'}) = "I am.Fine"
+     * </pre>
+     *
+     * @param str        the String to capitalize, may be null
+     * @param delimiters set of characters to determine capitalization, null means whitespace
+     * @return capitalized String, {@code null} if input String is null
+     * @see #capitalizeFully(String)
+     */
+    public static String capitalizeFully(final String str, @Nullable CharPredicate delimiters) {
+        if (StringUtils.isEmpty(str)) {
+            return str;
+        }
+        return capitalize(str.toLowerCase(), delimiters);
+    }
+
+    /**
+     * Tests if the character is a delimiter.
+     *
+     * @param ch         the character to check
+     * @param delimiters the delimiters
+     * @return {@code true} if it is a delimiter
+     */
+    private static boolean isDelimiter(final char ch, @Nullable CharPredicate delimiters) {
+        return delimiters != null ? delimiters.test(ch) : Character.isWhitespace(ch);
     }
 
     /**

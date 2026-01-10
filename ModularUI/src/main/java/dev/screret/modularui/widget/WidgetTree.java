@@ -96,7 +96,7 @@ public class WidgetTree {
         ObjectList<IWidget> parents = new ObjectArrayList<>();
         parents.add(parent);
         while (!parents.isEmpty()) {
-            for (IWidget child : parents.remove(0).getChildren()) {
+            for (IWidget child : parents.removeFirst().getChildren()) {
                 if (!child.getChildren().isEmpty()) {
                     parents.add(child);
                 }
@@ -127,7 +127,7 @@ public class WidgetTree {
         ObjectList<IWidget> parents = new ObjectArrayList<>();
         parents.add(parent);
         while (!parents.isEmpty()) {
-            for (IWidget child : parents.remove(0).getChildren()) {
+            for (IWidget child : parents.removeFirst().getChildren()) {
                 if (child.hasChildren()) {
                     parents.add(child);
                 }
@@ -211,19 +211,17 @@ public class WidgetTree {
     }
 
     /**
-     * Creates a stream of the whole sub widget tree.
+     * Creates a flat stream of the whole sub widget tree.
      * <p>
      * {@link Stream#forEach(Consumer)} on this has slightly worse performance than
-     * {@link #foreachChildBFS(IWidget, Predicate, boolean)} on
-     * small widget trees and has similar performance on large widget trees. The performance is significantly better
-     * than
-     * {@link #iteratorBFS(IWidget)} even though this method uses it.
+     * {@link #foreachChildBFS(IWidget, Predicate, boolean)} on small widget trees
+     * and has similar performance on large widget trees.<br>
+     * The performance is significantly better than {@link #iteratorBFS(IWidget)} even though this method uses it.
      *
      * @param parent starting point.
-     * @return stream of the sub widget tree
+     * @return flatStream of the sub widget tree
      */
-    @SuppressWarnings("UnstableApiUsage")
-    public static Stream<IWidget> stream(IWidget parent) {
+    public static Stream<IWidget> flatStream(IWidget parent) {
         if (!parent.hasChildren()) return Stream.of(parent);
         return Streams.stream(iteratorBFS(parent));
     }
@@ -258,7 +256,7 @@ public class WidgetTree {
                 }
                 if (currentIt.hasNext()) return handleWidget(currentIt.next());
                 while (!queue.isEmpty()) {
-                    currentIt = queue.remove(0).getChildren().iterator();
+                    currentIt = queue.removeFirst().getChildren().iterator();
                     if (currentIt.hasNext()) return handleWidget(currentIt.next());
                 }
                 return endOfData();
@@ -503,15 +501,15 @@ public class WidgetTree {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends IWidget> T findParent(IWidget parent, Class<T> type) {
-        if (parent == null) return null;
-        while (!(parent instanceof ModularPanel)) {
-            if (type.isAssignableFrom(parent.getClass())) {
-                return (T) parent;
+    public static <T extends IWidget> T findParent(IWidget widget, Class<T> type) {
+        if (widget == null) return null;
+        while (!(widget instanceof ModularPanel)) {
+            if (type.isAssignableFrom(widget.getClass())) {
+                return (T) widget;
             }
-            parent = parent.getParent();
+            widget = widget.getParent();
         }
-        return type.isAssignableFrom(parent.getClass()) ? (T) parent : null;
+        return type.isAssignableFrom(widget.getClass()) ? (T) widget : null;
     }
 
     public static boolean hasSyncedValues(ModularPanel panel) {
@@ -535,7 +533,7 @@ public class WidgetTree {
         String syncKey = ModularSyncManager.AUTO_SYNC_PREFIX + panelName;
         foreachChildBFS(panel, widget -> {
             if (widget instanceof ISynced<?> synced) {
-                if (synced.isSynced() && !syncManager.hasSyncHandler(synced.getSyncHandler())) {
+                if (synced.isSynced() && !synced.getSyncHandler().isRegistered()) {
                     syncManager.syncValue(syncKey, id.getAndIncrement(), synced.getSyncHandler());
                 }
             }
@@ -543,11 +541,10 @@ public class WidgetTree {
         }, includePanel);
     }
 
-    public static int countUnregisteredSyncHandlers(PanelSyncManager syncManager, IWidget parent) {
+    public static int countUnregisteredSyncHandlers(IWidget parent) {
         MutableInt count = new MutableInt();
         foreachChildBFS(parent, widget -> {
-            if (widget instanceof ISynced<?> synced && synced.isSynced() &&
-                    !syncManager.hasSyncHandler(synced.getSyncHandler())) {
+            if (widget instanceof ISynced<?> synced && synced.isSynced() && !synced.getSyncHandler().isRegistered()) {
                 count.increment();
             }
             return true;

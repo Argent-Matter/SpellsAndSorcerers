@@ -4,9 +4,8 @@ import dev.screret.modularui.api.IPacketWriter;
 import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.network.ModularNetwork;
 import dev.screret.modularui.network.ModularNetworkSide;
-import io.netty.buffer.Unpooled;
+
 import lombok.Getter;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.neoforged.api.distmarker.Dist;
@@ -80,11 +79,12 @@ public abstract class SyncHandler implements ISyncOrValue {
      * @param id             an internal denominator to identify this package
      * @param bufferConsumer the package builder
      */
-    public final void sync(int id, @NotNull IPacketWriter bufferConsumer) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-        buffer.writeVarInt(id);
-        bufferConsumer.write(buffer);
-        send(ModularNetwork.get(getSyncManager().isClient()), getSyncManager().getPanelName(), buffer, this);
+    public final void sync(int id, @NotNull IPacketWriter<? super RegistryFriendlyByteBuf> bufferConsumer) {
+        IPacketWriter<? super RegistryFriendlyByteBuf> writer = buffer -> {
+            VarInt.write(buffer, id);
+            bufferConsumer.write(buffer);
+        };
+        send(ModularNetwork.get(getSyncManager().isClient()), getSyncManager().getPanelName(), writer, this);
     }
 
     /**
@@ -122,7 +122,7 @@ public abstract class SyncHandler implements ISyncOrValue {
      */
     @ApiStatus.OverrideOnly
     @OnlyIn(Dist.CLIENT)
-    public abstract void readOnClient(int id, FriendlyByteBuf buf);
+    public abstract void readOnClient(int id, RegistryFriendlyByteBuf buf);
 
     /**
      * Called when this sync handler receives a packet on server.
@@ -131,7 +131,7 @@ public abstract class SyncHandler implements ISyncOrValue {
      * @param buf package
      */
     @ApiStatus.OverrideOnly
-    public abstract void readOnServer(int id, FriendlyByteBuf buf);
+    public abstract void readOnServer(int id, RegistryFriendlyByteBuf buf);
 
     /**
      * Called at least every tick. Use it to compare a cached value to its original and sync it.

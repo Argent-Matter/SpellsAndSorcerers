@@ -8,6 +8,7 @@ import dev.screret.modularui.api.RecipeViewerSettings;
 import dev.screret.modularui.api.UIFactory;
 import dev.screret.modularui.client.screen.*;
 import dev.screret.modularui.core.mixins.ServerPlayerAccessor;
+import dev.screret.modularui.network.ModularNetwork;
 import dev.screret.modularui.network.packets.OpenGuiPacket;
 import dev.screret.modularui.value.sync.ModularSyncManager;
 import dev.screret.modularui.value.sync.PanelSyncManager;
@@ -105,7 +106,7 @@ public class GuiManager {
         NeoForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, menu));
     }
     public static <T extends GuiData> void openFromClient(int windowId, int networkId, @NotNull UIFactory<T> factory,
-                                                          @NotNull FriendlyByteBuf data, @NotNull LocalPlayer player) {
+                                                          @NotNull FriendlyByteBuf data, @NotNull Player player) {
         T guiData = factory.readGuiData(player, data);
         UISettings settings = new UISettings();
         settings.defaultCanInteractWith(factory, guiData);

@@ -4,6 +4,8 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.IPacketWriter;
 import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.network.packets.CloseAllGuisPacket;
+import dev.screret.modularui.network.packets.CloseGuiPacket;
+import dev.screret.modularui.network.packets.ReopenGuiPacket;
 import dev.screret.modularui.network.packets.SyncHandlerPacket;
 import dev.screret.modularui.value.sync.ModularSyncManager;
 import dev.screret.modularui.value.sync.SyncHandler;
@@ -84,8 +86,8 @@ public abstract class ModularNetworkSide {
     }
 
     @ApiStatus.Internal
-    public void sendActionPacket(ModularSyncManager msm, String panel, String key, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
-                                 Player player) {
+    public void sendActionPacket(ModularSyncManager msm, String panel, String key,
+                                 IPacketWriter<? super RegistryFriendlyByteBuf> writer, Player player) {
         if (!inverseActiveScreens.containsKey(msm)) return;
         int id = inverseActiveScreens.getInt(msm);
         sendPacket(new SyncHandlerPacket(id, panel, key, true, writer), player);

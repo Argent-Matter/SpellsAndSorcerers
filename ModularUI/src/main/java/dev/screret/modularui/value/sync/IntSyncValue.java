@@ -5,6 +5,10 @@ import dev.screret.modularui.api.value.sync.IDoubleSyncValue;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
+
+import io.netty.buffer.ByteBuf;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,8 +17,9 @@ import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
-public class IntSyncValue extends ValueSyncHandler<Integer>
-                          implements IIntSyncValue<Integer>, IDoubleSyncValue<Integer>, IStringSyncValue<Integer> {
+public class IntSyncValue extends ValueSyncHandler<ByteBuf, Integer>
+        implements IIntSyncValue<ByteBuf, Integer>, IDoubleSyncValue<ByteBuf, Integer>,
+        IStringSyncValue<ByteBuf, Integer> {
 
     private int cache;
     private final IntSupplier getter;
@@ -102,13 +107,13 @@ public class IntSyncValue extends ValueSyncHandler<Integer>
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeVarInt(this.cache);
+    public void write(ByteBuf buffer) {
+        VarInt.write(buffer, getIntValue());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
-        setIntValue(buffer.readVarInt(), true, false);
+    public void read(ByteBuf buffer) {
+        setIntValue(VarInt.read(buffer), true, false);
     }
 
     @Override

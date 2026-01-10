@@ -1,12 +1,16 @@
 package dev.screret.modularui.value.sync;
 
-import com.gregtechceu.gtceu.utils.EqualityTest;
-import com.gregtechceu.gtceu.utils.ICopy;
-import com.gregtechceu.gtceu.utils.serialization.network.IByteBufDeserializer;
-import com.gregtechceu.gtceu.utils.serialization.network.IByteBufSerializer;
+import dev.screret.modularui.utils.ICopy;
+import dev.screret.modularui.utils.serialization.network.IEquals;
+
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,14 +21,14 @@ import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-public class GenericListSyncHandler<T> extends GenericCollectionSyncHandler<T, List<T>> {
+public class GenericListSyncHandler<B extends ByteBuf, T> extends GenericCollectionSyncHandler<B, T, List<T>> {
 
     private final ObjectList<T> cache = new ObjectArrayList<>();
 
     public GenericListSyncHandler(@NotNull Supplier<List<T>> getter, @Nullable Consumer<List<T>> setter,
-                                  @NotNull IByteBufDeserializer<T> deserializer,
-                                  @NotNull IByteBufSerializer<T> serializer, @Nullable EqualityTest<T> equals,
-                                  @Nullable ICopy<T> copy) {
+                                  @NotNull StreamDecoder<B, T> deserializer,
+                                  @NotNull StreamEncoder<B, T> serializer,
+                                  @Nullable IEquals<T> equals, @Nullable ICopy<T> copy) {
         super(getter, setter, deserializer, serializer, equals, copy);
     }
 
@@ -51,42 +55,38 @@ public class GenericListSyncHandler<T> extends GenericCollectionSyncHandler<T, L
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
+    public void read(B buffer) {
         this.cache.clear();
-        for (int i = 0; i < buffer.readVarInt(); i++) {
+        int size = VarInt.read(buffer);
+        for (int i = 0; i < size; i++) {
             this.cache.add(deserializeValue(buffer));
         }
         onSetCache(getValue(), true, false);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Class<List<T>> getValueType() {
         return (Class<List<T>>) (Object) List.class;
     }
 
-    public static <T> Builder<T> builder() {
+    public static <B extends ByteBuf, T> Builder<B, T> builder() {
         return new Builder<>();
     }
 
-    public static class Builder<T> extends GenericCollectionSyncHandler.Builder<T, List<T>, Builder<T>> {
+    public static class Builder<B extends ByteBuf, T> extends GenericCollectionSyncHandler.Builder<B, T, List<T>, Builder<B, T>> {
 
-        public Builder<T> getterArray(Supplier<T[]> getter) {
+        public Builder<B, T> getterArray(Supplier<T[]> getter) {
             getter(() -> Arrays.asList(getter.get()));
             return this;
         }
 
-        public Builder<T> setterArray(Consumer<T[]> setter, IntFunction<T[]> arrayFactory) {
+        public Builder<B, T> setterArray(Consumer<T[]> setter, IntFunction<T[]> arrayFactory) {
             setter(c -> setter.accept(c.toArray(arrayFactory.apply(c.size()))));
             return this;
         }
 
-        @Override
-        public Builder<T> equals(EqualityTest<T> equals) {
-            super.equals(equals);
-            return this;
-        }
-
-        public GenericListSyncHandler<T> build() {
+        public GenericListSyncHandler<B, T> build() {
             if (this.getter == null)
                 throw new NullPointerException("Getter in GenericListSyncHandler must not be null");
             if (this.deserializer == null)

@@ -2,6 +2,7 @@ package dev.screret.modularui.utils;
 
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.drawable.IInterpolation;
+import dev.screret.modularui.utils.math.MathHelper;
 import dev.screret.modularui.utils.serialization.json.JsonHelper;
 
 import net.minecraft.util.Mth;
@@ -403,8 +404,8 @@ public class Color {
      */
     public static float getHSVSaturation(int argb) {
         float r = getRedF(argb), g = getGreenF(argb), b = getBlueF(argb);
-        float min = Math.min(r, Math.min(g, b));
-        float max = Math.max(r, Math.max(g, b));
+        float min = MathHelper.min(r, g, b);
+        float max = MathHelper.max(r, g, b);
         return max == 0 ? 0 : (max - min) / max;
     }
 
@@ -416,8 +417,8 @@ public class Color {
      */
     public static float getHSLSaturation(int argb) {
         float r = getRedF(argb), g = getGreenF(argb), b = getBlueF(argb);
-        float min = Math.min(r, Math.min(g, b));
-        float max = Math.max(r, Math.max(g, b));
+        float min = MathHelper.min(r, g, b);
+        float max = MathHelper.max(r, g, b);
         return (max - min) / (1 - Math.abs(max + min - 1));
     }
 

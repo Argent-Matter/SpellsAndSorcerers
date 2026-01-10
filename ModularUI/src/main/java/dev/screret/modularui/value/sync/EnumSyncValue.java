@@ -3,8 +3,11 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.IEnumValue;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
+
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +16,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implements IEnumValue<T>, IIntSyncValue<T> {
+public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T> implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
 
     @Getter
     protected final Class<T> enumClass;
@@ -86,13 +89,13 @@ public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<T> implem
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeEnum(getValue());
+    public void write(ByteBuf buffer) {
+        VarInt.write(buffer, getValue().ordinal());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
-        setValue(buffer.readEnum(this.enumClass), true, false);
+    public void read(ByteBuf buffer) {
+        setIntValue(VarInt.read(buffer), true, false);
     }
 
     @Override

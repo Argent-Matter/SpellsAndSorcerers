@@ -5,6 +5,7 @@ import dev.screret.modularui.api.drawable.IDrawable;
 import dev.screret.modularui.api.drawable.IKey;
 import dev.screret.modularui.api.drawable.ITextLine;
 import dev.screret.modularui.api.value.IStringValue;
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.client.screen.RichTooltip;
 import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
 import dev.screret.modularui.utils.math.MathHelper;
@@ -67,17 +68,20 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        if (syncHandler instanceof IStringValue<?> iStringValue &&
-                syncHandler instanceof ValueSyncHandler<?, ?> valueSyncHandler) {
-            this.stringValue = iStringValue;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue.isTypeOrEmpty(IStringValue.class);
+    }
+
+    @Override
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.stringValue = syncOrValue.castNullable(IStringValue.class);
+        if (syncOrValue instanceof ValueSyncHandler<?, ?> valueSyncHandler) {
             valueSyncHandler.setChangeListener(() -> {
                 markTooltipDirty();
                 setText(this.stringValue.getValue().toString());
             });
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -219,8 +223,7 @@ public class TextFieldWidget extends BaseTextFieldWidget<TextFieldWidget> {
     }
 
     public TextFieldWidget value(IStringValue<?> stringValue) {
-        this.stringValue = stringValue;
-        setValue(stringValue);
+        setSyncOrValue(ISyncOrValue.orEmpty(stringValue));
         return this;
     }
 

@@ -6,8 +6,9 @@ import dev.screret.modularui.widgets.slot.ModularSlot;
 import dev.screret.modularui.widgets.slot.PlayerSlotGroup;
 import dev.screret.modularui.widgets.slot.SlotGroup;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,8 +102,8 @@ public interface ISyncRegistrar<S extends ISyncRegistrar<S>> {
         return registerSyncedAction(mapKey, true, true, action);
     }
 
-    default S registerSyncedAction(String mapKey, Side side, ISyncedAction action) {
-        return registerSyncedAction(mapKey, side.isClient(), side.isServer(), action);
+    default S registerSyncedAction(String mapKey, Dist side, ISyncedAction action) {
+        return registerSyncedAction(mapKey, side.isClient(), side.isDedicatedServer(), action);
     }
 
     default S registerClientSyncedAction(String mapKey, ISyncedAction action) {

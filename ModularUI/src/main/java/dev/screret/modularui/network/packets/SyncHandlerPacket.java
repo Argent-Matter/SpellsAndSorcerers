@@ -81,7 +81,7 @@ public record SyncHandlerPacket(int networkId, String panel, String key, boolean
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<SyncHandlerPacket> type() {
         return TYPE;
     }
 }

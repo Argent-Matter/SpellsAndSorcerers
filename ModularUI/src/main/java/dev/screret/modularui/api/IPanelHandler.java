@@ -2,7 +2,6 @@ package dev.screret.modularui.api;
 
 import dev.screret.modularui.client.screen.ModularPanel;
 import dev.screret.modularui.client.screen.SecondaryPanel;
-import dev.screret.modularui.value.sync.ItemSlotSH;
 import dev.screret.modularui.value.sync.PanelSyncHandler;
 import dev.screret.modularui.value.sync.PanelSyncManager;
 

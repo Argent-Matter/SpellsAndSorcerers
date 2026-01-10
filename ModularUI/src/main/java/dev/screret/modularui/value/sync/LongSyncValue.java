@@ -5,6 +5,10 @@ import dev.screret.modularui.api.value.sync.IIntSyncValue;
 import dev.screret.modularui.api.value.sync.ILongSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarLong;
+
+import io.netty.buffer.ByteBuf;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,8 +17,9 @@ import java.util.Objects;
 import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
 
-public class LongSyncValue extends ValueSyncHandler<Long>
-                           implements ILongSyncValue<Long>, IIntSyncValue<Long>, IStringSyncValue<Long> {
+public class LongSyncValue extends ValueSyncHandler<ByteBuf, Long>
+        implements ILongSyncValue<ByteBuf, Long>, IIntSyncValue<ByteBuf, Long>,
+        IStringSyncValue<ByteBuf, Long> {
 
     private final LongSupplier getter;
     private final LongConsumer setter;
@@ -92,13 +97,13 @@ public class LongSyncValue extends ValueSyncHandler<Long>
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeVarLong(getLongValue());
+    public void write(ByteBuf buffer) {
+        VarLong.write(buffer, getLongValue());
     }
 
     @Override
-    public void read(FriendlyByteBuf buffer) {
-        setValue(buffer.readVarLong(), true, false);
+    public void read(ByteBuf buffer) {
+        setValue(VarLong.read(buffer), true, false);
     }
 
     @Override

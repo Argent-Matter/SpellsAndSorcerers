@@ -1,9 +1,13 @@
 package dev.screret.modularui.widgets;
 
 import dev.screret.modularui.api.ITheme;
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.api.value.IValue;
 import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
 import dev.screret.modularui.drawable.GuiDraw;
+import dev.screret.modularui.integration.recipeviewer.entry.EntryList;
+import dev.screret.modularui.integration.recipeviewer.entry.item.ItemStackList;
+import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.value.ObjectValue;
 import dev.screret.modularui.value.sync.SyncHandler;
@@ -11,7 +15,9 @@ import dev.screret.modularui.widget.Widget;
 
 import net.minecraft.world.item.ItemStack;
 
-public class ItemDisplayWidget extends Widget<ItemDisplayWidget> {
+import org.jetbrains.annotations.NotNull;
+
+public class ItemDisplayWidget extends Widget<ItemDisplayWidget> implements IngredientProvider<ItemStack> {
 
     private IValue<ItemStack> value;
     private boolean displayAmount = false;
@@ -21,9 +27,14 @@ public class ItemDisplayWidget extends Widget<ItemDisplayWidget> {
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        this.value = castIfTypeGenericElseNull(syncHandler, ItemStack.class);
-        return this.value != null;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue.isValueOfType(ItemStack.class);
+    }
+
+    @Override
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.value = syncOrValue.castValueNullable(ItemStack.class);
     }
 
     @Override
@@ -43,18 +54,26 @@ public class ItemDisplayWidget extends Widget<ItemDisplayWidget> {
     }
 
     public ItemDisplayWidget item(IValue<ItemStack> itemSupplier) {
-        this.value = itemSupplier;
-        setValue(itemSupplier);
+        setSyncOrValue(ISyncOrValue.orEmpty(itemSupplier));
         return this;
     }
 
     public ItemDisplayWidget item(ItemStack itemStack) {
-        ;
-        return item(new ObjectValue<>(itemStack));
+        return item(new ObjectValue<>(ItemStack.class, itemStack));
     }
 
     public ItemDisplayWidget displayAmount(boolean displayAmount) {
         this.displayAmount = displayAmount;
         return this;
+    }
+
+    @Override
+    public EntryList<ItemStack> getIngredients() {
+        return ItemStackList.of(value.getValue());
+    }
+
+    @Override
+    public @NotNull Class<ItemStack> ingredientClass() {
+        return ItemStack.class;
     }
 }

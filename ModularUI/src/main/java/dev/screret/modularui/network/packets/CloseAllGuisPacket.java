@@ -10,7 +10,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class CloseAllGuisPacket implements CustomPacketPayload {
+public record CloseAllGuisPacket() implements CustomPacketPayload {
 
     public static final CloseAllGuisPacket INSTANCE = new CloseAllGuisPacket();
 

@@ -4,7 +4,6 @@ import dev.screret.modularui.api.value.sync.IValueSyncHandler;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
 public abstract class ValueSyncHandler<B extends ByteBuf, T> extends SyncHandler implements IValueSyncHandler<B, T> {
@@ -15,18 +14,24 @@ public abstract class ValueSyncHandler<B extends ByteBuf, T> extends SyncHandler
     @Setter
     private Runnable changeListener;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void readOnClient(int id, RegistryFriendlyByteBuf buf) {
-        if (id == SYNC_VALUE) read(buf);
+        // the lowest subclass of ByteBuf is RegistryFriendlyByteBuf so this *should* work
+        if (id == SYNC_VALUE) read((B) buf);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void readOnServer(int id, RegistryFriendlyByteBuf buf) {
-        if (id == SYNC_VALUE) read(buf);
+        // the lowest subclass of ByteBuf is RegistryFriendlyByteBuf so this *should* work
+        if (id == SYNC_VALUE) read((B) buf);
     }
 
+    @SuppressWarnings("unchecked")
     protected void sync() {
-        sync(SYNC_VALUE, this::write);
+        // the lowest subclass of ByteBuf is RegistryFriendlyByteBuf so this *should* work
+        sync(SYNC_VALUE, buf -> this.write((B) buf));
     }
 
     @Override

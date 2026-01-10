@@ -2,6 +2,7 @@ package dev.screret.modularui.widgets.slot;
 
 import dev.screret.modularui.api.ITheme;
 import dev.screret.modularui.api.IThemeApi;
+import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.api.widget.IVanillaSlot;
 import dev.screret.modularui.api.widget.Interactable;
 import dev.screret.modularui.client.screen.ClientScreenHandler;
@@ -15,8 +16,7 @@ import dev.screret.modularui.integration.recipeviewer.entry.item.ItemStackList;
 import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
 import dev.screret.modularui.theme.SlotTheme;
 import dev.screret.modularui.theme.WidgetThemeEntry;
-import dev.screret.modularui.value.sync.ItemSlotSH;
-import dev.screret.modularui.value.sync.SyncHandler;
+import dev.screret.modularui.value.sync.ItemSlotSyncHandler;
 import dev.screret.modularui.widget.Widget;
 
 import net.minecraft.ChatFormatting;
@@ -49,7 +49,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
         return phantom ? new PhantomItemSlot() : new ItemSlot();
     }
 
-    private ItemSlotSH syncHandler;
+    private ItemSlotSyncHandler syncHandler;
     @Setter
     private RichTooltip tooltip;
     @Getter
@@ -77,9 +77,14 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     }
 
     @Override
-    public boolean isValidSyncHandler(SyncHandler syncHandler) {
-        this.syncHandler = castIfTypeElseNull(syncHandler, ItemSlotSH.class);
-        return this.syncHandler != null;
+    public boolean isValidSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        return syncOrValue instanceof ItemSlotSyncHandler;
+    }
+
+    @Override
+    protected void setSyncOrValue(@NotNull ISyncOrValue syncOrValue) {
+        super.setSyncOrValue(syncOrValue);
+        this.syncHandler = syncOrValue.castOrThrow(ItemSlotSyncHandler.class);
     }
 
     @Override
@@ -96,15 +101,18 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
         if (this.syncHandler == null) return;
         Lighting.setupFor3DItems();
         drawSlot(context, getSlot());
-        Lighting.setupFor3DItems();
+        drawOverlay(context);
+    }
+
+    @Override
+    public void drawOverlay(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
+        super.drawOverlay(context, widgetTheme);
         drawOverlay(context);
     }
 
     protected void drawOverlay(ModularGuiContext context) {
         if (isHovering()) {
-            RenderSystem.colorMask(true, true, true, false);
             GuiDraw.drawRect(context.getGraphics(), 1, 1, 16, 16, getSlotHoverColor());
-            RenderSystem.colorMask(true, true, true, true);
         }
     }
 
@@ -170,7 +178,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     }
 
     @Override
-    public @NotNull ItemSlotSH getSyncHandler() {
+    public @NotNull ItemSlotSyncHandler getSyncHandler() {
         if (this.syncHandler == null) {
             throw new IllegalStateException("Widget is not initialised!");
         }
@@ -202,16 +210,15 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
     }
 
     public ItemSlot slot(ModularSlot slot) {
-        return syncHandler(new ItemSlotSH(slot));
+        return syncHandler(new ItemSlotSyncHandler(slot));
     }
 
     public ItemSlot slot(IItemHandlerModifiable itemHandler, int index) {
         return slot(new ModularSlot(itemHandler, index));
     }
 
-    public ItemSlot syncHandler(ItemSlotSH syncHandler) {
-        this.syncHandler = syncHandler;
-        setSyncHandler(this.syncHandler);
+    public ItemSlot syncHandler(ItemSlotSyncHandler syncHandler) {
+        setSyncOrValue(ISyncOrValue.orEmpty(syncHandler));
         return this;
     }
 
@@ -226,7 +233,7 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
         AbstractContainerScreenAccessor accessor = (AbstractContainerScreenAccessor) screen;
         ItemStack slotStack = slotIn.getItem();
         boolean isDragPreview = false;
-        boolean flag1 = slotIn == accessor.getClickedSlot() && !accessor.getDraggingItem().isEmpty() &&
+        boolean doDrawItem = slotIn == accessor.getClickedSlot() && !accessor.getDraggingItem().isEmpty() &&
                 !accessor.getIsSplittingStack();
         ItemStack carried = containerScreen.getMenu().getCarried();
         int amount = -1;
@@ -267,9 +274,9 @@ public class ItemSlot extends Widget<ItemSlot> implements IVanillaSlot, Interact
         context.graphicsPose().pushPose();
         context.graphicsPose().translate(0, 0, z);
 
-        if (!flag1) {
+        if (!doDrawItem) {
             if (isDragPreview) {
-                GuiDraw.drawRect(context.getGraphics(), 1, 1, 16, 16, -2130706433);
+                GuiDraw.drawRect(context.getGraphics(), 1, 1, 16, 16, 0x80FFFFFF);
             }
 
             if (!slotStack.isEmpty()) {
