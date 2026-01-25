@@ -2,20 +2,20 @@ package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.utils.ICopy;
 
-import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-
 import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamDecoder;
 import net.minecraft.network.codec.StreamEncoder;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GenericSetSyncHandler<B extends ByteBuf, T> extends GenericCollectionSyncHandler<B, T, Set<T>> {
 

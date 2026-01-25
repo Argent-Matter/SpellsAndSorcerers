@@ -10,7 +10,6 @@ import dev.screret.modularui.integration.recipeviewer.entry.item.ItemStackList;
 import dev.screret.modularui.integration.recipeviewer.handlers.IngredientProvider;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.value.ObjectValue;
-import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.widget.Widget;
 
 import net.minecraft.world.item.ItemStack;

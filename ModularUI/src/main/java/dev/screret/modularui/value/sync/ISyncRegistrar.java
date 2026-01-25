@@ -5,15 +5,16 @@ import dev.screret.modularui.api.ISyncedAction;
 import dev.screret.modularui.widgets.slot.ModularSlot;
 import dev.screret.modularui.widgets.slot.PlayerSlotGroup;
 import dev.screret.modularui.widgets.slot.SlotGroup;
+
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface ISyncRegistrar<S extends ISyncRegistrar<S>> {
 

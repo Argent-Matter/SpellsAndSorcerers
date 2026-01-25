@@ -5,14 +5,13 @@ import dev.screret.modularui.network.NetworkUtils;
 
 import io.netty.buffer.ByteBuf;
 
-import net.minecraft.network.FriendlyByteBuf;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class StringSyncValue extends AbstractGenericSyncValue<ByteBuf, String> implements IStringSyncValue<ByteBuf, String> {
 

@@ -26,7 +26,6 @@ import dev.screret.modularui.widget.sizer.Flex;
 import dev.screret.modularui.widget.sizer.IUnResizeable;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;

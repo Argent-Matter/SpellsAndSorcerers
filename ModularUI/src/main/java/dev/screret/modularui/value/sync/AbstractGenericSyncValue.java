@@ -2,18 +2,14 @@ package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.ModularUI;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-
 import io.netty.buffer.ByteBuf;
-
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractGenericSyncValue<B extends ByteBuf, T> extends ValueSyncHandler<B, T> {
 
@@ -27,7 +23,7 @@ public abstract class AbstractGenericSyncValue<B extends ByteBuf, T> extends Val
         this.setter = setter;
         this.cache = getter.get();
         if (type == null && this.cache != null) {
-            //noinspection unchecked
+            // noinspection unchecked
             type = (Class<T>) this.cache.getClass();
         }
         this.type = type;
@@ -49,7 +45,7 @@ public abstract class AbstractGenericSyncValue<B extends ByteBuf, T> extends Val
         }
         this.cache = this.getter.get();
         if (type == null && this.cache != null) {
-            //noinspection unchecked
+            // noinspection unchecked
             type = (Class<T>) this.cache.getClass();
         }
         this.type = type;

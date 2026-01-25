@@ -9,15 +9,14 @@ import dev.screret.modularui.utils.FloatSupplier;
 
 import io.netty.buffer.ByteBuf;
 
-import net.minecraft.network.FriendlyByteBuf;
+import java.util.Objects;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class FloatSyncValue extends ValueSyncHandler<ByteBuf, Float> implements
-        IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {
+                            IFloatSyncValue<ByteBuf, Float>, IDoubleSyncValue<ByteBuf, Float>, IStringSyncValue<ByteBuf, Float> {
 
     private final FloatSupplier getter;
     private final FloatConsumer setter;

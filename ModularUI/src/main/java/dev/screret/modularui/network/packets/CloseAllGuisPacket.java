@@ -3,12 +3,14 @@ package dev.screret.modularui.network.packets;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.MCHelper;
 import dev.screret.modularui.network.ModularNetwork;
-import io.netty.buffer.ByteBuf;
+
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import io.netty.buffer.ByteBuf;
 
 public record CloseAllGuisPacket() implements CustomPacketPayload {
 

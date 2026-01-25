@@ -2,10 +2,12 @@ package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.widgets.slot.ModularSlot;
 import dev.screret.modularui.widgets.slot.PlayerSlotType;
-import lombok.Getter;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
+
+import lombok.Getter;
+
 import org.jetbrains.annotations.Nullable;
 
 /**

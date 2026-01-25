@@ -1,8 +1,5 @@
 package dev.screret.modularui.api.widget;
 
-import org.jetbrains.annotations.ApiStatus;
-
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public interface IParentWidget<I extends IWidget, W extends IParentWidget<I, W>> {

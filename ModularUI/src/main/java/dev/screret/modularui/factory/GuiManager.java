@@ -1,6 +1,5 @@
 package dev.screret.modularui.factory;
 
-import dev.architectury.event.events.common.TickEvent;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.api.MCHelper;
@@ -16,7 +15,6 @@ import dev.screret.modularui.widget.WidgetTree;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = ModularUI.MOD_ID)
@@ -105,6 +102,7 @@ public class GuiManager {
         // finally invoke event
         NeoForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, menu));
     }
+
     public static <T extends GuiData> void openFromClient(int windowId, int networkId, @NotNull UIFactory<T> factory,
                                                           @NotNull FriendlyByteBuf data, @NotNull Player player) {
         T guiData = factory.readGuiData(player, data);

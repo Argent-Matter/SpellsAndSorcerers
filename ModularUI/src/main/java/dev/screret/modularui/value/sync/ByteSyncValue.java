@@ -3,12 +3,14 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IByteSyncValue;
 import dev.screret.modularui.value.ByteValue;
+
 import io.netty.buffer.ByteBuf;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class ByteSyncValue extends ValueSyncHandler<ByteBuf, Byte> implements IByteSyncValue<ByteBuf, Byte> {
 

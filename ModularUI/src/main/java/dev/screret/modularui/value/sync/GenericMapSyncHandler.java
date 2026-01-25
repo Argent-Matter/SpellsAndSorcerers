@@ -4,12 +4,12 @@ import dev.screret.modularui.utils.ICopy;
 import dev.screret.modularui.utils.serialization.network.IByteBufAdapter;
 import dev.screret.modularui.utils.serialization.network.IEquals;
 
-import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamDecoder;
 import net.minecraft.network.codec.StreamEncoder;
+
+import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Collections;
 import java.util.Map;

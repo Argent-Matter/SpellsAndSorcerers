@@ -1,17 +1,11 @@
 package dev.screret.modularui.api.widget;
 
 import dev.screret.modularui.api.value.ISyncOrValue;
-import dev.screret.modularui.value.sync.GenericSyncValue;
 import dev.screret.modularui.value.sync.ModularSyncManager;
 import dev.screret.modularui.value.sync.SyncHandler;
 
-import io.netty.buffer.ByteBuf;
-
-import java.util.function.Consumer;
-
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Marks a widget as synced

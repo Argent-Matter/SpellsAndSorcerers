@@ -1,13 +1,11 @@
 package dev.screret.modularui.drawable.text;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.screret.modularui.api.drawable.ITextLine;
 import dev.screret.modularui.client.screen.viewport.GuiContext;
 import dev.screret.modularui.core.mixins.client.StringSplitterAccessor;
 import dev.screret.modularui.utils.Alignment;
 import dev.screret.modularui.widget.sizer.Area;
-import lombok.Getter;
-import lombok.Setter;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
@@ -17,6 +15,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;

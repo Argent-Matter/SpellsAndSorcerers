@@ -2,15 +2,17 @@ package dev.screret.modularui.drawable.graph;
 
 import dev.screret.modularui.api.GuiAxis;
 import dev.screret.modularui.drawable.GuiDraw;
+import dev.screret.modularui.drawable.ModularUIRenderTypes;
 import dev.screret.modularui.utils.Color;
-import dev.screret.modularui.utils.DAM;
+import dev.screret.modularui.utils.DoubleArrayMath;
 import dev.screret.modularui.utils.Interpolations;
-import com.gregtechceu.gtceu.client.renderer.GTRenderTypes;
-import com.mojang.blaze3d.systems.RenderSystem;
-import lombok.Getter;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
 
 public class Plot {
 
@@ -25,8 +27,8 @@ public class Plot {
             Color.LIME.main
     };
 
-    double[] xs = DAM.EMPTY;
-    double[] ys = DAM.EMPTY;
+    double[] xs = DoubleArrayMath.EMPTY;
+    double[] ys = DoubleArrayMath.EMPTY;
     @Getter
     float thickness = 1f;
     boolean defaultColor = true;
@@ -174,13 +176,9 @@ public class Plot {
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         var pose = graphics.pose().last().pose();
-        var buffer = graphics.bufferSource().getBuffer(GTRenderTypes.guiTriangleStrip());
-        long time = System.nanoTime();
+        var buffer = graphics.bufferSource().getBuffer(ModularUIRenderTypes.guiTriangleStrip());
         for (int i = 0; i < this.vertexBuffer.length; i += 2) {
-            buffer.vertex(pose, this.vertexBuffer[i], this.vertexBuffer[i + 1], 0).color(r, g, b, a).endVertex();
-            time = System.nanoTime() - time;
-            // ModularUI.LOGGER.error("Drawing plot with {} points took {}s", xs.length,
-            // FormattingUtil.formatNumberReadable(time));
+            buffer.addVertex(pose, this.vertexBuffer[i], this.vertexBuffer[i + 1], 0).setColor(r, g, b, a);
         }
     }
 

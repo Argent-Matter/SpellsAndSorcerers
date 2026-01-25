@@ -15,19 +15,16 @@ import dev.screret.modularui.drawable.UITexture;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.utils.Alignment;
 import dev.screret.modularui.value.IntValue;
-import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.widget.Widget;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AbstractCycleButtonWidget<W extends AbstractCycleButtonWidget<W>> extends Widget<W>
-        implements Interactable {
+                                      implements Interactable {
 
     private static final RichTooltip[] EMPTY_TOOLTIP = new RichTooltip[0];
 

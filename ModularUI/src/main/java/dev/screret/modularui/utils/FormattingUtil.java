@@ -117,10 +117,12 @@ public class FormattingUtil {
      * rest of each word to lowercase at the same time,
      * use {@link #capitalizeFully(String)}.
      *
-     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.
+     * <p>
+     * Whitespace is defined by {@link Character#isWhitespace(char)}.
      * A {@code null} input String returns {@code null}.
      * Capitalization uses the Unicode title case, normally equivalent to
-     * upper case.</p>
+     * upper case.
+     * </p>
      *
      * <pre>
      * WordUtils.capitalize(null)        = null
@@ -128,7 +130,7 @@ public class FormattingUtil {
      * WordUtils.capitalize("i am FINE") = "I Am FINE"
      * </pre>
      *
-     * @param str  the String to capitalize, may be null
+     * @param str the String to capitalize, may be null
      * @return capitalized String, {@code null} if input String is null
      * @see #capitalizeFully(String)
      */
@@ -142,13 +144,17 @@ public class FormattingUtil {
      * rest of each word to lowercase at the same time,
      * use {@link #capitalizeFully(String, CharPredicate)}.
      *
-     * <p>The delimiters represent a set of characters understood to separate words.
+     * <p>
+     * The delimiters represent a set of characters understood to separate words.
      * The first string character and the first non-delimiter character after a
-     * delimiter will be capitalized.</p>
+     * delimiter will be capitalized.
+     * </p>
      *
-     * <p>A {@code null} input String returns {@code null}.
+     * <p>
+     * A {@code null} input String returns {@code null}.
      * Capitalization uses the Unicode title case, normally equivalent to
-     * upper case.</p>
+     * upper case.
+     * </p>
      *
      * <pre>
      * WordUtils.capitalize(null, *)            = null
@@ -186,10 +192,12 @@ public class FormattingUtil {
      * that is each word is made up of a titlecase character and then a series of
      * lowercase characters.
      *
-     * <p>Whitespace is defined by {@link Character#isWhitespace(char)}.
+     * <p>
+     * Whitespace is defined by {@link Character#isWhitespace(char)}.
      * A {@code null} input String returns {@code null}.
      * Capitalization uses the Unicode title case, normally equivalent to
-     * upper case.</p>
+     * upper case.
+     * </p>
      *
      * <pre>
      * WordUtils.capitalizeFully(null)        = null
@@ -209,13 +217,17 @@ public class FormattingUtil {
      * that is each word is made up of a titlecase character and then a series of
      * lowercase characters.
      *
-     * <p>The delimiters represent a set of characters understood to separate words.
+     * <p>
+     * The delimiters represent a set of characters understood to separate words.
      * The first string character and the first non-delimiter character after a
-     * delimiter will be capitalized.</p>
+     * delimiter will be capitalized.
+     * </p>
      *
-     * <p>A {@code null} input String returns {@code null}.
+     * <p>
+     * A {@code null} input String returns {@code null}.
      * Capitalization uses the Unicode title case, normally equivalent to
-     * upper case.</p>
+     * upper case.
+     * </p>
      *
      * <pre>
      * WordUtils.capitalizeFully(null, *)            = null

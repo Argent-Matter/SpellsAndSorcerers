@@ -1,10 +1,12 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.value.sync.IValueSyncHandler;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 
 public abstract class ValueSyncHandler<B extends ByteBuf, T> extends SyncHandler implements IValueSyncHandler<B, T> {
 

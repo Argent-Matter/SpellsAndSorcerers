@@ -13,7 +13,6 @@ import dev.screret.modularui.theme.WidgetTheme;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.utils.Color;
 import dev.screret.modularui.value.DoubleValue;
-import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.widget.Widget;
 import dev.screret.modularui.widget.sizer.Area;
 import dev.screret.modularui.widget.sizer.Unit;

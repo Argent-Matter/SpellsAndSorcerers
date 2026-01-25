@@ -9,11 +9,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import io.netty.buffer.Unpooled;
 
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This sync handler calls a function on client and server which creates a widget after being notified. The widget is

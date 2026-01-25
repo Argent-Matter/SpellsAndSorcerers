@@ -1,6 +1,7 @@
 package dev.screret.modularui.utils;
 
 import dev.screret.modularui.ModularUI;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;

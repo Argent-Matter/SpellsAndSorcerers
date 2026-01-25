@@ -11,7 +11,6 @@ import dev.screret.modularui.client.screen.viewport.ModularGuiContext;
 import dev.screret.modularui.utils.math.MathHelper;
 import dev.screret.modularui.utils.math.ParseResult;
 import dev.screret.modularui.value.StringValue;
-import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.value.sync.ValueSyncHandler;
 
 import net.minecraft.util.Mth;

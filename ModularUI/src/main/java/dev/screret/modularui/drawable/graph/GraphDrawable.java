@@ -2,16 +2,18 @@ package dev.screret.modularui.drawable.graph;
 
 import dev.screret.modularui.api.GuiAxis;
 import dev.screret.modularui.api.drawable.IDrawable;
+import dev.screret.modularui.client.screen.viewport.GuiContext;
 import dev.screret.modularui.drawable.GuiDraw;
 import dev.screret.modularui.theme.WidgetTheme;
 import dev.screret.modularui.utils.Color;
-import com.gregtechceu.gtceu.client.mui.screen.viewport.GuiContext;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import lombok.Getter;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,6 @@ import dev.screret.modularui.api.widget.Interactable;
 import dev.screret.modularui.drawable.GuiTextures;
 import dev.screret.modularui.theme.WidgetThemeEntry;
 import dev.screret.modularui.value.sync.InteractionSyncHandler;
-import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.widget.SingleChildWidget;
 
 import org.jetbrains.annotations.NotNull;

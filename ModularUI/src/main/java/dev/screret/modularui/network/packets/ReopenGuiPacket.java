@@ -12,13 +12,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import io.netty.buffer.ByteBuf;
 
-
 public record ReopenGuiPacket(int networkId) implements CustomPacketPayload {
 
     public static final ResourceLocation ID = ModularUI.id("reopen_gui");
     public static final Type<ReopenGuiPacket> TYPE = new Type<>(ID);
-public static final StreamCodec<ByteBuf, ReopenGuiPacket> CODEC = ByteBufCodecs.VAR_INT
-        .map(ReopenGuiPacket::new, ReopenGuiPacket::networkId);
+    public static final StreamCodec<ByteBuf, ReopenGuiPacket> CODEC = ByteBufCodecs.VAR_INT
+            .map(ReopenGuiPacket::new, ReopenGuiPacket::networkId);
 
     public void execute(IPayloadContext context) {
         if (context.flow() == PacketFlow.CLIENTBOUND) {

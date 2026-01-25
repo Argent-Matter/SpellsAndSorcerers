@@ -14,7 +14,6 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.Resource;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import io.netty.buffer.ByteBuf;

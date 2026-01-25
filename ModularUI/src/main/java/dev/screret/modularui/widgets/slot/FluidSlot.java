@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Accessors(fluent = true, chain = true)
 public class FluidSlot extends AbstractFluidDisplayWidget<FluidSlot>
-        implements Interactable, GhostIngredientSlot<FluidStack>, IngredientProvider<FluidStack> {
+                       implements Interactable, GhostIngredientSlot<FluidStack>, IngredientProvider<FluidStack> {
 
     public static final int DEFAULT_SIZE = 18;
     public static final String UNIT_BUCKET = "B";

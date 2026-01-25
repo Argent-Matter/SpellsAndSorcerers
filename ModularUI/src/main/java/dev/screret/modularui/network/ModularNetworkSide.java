@@ -9,14 +9,17 @@ import dev.screret.modularui.network.packets.ReopenGuiPacket;
 import dev.screret.modularui.network.packets.SyncHandlerPacket;
 import dev.screret.modularui.value.sync.ModularSyncManager;
 import dev.screret.modularui.value.sync.SyncHandler;
-import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import lombok.Getter;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent;
+
+import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import lombok.Getter;
+
 import org.jetbrains.annotations.ApiStatus;
 
 public abstract class ModularNetworkSide {
@@ -78,7 +81,8 @@ public abstract class ModularNetworkSide {
     }
 
     @ApiStatus.Internal
-    public void sendSyncHandlerPacket(String panel, SyncHandler syncHandler, IPacketWriter<? super RegistryFriendlyByteBuf> writer, Player player) {
+    public void sendSyncHandlerPacket(String panel, SyncHandler syncHandler,
+                                      IPacketWriter<? super RegistryFriendlyByteBuf> writer, Player player) {
         ModularSyncManager msm = syncHandler.getSyncManager().getModularSyncManager();
         if (!inverseActiveScreens.containsKey(msm)) return;
         int id = inverseActiveScreens.getInt(msm);

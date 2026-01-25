@@ -4,11 +4,11 @@ import dev.screret.modularui.utils.serialization.network.ByteBufAdapters;
 
 import io.netty.buffer.ByteBuf;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class LongArraySyncValue extends GenericSyncValue<ByteBuf, long[]> {
 

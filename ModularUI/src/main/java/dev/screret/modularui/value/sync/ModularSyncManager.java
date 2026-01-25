@@ -6,10 +6,7 @@ import dev.screret.modularui.api.ISyncedAction;
 import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.widgets.slot.PlayerSlotGroup;
 import dev.screret.modularui.widgets.slot.SlotGroup;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import lombok.Getter;
-import net.minecraft.network.FriendlyByteBuf;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,12 +17,16 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
 import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
 
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import lombok.Getter;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 public class ModularSyncManager implements ISyncRegistrar<ModularSyncManager> {
 

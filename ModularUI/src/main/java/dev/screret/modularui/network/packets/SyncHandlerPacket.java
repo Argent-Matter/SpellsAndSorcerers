@@ -2,11 +2,8 @@ package dev.screret.modularui.network.packets;
 
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.IPacketWriter;
-import dev.screret.modularui.client.screen.ModularContainerMenu;
-import dev.screret.modularui.client.screen.ModularScreen;
 import dev.screret.modularui.network.ModularNetwork;
 import dev.screret.modularui.network.NetworkUtils;
-import dev.screret.modularui.value.sync.ModularSyncManager;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,7 +11,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.connection.ConnectionType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 

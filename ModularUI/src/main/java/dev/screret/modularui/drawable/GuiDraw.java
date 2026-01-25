@@ -100,7 +100,6 @@ public class GuiDraw {
         buffer.addVertex(pose, x1, y0, 0.0f).setColor(r, g, b, a);
     }
 
-
     public static void drawCircle(GuiGraphics graphics, float x0, float y0, float diameter, int color, int segments) {
         drawEllipse(graphics, x0, y0, diameter, diameter, color, color, segments);
     }

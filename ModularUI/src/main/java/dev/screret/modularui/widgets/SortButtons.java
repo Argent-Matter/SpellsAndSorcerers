@@ -29,7 +29,7 @@ public class SortButtons extends Widget<SortButtons> {
 
     static {
         // TODO bogosort doesn't exist (yet), pick some other sorting mod to add compat for
-        if (ModularUI.isClientSide() && false /*ModularUI.Mods.BOGOSORTER.isLoaded()*/) {
+        if (ModularUI.isClientSide() && false /* ModularUI.Mods.BOGOSORTER.isLoaded() */) {
             // HOVER_SORT_OVERLAY = ButtonHandler.BUTTON_SORT.withColorOverride(0xFFFFA0);
             // HOVER_SETTINGS_OVERLAY = ButtonHandler.BUTTON_SETTINGS.withColorOverride(0xFFFFA0);
         } else {

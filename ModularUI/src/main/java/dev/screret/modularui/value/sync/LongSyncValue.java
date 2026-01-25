@@ -4,22 +4,22 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
 import dev.screret.modularui.api.value.sync.ILongSyncValue;
 import dev.screret.modularui.api.value.sync.IStringSyncValue;
-import net.minecraft.network.FriendlyByteBuf;
+
 import net.minecraft.network.VarLong;
 
 import io.netty.buffer.ByteBuf;
-
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class LongSyncValue extends ValueSyncHandler<ByteBuf, Long>
-        implements ILongSyncValue<ByteBuf, Long>, IIntSyncValue<ByteBuf, Long>,
-        IStringSyncValue<ByteBuf, Long> {
+                           implements ILongSyncValue<ByteBuf, Long>, IIntSyncValue<ByteBuf, Long>,
+                           IStringSyncValue<ByteBuf, Long> {
 
     private final LongSupplier getter;
     private final LongConsumer setter;

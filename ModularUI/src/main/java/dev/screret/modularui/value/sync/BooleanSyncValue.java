@@ -6,13 +6,13 @@ import dev.screret.modularui.api.value.sync.IStringSyncValue;
 
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.minecraft.network.FriendlyByteBuf;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BooleanSyncValue extends ValueSyncHandler<ByteBuf, Boolean>
                               implements IBoolSyncValue<ByteBuf, Boolean>, IStringSyncValue<ByteBuf, Boolean> {

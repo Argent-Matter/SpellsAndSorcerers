@@ -1,12 +1,14 @@
 package dev.screret.modularui.utils;
 
+import net.minecraft.util.Mth;
+
 import it.unimi.dsi.fastutil.doubles.DoubleBinaryOperator;
 import it.unimi.dsi.fastutil.doubles.DoubleUnaryOperator;
-import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A helper class providing math operations on 1D double arrays similar to numpy.

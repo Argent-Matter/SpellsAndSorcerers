@@ -4,16 +4,19 @@ import dev.screret.modularui.api.GuiAxis;
 import dev.screret.modularui.drawable.GuiDraw;
 import dev.screret.modularui.drawable.text.TextRenderer;
 import dev.screret.modularui.utils.Alignment;
-import dev.screret.modularui.utils.DAM;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import lombok.Getter;
+import dev.screret.modularui.utils.DoubleArrayMath;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
+
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import lombok.Getter;
 import org.joml.Matrix4f;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
 public class GraphAxis {
@@ -52,14 +55,14 @@ public class GraphAxis {
                 this.min = 0;
                 this.max = 0;
             } else if (plots.size() == 1) {
-                this.min = DAM.min(plots.get(0).getData(this.axis));
-                this.max = DAM.max(plots.get(0).getData(this.axis));
+                this.min = DoubleArrayMath.min(plots.get(0).getData(this.axis));
+                this.max = DoubleArrayMath.max(plots.get(0).getData(this.axis));
             } else {
                 double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
                 for (Plot plot : plots) {
-                    double m = DAM.min(plot.getData(this.axis));
+                    double m = DoubleArrayMath.min(plot.getData(this.axis));
                     if (m < min) min = m;
-                    m = DAM.max(plot.getData(this.axis));
+                    m = DoubleArrayMath.max(plot.getData(this.axis));
                     if (m > max) max = m;
                 }
                 this.min = min;
@@ -82,7 +85,7 @@ public class GraphAxis {
         }
         textRenderer.setScale(TICK_LABEL_SCALE);
         this.maxLabelWidth = 0;
-        double maxDiff = DAM.max(DAM.diff(this.majorTicks));
+        double maxDiff = DoubleArrayMath.max(DoubleArrayMath.diff(this.majorTicks));
         int significantPlaces = (int) Math.abs(Math.log10(maxDiff)) + 2;
         DecimalFormat format = new DecimalFormat();
         format.setMaximumFractionDigits(significantPlaces);

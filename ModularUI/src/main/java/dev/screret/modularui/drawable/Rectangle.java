@@ -1,6 +1,5 @@
 package dev.screret.modularui.drawable;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.animation.IAnimatable;
 import dev.screret.modularui.api.IJsonSerializable;
@@ -16,6 +15,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

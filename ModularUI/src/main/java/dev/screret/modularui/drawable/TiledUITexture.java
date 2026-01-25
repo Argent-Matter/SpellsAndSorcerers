@@ -1,12 +1,12 @@
 package dev.screret.modularui.drawable;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.screret.modularui.client.screen.viewport.GuiContext;
 
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 public class TiledUITexture extends UITexture {
 

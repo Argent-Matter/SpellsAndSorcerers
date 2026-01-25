@@ -17,7 +17,6 @@ import dev.screret.modularui.utils.Interpolation;
 import dev.screret.modularui.utils.Interpolations;
 import dev.screret.modularui.value.sync.PanelSyncHandler;
 import dev.screret.modularui.value.sync.PanelSyncManager;
-import dev.screret.modularui.value.sync.SyncHandler;
 import dev.screret.modularui.widget.ParentWidget;
 import dev.screret.modularui.widget.WidgetTree;
 import dev.screret.modularui.widget.sizer.Area;

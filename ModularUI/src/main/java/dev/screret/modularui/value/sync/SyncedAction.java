@@ -1,8 +1,10 @@
 package dev.screret.modularui.value.sync;
 
 import dev.screret.modularui.api.ISyncedAction;
-import lombok.Getter;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import lombok.Getter;
 
 import org.jetbrains.annotations.NotNull;
 

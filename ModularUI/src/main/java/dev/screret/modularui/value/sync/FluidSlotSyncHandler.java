@@ -3,11 +3,6 @@ package dev.screret.modularui.value.sync;
 import dev.screret.modularui.utils.FluidTankHandler;
 import dev.screret.modularui.utils.MouseData;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +14,11 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.*;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -245,10 +245,11 @@ public class FluidSlotSyncHandler extends ValueSyncHandler<RegistryFriendlyByteB
                     this.fluidTank.fill(toFill, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
-        } else if (mouseData.mouseButton() == InputConstants.MOUSE_BUTTON_MIDDLE && !currentFluid.isEmpty() && this.canDrainSlot) {
-            this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : FluidType.BUCKET_VOLUME,
-                    IFluidHandler.FluidAction.EXECUTE);
-        }
+        } else
+            if (mouseData.mouseButton() == InputConstants.MOUSE_BUTTON_MIDDLE && !currentFluid.isEmpty() && this.canDrainSlot) {
+                this.fluidTank.drain(mouseData.shift() ? Integer.MAX_VALUE : FluidType.BUCKET_VOLUME,
+                        IFluidHandler.FluidAction.EXECUTE);
+            }
     }
 
     public void tryScrollPhantom(MouseData mouseData) {

@@ -5,16 +5,18 @@ import dev.screret.modularui.api.value.ISyncOrValue;
 import dev.screret.modularui.network.ModularNetwork;
 import dev.screret.modularui.network.ModularNetworkSide;
 
-import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
+import lombok.Getter;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * Base class for handling syncing of widgets.
@@ -177,12 +179,14 @@ public abstract class SyncHandler implements ISyncOrValue {
         network.sendSyncHandlerPacket(panel, syncHandler, writer, syncHandler.syncManager.getPlayer());
     }
 
-    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+    public static void sendToClient(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
+                                    SyncHandler syncHandler) {
         send(ModularNetwork.SERVER, panel, writer, syncHandler);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer, SyncHandler syncHandler) {
+    public static void sendToServer(String panel, IPacketWriter<? super RegistryFriendlyByteBuf> writer,
+                                    SyncHandler syncHandler) {
         send(ModularNetwork.CLIENT, panel, writer, syncHandler);
     }
 }

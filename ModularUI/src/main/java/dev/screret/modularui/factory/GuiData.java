@@ -7,9 +7,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class and subclasses are holding necessary data to find the exact same GUI on client and server.

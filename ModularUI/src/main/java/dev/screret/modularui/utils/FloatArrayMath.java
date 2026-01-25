@@ -1,11 +1,13 @@
 package dev.screret.modularui.utils;
 
+import net.minecraft.util.Mth;
+
 import it.unimi.dsi.fastutil.floats.FloatBinaryOperator;
 import it.unimi.dsi.fastutil.floats.FloatUnaryOperator;
-import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A helper class providing math operations on 1D float arrays similar to numpy.

@@ -2,6 +2,7 @@ package dev.screret.modularui.network;
 
 import dev.screret.modularui.api.IMuiScreen;
 import dev.screret.modularui.value.sync.ModularSyncManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
+
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental

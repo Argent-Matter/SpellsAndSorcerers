@@ -5,7 +5,6 @@ import dev.screret.modularui.utils.serialization.network.ByteBufAdapters;
 import dev.screret.modularui.utils.serialization.network.IByteBufAdapter;
 import dev.screret.modularui.utils.serialization.network.IEquals;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamDecoder;
 import net.minecraft.network.codec.StreamEncoder;
@@ -14,12 +13,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import io.netty.buffer.ByteBuf;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GenericSyncValue<B extends ByteBuf, T> extends AbstractGenericSyncValue<B, T> {
 

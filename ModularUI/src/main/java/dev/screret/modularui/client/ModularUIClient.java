@@ -3,6 +3,7 @@ package dev.screret.modularui.client;
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.animation.AnimatorManager;
 import dev.screret.modularui.client.screen.ContainerScreenWrapper;
+import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.drawable.DrawableSerialization;
 import dev.screret.modularui.factory.inventory.InventoryTypes;
 
@@ -30,6 +31,7 @@ public class ModularUIClient {
 
     @SubscribeEvent
     public void registerScreens(final RegisterMenuScreensEvent event) {
-        event.register(ModularUI.MODULAR_CONTAINER.get(), ContainerScreenWrapper::new);
+        event.<ModularContainerMenu, ContainerScreenWrapper>register(ModularUI.MODULAR_CONTAINER.get(),
+                ContainerScreenWrapper::new);
     }
 }

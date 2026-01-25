@@ -4,19 +4,21 @@ import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.api.value.IEnumValue;
 import dev.screret.modularui.api.value.sync.IIntSyncValue;
 
-import io.netty.buffer.ByteBuf;
-import lombok.Getter;
 import net.minecraft.network.VarInt;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import io.netty.buffer.ByteBuf;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T> implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class EnumSyncValue<T extends Enum<T>> extends ValueSyncHandler<ByteBuf, T>
+                          implements IEnumValue<T>, IIntSyncValue<ByteBuf, T> {
 
     @Getter
     protected final Class<T> enumClass;

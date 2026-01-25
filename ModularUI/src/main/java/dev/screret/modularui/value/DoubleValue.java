@@ -1,9 +1,10 @@
 package dev.screret.modularui.value;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import dev.screret.modularui.api.value.IDoubleValue;
 import dev.screret.modularui.api.value.IFloatValue;
 import dev.screret.modularui.api.value.IStringValue;
+
+import com.google.common.util.concurrent.AtomicDouble;
 
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
