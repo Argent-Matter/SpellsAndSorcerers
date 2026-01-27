@@ -140,16 +140,13 @@ jobs:
           git commit -am "Bump version to ${BUMPED}"
       - name: Prepend to CHANGELOG
         if: ${{ inputs.release-body && inputs.changelog-title }}
+        env:
+          RELEASE_BODY: ${{ inputs.release-body }}
+          CHANGELOG_TITLE: ${{ inputs.changelog-title }}
         run: |
-          cat > temp2.md <<'EOF'
-          ${{ inputs.release-body }}
-          'EOF'
-          cat > temp3.md <<'EOF'
-          ${{ inputs.changelog-title }}
-          'EOF'
-          { cat temp2.md | head -n -1 - | tail -n +1 -; } >> temp3.md
+          { echo -e "$RELEASE_BODY" | head -n -1 - | tail -n +1 -; } >> temp2.md
           
-          { head -n 2 CHANGELOG.md; cat temp3.md; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
+          { head -n 2 CHANGELOG.md; echo -e "$CHANGELOG_TITLE"; cat temp2.md; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
           git commit -am "Updated CHANGELOG"
       - name: Push and PR
         env:
