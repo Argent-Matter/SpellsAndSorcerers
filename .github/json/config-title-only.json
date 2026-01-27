@@ -1,7 +1,21 @@
 {
-  "categories": [],
+  "categories": [
+    {
+      "title": "### Added",
+      "labels": ["type: feature"]
+    },
+    {
+      "title": "### Fixed",
+      "labels": ["type: bugfix"]
+    },
+    {
+      "title": "### Changed",
+      "labels": ["type: refactor", "type: translation"]
+    }
+  ],
   "sort": "ASC",
   "template": "## Version [v#{{VERSION}}](#{{RELEASE_DIFF}})",
+  "pr_template": "- #{{TITLE}} by @#{{AUTHOR}} in [##{{NUMBER}}](#{{URL}})",
   "custom_placeholders": [
     {
       "name": "VERSION",
@@ -13,6 +27,7 @@
     }
   ],
   "empty_template": "",
+  "ignore_labels": ["ignore changelog"],
   "tag_resolver": {
     "method": "semver",
     "filter": {
@@ -24,6 +39,7 @@
       "target": "$1"
     }
   },
+  "max_pull_requests": 1000,
   "max_back_track_time_days": 365,
   "base_branches": ["1.21.1"]
 }
