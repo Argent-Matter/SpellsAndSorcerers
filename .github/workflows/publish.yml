@@ -141,8 +141,15 @@ jobs:
       - name: Prepend to CHANGELOG
         if: ${{ inputs.release-body && inputs.changelog-title }}
         run: |
-          { env printf "%q" "${{ inputs.changelog-title }}"; env printf "%q" "${{ inputs.release-body }}" | head -n -1 - | tail -n +1 -; } > temp.md
-          { head -n 2 CHANGELOG.md; cat temp.md; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
+          cat > temp2.md <<'EOF'
+          ${{ inputs.release-body }}
+          'EOF'
+          cat > temp3.md <<'EOF'
+          ${{ inputs.changelog-title }}
+          'EOF'
+          { cat temp2.md | head -n -1 - | tail -n +1 -; } >> temp3.md
+          
+          { head -n 2 CHANGELOG.md; cat temp3.md; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
           git commit -am "Updated CHANGELOG"
       - name: Push and PR
         env:
