@@ -18,10 +18,6 @@ on:
         description: 'Body for published release notes'
         required: false
         type: string
-      changelog-body:
-        description: 'Body of change notes to insert into CHANGELOG.md'
-        required: false
-        type: string
 
 jobs:
   build:
