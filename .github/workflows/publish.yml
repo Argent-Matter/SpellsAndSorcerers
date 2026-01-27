@@ -15,7 +15,11 @@ on:
         required: true
         type: string
       release-body:
-        description: 'Body for published release notes'
+        description: 'Body for published release notes, also inserted into CHANGELOG.md'
+        required: false
+        type: string
+      changelog-title:
+        description: 'Title of change notes to insert into CHANGELOG.md'
         required: false
         type: string
 
@@ -135,10 +139,10 @@ jobs:
           sed -i "s/= ${{ needs.build.outputs.ver }}/= ${BUMPED}/" gradle.properties
           git commit -am "Bump version to ${BUMPED}"
       - name: Prepend to CHANGELOG
-        if: inputs.release-body
+        if: ${{ inputs.release-body && inputs.changelog-title }}
         run: |
-          NEW_LOG=$(echo '${{ inputs.release-body }}' | head -n -2 | tail -n +1)
-          { head -n 2 CHANGELOG.md; echo -e "${NEW_LOG}"; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
+          { env printf "%q" "${{ inputs.changelog-title }}"; env printf "%q" "${{ inputs.release-body }}" | head -n -1 - | tail -n +1 -; } > temp.md
+          { head -n 2 CHANGELOG.md; cat temp.md; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
           git commit -am "Updated CHANGELOG"
       - name: Push and PR
         env:
