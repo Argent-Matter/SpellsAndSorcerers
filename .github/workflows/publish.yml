@@ -139,9 +139,10 @@ jobs:
           sed -i "s/= ${{ needs.build.outputs.ver }}/= ${BUMPED}/" gradle.properties
           git commit -am "Bump version to ${BUMPED}"
       - name: Prepend to CHANGELOG
-        if: inputs.changelog-body
+        if: inputs.release-body
         run: |
-          { head -n 2 CHANGELOG.md; echo -e "${{ inputs.changelog-body }}"; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
+          NEW_LOG=$(echo -e "${{ inputs.release-body }}" | head -n -2 | tain -n +1)
+          { head -n 2 CHANGELOG.md; echo -e "${NEW_LOG}"; tail -n +3 CHANGELOG.md; } > temp.md && mv temp.md CHANGELOG.md
           git commit -am "Updated CHANGELOG"
       - name: Push and PR
         env:
