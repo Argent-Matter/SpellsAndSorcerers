@@ -19,6 +19,7 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
@@ -159,6 +160,10 @@ public final class ValueTransformers {
         registerSimpleClassTransformer(int[].class, IntArrayTag::new, IntArrayTag::getAsIntArray, IntArrayTag.class);
         registerSimpleClassTransformer(long[].class, LongArrayTag::new, LongArrayTag::getAsLongArray, LongArrayTag.class);
         registerSimpleClassTransformer(byte[].class, ByteArrayTag::new, ByteArrayTag::getAsByteArray, ByteArrayTag.class);
+        registerPrimitiveArrayTransformer(float.class, Tag.TAG_FLOAT);
+        registerPrimitiveArrayTransformer(double.class, Tag.TAG_DOUBLE);
+        registerPrimitiveArrayTransformer(short.class, Tag.TAG_SHORT);
+        registerPrimitiveArrayTransformer(char.class, Tag.TAG_INT);
 
         // Java classes and standard minecraft/forge classes
 
@@ -180,4 +185,65 @@ public final class ValueTransformers {
         registerTransformerProvider(Set.class, SetTransformer::new);
     }
     // spotless:on
+
+    /**
+     * Create a generic primitive array transformer for primitive types that don't have built in array types in NBT.<br>
+     * This is private because it should only actually be used for {@code float}, {@code double}, {@code short}, and {@code char}.
+     *
+     * @param componentType    The component type of the array, e.g. {@code float.class} for a float array.
+     * @param componentTagType The tag type to use for the component, e.g. {@link Tag#TAG_FLOAT} for a float array.
+     * @param <T>              {@code componentType}
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> void registerPrimitiveArrayTransformer(Class<T> componentType, byte componentTagType) {
+        ValueTransformers.registerSimpleClassTransformer((Class<T[]>) componentType.arrayType(), (T[] arr) -> {
+            ListTag tag = new ListTag(arr.length);
+            for (int i = 0; i < arr.length; i++) {
+                // I don't know a better way to do this, so this is what we're using.
+                switch (componentTagType) {
+                    case Tag.TAG_INT -> {
+                        // special case char support
+                        if (componentType == char.class || componentType == Character.class) {
+                            tag.add(IntTag.valueOf(Array.getChar(arr, i)));
+                        } else {
+                            tag.add(IntTag.valueOf(Array.getInt(arr, i)));
+                        }
+                    }
+                    case Tag.TAG_LONG -> tag.add(LongTag.valueOf(Array.getLong(arr, i)));
+                    case Tag.TAG_FLOAT -> tag.add(FloatTag.valueOf(Array.getFloat(arr, i)));
+                    case Tag.TAG_DOUBLE -> tag.add(DoubleTag.valueOf(Array.getDouble(arr, i)));
+                    case Tag.TAG_SHORT -> tag.add(ShortTag.valueOf(Array.getShort(arr, i)));
+                    case Tag.TAG_BYTE -> tag.add(ByteTag.valueOf(Array.getByte(arr, i)));
+                    default -> throw new IllegalArgumentException("%s is not a primitive tag type".formatted(componentTagType));
+                }
+            }
+            return tag;
+        }, listTag -> {
+            T[] array = (T[]) Array.newInstance(componentType, listTag.size());
+            if (listTag.isEmpty() || listTag.getElementType() != componentTagType) {
+                return array;
+            }
+            for (int i = 0; i < listTag.size(); i++) {
+                NumericTag tag = (NumericTag) listTag.get(i);
+                // I don't know a better way to do this, so this is what we're using.
+                switch (componentTagType) {
+                    case Tag.TAG_INT -> {
+                        // special case char support
+                        if (componentType == char.class || componentType == Character.class) {
+                            Array.setChar(array, i, (char) tag.getAsInt());
+                        } else {
+                            Array.setInt(array, i, tag.getAsInt());
+                        }
+                    }
+                    case Tag.TAG_LONG -> Array.setLong(array, i, tag.getAsLong());
+                    case Tag.TAG_FLOAT -> Array.setFloat(array, i, tag.getAsFloat());
+                    case Tag.TAG_DOUBLE -> Array.setDouble(array, i, tag.getAsDouble());
+                    case Tag.TAG_SHORT -> Array.setShort(array, i, tag.getAsShort());
+                    case Tag.TAG_BYTE -> Array.setByte(array, i, tag.getAsByte());
+                    default -> throw new IllegalArgumentException("%s is not a primitive tag type".formatted(componentTagType));
+                }
+            }
+            return array;
+        }, ListTag.class);
+    }
 }
