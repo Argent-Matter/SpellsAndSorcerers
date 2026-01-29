@@ -23,6 +23,8 @@ jobs:
           filters: |
             code:
               - 'src/**'
+              - 'ModularUI/src/**'
+              - 'SyncSystem/src/**'
               - '*.gradle'
               - 'gradle.properties'
               - 'gradlew*'
