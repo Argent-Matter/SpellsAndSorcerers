@@ -10,14 +10,16 @@ plugins {
     alias libs.plugins.lombok
 }
 
-group = maven_group
+group = project.properties.maven_group
 // Formats the mod version to include the loader, Minecraft version, and '-SNAPSHOT-<timestamp>' if enabled.
 boolean isSnapshot = System.getenv("SNAPSHOT")
 version = "${mod_version}" + (isSnapshot ? "-SNAPSHOT" : "")
 boolean isCI = System.getenv("CI") != null
 
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+allprojects {
+    java {
+        toolchain.languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 sourceSets {
@@ -71,11 +73,15 @@ apply from: "$rootDir/gradle/scripts/resources.gradle"
 apply from: "$rootDir/gradle/scripts/publishing.gradle"
 apply from: "$rootDir/gradle/scripts/spotless.gradle"
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:-removal"
-}
+afterEvaluate {
+    allprojects {
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = "UTF-8"
+            options.compilerArgs << "-Xlint:-removal"
+        }
 
-lombok {
-    version = "1.18.38"
+        lombok {
+            version = "1.18.38"
+        }
+    }
 }

@@ -1,9 +1,10 @@
-name: Publish ModularUI
+name: Publish Subproject
 
 on:
   workflow_dispatch:
     inputs:
       simulate:
+        description: 'Whether to actually publish to the maven'
         required: false
         type: boolean
         default: false
@@ -12,6 +13,24 @@ on:
         required: false
         type: string
         default: '1.21.1'
+      project:
+        description: 'The subproject to publish, either ModularUI or SyncSystem'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      simulate:
+        description: 'Whether to actually publish to the maven'
+        required: false
+        type: boolean
+      branch:
+        description: 'Branch to checkout (must be 1.21.1 to publish)'
+        required: true
+        type: string
+      project:
+        description: 'The subproject to publish, either ModularUI or SyncSystem'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -33,15 +52,15 @@ jobs:
           ref: ${{ inputs.branch }}
       - name: Get Version
         id: ver
-        run: echo "version=$(./gradlew -q :ModularUI:printVersion)" >> $GITHUB_OUTPUT
+        run: echo "version=$(./gradlew -q :${{ inputs.project }}:printVersion)" >> $GITHUB_OUTPUT
       - name: Build
-        run: ./gradlew :ModularUI:assemble
+        run: ./gradlew :${{ inputs.project }}:assemble
       - name: Publish
         if: ${{ !inputs.simulate && inputs.branch == '1.21.1' }}
         env:
           MAVEN_USER: ${{ secrets.MAVEN_USER }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-        run: ./gradlew :ModularUI:publish
+        run: ./gradlew :${{ inputs.project }}:publish
 
   # After successful release, PR version bump and changelog
   bump-version-and-changelog:
@@ -60,13 +79,13 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git switch -C gh/release-mui-${{ inputs.branch }}
+          git switch -C gh/release-${{ inputs.project }}-${{ inputs.branch }}
           BUMPED=$(echo ${{ needs.build.outputs.ver }} | awk -F. '/[0-9]+\./{$NF++;print}' OFS=.)
-          sed -i "s/= ${{ needs.build.outputs.ver }}/= ${BUMPED}/" ./ModularUI/gradle.properties
+          sed -i "s/= ${{ needs.build.outputs.ver }}/= ${BUMPED}/" ./${{ inputs.project }}/gradle.properties
           git commit -am "Bump version to ${BUMPED}"
       - name: Push and PR
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git push --force --set-upstream origin gh/release-${{ inputs.branch }}
-          gh pr create -B ${{ inputs.branch }} -H gh/release-${{ inputs.branch }} --title "RELEASE for ${{ inputs.branch }} [no-snapshot]" --body "Created by GH Workflow" --label "ignore changelog"
+          git push --force --set-upstream origin gh/release-${{ inputs.project }}-${{ inputs.branch }}
+          gh pr create -B ${{ inputs.branch }} -H gh/release-${{ inputs.project }}-${{ inputs.branch }} --title "RELEASE ${{ inputs.project }} for ${{ inputs.branch }} [no-snapshot]" --body "Created by GH Workflow" --label "ignore changelog"

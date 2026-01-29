@@ -7,12 +7,14 @@ shadow = "9.3.0"
 spotless = "7.0.4"
 modDevGradle = "2.0.120"
 lombok = "8.14"
+jetbrains-annotations = "26.0.1"
 renderNurse = "0.0.12"
 mxparser = "6.1.0"
 
 [libraries]
 minecraft               = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 neoForge                = { module = "net.neoforged:neoforge", version.ref = "neoForge" }
+jetbrains-annotations   = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 renderNurse             = { module = "net.neoforged:render-nurse", version.ref = "renderNurse" }
 mxparser                = { module = "org.mariuszgromada.math:MathParser.org-mXparser", version.ref = "mxparser" }
 
