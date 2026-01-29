@@ -3,7 +3,7 @@ name: Publish All Subprojects
 on:
   workflow_dispatch:
     inputs:
-      simulate:
+      really-publish:
         description: 'Whether to actually publish to the maven'
         required: false
         type: boolean
@@ -23,6 +23,6 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/publish-subproject.yml
     with:
-      simulate: ${{ inputs.simulate || github.repository_owner != 'Argent-Matter' }}
+      simulate: ${{ !inputs.really-publish || github.repository_owner != 'Argent-Matter' }}
       branch: ${{ inputs.branch }}
       project: ${{ matrix.project }}
