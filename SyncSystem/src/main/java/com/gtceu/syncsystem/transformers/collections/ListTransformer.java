@@ -40,8 +40,9 @@ public class ListTransformer<T> implements ValueTransformer<List<T>> {
     @Override
     public Tag serializeNBT(List<T> value, ValueTransformer.TransformerContext<List<T>> context) {
         ListTag list = new ListTag();
+        ValueTransformer<T> elementTransformer = getElementTransformer(context);
         for (var obj : value) {
-            list.add(getElementTransformer(context).serializeNBT(obj, createInnerElementContext(obj, context)));
+            list.add(elementTransformer.serializeNBT(obj, createInnerElementContext(obj, context)));
         }
         return list;
     }
@@ -50,13 +51,17 @@ public class ListTransformer<T> implements ValueTransformer<List<T>> {
     public @Nullable List<T> deserializeNBT(Tag tag, ValueTransformer.TransformerContext<List<T>> context) {
         var current = context.currentValue();
         ListTag listTag = ValueTransformer.assertTagType(ListTag.class, tag, context);
-        if (current != null) current.clear();
-        else current = new ArrayList<>();
-        List<T> finalCurrent = current;
-        for (var t : listTag) {
-            T val = getElementTransformer(context).deserializeNBT(ValueTransformer.stripLdlibWrapper(t),
+        if (current != null) {
+            current.clear();
+        } else {
+            current = new ArrayList<>();
+        }
+
+        ValueTransformer<T> elementTransformer = getElementTransformer(context);
+        for (var elementTag : listTag) {
+            T val = elementTransformer.deserializeNBT(ValueTransformer.stripLdlibWrapper(elementTag),
                     createInnerElementContext(null, context));
-            if (val != null) finalCurrent.add(val);
+            if (val != null) current.add(val);
         }
         return current;
     }

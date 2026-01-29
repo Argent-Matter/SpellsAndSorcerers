@@ -21,11 +21,11 @@ public class SetTransformer<T> implements ValueTransformer<Set<T>> {
         if (this.elementTransformer != null) {
             return this.elementTransformer;
         }
-        Type elemType = context.type().getGenericTypeArgs()[0].getRawType();
-        var transformer = (ValueTransformer<T>) ValueTransformers.get(elemType);
+        Type innerType = context.type().getGenericTypeArgs()[0].getRawType();
+        var transformer = (ValueTransformer<T>) ValueTransformers.get(innerType);
         if (transformer == null) {
             throw new IllegalStateException("Sync: Failed to serialize set: Missing transformer for inner type: %s"
-                    .formatted(elemType));
+                    .formatted(innerType));
         }
         this.elementTransformer = transformer;
         return this.elementTransformer;
@@ -50,11 +50,16 @@ public class SetTransformer<T> implements ValueTransformer<Set<T>> {
     @Override
     public Set<T> deserializeNBT(Tag tag, ValueTransformer.TransformerContext<Set<T>> context) {
         ListTag listTag = ValueTransformer.assertTagType(ListTag.class, tag, context);
-        var current = context.currentValue();
-        if (current != null) current.clear();
-        else current = new ObjectOpenHashSet<>();
+        Set<T> current = context.currentValue();
+        if (current != null) {
+            current.clear();
+        } else {
+            current = new ObjectOpenHashSet<>();
+        }
+
+        ValueTransformer<T> elementTransformer = getElementTransformer(context);
         for (Tag elementTag : listTag) {
-            T value = getElementTransformer(context).deserializeNBT(elementTag, createInnerElementContext(null, context));
+            T value = elementTransformer.deserializeNBT(elementTag, createInnerElementContext(null, context));
             if (value != null) current.add(value);
         }
         return current;

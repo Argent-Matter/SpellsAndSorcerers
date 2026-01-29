@@ -23,7 +23,8 @@ public class TypeDeclaration {
 
         if (type instanceof ParameterizedType parameterizedType) {
             this.classValue = (Class<?>) parameterizedType.getRawType();
-            this.genericTypeArgs = Arrays.stream(parameterizedType.getActualTypeArguments()).map(TypeDeclaration::new)
+            this.genericTypeArgs = Arrays.stream(parameterizedType.getActualTypeArguments())
+                    .map(TypeDeclaration::new)
                     .toArray(TypeDeclaration[]::new);
             this.arrayComponentType = null;
         } else if (type instanceof GenericArrayType genericArrayType) {
@@ -42,8 +43,9 @@ public class TypeDeclaration {
     }
 
     public TypeDeclaration getArrayComponentType() {
-        if (arrayComponentType == null) throw new IllegalStateException(
-                "Attempted to get array component for non-array type %s".formatted(rawType));
+        if (arrayComponentType == null) {
+            throw new IllegalStateException("Attempted to get array component for non-array type %s".formatted(rawType));
+        }
         return arrayComponentType;
     }
 }

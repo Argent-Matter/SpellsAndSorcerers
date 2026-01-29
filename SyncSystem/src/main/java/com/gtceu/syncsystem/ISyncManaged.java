@@ -2,8 +2,7 @@ package com.gtceu.syncsystem;
 
 import com.gtceu.syncsystem.transformers.ValueTransformer;
 
-import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 /**
  * Represents a class with fields that have sync annotations.
@@ -11,9 +10,9 @@ import net.minecraftforge.common.util.INBTSerializable;
  * A field of type {@code T} can be marked with sync annotations if:
  * <ul>
  * <li>{@code T} is primitive
- * <li>{@code T} has an {@link ValueTransformer} registered
- * <li>{@code T} implements {@link INBTSerializable<Tag>}
- * <li>{@code T} is a {@link ISyncManaged} class
+ * <li>{@code T} has a {@link ValueTransformer} registered
+ * <li>{@code T} implements {@link INBTSerializable INBTSerializable&lt;T&gt;}
+ * <li>{@code T} implements {@link ISyncManaged}
  * </ul>
  *
  * @see SyncDataHolder

@@ -143,28 +143,24 @@ public final class ValueTransformers {
         REGISTERED_SUPPLIERS.put(type, sup);
     }
 
+    // spotless:off
     static {
-
-        //// Primitives
-
+        // Primitives
         registerSimpleClassTransformer(Integer.class, IntTag::valueOf, IntTag::getAsInt, IntTag.class);
         registerSimpleClassTransformer(Long.class, LongTag::valueOf, LongTag::getAsLong, LongTag.class);
         registerSimpleClassTransformer(Float.class, FloatTag::valueOf, FloatTag::getAsFloat, FloatTag.class);
         registerSimpleClassTransformer(Double.class, DoubleTag::valueOf, DoubleTag::getAsDouble, DoubleTag.class);
         registerSimpleClassTransformer(Short.class, ShortTag::valueOf, ShortTag::getAsShort, ShortTag.class);
         registerSimpleClassTransformer(Byte.class, ByteTag::valueOf, ByteTag::getAsByte, ByteTag.class);
-        registerSimpleClassTransformer(Character.class, (b) -> IntTag.valueOf(b), (t) -> (char) t.getAsInt(),
-                IntTag.class);
+        registerSimpleClassTransformer(Character.class, (b) -> IntTag.valueOf(b), (t) -> (char) t.getAsInt(), IntTag.class);
         registerSimpleClassTransformer(Boolean.class, ByteTag::valueOf, (b) -> b.getAsByte() != 0, ByteTag.class);
 
         // Primtive arrays
         registerSimpleClassTransformer(int[].class, IntArrayTag::new, IntArrayTag::getAsIntArray, IntArrayTag.class);
-        registerSimpleClassTransformer(long[].class, LongArrayTag::new, LongArrayTag::getAsLongArray,
-                LongArrayTag.class);
-        registerSimpleClassTransformer(byte[].class, ByteArrayTag::new, ByteArrayTag::getAsByteArray,
-                ByteArrayTag.class);
+        registerSimpleClassTransformer(long[].class, LongArrayTag::new, LongArrayTag::getAsLongArray, LongArrayTag.class);
+        registerSimpleClassTransformer(byte[].class, ByteArrayTag::new, ByteArrayTag::getAsByteArray, ByteArrayTag.class);
 
-        //// Java classes and standard minecraft/forge classes
+        // Java classes and standard minecraft/forge classes
 
         registerSimpleClassTransformer(String.class, StringTag::valueOf, StringTag::getAsString, StringTag.class);
 
@@ -183,4 +179,5 @@ public final class ValueTransformers {
         registerTransformerProvider(Map.class, MapTransformer::new);
         registerTransformerProvider(Set.class, SetTransformer::new);
     }
+    // spotless:on
 }

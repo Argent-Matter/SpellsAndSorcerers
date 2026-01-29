@@ -79,10 +79,16 @@ public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
 
     @Override
     public Map<K, V> deserializeNBT(Tag tag, ValueTransformer.TransformerContext<Map<K, V>> context) {
-        var current = context.currentValue();
         ListTag listTag = ValueTransformer.assertTagType(ListTag.class, tag, context);
-        if (current != null) current.clear();
-        else current = new Object2ObjectOpenHashMap<>();
+        Map<K, V> current = context.currentValue();
+        if (current != null) {
+            current.clear();
+        } else {
+            current = new Object2ObjectOpenHashMap<>();
+        }
+
+        ValueTransformer<K> keyTransformer = getKeyTransformer(context);
+        ValueTransformer<V> valueTransformer = getValueTransformer(context);
         for (Tag entryTag : listTag) {
             CompoundTag compound = (CompoundTag) entryTag;
 
@@ -90,14 +96,14 @@ public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
             Tag valueTag = compound.get("v");
             if (keyTag == null || valueTag == null) continue;
 
-            K key = getKeyTransformer(context).deserializeNBT(keyTag, createInnerKeyContext(null, context));
-            V value = getValueTransformer(context).deserializeNBT(valueTag, createInnerValueContext(null, context));
+            K key = keyTransformer.deserializeNBT(keyTag, createInnerKeyContext(null, context));
+            V value = valueTransformer.deserializeNBT(valueTag, createInnerValueContext(null, context));
             if (key == null || value == null) {
                 SyncSystem.LOGGER.warn(
                         "Sync: Skipping null key or field while deserializing map: [key: {}, value: {}] [nbt key: {}, nbt value: {}]",
                         key, value, keyTag, valueTag);
                 continue;
-            } ;
+            }
             current.put(key, value);
         }
         return current;

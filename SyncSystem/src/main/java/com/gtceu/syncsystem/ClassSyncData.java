@@ -114,7 +114,7 @@ public final class ClassSyncData {
 
     /**
      * Allows for a custom value transformer to be used for a specific field on this class, ignoring any other sync
-     * behaviour attached to the field.
+     * behavior attached to the field.
      * 
      * @param fieldName   The field name
      * @param transformer The custom value transformer

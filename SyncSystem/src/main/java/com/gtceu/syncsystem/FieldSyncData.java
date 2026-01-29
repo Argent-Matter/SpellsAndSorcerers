@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 /**
- * Information about the sync behaviour of fields with sync annotations in ISyncManaged classes
+ * Information about the sync behavior of fields with sync annotations in ISyncManaged classes
  */
 public final class FieldSyncData {
 
