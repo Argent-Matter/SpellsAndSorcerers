@@ -66,6 +66,10 @@ public class SyncDataHolder {
                 Tag nbtValue = serializeField(holder, field, writeClientFields);
                 tag.put(field.nbtSaveKey, nbtValue);
             }
+            dirtySyncFields.remove(field.fieldName);
+        }
+        if (fullSync) {
+            dirtySyncFields.clear();
         }
         return tag;
     }

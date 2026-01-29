@@ -6,6 +6,8 @@ import com.gtceu.syncsystem.network.SPacketUpdateBESyncValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,18 +58,21 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
     }
 
     @Override
-    public final void markAsChanged() {
-        isDirty = true;
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public final void updateTick() {
-        setChanged();
-        if (isDirty) {
-            var level = getLevel();
-            if (level == null) return;
-            GTNetwork.sendToAllPlayersTrackingChunk(level.getChunkAt(getBlockPos()),
-                    new SPacketUpdateBESyncValue(this));
-            isDirty = false;
+    @Override
+    public final void markAsChanged() {
+        this.setChanged();
+    }
+
+    @Override
+    @MustBeInvokedByOverriders
+    public void setChanged() {
+        super.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
         }
     }
 }
