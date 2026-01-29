@@ -177,7 +177,7 @@ public final class ValueTransformers {
 
         registerCodecTransformer(Component.class, ComponentSerialization.CODEC);
 
-        registerTransformer(INBTSerializable.class, new NBTSerializableTransformer());
+        registerTransformerProvider(INBTSerializable.class, NBTSerializableTransformer::new);
 
         registerTransformerProvider(List.class, ListTransformer::new);
         registerTransformerProvider(Map.class, MapTransformer::new);
