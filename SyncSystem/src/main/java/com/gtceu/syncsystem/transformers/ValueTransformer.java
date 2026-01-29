@@ -3,10 +3,10 @@ package com.gtceu.syncsystem.transformers;
 import com.gtceu.syncsystem.ISyncManaged;
 import com.gtceu.syncsystem.TypeDeclaration;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,8 +29,9 @@ public interface ValueTransformer<T> {
      *                     being
      *                     written to the server save.
      */
-    record TransformerContext<U>(@NotNull ISyncManaged holder, @NotNull TypeDeclaration type,
-                                 @Nullable U currentValue, @Nullable String fieldName, boolean isClientSync) {}
+    record TransformerContext<U>(ISyncManaged holder, TypeDeclaration type,
+                                 @Nullable U currentValue, @Nullable String fieldName, boolean isClientSync,
+                                 HolderLookup.Provider registries) {}
 
     /**
      * Casts a given NBT tag to a specific tag type, throwing an error if the tag cannot be casted.

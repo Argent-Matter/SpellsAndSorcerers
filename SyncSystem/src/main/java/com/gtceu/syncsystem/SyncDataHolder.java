@@ -1,18 +1,18 @@
 package com.gtceu.syncsystem;
 
-import com.gtceu.syncsystem.SyncSystem;
-import com.gtceu.syncsystem.transformers.ValueTransformer;
-
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
+import com.gtceu.syncsystem.transformers.ValueTransformer;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.WrongMethodTypeException;
-import java.util.*;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Class that holds all sync info for an {@link ISyncManaged} object.
@@ -32,7 +32,7 @@ public class SyncDataHolder {
 
     /**
      * Instructs the sync system that this field has been updated and must be synced with clients.
-     * 
+     *
      * @param fieldName The field that has changed.
      */
     public void markClientSyncFieldDirty(String fieldName) {
@@ -45,14 +45,15 @@ public class SyncDataHolder {
         holder.markAsChanged();
     }
 
-    public CompoundTag serializeNBT(boolean writeClientFields) {
-        CompoundTag tag = serializeNBT(writeClientFields, resyncAll);
+    public CompoundTag serializeNBT(boolean writeClientFields, HolderLookup.Provider registries) {
+        CompoundTag tag = serializeNBT(writeClientFields, resyncAll, registries);
         resyncAll = false;
         dirtySyncFields.clear();
         return tag;
     }
 
-    public CompoundTag serializeNBT(boolean writeClientFields, boolean fullSync) {
+    public CompoundTag serializeNBT(boolean writeClientFields, boolean fullSync,
+                                    HolderLookup.Provider registries) {
         Set<FieldSyncData> fieldsToSerialize;
         if (!writeClientFields) {
             fieldsToSerialize = syncData.getServerSaveFields();
@@ -63,7 +64,7 @@ public class SyncDataHolder {
         CompoundTag tag = new CompoundTag();
         for (var field : fieldsToSerialize) {
             if (shouldSerializeField(field, writeClientFields, fullSync)) {
-                Tag nbtValue = serializeField(holder, field, writeClientFields);
+                Tag nbtValue = serializeField(holder, field, writeClientFields, registries);
                 tag.put(field.nbtSaveKey, nbtValue);
             }
             dirtySyncFields.remove(field.fieldName);
@@ -78,14 +79,14 @@ public class SyncDataHolder {
         return !writeClient || fullSync || (dirtySyncFields.contains(field.fieldName)) || field.isSyncManaged;
     }
 
-    public void deserializeNBT(CompoundTag tag, boolean readingClientFields) {
+    public void deserializeNBT(CompoundTag tag, boolean readingClientFields, HolderLookup.Provider registries) {
         Set<FieldSyncData> fieldsToCheck = readingClientFields ? syncData.getClientSyncFields() :
                 syncData.getServerSaveFields();
 
         for (var field : fieldsToCheck) {
 
             Tag savedValue = tag.get(field.nbtSaveKey);
-            deserializeField(holder, field, savedValue, readingClientFields);
+            deserializeField(holder, field, savedValue, readingClientFields, registries);
 
             if (readingClientFields) {
                 try {
@@ -108,8 +109,8 @@ public class SyncDataHolder {
     }
 
     @SuppressWarnings("unchecked")
-    private static Tag serializeField(ISyncManaged holder, FieldSyncData field,
-                                      boolean writeClientFields) {
+    private static Tag serializeField(ISyncManaged holder, FieldSyncData field, boolean writeClientFields,
+                                      HolderLookup.Provider registries) {
         Object currentValue = field.handle.get(holder);
 
         if (!field.isSyncManaged && currentValue == null) {
@@ -121,12 +122,11 @@ public class SyncDataHolder {
         try {
 
             if (field.transformer != null) {
-                return ((ValueTransformer<Object>) field.transformer).serializeNBT(currentValue,
-                        new ValueTransformer.TransformerContext<>(holder, field.type, currentValue,
-                                field.fieldName,
-                                writeClientFields));
+                ValueTransformer<Object> transformer = (ValueTransformer<Object>) field.transformer;
+                return transformer.serializeNBT(currentValue, new ValueTransformer.TransformerContext<>(
+                        holder, field.type, currentValue, field.fieldName, writeClientFields, registries));
             } else if (currentValue instanceof ISyncManaged syncObj) {
-                return syncObj.getSyncDataHolder().serializeNBT(writeClientFields);
+                return syncObj.getSyncDataHolder().serializeNBT(writeClientFields, registries);
             } else {
                 SyncSystem.LOGGER.error("Sync: Failed to serialize field {}: Missing value transformer", field.fieldName);
             }
@@ -140,9 +140,8 @@ public class SyncDataHolder {
     }
 
     @SuppressWarnings("unchecked")
-    private static void deserializeField(ISyncManaged holder, FieldSyncData field,
-                                         @Nullable Tag savedValue,
-                                         boolean readingClientFields) {
+    private static void deserializeField(ISyncManaged holder, FieldSyncData field, @Nullable Tag savedValue,
+                                         boolean readingClientFields, HolderLookup.Provider registries) {
         Object currentVal = field.handle.get(holder);
 
         if (savedValue == null || savedValue instanceof CompoundTag compound && compound.isEmpty()) return;
@@ -158,7 +157,7 @@ public class SyncDataHolder {
                 try {
                     var current = field.handle.get(holder);
                     Object result = transformer.deserializeNBT(savedValue, new ValueTransformer.TransformerContext<>(
-                            holder, field.type, current, field.fieldName, readingClientFields));
+                            holder, field.type, current, field.fieldName, readingClientFields, registries));
                     if (result != current) {
                         field.handle.set(holder, result);
                     }
@@ -173,7 +172,7 @@ public class SyncDataHolder {
                     return;
                 }
                 if (currentVal instanceof ISyncManaged syncObj)
-                    syncObj.getSyncDataHolder().deserializeNBT(compound, readingClientFields);
+                    syncObj.getSyncDataHolder().deserializeNBT(compound, readingClientFields, registries);
             } else {
                 SyncSystem.LOGGER.error("Sync: Failed to deserialize field {}: Missing value transformer", field.fieldName);
             }

@@ -30,9 +30,9 @@ public class ListTransformer<T> implements ValueTransformer<List<T>> {
 
     private ValueTransformer.TransformerContext<T> getInnerElemContext(@Nullable T elem,
                                                                        ValueTransformer.TransformerContext<List<T>> parentContext) {
-        return new TransformerContext<>(parentContext.holder(),
+        return new TransformerContext<T>(parentContext.holder(),
                 parentContext.type().getGenericTypeArgs()[0], elem, parentContext.fieldName() + "[element]",
-                parentContext.isClientSync());
+                parentContext.isClientSync(), parentContext.registries());
     }
 
     @Override
