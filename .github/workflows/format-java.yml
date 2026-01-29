@@ -4,7 +4,7 @@ name: Java Formatting
 on:
   push:
     branches: ['1.21.1']
-    paths: ['src/main/java/**', 'src/test/**']
+    paths: ['src/main/java/**', 'ModularUI/src/main/java/**', 'SyncSystem/src/main/java/**', 'src/test/**']
   pull_request:
     paths: ['**']
 
@@ -30,6 +30,8 @@ jobs:
           filters: |
             code:
               - 'src/main/java/**'
+              - 'ModularUI/src/main/java/**'
+              - 'SyncSystem/src/main/java/**'
               - 'src/test/**'
       - name: Setup Build
         if: steps.filter.outputs.code == 'true'
