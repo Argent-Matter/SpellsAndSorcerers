@@ -22,6 +22,6 @@ jobs:
         project: [ 'ModularUI', 'SyncSystem' ]
     uses: ./.github/workflows/publish-subproject.yml
     with:
-      simulate: ${{ inputs.simulate || startsWith(github.event.release.name, 'simulate') || github.repository_owner != 'Argent-Matter' }}
+      simulate: ${{ inputs.simulate || github.repository_owner != 'Argent-Matter' }}
       branch: ${{ inputs.branch }}
       project: ${{ matrix.project }}
