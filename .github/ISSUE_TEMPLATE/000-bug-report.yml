@@ -14,7 +14,7 @@ body:
     id: tried-latest
     attributes:
       label: Tested latest version
-      description: You have checked that this issue occurs on the latest version of GTCEu.
+      description: You have checked that this issue occurs on the latest version of Magic of the Mind.
       options:
         - label: "I have checked that this occurs on the latest version."
           required: true
