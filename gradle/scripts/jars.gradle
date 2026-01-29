@@ -11,7 +11,6 @@ afterEvaluate {
     tasks.withType(org.gradle.jvm.tasks.Jar).configureEach {
         destinationDirectory = file('build/libs/')
         manifest.attributes([
-                'MixinConfigs': "${project.properties.mod_id}.mixins.json",
                 'Specification-Title': project.name,
                 'Specification-Version': project.properties.mod_version,
                 'Specification-Vendor': project.properties.mod_authors,
@@ -19,6 +18,11 @@ afterEvaluate {
                 'Implementation-Version': project.version,
                 'Implementation-Vendor': project.properties.mod_authors,
         ])
+        if (project.file("${project.properties.mod_id}.mixins.json").exists()) {
+            manifest.attributes += ([
+                    'MixinConfigs': "${project.properties.mod_id}.mixins.json"
+            ])
+        }
 
         exclude ".cache"
         exclude "logo_assets"

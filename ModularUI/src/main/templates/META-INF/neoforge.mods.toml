@@ -14,8 +14,6 @@ license = "${mod_license}"
     credits = "${mod_credits}"
 
 enumExtensions = "META-INF/enum_extensions.json"
-# [mods."modernfix:integration"]
-# client_entrypoint = "com.gregtechceu.gtceu.integration.modernfix.GTModernFixIntegration"
 
 [[mixins]]
     config = "${mod_id}.mixins.json"
