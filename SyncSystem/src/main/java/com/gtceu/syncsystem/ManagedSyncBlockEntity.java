@@ -1,9 +1,8 @@
-package com.gregtechceu.gtceu.syncsystem;
+package com.gtceu.syncsystem;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.blockentity.BlockEntityCreationInfo;
-import com.gregtechceu.gtceu.common.network.GTNetwork;
-import com.gregtechceu.gtceu.syncsystem.network.SPacketUpdateBESyncValue;
+import com.gtceu.syncsystem.SyncSystem;
+import com.gtceu.common.network.GTNetwork;
+import com.gtceu.syncsystem.network.SPacketUpdateBESyncValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -28,10 +27,6 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
     @Setter
     private boolean isDirty;
 
-    public ManagedSyncBlockEntity(BlockEntityCreationInfo info) {
-        super(info.type(), info.pos(), info.state());
-    }
-
     public ManagedSyncBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
@@ -49,7 +44,7 @@ public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyn
     public void load(CompoundTag tag) {
         super.load(tag);
         getSyncDataHolder().deserializeNBT(tag,
-                (getLevel() == null ? GTCEu.isClientThread() : getLevel().isClientSide));
+                (getLevel() == null ? SyncSystem.isClientThread() : getLevel().isClientSide));
     }
 
     @Override

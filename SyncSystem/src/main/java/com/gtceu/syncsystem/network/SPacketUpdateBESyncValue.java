@@ -1,7 +1,7 @@
-package com.gregtechceu.gtceu.syncsystem.network;
+package com.gtceu.syncsystem.network;
 
-import com.gregtechceu.gtceu.common.network.GTNetwork;
-import com.gregtechceu.gtceu.syncsystem.ManagedSyncBlockEntity;
+import com.gtceu.common.network.GTNetwork;
+import com.gtceu.syncsystem.ManagedSyncBlockEntity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

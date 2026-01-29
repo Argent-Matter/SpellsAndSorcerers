@@ -1,4 +1,4 @@
-package com.gregtechceu.gtceu.syncsystem;
+package com.gtceu.syncsystem;
 
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;

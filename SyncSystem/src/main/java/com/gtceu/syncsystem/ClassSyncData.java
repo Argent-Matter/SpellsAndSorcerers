@@ -1,9 +1,9 @@
-package com.gregtechceu.gtceu.syncsystem;
+package com.gtceu.syncsystem;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.syncsystem.annotations.*;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformers;
+import com.gtceu.syncsystem.SyncSystem;
+import com.gtceu.syncsystem.annotations.*;
+import com.gtceu.syncsystem.transformers.ValueTransformer;
+import com.gtceu.syncsystem.transformers.ValueTransformers;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -48,8 +48,8 @@ public final class ClassSyncData {
         try {
             privateLookup = MethodHandles.privateLookupIn(clazz, LOOKUP);
         } catch (IllegalAccessException e) {
-            GTCEu.LOGGER.error("Sync: Failed to create method handle lookup for class {}", clazz);
-            GTCEu.LOGGER.error(e.getMessage());
+            SyncSystem.LOGGER.error("Sync: Failed to create method handle lookup for class {}", clazz);
+            SyncSystem.LOGGER.error(e.getMessage());
             return;
         }
 
@@ -67,9 +67,9 @@ public final class ClassSyncData {
             try {
                 handle = privateLookup.unreflect(method);
             } catch (IllegalAccessException e) {
-                GTCEu.LOGGER.error("Sync: Failed to acquire method handle for method {} {}", method.getName(),
+                SyncSystem.LOGGER.error("Sync: Failed to acquire method handle for method {} {}", method.getName(),
                         clazz.getName());
-                GTCEu.LOGGER.error(e.getMessage());
+                SyncSystem.LOGGER.error(e.getMessage());
                 continue;
             }
 
@@ -90,9 +90,9 @@ public final class ClassSyncData {
             try {
                 handle = privateLookup.unreflectVarHandle(field);
             } catch (IllegalAccessException e) {
-                GTCEu.LOGGER.error("Sync: Failed to acquire variable handle for field {} {}", field.getName(),
+                SyncSystem.LOGGER.error("Sync: Failed to acquire variable handle for field {} {}", field.getName(),
                         clazz.getName());
-                GTCEu.LOGGER.error(e.getMessage());
+                SyncSystem.LOGGER.error(e.getMessage());
                 continue;
             }
 

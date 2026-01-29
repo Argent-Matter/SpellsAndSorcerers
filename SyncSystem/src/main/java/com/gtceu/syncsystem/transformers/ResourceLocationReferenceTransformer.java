@@ -1,4 +1,4 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers;
+package com.gtceu.syncsystem.transformers;
 
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;

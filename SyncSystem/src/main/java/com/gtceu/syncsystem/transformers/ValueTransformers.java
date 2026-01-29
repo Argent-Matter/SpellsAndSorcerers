@@ -1,20 +1,20 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers;
+package com.gtceu.syncsystem.transformers;
 
-import com.gregtechceu.gtceu.api.GTCEuAPI;
-import com.gregtechceu.gtceu.api.cover.CoverBehavior;
-import com.gregtechceu.gtceu.api.data.chemical.material.Material;
-import com.gregtechceu.gtceu.api.recipe.GTRecipe;
-import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
-import com.gregtechceu.gtceu.api.transfer.fluid.CustomFluidTank;
-import com.gregtechceu.gtceu.client.model.machine.MachineRenderState;
-import com.gregtechceu.gtceu.common.machine.multiblock.electric.monitor.MonitorGroup;
-import com.gregtechceu.gtceu.syncsystem.TypeDeclaration;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.collections.ListTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.collections.MapTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.collections.ObjectArrayTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.collections.SetTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.gtceu.*;
+import com.gtceu.api.SyncSystemAPI;
+import com.gtceu.api.cover.CoverBehavior;
+import com.gtceu.api.data.chemical.material.Material;
+import com.gtceu.api.recipe.GTRecipe;
+import com.gtceu.api.recipe.GTRecipeType;
+import com.gtceu.api.registry.GTRegistries;
+import com.gtceu.api.transfer.fluid.CustomFluidTank;
+import com.gtceu.client.model.machine.MachineRenderState;
+import com.gtceu.common.machine.multiblock.electric.monitor.MonitorGroup;
+import com.gtceu.syncsystem.TypeDeclaration;
+import com.gtceu.syncsystem.transformers.collections.ListTransformer;
+import com.gtceu.syncsystem.transformers.collections.MapTransformer;
+import com.gtceu.syncsystem.transformers.collections.ObjectArrayTransformer;
+import com.gtceu.syncsystem.transformers.collections.SetTransformer;
+import com.gtceu.syncsystem.transformers.gtceu.*;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
@@ -180,18 +180,5 @@ public final class ValueTransformers {
         registerTransformerSupplier(List.class, ListTransformer::new);
         registerTransformerSupplier(Map.class, MapTransformer::new);
         registerTransformerSupplier(Set.class, SetTransformer::new);
-
-        //// GT specific classes
-
-        registerTransformer(GTRecipe.class, new GTRecipeTransformer());
-        registerTransformer(MachineRenderState.class, new CodecTransformer<>(MachineRenderState.CODEC));
-        registerTransformer(GTRecipeType.class, new ResourceLocationReferenceTransformer<>(
-                GTRecipeType::getRegistryName, GTRegistries.RECIPE_TYPES::get));
-        registerTransformer(Material.class, new ResourceLocationReferenceTransformer<>(
-                Material::getResourceLocation, GTCEuAPI.materialManager::getMaterial));
-        registerTransformer(MonitorGroup.class, new MonitorGroupTransformer());
-        registerTransformer(CustomFluidTank.class, new CustomFluidTankTransformer());
-
-        registerTransformer(CoverBehavior.class, new CoverBehaviorTransformer());
     }
 }

@@ -1,7 +1,7 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers;
+package com.gtceu.syncsystem.transformers;
 
-import com.gregtechceu.gtceu.syncsystem.ISyncManaged;
-import com.gregtechceu.gtceu.syncsystem.TypeDeclaration;
+import com.gtceu.syncsystem.ISyncManaged;
+import com.gtceu.syncsystem.TypeDeclaration;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

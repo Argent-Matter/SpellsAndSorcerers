@@ -1,7 +1,7 @@
-package com.gregtechceu.gtceu.syncsystem;
+package com.gtceu.syncsystem;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformer;
+import com.gtceu.syncsystem.SyncSystem;
+import com.gtceu.syncsystem.transformers.ValueTransformer;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -94,8 +94,8 @@ public class SyncDataHolder {
                                 "Invalid method signature for change listener for field %s %s"
                                         .formatted(field.fieldName, holder.getClass().getName()));
                     }
-                    GTCEu.LOGGER.error("Sync: Error while invoking change listener for field {}", field.fieldName);
-                    GTCEu.LOGGER.error(e);
+                    SyncSystem.LOGGER.error("Sync: Error while invoking change listener for field {}", field.fieldName);
+                    SyncSystem.LOGGER.error(e);
                 }
 
                 if (field.triggerClientRerender) holder.scheduleRenderUpdate();
@@ -124,12 +124,12 @@ public class SyncDataHolder {
             } else if (currentValue instanceof ISyncManaged syncObj) {
                 return syncObj.getSyncDataHolder().serializeNBT(writeClientFields);
             } else {
-                GTCEu.LOGGER.error("Sync: Failed to serialize field {}: Missing value transformer", field.fieldName);
+                SyncSystem.LOGGER.error("Sync: Failed to serialize field {}: Missing value transformer", field.fieldName);
             }
 
         } catch (Exception e) {
-            GTCEu.LOGGER.error("Sync: Failed to serialize field {}", field.fieldName);
-            GTCEu.LOGGER.error(e);
+            SyncSystem.LOGGER.error("Sync: Failed to serialize field {}", field.fieldName);
+            SyncSystem.LOGGER.error(e);
         }
 
         return new CompoundTag();
@@ -159,23 +159,23 @@ public class SyncDataHolder {
                         field.handle.set(holder, result);
                     }
                 } catch (UnsupportedOperationException e) {
-                    GTCEu.LOGGER.error("Sync: failed to perform VarHandle set: unsupported op {} {}",
+                    SyncSystem.LOGGER.error("Sync: failed to perform VarHandle set: unsupported op {} {}",
                             field.fieldName, field.handle.toString());
                 }
             } else if (field.isSyncManaged && savedValue instanceof CompoundTag compound) {
                 if (currentVal == null) {
-                    GTCEu.LOGGER.error("Sync: ISyncManaged field was null, cannot instantiate {}",
+                    SyncSystem.LOGGER.error("Sync: ISyncManaged field was null, cannot instantiate {}",
                             field.fieldName);
                     return;
                 }
                 if (currentVal instanceof ISyncManaged syncObj)
                     syncObj.getSyncDataHolder().deserializeNBT(compound, readingClientFields);
             } else {
-                GTCEu.LOGGER.error("Sync: Failed to deserialize field {}: Missing value transformer", field.fieldName);
+                SyncSystem.LOGGER.error("Sync: Failed to deserialize field {}: Missing value transformer", field.fieldName);
             }
         } catch (Exception e) {
-            GTCEu.LOGGER.error("Sync: Failed to deserialize field {}", field.fieldName);
-            GTCEu.LOGGER.error(e);
+            SyncSystem.LOGGER.error("Sync: Failed to deserialize field {}", field.fieldName);
+            SyncSystem.LOGGER.error(e);
         }
     }
 }

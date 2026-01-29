@@ -1,8 +1,8 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers.collections;
+package com.gtceu.syncsystem.transformers.collections;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformers;
+import com.gtceu.syncsystem.SyncSystem;
+import com.gtceu.syncsystem.transformers.ValueTransformer;
+import com.gtceu.syncsystem.transformers.ValueTransformers;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -91,7 +91,7 @@ public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
             K key = getKeyTransformer(context).deserializeNBT(keyTag, getInnerKeyContext(null, context));
             V value = getValueTransformer(context).deserializeNBT(valueTag, getInnerValueContext(null, context));
             if (key == null || value == null) {
-                GTCEu.LOGGER.warn(
+                SyncSystem.LOGGER.warn(
                         "Sync: Skipping null key or field while deserializing map: [key: {}, value: {}] [nbt key: {}, nbt value: {}]",
                         key, value, keyTag, valueTag);
                 continue;

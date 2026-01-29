@@ -1,6 +1,6 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers;
+package com.gtceu.syncsystem.transformers;
 
-import com.gregtechceu.gtceu.GTCEu;
+import com.gtceu.syncsystem.SyncSystem;
 
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -20,7 +20,7 @@ public class NBTSerializableTransformer implements ValueTransformer<INBTSerializ
                                                           ValueTransformer.TransformerContext<INBTSerializable<Tag>> context) {
         var currentVal = context.currentValue();
         if (currentVal == null) {
-            GTCEu.LOGGER.warn(
+            SyncSystem.LOGGER.warn(
                     "Sync: Deserialization of INBTSerializable objects requires an existing object, they cannot be instantiated purely from saved data.");
             return null;
         }

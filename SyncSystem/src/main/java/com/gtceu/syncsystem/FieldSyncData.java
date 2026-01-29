@@ -1,8 +1,8 @@
-package com.gregtechceu.gtceu.syncsystem;
+package com.gtceu.syncsystem;
 
-import com.gregtechceu.gtceu.syncsystem.annotations.RerenderOnChanged;
-import com.gregtechceu.gtceu.syncsystem.annotations.SaveField;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformer;
+import com.gtceu.syncsystem.annotations.RerenderOnChanged;
+import com.gtceu.syncsystem.annotations.SaveField;
+import com.gtceu.syncsystem.transformers.ValueTransformer;
 
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;

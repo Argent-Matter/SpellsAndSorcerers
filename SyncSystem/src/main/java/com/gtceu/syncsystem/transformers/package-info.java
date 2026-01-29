@@ -1,4 +1,4 @@
 @NotNullByDefault
-package com.gregtechceu.gtceu.syncsystem.data_transformers;
+package com.gtceu.syncsystem.transformers;
 
 import org.jetbrains.annotations.NotNullByDefault;

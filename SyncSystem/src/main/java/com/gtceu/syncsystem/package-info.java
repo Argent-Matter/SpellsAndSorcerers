@@ -1,4 +1,4 @@
 @NotNullByDefault
-package com.gregtechceu.gtceu.syncsystem;
+package com.gtceu.syncsystem;
 
 import org.jetbrains.annotations.NotNullByDefault;

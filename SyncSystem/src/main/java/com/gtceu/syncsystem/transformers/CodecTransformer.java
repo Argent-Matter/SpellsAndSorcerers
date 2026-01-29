@@ -1,6 +1,6 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers;
+package com.gtceu.syncsystem.transformers;
 
-import com.gregtechceu.gtceu.GTCEu;
+import com.gtceu.syncsystem.SyncSystem;
 
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -17,11 +17,11 @@ public class CodecTransformer<T> implements ValueTransformer<T> {
 
     @Override
     public Tag serializeNBT(T value, ValueTransformer.TransformerContext<T> context) {
-        return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow(false, GTCEu.LOGGER::error);
+        return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow(false, SyncSystem.LOGGER::error);
     }
 
     @Override
     public T deserializeNBT(Tag tag, ValueTransformer.TransformerContext<T> context) {
-        return codec.parse(NbtOps.INSTANCE, tag).getOrThrow(false, GTCEu.LOGGER::error);
+        return codec.parse(NbtOps.INSTANCE, tag).getOrThrow(false, SyncSystem.LOGGER::error);
     }
 }

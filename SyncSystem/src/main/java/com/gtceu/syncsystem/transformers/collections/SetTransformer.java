@@ -1,7 +1,7 @@
-package com.gregtechceu.gtceu.syncsystem.data_transformers.collections;
+package com.gtceu.syncsystem.transformers.collections;
 
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformer;
-import com.gregtechceu.gtceu.syncsystem.data_transformers.ValueTransformers;
+import com.gtceu.syncsystem.transformers.ValueTransformer;
+import com.gtceu.syncsystem.transformers.ValueTransformers;
 
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
