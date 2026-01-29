@@ -16,22 +16,24 @@ public class ListTransformer<T> implements ValueTransformer<List<T>> {
     private @Nullable ValueTransformer<T> elementTransformer = null;
 
     @SuppressWarnings("unchecked")
-    private ValueTransformer<T> getElemTransformer(ValueTransformer.TransformerContext<List<T>> context) {
-        if (elementTransformer != null) return elementTransformer;
+    private ValueTransformer<T> getElementTransformer(ValueTransformer.TransformerContext<List<T>> context) {
+        if (this.elementTransformer != null) {
+            return this.elementTransformer;
+        }
         var innerType = context.type().getGenericTypeArgs()[0].getRawType();
         var transformer = (ValueTransformer<T>) ValueTransformers.get(innerType);
         if (transformer == null) {
             throw new IllegalStateException("Sync: Failed to serialize list: Missing transformer for inner type: %s"
                     .formatted(innerType));
         }
-        elementTransformer = transformer;
-        return elementTransformer;
+        this.elementTransformer = transformer;
+        return this.elementTransformer;
     }
 
-    private ValueTransformer.TransformerContext<T> getInnerElemContext(@Nullable T elem,
-                                                                       ValueTransformer.TransformerContext<List<T>> parentContext) {
+    private ValueTransformer.TransformerContext<T> createInnerElementContext(@Nullable T element,
+                                                                             ValueTransformer.TransformerContext<List<T>> parentContext) {
         return new TransformerContext<T>(parentContext.holder(),
-                parentContext.type().getGenericTypeArgs()[0], elem, parentContext.fieldName() + "[element]",
+                parentContext.type().getGenericTypeArgs()[0], element, parentContext.fieldName() + "[element]",
                 parentContext.isClientSync(), parentContext.registries());
     }
 
@@ -39,7 +41,7 @@ public class ListTransformer<T> implements ValueTransformer<List<T>> {
     public Tag serializeNBT(List<T> value, ValueTransformer.TransformerContext<List<T>> context) {
         ListTag list = new ListTag();
         for (var obj : value) {
-            list.add(getElemTransformer(context).serializeNBT(obj, getInnerElemContext(obj, context)));
+            list.add(getElementTransformer(context).serializeNBT(obj, createInnerElementContext(obj, context)));
         }
         return list;
     }
@@ -52,8 +54,8 @@ public class ListTransformer<T> implements ValueTransformer<List<T>> {
         else current = new ArrayList<>();
         List<T> finalCurrent = current;
         for (var t : listTag) {
-            T val = getElemTransformer(context).deserializeNBT(ValueTransformer.stripLdlibWrapper(t),
-                    getInnerElemContext(null, context));
+            T val = getElementTransformer(context).deserializeNBT(ValueTransformer.stripLdlibWrapper(t),
+                    createInnerElementContext(null, context));
             if (val != null) finalCurrent.add(val);
         }
         return current;

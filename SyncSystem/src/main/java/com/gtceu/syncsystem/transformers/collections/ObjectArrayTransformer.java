@@ -18,10 +18,10 @@ public class ObjectArrayTransformer<T> implements ValueTransformer<T[]> {
         this.elementTransformer = elementTransformer;
     }
 
-    private ValueTransformer.TransformerContext<T> getInnerElemContext(@Nullable T elem,
-                                                                       ValueTransformer.TransformerContext<T[]> parentContext) {
+    private ValueTransformer.TransformerContext<T> createInnerElementContext(@Nullable T element,
+                                                                             ValueTransformer.TransformerContext<T[]> parentContext) {
         return new TransformerContext<T>(parentContext.holder(),
-                parentContext.type().getArrayComponentType(), elem, parentContext.fieldName() + "[element]",
+                parentContext.type().getArrayComponentType(), element, parentContext.fieldName() + "[element]",
                 parentContext.isClientSync(), parentContext.registries());
     }
 
@@ -29,7 +29,7 @@ public class ObjectArrayTransformer<T> implements ValueTransformer<T[]> {
     public Tag serializeNBT(T[] value, ValueTransformer.TransformerContext<T[]> context) {
         ListTag listTag = new ListTag();
         for (T element : value) {
-            listTag.add(elementTransformer.serializeNBT(element, getInnerElemContext(element, context)));
+            listTag.add(this.elementTransformer.serializeNBT(element, createInnerElementContext(element, context)));
         }
         return listTag;
     }
@@ -50,8 +50,8 @@ public class ObjectArrayTransformer<T> implements ValueTransformer<T[]> {
         }
         for (int i = 0; i < listTag.size(); i++) {
             var currentV = current[i];
-            T result = elementTransformer.deserializeNBT(ValueTransformer.stripLdlibWrapper(listTag.get(i)),
-                    getInnerElemContext(null, context));
+            T result = this.elementTransformer.deserializeNBT(ValueTransformer.stripLdlibWrapper(listTag.get(i)),
+                    createInnerElementContext(null, context));
             if (result == null) return current;
             if (result != currentV) current[i] = result;
         }

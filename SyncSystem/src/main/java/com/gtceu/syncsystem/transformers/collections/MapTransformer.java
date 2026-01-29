@@ -20,39 +20,43 @@ public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
 
     @SuppressWarnings("unchecked")
     private ValueTransformer<K> getKeyTransformer(ValueTransformer.TransformerContext<Map<K, V>> context) {
-        if (keyTransformer != null) return keyTransformer;
+        if (this.keyTransformer != null) {
+            return this.keyTransformer;
+        }
         var innerType = context.type().getGenericTypeArgs()[0].getRawType();
         var transformer = (ValueTransformer<K>) ValueTransformers.get(innerType);
         if (transformer == null) {
             throw new IllegalStateException("Sync: Failed to serialize map: Missing transformer for key type: %s"
                     .formatted(innerType));
         }
-        keyTransformer = transformer;
-        return keyTransformer;
+        this.keyTransformer = transformer;
+        return this.keyTransformer;
     }
 
     @SuppressWarnings("unchecked")
     private ValueTransformer<V> getValueTransformer(ValueTransformer.TransformerContext<Map<K, V>> context) {
-        if (valueTransformer != null) return valueTransformer;
+        if (this.valueTransformer != null) {
+            return this.valueTransformer;
+        }
         var innerType = context.type().getGenericTypeArgs()[1].getRawType();
         var transformer = (ValueTransformer<V>) ValueTransformers.get(innerType);
         if (transformer == null) {
             throw new IllegalStateException("Sync: Failed to serialize map: Missing transformer for value type: %s"
                     .formatted(innerType));
         }
-        valueTransformer = transformer;
-        return valueTransformer;
+        this.valueTransformer = transformer;
+        return this.valueTransformer;
     }
 
-    private ValueTransformer.TransformerContext<K> getInnerKeyContext(@Nullable K key,
-                                                                      ValueTransformer.TransformerContext<Map<K, V>> parentContext) {
+    private ValueTransformer.TransformerContext<K> createInnerKeyContext(@Nullable K key,
+                                                                         ValueTransformer.TransformerContext<Map<K, V>> parentContext) {
         return new TransformerContext<K>(parentContext.holder(),
                 parentContext.type().getGenericTypeArgs()[0], key, parentContext.fieldName() + "[key]",
                 parentContext.isClientSync(), parentContext.registries());
     }
 
-    private ValueTransformer.TransformerContext<V> getInnerValueContext(@Nullable V value,
-                                                                        ValueTransformer.TransformerContext<Map<K, V>> parentContext) {
+    private ValueTransformer.TransformerContext<V> createInnerValueContext(@Nullable V value,
+                                                                           ValueTransformer.TransformerContext<Map<K, V>> parentContext) {
         return new TransformerContext<V>(parentContext.holder(),
                 parentContext.type().getGenericTypeArgs()[1], value,
                 parentContext.fieldName() + "[value]",
@@ -64,12 +68,10 @@ public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
         ListTag entries = new ListTag();
         for (var entry : value.entrySet()) {
             CompoundTag compound = new CompoundTag();
-            compound.put("k",
-                    getKeyTransformer(context).serializeNBT(entry.getKey(),
-                            getInnerKeyContext(entry.getKey(), context)));
-            compound.put("v",
-                    getValueTransformer(context).serializeNBT(entry.getValue(),
-                            getInnerValueContext(entry.getValue(), context)));
+            compound.put("k", getKeyTransformer(context)
+                    .serializeNBT(entry.getKey(), createInnerKeyContext(entry.getKey(), context)));
+            compound.put("v", getValueTransformer(context)
+                    .serializeNBT(entry.getValue(), createInnerValueContext(entry.getValue(), context)));
             entries.add(compound);
         }
         return entries;
@@ -88,8 +90,8 @@ public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
             Tag valueTag = compound.get("v");
             if (keyTag == null || valueTag == null) continue;
 
-            K key = getKeyTransformer(context).deserializeNBT(keyTag, getInnerKeyContext(null, context));
-            V value = getValueTransformer(context).deserializeNBT(valueTag, getInnerValueContext(null, context));
+            K key = getKeyTransformer(context).deserializeNBT(keyTag, createInnerKeyContext(null, context));
+            V value = getValueTransformer(context).deserializeNBT(valueTag, createInnerValueContext(null, context));
             if (key == null || value == null) {
                 SyncSystem.LOGGER.warn(
                         "Sync: Skipping null key or field while deserializing map: [key: {}, value: {}] [nbt key: {}, nbt value: {}]",
