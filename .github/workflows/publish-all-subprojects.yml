@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         project: [ 'ModularUI', 'SyncSystem' ]
+    secrets: inherit
     uses: ./.github/workflows/publish-subproject.yml
     with:
       simulate: ${{ inputs.simulate || github.repository_owner != 'Argent-Matter' }}
