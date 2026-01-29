@@ -1,10 +1,11 @@
 package com.gtceu.syncsystem;
 
+import com.gtceu.syncsystem.transformers.ValueTransformer;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
-import com.gtceu.syncsystem.transformers.ValueTransformer;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 

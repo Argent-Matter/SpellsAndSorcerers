@@ -7,10 +7,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
 
 public class SetTransformer<T> implements ValueTransformer<Set<T>> {
 

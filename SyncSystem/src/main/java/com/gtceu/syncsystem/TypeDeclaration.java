@@ -1,12 +1,13 @@
 package com.gtceu.syncsystem;
 
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+
+import org.jetbrains.annotations.Nullable;
 
 public class TypeDeclaration {
 

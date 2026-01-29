@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 public final class SyncSystem {
 
-    public static final String MOD_ID   = "syncsystem",
-                               MOD_NAME = "SyncSystem";
+    public static final String MOD_ID = "syncsystem",
+            MOD_NAME = "SyncSystem";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 

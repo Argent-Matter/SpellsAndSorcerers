@@ -1,16 +1,16 @@
 package com.gtceu.syncsystem.transformers;
 
+import com.gtceu.syncsystem.SyncSystem;
+
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 
-import com.gtceu.syncsystem.SyncSystem;
+import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 public class RegistryValueLikeTransformer<T> implements ValueTransformer<T> {
 

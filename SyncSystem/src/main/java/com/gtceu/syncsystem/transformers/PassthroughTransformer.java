@@ -1,6 +1,5 @@
 package com.gtceu.syncsystem.transformers;
 
-
 import net.minecraft.nbt.Tag;
 
 import org.jetbrains.annotations.Nullable;

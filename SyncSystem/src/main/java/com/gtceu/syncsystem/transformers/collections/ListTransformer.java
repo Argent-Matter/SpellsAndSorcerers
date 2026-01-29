@@ -6,10 +6,10 @@ import com.gtceu.syncsystem.transformers.ValueTransformers;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ListTransformer<T> implements ValueTransformer<List<T>> {
 

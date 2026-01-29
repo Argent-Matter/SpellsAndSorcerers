@@ -5,10 +5,10 @@ import com.gtceu.syncsystem.transformers.ValueTransformer;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.lang.reflect.Array;
 import java.util.Arrays;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ObjectArrayTransformer<T> implements ValueTransformer<T[]> {
 

@@ -9,9 +9,10 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
 
 public class MapTransformer<K, V> implements ValueTransformer<Map<K, V>> {
 

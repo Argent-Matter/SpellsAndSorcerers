@@ -1,6 +1,5 @@
 package com.gtceu.syncsystem;
 
-import com.gtceu.syncsystem.SyncSystem;
 import com.gtceu.syncsystem.annotations.*;
 import com.gtceu.syncsystem.transformers.ValueTransformer;
 import com.gtceu.syncsystem.transformers.ValueTransformers;

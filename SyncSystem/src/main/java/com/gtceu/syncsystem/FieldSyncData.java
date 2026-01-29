@@ -5,12 +5,13 @@ import com.gtceu.syncsystem.annotations.SaveField;
 import com.gtceu.syncsystem.transformers.ValueTransformer;
 
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Information about the sync behavior of fields with sync annotations in ISyncManaged classes
