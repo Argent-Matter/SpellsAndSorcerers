@@ -8,6 +8,7 @@ tasks.register('printVersion') {
     }
 }
 
+if (project == rootProject) {
 // Create run-folders for non-client configs to avoid pollution of dev envs
 tasks.matching { it.name.startsWith('prepare') }.configureEach {
     doFirst {
@@ -65,4 +66,5 @@ neoForge.ideSyncTask generateModMetadata
 processResources {
     exclude ".cache"
     exclude "logo_assets"
+}
 }
