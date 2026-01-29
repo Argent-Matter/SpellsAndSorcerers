@@ -1,29 +1,21 @@
 package com.gtceu.syncsystem.transformers;
 
-import com.gtceu.api.SyncSystemAPI;
-import com.gtceu.api.cover.CoverBehavior;
-import com.gtceu.api.data.chemical.material.Material;
-import com.gtceu.api.recipe.GTRecipe;
-import com.gtceu.api.recipe.GTRecipeType;
-import com.gtceu.api.registry.GTRegistries;
-import com.gtceu.api.transfer.fluid.CustomFluidTank;
-import com.gtceu.client.model.machine.MachineRenderState;
-import com.gtceu.common.machine.multiblock.electric.monitor.MonitorGroup;
 import com.gtceu.syncsystem.TypeDeclaration;
 import com.gtceu.syncsystem.transformers.collections.ListTransformer;
 import com.gtceu.syncsystem.transformers.collections.MapTransformer;
 import com.gtceu.syncsystem.transformers.collections.ObjectArrayTransformer;
 import com.gtceu.syncsystem.transformers.collections.SetTransformer;
-import com.gtceu.syncsystem.transformers.gtceu.*;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.extensions.IForgeItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.fluids.FluidStack;
 
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,16 +81,29 @@ public final class ValueTransformers {
 
     /**
      * Registers a {@link ValueTransformer} for the given class or interface.
-     * If registering a type with generic arguments, instead use {@code registerTransformerSupplier} to create a new
-     * transformer instance for each set of generic type arguments.
+     * If registering a type with generic arguments, instead use {@link #registerTransformerProvider}
+     * to create a new transformer instance for each set of generic type arguments.
      * 
      * @param type        The class to register this {@link ValueTransformer} for
      * @param transformer The transformer being registered
      */
-    public static void registerTransformer(Class<?> type, ValueTransformer<?> transformer) {
-        if (REGISTERED.containsKey(type))
+    public static <T> void registerTransformer(Class<T> type, ValueTransformer<T> transformer) {
+        if (REGISTERED.containsKey(type)) {
             throw new IllegalArgumentException("Attempted to register transformer for %s twice".formatted(type));
+        }
         REGISTERED.put(type, transformer);
+    }
+
+    /**
+     * Registers a {@link ValueTransformer} for the given class or interface.
+     * If registering a type with generic arguments, instead use {@link #registerTransformerProvider}
+     * to create a new transformer instance for each set of generic type arguments.
+     *
+     * @param type  The class to register this {@link ValueTransformer} for
+     * @param codec The codec to register as a transformer
+     */
+    public static <T> void registerCodecTransformer(Class<T> type, Codec<T> codec) {
+        registerTransformer(type, new CodecTransformer<>(codec));
     }
 
     /**
@@ -111,24 +116,31 @@ public final class ValueTransformers {
      */
     public static <T, S extends Tag> void registerSimpleClassTransformer(Class<T> type, Function<T, S> write, Function<S, T> read,
                                                                          Class<S> tagClass) {
-        if (REGISTERED.containsKey(type))
-            throw new IllegalArgumentException("Attempted to register transformer for %s twice".formatted(type));
-        ValueTransformer<T> transformer = new SimpleClassTransformer<>(write, read, tagClass);
-        REGISTERED.putIfAbsent(type, transformer);
+        registerTransformer(type, new SimpleClassTransformer<>(write, read, tagClass));
+    }
+
+    /**
+     * Creates and registers a {@link ValueTransformer} that simply passes the original value through as is.
+     *
+     * @param tagClass The class to register this {@link PassthroughTransformer} for
+     */
+    public static <T extends Tag> void registerPassthrough(Class<T> tagClass) {
+        registerTransformer(tagClass, new PassthroughTransformer<>(tagClass));
     }
 
     /**
      * Registers a supplier that supplies instances of a specific transformer type.
-     * The supplier will be called to create new instances of the transformer for each unique set of generic type
-     * arguments passed to the given class.
+     * The supplier will be called to create new instances of the transformer for each unique set of
+     * generic type arguments passed to the given class.
      *
      * @param type The class to register this {@link ValueTransformer} supplier for
-     * @param func Supplier function
+     * @param sup  Supplier function
      */
-    public static <T> void registerTransformerSupplier(Class<T> type, Supplier<ValueTransformer<?>> func) {
-        if (REGISTERED_SUPPLIERS.containsKey(type))
-            throw new IllegalArgumentException("Attempted to register transformer for %s twice".formatted(type));
-        REGISTERED_SUPPLIERS.put(type, func);
+    public static <T> void registerTransformerProvider(Class<T> type, Supplier<ValueTransformer<?>> sup) {
+        if (REGISTERED_SUPPLIERS.containsKey(type)) {
+            throw new IllegalArgumentException("Attempted to register transformer provider for %s twice".formatted(type));
+        }
+        REGISTERED_SUPPLIERS.put(type, sup);
     }
 
     static {
@@ -155,28 +167,20 @@ public final class ValueTransformers {
         //// Java classes and standard minecraft/forge classes
 
         registerSimpleClassTransformer(String.class, StringTag::valueOf, StringTag::getAsString, StringTag.class);
-        registerSimpleClassTransformer(ItemStack.class, IForgeItemStack::serializeNBT, ItemStack::of,
-                CompoundTag.class);
-        registerSimpleClassTransformer(FluidStack.class, (v) -> v.writeToNBT(new CompoundTag()),
-                FluidStack::loadFluidStackFromNBT, CompoundTag.class);
 
-        // The default value supplier will never be called as NbtUtils::loadUUID will throw if the UUID is invalid.
-        registerSimpleClassTransformer(UUID.class, NbtUtils::createUUID, NbtUtils::loadUUID, IntArrayTag.class);
+        registerCodecTransformer(ItemStack.class, ItemStack.OPTIONAL_CODEC);
+        registerCodecTransformer(FluidStack.class, FluidStack.OPTIONAL_CODEC);
 
-        registerSimpleClassTransformer(BlockPos.class, NbtUtils::writeBlockPos, NbtUtils::readBlockPos,
-                CompoundTag.class);
-        registerSimpleClassTransformer(CompoundTag.class, (v) -> v, (v) -> v, CompoundTag.class);
+        registerCodecTransformer(UUID.class, UUIDUtil.LENIENT_CODEC);
+        registerCodecTransformer(BlockPos.class, BlockPos.CODEC);
+        registerPassthrough(CompoundTag.class);
 
-        registerSimpleClassTransformer(Component.class, (c) -> StringTag.valueOf(Component.Serializer.toJson(c)),
-                t -> {
-                    var comp = Component.Serializer.fromJson(t.getAsString());
-                    return comp == null ? Component.empty() : comp;
-                }, StringTag.class);
+        registerCodecTransformer(Component.class, ComponentSerialization.CODEC);
 
         registerTransformer(INBTSerializable.class, new NBTSerializableTransformer());
 
-        registerTransformerSupplier(List.class, ListTransformer::new);
-        registerTransformerSupplier(Map.class, MapTransformer::new);
-        registerTransformerSupplier(Set.class, SetTransformer::new);
+        registerTransformerProvider(List.class, ListTransformer::new);
+        registerTransformerProvider(Map.class, MapTransformer::new);
+        registerTransformerProvider(Set.class, SetTransformer::new);
     }
 }

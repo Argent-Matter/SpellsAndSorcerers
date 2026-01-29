@@ -18,12 +18,12 @@ public class SimpleClassTransformer<T, S extends Tag> implements ValueTransforme
 
     @Override
     public Tag serializeNBT(T value, ValueTransformer.TransformerContext<T> context) {
-        return writer.apply(value);
+        return this.writer.apply(value);
     }
 
     @Override
-    public T deserializeNBT(Tag tag, ValueTransformer.TransformerContext<T> context) {
-        S t = ValueTransformer.assertTagType(tagClass, tag, context);
-        return reader.apply(t);
+    public T deserializeNBT(Tag t, ValueTransformer.TransformerContext<T> context) {
+        S tag = ValueTransformer.assertTagType(this.tagClass, t, context);
+        return this.reader.apply(tag);
     }
 }
