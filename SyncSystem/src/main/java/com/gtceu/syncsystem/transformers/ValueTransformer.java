@@ -37,9 +37,9 @@ public interface ValueTransformer<T> {
      * Casts a given NBT tag to a specific tag type, throwing an error if the tag cannot be casted.
      */
     @SuppressWarnings("unchecked")
-    static <TagType extends Tag> TagType assertTagType(Class<TagType> cls, Tag tag, TransformerContext<?> ctx) {
+    static <S extends Tag> S assertTagType(Class<S> cls, Tag tag, TransformerContext<?> ctx) {
         try {
-            return (TagType) (tag);
+            return (S) (tag);
         } catch (ClassCastException c) {
             throw new ClassCastException("Sync: Invalid tag type: expected %s, got %s [%s, field %s]"
                     .formatted(cls.toString(), tag.getClass().getName(), ctx.holder(), ctx.fieldName));

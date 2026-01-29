@@ -84,7 +84,6 @@ public class SyncDataHolder {
                 syncData.getServerSaveFields();
 
         for (var field : fieldsToCheck) {
-
             Tag savedValue = tag.get(field.nbtSaveKey);
             deserializeField(holder, field, savedValue, readingClientFields, registries);
 
@@ -120,7 +119,6 @@ public class SyncDataHolder {
         }
 
         try {
-
             if (field.transformer != null) {
                 ValueTransformer<Object> transformer = (ValueTransformer<Object>) field.transformer;
                 return transformer.serializeNBT(currentValue, new ValueTransformer.TransformerContext<>(
@@ -130,7 +128,6 @@ public class SyncDataHolder {
             } else {
                 SyncSystem.LOGGER.error("Sync: Failed to serialize field {}: Missing value transformer", field.fieldName);
             }
-
         } catch (Exception e) {
             SyncSystem.LOGGER.error("Sync: Failed to serialize field {}", field.fieldName);
             SyncSystem.LOGGER.error(e);
@@ -144,8 +141,9 @@ public class SyncDataHolder {
                                          boolean readingClientFields, HolderLookup.Provider registries) {
         Object currentVal = field.handle.get(holder);
 
-        if (savedValue == null || savedValue instanceof CompoundTag compound && compound.isEmpty()) return;
-
+        if (savedValue == null || savedValue instanceof CompoundTag compound && compound.isEmpty()) {
+            return;
+        }
         if (savedValue instanceof CompoundTag compound && compound.getBoolean("null")) {
             field.handle.set(holder, null);
             return;

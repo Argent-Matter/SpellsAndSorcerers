@@ -109,10 +109,8 @@ public final class ValueTransformers {
      * @param read     A function that reads the value from a specific tag type
      * @param tagClass The tag type the value is serialized into
      */
-    public static <T,
-            TagType extends Tag> void registerSimpleClassTransformer(Class<T> type, Function<T, TagType> write,
-                                                                     Function<TagType, T> read,
-                                                                     Class<TagType> tagClass) {
+    public static <T, S extends Tag> void registerSimpleClassTransformer(Class<T> type, Function<T, S> write, Function<S, T> read,
+                                                                         Class<S> tagClass) {
         if (REGISTERED.containsKey(type))
             throw new IllegalArgumentException("Attempted to register transformer for %s twice".formatted(type));
         ValueTransformer<T> transformer = new SimpleClassTransformer<>(write, read, tagClass);

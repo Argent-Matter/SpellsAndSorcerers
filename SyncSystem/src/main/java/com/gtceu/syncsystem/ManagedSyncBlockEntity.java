@@ -15,8 +15,8 @@ import lombok.Setter;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
 /**
- * A BlockEntity that manages sync and save data via the {@code ISyncManaged} syncdata system.
- * 
+ * A block entity that manages client-server synchronization and save data via the {@link ISyncManaged sync data} system.
+ *
  * @see ISyncManaged
  */
 public abstract class ManagedSyncBlockEntity extends BlockEntity implements ISyncManaged {
