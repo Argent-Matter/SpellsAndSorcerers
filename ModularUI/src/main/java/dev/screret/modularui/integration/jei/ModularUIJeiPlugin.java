@@ -2,6 +2,7 @@ package dev.screret.modularui.integration.jei;
 
 import dev.screret.modularui.ModularUI;
 import dev.screret.modularui.client.screen.ContainerScreenWrapper;
+import dev.screret.modularui.client.screen.ModularContainerMenu;
 import dev.screret.modularui.client.screen.ScreenWrapper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -39,5 +40,12 @@ public class ModularUIJeiPlugin implements IModPlugin {
 
         JeiScreenHandler.register(ScreenWrapper.class, registration);
         JeiScreenHandler.register(ContainerScreenWrapper.class, registration);
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        if (ModularUI.Mods.REI.isLoaded() || ModularUI.Mods.EMI.isLoaded()) return;
+
+        JeiContainerHandler.register(ModularContainerMenu.class, registration);
     }
 }
