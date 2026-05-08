@@ -1,15 +1,15 @@
 package dev.screret.motm.client.memory;
 
-import dev.screret.modularui.client.schemarenderer.BaseSchemaRenderer;
-import dev.screret.modularui.utils.fakelevel.SchemaLevel;
-import dev.screret.modularui.utils.math.MathHelper;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.memory.Memory;
 import dev.screret.motm.api.util.worldgen.ExtendedStructurePlaceSettings;
 import dev.screret.motm.api.util.worldgen.StructureUtil;
 import dev.screret.motm.client.util.BufferSourceUtil;
 import dev.screret.motm.common.memory.MemoryGeoModel;
+import dev.screret.motm.common.util.MathUtil;
 
+import brachy.modularui.client.schemarenderer.BaseSchemaRenderer;
+import brachy.modularui.utils.fakelevel.SchemaLevel;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -188,7 +188,7 @@ public class MemoryRenderer extends GeoObjectRenderer<Memory> {
         if (this.fakeLevel.hasFilledBlocks()) {
             Camera playerCamera = CURRENT_CAMERA.get();
             var fakeLevelCamera = this.fakeLevelRenderer.camera();
-            fakeLevelCamera.setPosAndAngle(MathHelper.ZERO, 1.0f, playerCamera.getYRot(), playerCamera.getXRot());
+            fakeLevelCamera.setPosAndAngle(MathUtil.ZERO, 1.0f, playerCamera.getYRot(), playerCamera.getXRot());
 
             this.fakeLevelRenderer.renderWorld(BufferSourceUtil.getRealBufferSource(bufferSource), partialTick);
         }

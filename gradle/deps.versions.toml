@@ -2,6 +2,7 @@
 # JIJ dependencies
 geckoLib = "4.8.2"
 smartBrainLib = "1.16.11"
+modularUI = "3.2.0"
 
 # Recipe viewers
 emi = "1.1.22+1.21.1"
@@ -52,6 +53,7 @@ kotlinForForge = "5.7.0"
 # JIJ dependencies
 geckoLib            = { module = "software.bernie.geckolib:geckolib-neoforge-1.21.1", version.ref = "geckoLib" }
 smartBrainLib       = { module = "net.tslat.smartbrainlib:SmartBrainLib-neoforge-1.21.1", version.ref = "smartBrainLib" }
+modularUI           = { module = "brachy.modularui:modularui-mc1.21.1", version.ref = "modularUI" }
 
 # Recipe viewers
 emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }

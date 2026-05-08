@@ -2,9 +2,12 @@ package dev.screret.motm.common.util;
 
 import net.minecraft.world.phys.Vec3;
 
+import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 public class MathUtil {
+
+    public static final Vector3fc ZERO = new Vector3f();
 
     /**
      * @param vec    The vector to reflect.

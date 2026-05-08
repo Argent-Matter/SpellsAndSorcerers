@@ -24,7 +24,6 @@ dependencyResolutionManagement {
     }
 }
 
-include("ModularUI")
 include("SyncSystem")
 
 rootProject.name = "${mod_id}"

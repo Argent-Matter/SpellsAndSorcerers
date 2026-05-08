@@ -1,9 +1,11 @@
 package dev.screret.motm.common.ui;
 
-import dev.screret.modularui.drawable.ColorType;
-import dev.screret.modularui.drawable.GuiTextures;
-import dev.screret.modularui.drawable.UITexture;
+import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
+
+import brachy.modularui.drawable.ColorType;
+import brachy.modularui.drawable.GuiTextures;
+import brachy.modularui.drawable.UITexture;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +46,7 @@ public interface MOTMGuiTextures {
     }
 
     private static UITexture fullImage(String path, ColorType colorType) {
-        return UITexture.fullImage(MagicOfTheMind.MOD_ID, path, colorType);
+        return UITexture.fullImage(MOTMUtil.id(path), colorType);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -85,7 +87,7 @@ public interface MOTMGuiTextures {
 
     private static UITexture progressBar(String path, int width, int height, @Nullable ColorType colorType) {
         UITexture.Builder builder = new UITexture.Builder()
-                .location(MagicOfTheMind.MOD_ID, path)
+                .location(MOTMUtil.id(path))
                 .imageSize(width, height)
                 .colorType(colorType);
         return builder.build();

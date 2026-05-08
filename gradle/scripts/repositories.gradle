@@ -1,22 +1,21 @@
 repositories {
-    mavenLocal()
     mavenCentral()
 
-    maven { // JEI
-        name = "Jared's Maven"
-        url = "https://maven.blamejared.com/"
+    exclusiveContent { // ModularUI and GT org libs
+        forRepositories(
+                mavenLocal(),
+                maven { url = "https://maven.gtceu.com/" },
+                maven { url = "https://maven.screret.dev/" }
+        )
+        filter {
+            includeGroup("brachy.modularui")
+            includeGroupAndSubgroups("com.gtceu")
+            includeGroupAndSubgroups("com.gregtechceu")
+        }
     }
-
-    maven { // JEI mirror, AE2
-        name = "ModMaven"
-        url = "https://modmaven.dev/"
-    }
-
     exclusiveContent {
         forRepository { maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" } }
-        filter {
-            includeGroupAndSubgroups("software.bernie")
-        }
+        filter { includeGroupAndSubgroups("software.bernie") }
     }
     exclusiveContent {
         forRepository { maven { url = 'https://dl.cloudsmith.io/public/tslat/sbl/maven/' } }
@@ -53,6 +52,10 @@ repositories {
     exclusiveContent { // terraformers - EMI
         forRepository { maven { url = "https://maven.terraformersmc.com/releases/" } }
         filter { includeGroup("dev.emi") }
+    }
+    exclusiveContent {
+        forRepository { maven {url = "https://maven.blamejared.com/" } }
+        filter { includeGroup("mezz.jei") }
     }
     exclusiveContent { // shedaniel - REI, architectury, cloth-config
         forRepository { maven { url = "https://maven.shedaniel.me/" } }

@@ -43,7 +43,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             neo_version         : neoVersion,
             geckolib_version    : deps.versions.geckoLib.get(),
             sbl_version         : deps.versions.smartBrainLib.get(),
-            modularui_version   : project(':ModularUI').properties.mod_version,
+            modularui_version   : deps.versions.modularUI.get(),
             kjs_version         : deps.versions.kubejs.get().split("\\.")[0], // only specify major version of kjs
             jei_version         : deps.versions.jei.get(),
             rei_version         : deps.versions.rei.get(),

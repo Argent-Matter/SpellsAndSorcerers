@@ -1,14 +1,14 @@
 package dev.screret.motm.common.ui;
 
-import dev.screret.modularui.api.ITheme;
-import dev.screret.modularui.api.IThemeApi;
-import dev.screret.modularui.client.screen.RichTooltip;
-import dev.screret.modularui.drawable.UITexture;
-import dev.screret.modularui.theme.ReloadThemeEvent;
-import dev.screret.modularui.theme.WidgetTheme;
-import dev.screret.modularui.theme.WidgetThemeKey;
-import dev.screret.modularui.utils.Color;
-import dev.screret.modularui.utils.serialization.json.JsonBuilder;
+import brachy.modularui.api.ITheme;
+import brachy.modularui.api.IThemeApi;
+import brachy.modularui.screen.RichTooltip;
+import brachy.modularui.drawable.UITexture;
+import brachy.modularui.theme.ReloadThemeEvent;
+import brachy.modularui.theme.WidgetTheme;
+import brachy.modularui.theme.WidgetThemeKey;
+import brachy.modularui.utils.Color;
+import brachy.modularui.utils.serialization.json.JsonBuilder;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;

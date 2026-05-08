@@ -1,9 +1,8 @@
 package dev.screret.motm.common.ui;
 
-import dev.screret.modularui.api.IPanelHandler;
-import dev.screret.modularui.client.screen.ModularPanel;
-import dev.screret.modularui.utils.Alignment;
-import dev.screret.modularui.widgets.ButtonWidget;
+import brachy.modularui.api.IPanelHandler;
+import brachy.modularui.screen.ModularPanel;
+import brachy.modularui.widgets.ButtonWidget;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,23 +17,23 @@ public class MOTMGuis {
 
     public static final int DEFAULT_WIDTH = 176, DEFAULT_HEIGHT = 166;
 
-    public static ModularPanel createPanel(String name, int width, int height) {
+    public static ModularPanel<?> createPanel(String name, int width, int height) {
         return ModularPanel.defaultPanel(name, width, height);
     }
 
-    public static ModularPanel createPanel(ItemStack stack, int width, int height) {
+    public static ModularPanel<?> createPanel(ItemStack stack, int width, int height) {
         return createPanel(stack.getDescriptionId(), width, height);
     }
 
-    public static ModularPanel createPanel(String name) {
+    public static ModularPanel<?> createPanel(String name) {
         return ModularPanel.defaultPanel(name, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
-    public static ModularPanel defaultPanel(ItemStack stack) {
+    public static ModularPanel<?> defaultPanel(ItemStack stack) {
         return createPanel(stack, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
-    public static ModularPanel defaultPanel(Item item) {
+    public static ModularPanel<?> defaultPanel(Item item) {
         return createPanel(item.getDescriptionId());
     }
 
@@ -62,7 +61,7 @@ public class MOTMGuis {
     }
 
     @Accessors(chain = true, fluent = true)
-    public static class PopupPanel extends ModularPanel {
+    public static class PopupPanel extends ModularPanel<PopupPanel> {
 
         @Getter
         @Setter
@@ -75,10 +74,9 @@ public class MOTMGuis {
 
         private PopupPanel(@NotNull String name) {
             super(name);
-            align(Alignment.Center);
             background(MOTMGuiTextures.BACKGROUND);
             child(ButtonWidget.panelCloseButton().top(5).right(5)
-                    .onMousePressed((mouseX, mouseY, button) -> {
+                    .onMousePressed((ctx, button) -> {
                         if (button == 0 || button == 1) {
                             this.closeIfOpen();
                             return true;

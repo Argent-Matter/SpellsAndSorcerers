@@ -2,11 +2,12 @@ dependencies {
     // JIJ dependencies
     var geckoLibDependency = api(deps.geckoLib.get())
     var smartBrainLibDependency = api(deps.smartBrainLib.get())
+    var modularUIDependency = api(deps.modularUI.get())
     if (enableJarJarDependencies) {
         jarJar(geckoLibDependency)
         jarJar(smartBrainLibDependency)
+        jarJar(modularUIDependency)
     }
-    jarJar(api(project(':ModularUI')) { transitive = false })
     jarJar(api(project(':SyncSystem')) { transitive = false })
 
     // Recipe Viewers
