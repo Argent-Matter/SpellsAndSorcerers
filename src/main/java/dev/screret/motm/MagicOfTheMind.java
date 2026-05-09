@@ -26,10 +26,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -113,6 +110,28 @@ public class MagicOfTheMind {
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.BUILDING_BLOCKS -> {
                 event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
+
+                event.accept(MOTMItems.UNAWAKENED_MEMORYSTONE);
+                event.accept(MOTMItems.UNAWAKENED_MEMORYSTONE_STAIRS);
+                event.accept(MOTMItems.UNAWAKENED_MEMORYSTONE_SLAB);
+                event.accept(MOTMItems.UNAWAKENED_MEMORYSTONE_WALL);
+                event.accept(MOTMItems.MEMORYSTONE);
+                event.accept(MOTMItems.MEMORYSTONE_STAIRS);
+                event.accept(MOTMItems.MEMORYSTONE_SLAB);
+                event.accept(MOTMItems.MEMORYSTONE_WALL);
+
+                event.accept(MOTMItems.CHISELED_POLISHED_MEMORYSTONE);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_STAIRS);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_SLAB);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_WALL);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_PRESSURE_PLATE);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_BUTTON);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_BRICKS);
+                event.accept(MOTMItems.CRACKED_POLISHED_MEMORYSTONE_BRICKS);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_BRICK_STAIRS);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_BRICK_SLAB);
+                event.accept(MOTMItems.POLISHED_MEMORYSTONE_BRICK_WALL);
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.FUNCTIONAL_BLOCKS -> {
                 event.accept(MOTMItems.PALANTIR.get());
