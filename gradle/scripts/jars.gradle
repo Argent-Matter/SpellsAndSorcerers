@@ -11,6 +11,8 @@ tasks.register('shadowBugWorkaround', Jar) {
 
 if (tasks.getNames().contains('shadowJar')) {
     shadowJar {
+        dependsOn tasks.shadowBugWorkaround
+        dependsOn tasks.jar
         from tasks.shadowBugWorkaround
         // This is how the official docs say to do it. I can't get the warning to go away.
         configurations = project.configurations.named('includedLibrary').map { [it] }
