@@ -53,13 +53,14 @@ public class MOTMBlockStateProvider extends BlockStateProvider {
         wallBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_WALL, MOTMBlocks.MEMORYSTONE);
         pressurePlateBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_PRESSURE_PLATE, MOTMBlocks.POLISHED_MEMORYSTONE);
         buttonBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BUTTON, MOTMBlocks.POLISHED_MEMORYSTONE);
-        simpleBlockWithItem(MOTMBlocks.CHISELED_POLISHED_MEMORYSTONE);
+        // TODO make texture
+        // simpleBlockWithItem(MOTMBlocks.CHISELED_POLISHED_MEMORYSTONE);
 
-        simpleBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
-        simpleBlockWithItem(MOTMBlocks.CRACKED_POLISHED_MEMORYSTONE_BRICKS);
-        stairsBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_STAIRS, MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
-        slabBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_SLAB, MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
-        wallBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_WALL, MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
+        // simpleBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
+        // simpleBlockWithItem(MOTMBlocks.CRACKED_POLISHED_MEMORYSTONE_BRICKS);
+        // stairsBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_STAIRS, MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
+        // slabBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_SLAB, MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
+        // wallBlockWithItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_WALL, MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
         // endregion
     }
 
@@ -114,20 +115,6 @@ public class MOTMBlockStateProvider extends BlockStateProvider {
         itemModels().buttonInventory(name(block.get()), texture);
     }
 
-    public void randomRotatedBlock(Supplier<? extends Block> block) {
-        randomRotatedBlock(block, cubeAll(block.get()), null);
-    }
-
-    public void randomRotatedBlock(Supplier<? extends Block> block, ModelFile model, @Nullable ModelFile mirroredModel) {
-        var builder = getVariantBuilder(block.get());
-        var partialState = builder.partialState();
-
-        builder.addModels(partialState, makeRotationModels(model, false, true));
-        if (mirroredModel != null) {
-            builder.addModels(partialState, makeRotationModels(mirroredModel, false, true));
-        }
-    }
-
     public void randomRotatedBlockWithItem(Supplier<? extends Block> block) {
         ModelFile model = cubeAll(block.get());
         randomRotatedBlockWithItem(block, model, null);
@@ -148,6 +135,20 @@ public class MOTMBlockStateProvider extends BlockStateProvider {
     public void randomRotatedBlockWithItem(Supplier<? extends Block> block, ModelFile model, @Nullable ModelFile mirrored) {
         randomRotatedBlock(block, model, mirrored);
         simpleBlockItem(block.get(), model);
+    }
+
+    public void randomRotatedBlock(Supplier<? extends Block> block) {
+        randomRotatedBlock(block, cubeAll(block.get()), null);
+    }
+
+    public void randomRotatedBlock(Supplier<? extends Block> block, ModelFile model, @Nullable ModelFile mirroredModel) {
+        var builder = getVariantBuilder(block.get());
+        var partialState = builder.partialState();
+
+        builder.addModels(partialState, makeRotationModels(model, false, true));
+        if (mirroredModel != null) {
+            builder.addModels(partialState, makeRotationModels(mirroredModel, false, true));
+        }
     }
 
     protected ConfiguredModel[] makeRotationModels(ModelFile model, boolean rotateX, boolean rotateY) {
@@ -177,11 +178,11 @@ public class MOTMBlockStateProvider extends BlockStateProvider {
     }
 
     public ModelFile cubeMirroredAll(Block block) {
-        return cubeMirroredAll(name(block) + "_mirrored", blockTexture(block));
+        return cubeMirroredAll(name(block), blockTexture(block));
     }
 
-    public BlockModelBuilder cubeMirroredAll(String name, ResourceLocation texture) {
-        return models().singleTexture(name, mcLoc(ModelProvider.BLOCK_FOLDER + "/cube_mirrored_all"), "all", texture);
+    public BlockModelBuilder cubeMirroredAll(String baseName, ResourceLocation texture) {
+        return models().singleTexture(baseName + "_mirrored", mcLoc(ModelProvider.BLOCK_FOLDER + "/cube_mirrored_all"), "all", texture);
     }
 
     public ModelFile.ExistingModelFile getExistingFile(ResourceLocation path) {

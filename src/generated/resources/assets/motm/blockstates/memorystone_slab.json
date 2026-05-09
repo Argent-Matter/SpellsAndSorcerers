@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "type=bottom": {
+            "model": "motm:block/memorystone_slab_top"
+        },
+        "type=double": {
+            "model": "motm:block/memorystone"
+        },
+        "type=top": {
+            "model": "motm:block/memorystone_slab"
+        }
+    }
+}
