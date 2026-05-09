@@ -17,7 +17,6 @@ version = "${mod_version}" + (isSnapshot ? "-SNAPSHOT" : "")
 boolean isCI = System.getenv("CI") != null
 
 apply from: "$rootDir/gradle/scripts/jars.gradle"
-apply from: "$rootDir/gradle/scripts/moddevgradle.gradle"
 apply from: "$rootDir/gradle/scripts/repositories.gradle"
 apply from: "$projectDir/dependencies.gradle"
 apply from: "$rootDir/gradle/scripts/resources.gradle"

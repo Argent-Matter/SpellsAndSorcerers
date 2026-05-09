@@ -38,13 +38,6 @@ neoForge {
         }
     }
 
-    if (project != rootProject) {
-        // only add the run configurations to the root project, remove them from subprojects
-        runs {
-            removeIf { true }
-        }
-        return
-    }
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
