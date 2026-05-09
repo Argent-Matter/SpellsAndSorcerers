@@ -1,8 +1,8 @@
 package dev.screret.motm.common.block.entity;
 
 import dev.screret.motm.api.memory.Memory;
-import dev.screret.motm.data.MOTMBlockEntities;
-import dev.screret.motm.data.MOTMDataComponents;
+import dev.screret.motm.data.block.entity.MOTMBlockEntities;
+import dev.screret.motm.data.item.MOTMDataComponents;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

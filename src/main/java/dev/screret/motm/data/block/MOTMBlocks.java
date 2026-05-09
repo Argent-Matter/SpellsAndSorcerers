@@ -1,9 +1,7 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.block;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.common.block.MemorystoneBlock;
-import dev.screret.motm.common.block.PalantirBlock;
-import dev.screret.motm.common.block.PortStoneBlock;
+import dev.screret.motm.common.block.*;
 
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;

@@ -1,7 +1,7 @@
 package dev.screret.motm.common.block;
 
 import dev.screret.motm.common.block.entity.PalantirBlockEntity;
-import dev.screret.motm.data.MOTMBlockEntities;
+import dev.screret.motm.data.block.entity.MOTMBlockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;

@@ -2,8 +2,8 @@ package dev.screret.motm.common.ui;
 
 import brachy.modularui.api.ITheme;
 import brachy.modularui.api.IThemeApi;
-import brachy.modularui.screen.RichTooltip;
 import brachy.modularui.drawable.UITexture;
+import brachy.modularui.screen.RichTooltip;
 import brachy.modularui.theme.ReloadThemeEvent;
 import brachy.modularui.theme.WidgetTheme;
 import brachy.modularui.theme.WidgetThemeKey;

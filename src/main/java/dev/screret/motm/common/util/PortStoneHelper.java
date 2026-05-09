@@ -4,8 +4,8 @@ import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.common.block.entity.PortStoneBlockEntity;
 import dev.screret.motm.common.block.entity.PortStoneBlockEntity.PortRune;
-import dev.screret.motm.data.MOTMBlockEntities;
-import dev.screret.motm.data.MOTMPoiTypes;
+import dev.screret.motm.data.block.MOTMPoiTypes;
+import dev.screret.motm.data.block.entity.MOTMBlockEntities;
 
 import net.minecraft.core.*;
 import net.minecraft.server.MinecraftServer;

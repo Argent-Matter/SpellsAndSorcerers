@@ -1,7 +1,8 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.item;
 
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
+import dev.screret.motm.data.MOTMTags;
 
 import net.minecraft.Util;
 import net.minecraft.core.Holder;

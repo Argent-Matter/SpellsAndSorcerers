@@ -1,7 +1,9 @@
 package dev.screret.motm.common.data.provider.lang;
 
 import dev.screret.motm.common.data.util.LangUtil;
-import dev.screret.motm.data.*;
+import dev.screret.motm.data.block.MOTMBlocks;
+import dev.screret.motm.data.item.MOTMCreativeTabs;
+import dev.screret.motm.data.item.MOTMItems;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;

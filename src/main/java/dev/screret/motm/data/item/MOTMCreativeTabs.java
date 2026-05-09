@@ -1,4 +1,4 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.item;
 
 import dev.screret.motm.MagicOfTheMind;
 
