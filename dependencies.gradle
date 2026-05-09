@@ -23,7 +23,7 @@ dependencies {
             }
         }
     }
-    jarJar(api(project(':SyncSystem')) { transitive = false })
+    includedLibrary(api(project(':SyncSystem')) { transitive = false })
 
     // Recipe Viewers
     compileOnly(deps.bundles.jei)
