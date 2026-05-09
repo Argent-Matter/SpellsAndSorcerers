@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MOTMMemories {
 
-    public static final ResourceKey<Memory> TEST_1 = createMemoryKey("test_1");
+    public static final ResourceKey<Memory> TEST_1 = createKey("test_1");
 
     public static void bootstrap(BootstrapContext<Memory> context) {
         registerSimple(context, TEST_1);
@@ -23,7 +23,7 @@ public class MOTMMemories {
         context.register(key, new Memory(name));
     }
 
-    private static ResourceKey<Memory> createMemoryKey(String name) {
+    private static ResourceKey<Memory> createKey(String name) {
         return ResourceKey.create(MOTMRegistries.MEMORY_REGISTRY, MOTMUtil.id(name));
     }
 

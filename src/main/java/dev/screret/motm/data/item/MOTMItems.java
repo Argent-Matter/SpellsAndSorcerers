@@ -24,9 +24,31 @@ public class MOTMItems {
     public static final DeferredItem<BlockItem> SOULSTEEL_BLOCK = ITEMS.registerSimpleBlockItem(MOTMBlocks.SOULSTEEL_BLOCK);
     public static final DeferredItem<BlockItem> GLINT_ORE = ITEMS.registerSimpleBlockItem(MOTMBlocks.GLINT_ORE);
 
-    public static final DeferredItem<BlockItem> MEMORYSTONE = ITEMS.registerSimpleBlockItem(MOTMBlocks.MEMORYSTONE);
-    public static final DeferredItem<BlockItem> UNAWAKENED_MEMORYSTONE = ITEMS.registerSimpleBlockItem(MOTMBlocks.UNAWAKENED_MEMORYSTONE);
     public static final DeferredItem<PortStoneBlockItem> PORT_STONE = ITEMS.registerItem("port_stone", PortStoneBlockItem::new);
+
+    public static final DeferredItem<BlockItem> UNAWAKENED_MEMORYSTONE = ITEMS.registerSimpleBlockItem(MOTMBlocks.UNAWAKENED_MEMORYSTONE);
+    public static final DeferredItem<BlockItem> UNAWAKENED_MEMORYSTONE_STAIRS = ITEMS.registerSimpleBlockItem(MOTMBlocks.UNAWAKENED_MEMORYSTONE_STAIRS);
+    public static final DeferredItem<BlockItem> UNAWAKENED_MEMORYSTONE_SLAB = ITEMS.registerSimpleBlockItem(MOTMBlocks.UNAWAKENED_MEMORYSTONE_SLAB);
+    public static final DeferredItem<BlockItem> UNAWAKENED_MEMORYSTONE_WALL = ITEMS.registerSimpleBlockItem(MOTMBlocks.UNAWAKENED_MEMORYSTONE_WALL);
+
+    public static final DeferredItem<BlockItem> MEMORYSTONE = ITEMS.registerSimpleBlockItem(MOTMBlocks.MEMORYSTONE);
+    public static final DeferredItem<BlockItem> MEMORYSTONE_STAIRS = ITEMS.registerSimpleBlockItem(MOTMBlocks.MEMORYSTONE_STAIRS);
+    public static final DeferredItem<BlockItem> MEMORYSTONE_SLAB = ITEMS.registerSimpleBlockItem(MOTMBlocks.MEMORYSTONE_SLAB);
+    public static final DeferredItem<BlockItem> MEMORYSTONE_WALL = ITEMS.registerSimpleBlockItem(MOTMBlocks.MEMORYSTONE_WALL);
+
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_STAIRS = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_STAIRS);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_SLAB = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_SLAB);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_WALL = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_WALL);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_PRESSURE_PLATE = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_PRESSURE_PLATE);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_BUTTON = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_BUTTON);
+    public static final DeferredItem<BlockItem> CHISELED_POLISHED_MEMORYSTONE = ITEMS.registerSimpleBlockItem(MOTMBlocks.CHISELED_POLISHED_MEMORYSTONE);
+
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_BRICKS = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS);
+    public static final DeferredItem<BlockItem> CRACKED_POLISHED_MEMORYSTONE_BRICKS = ITEMS.registerSimpleBlockItem(MOTMBlocks.CRACKED_POLISHED_MEMORYSTONE_BRICKS);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_BRICK_STAIRS = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_STAIRS);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_BRICK_SLAB = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_SLAB);
+    public static final DeferredItem<BlockItem> POLISHED_MEMORYSTONE_BRICK_WALL = ITEMS.registerSimpleBlockItem(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_WALL);
 
     // OTHER ITEMS
     public static final DeferredItem<Item> HANDLE = ITEMS.registerSimpleItem("handle");

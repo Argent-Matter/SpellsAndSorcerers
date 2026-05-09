@@ -1,4 +1,6 @@
 dependencies {
+    compileOnly(libs.jetbrains.annotations)
+
     // JIJ dependencies
     var geckoLibDependency = api(deps.geckoLib.get())
     var smartBrainLibDependency = api(deps.smartBrainLib.get())

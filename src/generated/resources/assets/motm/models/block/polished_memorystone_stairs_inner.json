@@ -1,0 +1,8 @@
+{
+    "parent": "minecraft:block/inner_stairs",
+    "textures": {
+        "bottom": "motm:block/polished_memorystone",
+        "side": "motm:block/polished_memorystone",
+        "top": "motm:block/polished_memorystone"
+    }
+}

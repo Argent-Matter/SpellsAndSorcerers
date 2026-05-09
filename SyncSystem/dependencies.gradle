@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly(rootProject.configurations.modDevCompileDependencies.allDependencies)
-
     compileOnly(libs.jetbrains.annotations)
+
+    compileOnly(rootProject.configurations.modDevCompileDependencies.allDependencies)
 }

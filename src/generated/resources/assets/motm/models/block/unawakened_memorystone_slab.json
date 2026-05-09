@@ -1,0 +1,8 @@
+{
+    "parent": "minecraft:block/slab",
+    "textures": {
+        "bottom": "motm:block/unawakened_memorystone",
+        "side": "motm:block/unawakened_memorystone",
+        "top": "motm:block/unawakened_memorystone"
+    }
+}

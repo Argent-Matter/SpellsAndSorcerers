@@ -11,7 +11,6 @@ import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,12 +21,8 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import org.jetbrains.annotations.Nullable;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class MOTMArmorItem extends ArmorItem implements GeoItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -40,7 +35,7 @@ public class MOTMArmorItem extends ArmorItem implements GeoItem {
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
         consumer.accept(new GeoRenderProvider() {
 
-            private GeoArmorRenderer<MOTMArmorItem> renderer;
+            private @Nullable GeoArmorRenderer<MOTMArmorItem> renderer;
 
             @Override
             public <T extends LivingEntity> HumanoidModel<?> getGeoArmorRenderer(@Nullable T entity, ItemStack stack,

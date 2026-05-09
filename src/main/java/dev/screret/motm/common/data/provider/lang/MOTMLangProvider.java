@@ -48,14 +48,37 @@ public class MOTMLangProvider extends LanguageProvider {
 
         // region blocks
         addBlock(MOTMBlocks.PALANTIR, "Palantír");
-        addBlock(MOTMBlocks.MEMORYSTONE, "Memorystone");
-        addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE, "Unawakened Memorystone");
         addBlock(MOTMBlocks.PORT_STONE, "Port Stone");
         // TODO add discovery system; use this
         add("block.motm.port_stone.undiscovered", "Mysterious Obelisk");
 
         addBlock(MOTMBlocks.SOULSTEEL_BLOCK, "Block of Soulsteel");
         addBlock(MOTMBlocks.GLINT_ORE, "Glint Ore");
+
+        addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE, "Unawakened Memorystone");
+        addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE_STAIRS, "Unawakened Memorystone Stairs");
+        addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE_SLAB, "Unawakened Memorystone Slab");
+        addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE_WALL, "Unawakened Memorystone Wall");
+
+        addBlock(MOTMBlocks.MEMORYSTONE, "Memorystone");
+        addBlock(MOTMBlocks.MEMORYSTONE_STAIRS, "Memorystone Stairs");
+        addBlock(MOTMBlocks.MEMORYSTONE_SLAB, "Memorystone Slab");
+        addBlock(MOTMBlocks.MEMORYSTONE_WALL, "Memorystone Wall");
+
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE, "Polished Memorystone");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_STAIRS, "Polished Memorystone Stairs");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_SLAB, "Polished Memorystone Slab");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_WALL, "Polished Memorystone Wall");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_PRESSURE_PLATE, "Polished Memorystone Pressure Plate");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_BUTTON, "Polished Memorystone Button");
+
+        addBlock(MOTMBlocks.CHISELED_POLISHED_MEMORYSTONE, "Chiseled Polished Memorystone");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_BRICKS, "Polished Memorystone Bricks");
+        addBlock(MOTMBlocks.CRACKED_POLISHED_MEMORYSTONE_BRICKS, "Cracked Polished Memorystone Bricks");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_STAIRS, "Polished Memorystone Brick Stairs");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_SLAB, "Polished Memorystone Brick Slab");
+        addBlock(MOTMBlocks.POLISHED_MEMORYSTONE_BRICK_WALL, "Polished Memorystone Brick Wall");
+
         // endregion
 
         // region items

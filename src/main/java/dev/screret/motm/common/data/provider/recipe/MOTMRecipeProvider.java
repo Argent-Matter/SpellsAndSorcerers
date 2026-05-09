@@ -1,7 +1,9 @@
 package dev.screret.motm.common.data.provider.recipe;
 
 import dev.screret.motm.MOTMUtil;
+import dev.screret.motm.common.data.util.BlockFamily;
 import dev.screret.motm.data.MOTMTags;
+import dev.screret.motm.data.block.MOTMBlockFamilies;
 import dev.screret.motm.data.item.MOTMItems;
 
 import net.minecraft.core.HolderLookup;
@@ -10,13 +12,18 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MOTMRecipeProvider extends RecipeProvider {
@@ -26,7 +33,7 @@ public class MOTMRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildRecipes(@NotNull RecipeOutput provider) {
+    protected void buildRecipes(RecipeOutput provider) {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, MOTMItems.SOULSTEEL_INGOT.get())
                 .requires(MOTMTags.Items.GLINT_GEMS)
                 .requires(MOTMTags.Items.GLINT_GEMS)
@@ -71,6 +78,12 @@ public class MOTMRecipeProvider extends RecipeProvider {
 
         oreSmelting(Ingredient.of(MOTMTags.Items.GLINT_ORES), MOTMItems.GLINT.get(), 1.5F, 200);
         oreBlasting(Ingredient.of(MOTMTags.Items.GLINT_ORES), MOTMItems.GLINT.get(), 1.5F, 100);
+    }
+
+    @Override
+    protected void generateForEnabledBlockFamilies(RecipeOutput provider, FeatureFlagSet enabledFeatures) {
+        MOTMBlockFamilies.getAllFamilies().filter(BlockFamily::shouldGenerateRecipe)
+                .forEach(family -> generateRecipes(provider, family, enabledFeatures));
     }
 
     protected static void nineBlockStorageRecipesWithCustomPacking(
@@ -154,4 +167,64 @@ public class MOTMRecipeProvider extends RecipeProvider {
     protected static String getHasName(TagKey<Item> tag) {
         return "has_" + tag.location();
     }
+
+    protected static void generateRecipes(RecipeOutput provider, BlockFamily blockFamily, FeatureFlagSet requiredFeatures) {
+        blockFamily.getVariants().forEach((variant, block) -> {
+            if (!block.value().requiredFeatures().isSubsetOf(requiredFeatures)) {
+                return;
+            }
+            BiFunction<ItemLike, Ingredient, RecipeBuilder> recipeFunction = SHAPE_BUILDERS.get(variant);
+            if (recipeFunction == null) {
+                return;
+            }
+
+            ItemLike baseBlock = getBaseBlock(blockFamily, variant);
+
+            RecipeBuilder recipeBuilder = recipeFunction.apply(block.value(), Ingredient.of(baseBlock));
+
+            if (blockFamily.getRecipeGroupPrefix().isPresent()) {
+                String recipeGroup = blockFamily.getRecipeGroupPrefix().get();
+                if (variant != BlockFamily.Variant.CUT) {
+                    recipeGroup += "_" + variant.getVariantName();
+                }
+                recipeBuilder.group(recipeGroup);
+            }
+
+            recipeBuilder.unlockedBy(blockFamily.getRecipeUnlockedBy().orElseGet(() -> getHasName(baseBlock)), has(baseBlock));
+            recipeBuilder.save(provider);
+        });
+    }
+
+    protected static Block getBaseBlock(BlockFamily family, BlockFamily.Variant variant) {
+        if (variant == BlockFamily.Variant.CHISELED) {
+            if (family.getVariants().containsKey(BlockFamily.Variant.SLAB)) {
+                return family.get(BlockFamily.Variant.SLAB).value();
+            } else {
+                throw new IllegalStateException("Slab is not defined for the family.");
+            }
+        } else {
+            return family.getBaseBlock().value();
+        }
+    }
+
+    // spotless:off
+    private static final Map<BlockFamily.Variant, BiFunction<ItemLike, Ingredient, RecipeBuilder>> SHAPE_BUILDERS = ImmutableMap.<BlockFamily.Variant, BiFunction<ItemLike, Ingredient, RecipeBuilder>>builder()
+            .put(BlockFamily.Variant.BUTTON, RecipeProvider::buttonBuilder)
+            .put(BlockFamily.Variant.CHISELED, (result, ingredient) -> chiseledBuilder(RecipeCategory.BUILDING_BLOCKS, result, ingredient))
+            .put(BlockFamily.Variant.CRACKED, (result, ingredient) -> SimpleCookingRecipeBuilder.smelting(ingredient, RecipeCategory.BUILDING_BLOCKS, result, 0.1f, 200))
+            .put(BlockFamily.Variant.CUT, (result, ingredient) -> cutBuilder(RecipeCategory.BUILDING_BLOCKS, result, ingredient))
+            .put(BlockFamily.Variant.DOOR, RecipeProvider::doorBuilder)
+            .put(BlockFamily.Variant.CUSTOM_FENCE, RecipeProvider::fenceBuilder)
+            .put(BlockFamily.Variant.FENCE, RecipeProvider::fenceBuilder)
+            .put(BlockFamily.Variant.CUSTOM_FENCE_GATE, RecipeProvider::fenceGateBuilder)
+            .put(BlockFamily.Variant.FENCE_GATE, RecipeProvider::fenceGateBuilder)
+            .put(BlockFamily.Variant.SIGN, RecipeProvider::signBuilder)
+            .put(BlockFamily.Variant.SLAB, (result, ingredient) -> slabBuilder(RecipeCategory.BUILDING_BLOCKS, result, ingredient))
+            .put(BlockFamily.Variant.STAIRS, RecipeProvider::stairBuilder)
+            .put(BlockFamily.Variant.PRESSURE_PLATE, (result, ingredient) -> pressurePlateBuilder(RecipeCategory.REDSTONE, result, ingredient))
+            .put(BlockFamily.Variant.POLISHED, (result, ingredient) -> polishedBuilder(RecipeCategory.BUILDING_BLOCKS, result, ingredient))
+            .put(BlockFamily.Variant.TRAPDOOR, RecipeProvider::trapdoorBuilder)
+            .put(BlockFamily.Variant.WALL, (result, ingredient) -> wallBuilder(RecipeCategory.DECORATIONS, result, ingredient))
+            .build();
+    // spotless:on
 }

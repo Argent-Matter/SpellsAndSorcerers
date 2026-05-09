@@ -1,7 +1,4 @@
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@NotNullByDefault
 package dev.screret.motm.api.util.worldgen;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNullByDefault;
