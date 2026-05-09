@@ -182,7 +182,8 @@ public class MOTMBlockStateProvider extends BlockStateProvider {
     }
 
     public BlockModelBuilder cubeMirroredAll(String baseName, ResourceLocation texture) {
-        return models().singleTexture(baseName + "_mirrored", mcLoc(ModelProvider.BLOCK_FOLDER + "/cube_mirrored_all"), "all", texture);
+        return models().singleTexture(baseName + "_mirrored", mcLoc(ModelProvider.BLOCK_FOLDER + "/cube_mirrored_all"),
+                "all", texture);
     }
 
     public ModelFile.ExistingModelFile getExistingFile(ResourceLocation path) {

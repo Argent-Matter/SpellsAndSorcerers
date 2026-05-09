@@ -45,6 +45,7 @@ public class MOTMProcessorLists {
 
     private static RuleProcessor makeDegradeProcessor(Block originalBlock, Block degradedBlock,
                                                       float degradeChance, float unDegradeChance) {
+        // spotless:off
         return new RuleProcessor(ImmutableList.of(
                 new ProcessorRule(
                         new RandomBlockMatchTest(originalBlock, degradeChance),
@@ -57,6 +58,7 @@ public class MOTMProcessorLists {
                         originalBlock.defaultBlockState()
                 )
         ));
+        // spotless:on
     }
 
     // endregion

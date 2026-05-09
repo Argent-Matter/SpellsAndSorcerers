@@ -55,7 +55,6 @@ public class MOTMLangProvider extends LanguageProvider {
         addBlock(MOTMBlocks.SOULSTEEL_BLOCK, "Block of Soulsteel");
         addBlock(MOTMBlocks.GLINT_ORE, "Glint Ore");
 
-
         addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE, "Unawakened Memorystone");
         addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE_STAIRS, "Unawakened Memorystone Stairs");
         addBlock(MOTMBlocks.UNAWAKENED_MEMORYSTONE_SLAB, "Unawakened Memorystone Slab");
