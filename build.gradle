@@ -8,6 +8,7 @@ plugins {
     alias libs.plugins.modDevGradle
     alias libs.plugins.spotless
     alias libs.plugins.lombok
+    alias libs.plugins.shadow
 }
 
 group = project.properties.maven_group
@@ -29,23 +30,24 @@ sourceSets {
     }
 
     client {
+        // The Java plugin does this for the test source set, replicate that here
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += client.output + main.output
     }
 
     test {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += test.output + main.output
     }
 
     extra {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += extra.output + main.output
     }
 
     clientExtra {
-        compileClasspath += client.output + extra.compileClasspath
-        runtimeClasspath += client.output + client.runtimeClasspath + extra.runtimeClasspath
+        compileClasspath += client.output + extra.output
+        runtimeClasspath += clientExtra.output + client.output + extra.output
     }
 }
 
@@ -57,6 +59,7 @@ configurations {
 
     renderNurseCfg {
         canBeConsumed = false
+        canBeResolved = true
     }
 
     includedLibrary {
@@ -82,6 +85,14 @@ afterEvaluate {
 
         lombok {
             version = "1.18.38"
+        }
+
+        // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
+        idea {
+            module {
+                downloadSources = true
+                downloadJavadoc = true
+            }
         }
     }
 }

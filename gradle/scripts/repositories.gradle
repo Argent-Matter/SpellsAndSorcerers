@@ -3,7 +3,7 @@ repositories {
 
     exclusiveContent { // ModularUI and GT org libs
         forRepositories(
-                mavenLocal(),
+                // mavenLocal(),
                 maven { url = "https://maven.gtceu.com/" },
                 maven { url = "https://maven.screret.dev/" }
         )

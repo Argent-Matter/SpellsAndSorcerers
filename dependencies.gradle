@@ -4,11 +4,26 @@ dependencies {
     var smartBrainLibDependency = api(deps.smartBrainLib.get())
     var modularUIDependency = api(deps.modularUI.get())
     if (enableJarJarDependencies) {
-        jarJar(geckoLibDependency)
-        jarJar(smartBrainLibDependency)
-        jarJar(modularUIDependency)
+        jarJar(geckoLibDependency) {
+            version {
+                strictly '[4.8, 5.0)'
+                prefer deps.versions.geckoLib.get()
+            }
+        }
+        jarJar(smartBrainLibDependency) {
+            version {
+                strictly '[1.16, 1.17)'
+                prefer deps.versions.smartBrainLib.get()
+            }
+        }
+        jarJar(modularUIDependency) {
+            version {
+                strictly "[${deps.versions.modularUI.get()},)"
+                prefer deps.versions.modularUI.get()
+            }
+        }
     }
-    jarJar(api(project(':SyncSystem')) { transitive = false })
+    includedLibrary(api(project(':SyncSystem')) { transitive = false })
 
     // Recipe Viewers
     compileOnly(deps.bundles.jei)
