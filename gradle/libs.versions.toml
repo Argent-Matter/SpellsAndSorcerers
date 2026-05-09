@@ -1,25 +1,24 @@
 [versions]
 minecraft = "1.21.1"
-neoForge = "21.1.215"
+neoForge = "21.1.228"
 loader = "4"
 parchment = "2024.11.17" # https://parchmentmc.org/docs/getting-started
+
 shadow = "9.3.0"
 spotless = "7.0.4"
-modDevGradle = "2.0.120"
+modDevGradle = "2.0.141"
 lombok = "8.14"
 jetbrains-annotations = "26.0.1"
 renderNurse = "0.0.12"
-mxparser = "6.1.0"
 
 [libraries]
-minecraft               = { module = "com.mojang:minecraft", version.ref = "minecraft" }
-neoForge                = { module = "net.neoforged:neoforge", version.ref = "neoForge" }
-jetbrains-annotations   = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
-renderNurse             = { module = "net.neoforged:render-nurse", version.ref = "renderNurse" }
-mxparser                = { module = "org.mariuszgromada.math:MathParser.org-mXparser", version.ref = "mxparser" }
+minecraft             = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+neoForge              = { module = "net.neoforged:neoforge", version.ref = "neoForge" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+renderNurse           = { module = "net.neoforged:render-nurse", version.ref = "renderNurse" }
 
 [plugins]
-modDevGradle            = { id = "net.neoforged.moddev", version.ref = "modDevGradle" }
-shadow                  = { id = "com.gradleup.shadow", version.ref = "shadow" }
-spotless                = { id = "com.diffplug.spotless", version.ref = "spotless" }
-lombok                  = { id = "io.freefair.lombok", version.ref = "lombok" }
+modDevGradle          = { id = "net.neoforged.moddev", version.ref = "modDevGradle" }
+shadow                = { id = "com.gradleup.shadow", version.ref = "shadow" }
+spotless              = { id = "com.diffplug.spotless", version.ref = "spotless" }
+lombok                = { id = "io.freefair.lombok", version.ref = "lombok" }
