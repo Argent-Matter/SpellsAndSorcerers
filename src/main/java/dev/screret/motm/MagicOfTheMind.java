@@ -16,6 +16,7 @@ import dev.screret.motm.data.item.*;
 import dev.screret.motm.data.memory.*;
 import dev.screret.motm.data.recipe.*;
 import dev.screret.motm.data.ui.*;
+import dev.screret.motm.data.worldgen.*;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -161,6 +162,7 @@ public class MagicOfTheMind {
         registries = gen.addProvider(true, new DatapackBuiltinEntriesProvider(packOutput, registries,
                 new RegistrySetBuilder()
                         .add(Registries.ENCHANTMENT, MOTMEnchantments::bootstrap)
+                        .add(Registries.PROCESSOR_LIST, MOTMProcessorLists::bootstrap)
                         .add(MOTMRegistries.MEMORY_REGISTRY, MOTMMemories::bootstrap),
                 Set.of(MagicOfTheMind.MOD_ID)))
                 .getRegistryProvider();
