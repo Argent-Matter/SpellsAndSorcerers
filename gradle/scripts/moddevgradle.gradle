@@ -28,19 +28,13 @@ neoForge {
         }
     }
 
-    addModdingDependenciesTo(sourceSets.test)
+//    addModdingDependenciesTo(sourceSets.test)
 //    addModdingDependenciesTo(sourceSets.extra)
 
     mods {
         // define mod <-> source bindings
         "${project.properties.mod_id}" {
             sourceSet(sourceSets.main)
-            if (project == rootProject) {
-                sourceSet(sourceSets.client)
-                sourceSet(sourceSets.test)
-                sourceSet(sourceSets.extra)
-                sourceSet(sourceSets.clientExtra)
-            }
         }
     }
 
@@ -56,7 +50,7 @@ neoForge {
     runs {
         client {
             client()
-                sourceSet = sourceSets.clientExtra
+            sourceSet = project.sourceSets.clientExtra
             ideName = "Client 1"
 
             gameDirectory.set(file('runs/client'))
@@ -65,7 +59,7 @@ neoForge {
 
         client2 {
             client()
-                sourceSet = sourceSets.clientExtra
+            sourceSet = sourceSets.clientExtra
             ideName = "Client 2"
 
             gameDirectory.set(file('runs/client'))
@@ -75,7 +69,7 @@ neoForge {
 
         server {
             server()
-                sourceSet = sourceSets.extra
+            sourceSet = sourceSets.extra
             ideName = "Server"
 
             gameDirectory.set(file('runs/server'))
@@ -86,7 +80,7 @@ neoForge {
         // Client with MOTM, Curios, EMI, Jade
         cleanClient {
             client()
-                sourceSet = sourceSets.client
+            sourceSet = sourceSets.client
             ideName = "Clean Client"
 
             gameDirectory.set(file('runs/clean_client'))
@@ -108,7 +102,7 @@ neoForge {
         // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
             type = "gameTestServer"
-                sourceSet = sourceSets.test
+            sourceSet = sourceSets.test
             ideName = "Game Tests"
 
             gameDirectory.set(file('runs/gametest'))
@@ -134,7 +128,7 @@ neoForge {
         if(renderDocPath != null && !OperatingSystem.current().isMacOsX()) {
             create("renderDocClient") {
                 client()
-                    sourceSet = sourceSets.client
+                sourceSet = sourceSets.client
                 ideName = "Clean Client w/ RenderDoc"
 
                 gameDirectory.set(file('runs/clean_client'))

@@ -30,23 +30,24 @@ sourceSets {
     }
 
     client {
+        // The Java plugin does this for the test source set, replicate that here
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += client.output + main.output
     }
 
     test {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += test.output + main.output
     }
 
     extra {
         compileClasspath += main.output
-        runtimeClasspath += main.output + main.runtimeClasspath
+        runtimeClasspath += extra.output + main.output
     }
 
     clientExtra {
-        compileClasspath += client.output + extra.compileClasspath
-        runtimeClasspath += client.output + client.runtimeClasspath + extra.runtimeClasspath
+        compileClasspath += client.output + extra.output
+        runtimeClasspath += clientExtra.output + client.output + extra.output
     }
 }
 
@@ -58,6 +59,7 @@ configurations {
 
     renderNurseCfg {
         canBeConsumed = false
+        canBeResolved = true
     }
 
     includedLibrary {
