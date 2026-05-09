@@ -1,4 +1,4 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.block;
 
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.common.block.PortStoneBlock;

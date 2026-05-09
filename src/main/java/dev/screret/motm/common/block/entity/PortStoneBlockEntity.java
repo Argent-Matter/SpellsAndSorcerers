@@ -4,8 +4,8 @@ import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.common.item.component.PortStoneRunes;
 import dev.screret.motm.common.util.MathUtil;
 import dev.screret.motm.common.util.PortStoneHelper;
-import dev.screret.motm.data.MOTMBlockEntities;
-import dev.screret.motm.data.MOTMDataComponents;
+import dev.screret.motm.data.block.entity.MOTMBlockEntities;
+import dev.screret.motm.data.item.MOTMDataComponents;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -1,11 +1,9 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.block.entity;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.api.registry.util.DeferredBlockEntity;
-import dev.screret.motm.api.registry.util.DeferredRegisterHelper;
-import dev.screret.motm.common.block.entity.MemorystoneBlockEntity;
-import dev.screret.motm.common.block.entity.PalantirBlockEntity;
-import dev.screret.motm.common.block.entity.PortStoneBlockEntity;
+import dev.screret.motm.api.registry.util.*;
+import dev.screret.motm.common.block.entity.*;
+import dev.screret.motm.data.block.MOTMBlocks;
 
 public class MOTMBlockEntities {
 

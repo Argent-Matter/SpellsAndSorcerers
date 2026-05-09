@@ -1,8 +1,10 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.item;
 
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.api.item.SimpleGeoBlockItem;
 import dev.screret.motm.common.item.*;
+import dev.screret.motm.data.entity.MOTMEntityTypes;
+import dev.screret.motm.data.block.MOTMBlocks;
 
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;

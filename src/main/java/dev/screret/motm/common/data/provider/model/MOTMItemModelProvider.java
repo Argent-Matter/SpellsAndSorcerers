@@ -1,7 +1,7 @@
 package dev.screret.motm.common.data.provider.model;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.data.MOTMItems;
+import dev.screret.motm.data.item.MOTMItems;
 
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;

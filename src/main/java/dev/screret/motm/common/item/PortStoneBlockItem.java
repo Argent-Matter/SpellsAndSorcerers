@@ -1,7 +1,7 @@
 package dev.screret.motm.common.item;
 
 import dev.screret.motm.common.block.PortStoneBlock;
-import dev.screret.motm.data.MOTMBlocks;
+import dev.screret.motm.data.block.MOTMBlocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BlockItem;

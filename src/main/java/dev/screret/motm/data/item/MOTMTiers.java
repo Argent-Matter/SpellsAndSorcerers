@@ -1,4 +1,6 @@
-package dev.screret.motm.data;
+package dev.screret.motm.data.item;
+
+import dev.screret.motm.data.MOTMTags;
 
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.crafting.Ingredient;

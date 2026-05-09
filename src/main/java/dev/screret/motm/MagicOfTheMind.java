@@ -8,7 +8,14 @@ import dev.screret.motm.common.data.provider.tag.*;
 import dev.screret.motm.common.entity.Elderling;
 import dev.screret.motm.config.MOTMConfig;
 import dev.screret.motm.data.*;
+import dev.screret.motm.data.block.*;
+import dev.screret.motm.data.block.entity.*;
+import dev.screret.motm.data.client.*;
+import dev.screret.motm.data.entity.*;
+import dev.screret.motm.data.item.*;
 import dev.screret.motm.data.memory.*;
+import dev.screret.motm.data.recipe.*;
+import dev.screret.motm.data.ui.*;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;

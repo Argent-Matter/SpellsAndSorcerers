@@ -1,7 +1,7 @@
 package dev.screret.motm.common.data.provider.recipe;
 
 import dev.screret.motm.MOTMUtil;
-import dev.screret.motm.data.MOTMItems;
+import dev.screret.motm.data.item.MOTMItems;
 import dev.screret.motm.data.MOTMTags;
 
 import net.minecraft.core.HolderLookup;

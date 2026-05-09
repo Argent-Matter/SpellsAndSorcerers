@@ -1,6 +1,6 @@
 package dev.screret.motm.common.block.entity;
 
-import dev.screret.motm.data.MOTMBlockEntities;
+import dev.screret.motm.data.block.entity.MOTMBlockEntities;
 
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;

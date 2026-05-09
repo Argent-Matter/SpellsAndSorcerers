@@ -3,7 +3,7 @@ package dev.screret.motm.common.data.provider.model;
 import dev.screret.motm.MOTMUtil;
 import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.common.block.PortStoneBlock;
-import dev.screret.motm.data.MOTMBlocks;
+import dev.screret.motm.data.block.MOTMBlocks;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
