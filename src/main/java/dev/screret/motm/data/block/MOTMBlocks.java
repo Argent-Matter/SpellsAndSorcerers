@@ -37,8 +37,8 @@ public class MOTMBlocks {
 
     // TODO (maybe) make it so this can be awakened somehow (turned into actual memorystone)
     public static final DeferredBlock<Block> UNAWAKENED_MEMORYSTONE = BLOCKS.registerSimpleBlock("unawakened_memorystone", unawakenedMemoryStoneProperties());
-    public static final DeferredBlock<SlabBlock> UNAWAKENED_MEMORYSTONE_SLAB = BLOCKS.registerBlock("unawakened_memorystone_slab", SlabBlock::new, unawakenedMemoryStoneProperties());
     public static final DeferredBlock<StairBlock> UNAWAKENED_MEMORYSTONE_STAIRS = BLOCKS.registerBlock("unawakened_memorystone_stairs", stair(UNAWAKENED_MEMORYSTONE), unawakenedMemoryStoneProperties());
+    public static final DeferredBlock<SlabBlock> UNAWAKENED_MEMORYSTONE_SLAB = BLOCKS.registerBlock("unawakened_memorystone_slab", SlabBlock::new, unawakenedMemoryStoneProperties());
     public static final DeferredBlock<WallBlock> UNAWAKENED_MEMORYSTONE_WALL = BLOCKS.registerBlock("unawakened_memorystone_wall", WallBlock::new, unawakenedMemoryStoneProperties().forceSolidOn());
 
     public static final DeferredBlock<MemorystoneBlock> MEMORYSTONE = BLOCKS.registerBlock("memorystone", MemorystoneBlock::new, memoryStoneProperties());
