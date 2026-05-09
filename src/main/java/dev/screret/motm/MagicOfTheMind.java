@@ -94,22 +94,22 @@ public class MagicOfTheMind {
     public static void addVanillaTabItems(final BuildCreativeModeTabContentsEvent event) {
         switch (event.getTabKey()) {
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.COMBAT -> {
-                event.accept(MOTMItems.SOULSTEEL_AXE.get());
-                event.accept(MOTMItems.SOULSTEEL_SWORD.get());
-                event.accept(MOTMItems.SOULSTEEL_HELMET.get());
-                event.accept(MOTMItems.SOULSTEEL_CHESTPLATE.get());
-                event.accept(MOTMItems.SOULSTEEL_LEGGINGS.get());
-                event.accept(MOTMItems.SOULSTEEL_BOOTS.get());
+                event.accept(MOTMItems.SOULSTEEL_AXE);
+                event.accept(MOTMItems.SOULSTEEL_SWORD);
+                event.accept(MOTMItems.SOULSTEEL_HELMET);
+                event.accept(MOTMItems.SOULSTEEL_CHESTPLATE);
+                event.accept(MOTMItems.SOULSTEEL_LEGGINGS);
+                event.accept(MOTMItems.SOULSTEEL_BOOTS);
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.TOOLS_AND_UTILITIES -> {
-                event.accept(MOTMItems.SOULSTEEL_AXE.get());
-                event.accept(MOTMItems.SOULSTEEL_HOE.get());
-                event.accept(MOTMItems.SOULSTEEL_PICKAXE.get());
-                event.accept(MOTMItems.SOULSTEEL_SHOVEL.get());
-                event.accept(MOTMItems.THE_ONE_RING.get());
+                event.accept(MOTMItems.SOULSTEEL_AXE);
+                event.accept(MOTMItems.SOULSTEEL_HOE);
+                event.accept(MOTMItems.SOULSTEEL_PICKAXE);
+                event.accept(MOTMItems.SOULSTEEL_SHOVEL);
+                event.accept(MOTMItems.THE_ONE_RING);
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.BUILDING_BLOCKS -> {
-                event.accept(MOTMItems.SOULSTEEL_BLOCK.get());
+                event.accept(MOTMItems.SOULSTEEL_BLOCK);
 
                 event.accept(MOTMItems.UNAWAKENED_MEMORYSTONE);
                 event.accept(MOTMItems.UNAWAKENED_MEMORYSTONE_STAIRS);
@@ -134,17 +134,17 @@ public class MagicOfTheMind {
                 event.accept(MOTMItems.POLISHED_MEMORYSTONE_BRICK_WALL);
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.FUNCTIONAL_BLOCKS -> {
-                event.accept(MOTMItems.PALANTIR.get());
-                event.accept(MOTMItems.PORT_STONE.get());
+                event.accept(MOTMItems.PALANTIR);
+                event.accept(MOTMItems.PORT_STONE);
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.INGREDIENTS -> {
-                event.accept(MOTMItems.HANDLE.get());
-                event.accept(MOTMItems.CLOUD_BOTTLE.get());
-                event.accept(MOTMItems.SOUL_BOTTLE.get());
-                event.accept(MOTMItems.SOULSTEEL_INGOT.get());
+                event.accept(MOTMItems.HANDLE);
+                event.accept(MOTMItems.CLOUD_BOTTLE);
+                event.accept(MOTMItems.SOUL_BOTTLE);
+                event.accept(MOTMItems.SOULSTEEL_INGOT);
             }
             case ResourceKey<CreativeModeTab> tab when tab == CreativeModeTabs.SPAWN_EGGS -> {
-                event.accept(MOTMItems.ELDERLING_SPAWN_EGG.get());
+                event.accept(MOTMItems.ELDERLING_SPAWN_EGG);
             }
             default -> {}
         }
