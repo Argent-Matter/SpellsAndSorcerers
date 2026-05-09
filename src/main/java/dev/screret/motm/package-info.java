@@ -1,4 +1,4 @@
 @NotNullByDefault
-package dev.screret.motm.api.memory;
+package dev.screret.motm;
 
 import org.jetbrains.annotations.NotNullByDefault;
