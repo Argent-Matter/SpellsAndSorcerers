@@ -18,7 +18,7 @@ dependencies {
         }
         jarJar(modularUIDependency) {
             version {
-                strictly "[${deps.versions.modularUI.get()}]"
+                strictly "[${deps.versions.modularUI.get()},)"
                 prefer deps.versions.modularUI.get()
             }
         }
