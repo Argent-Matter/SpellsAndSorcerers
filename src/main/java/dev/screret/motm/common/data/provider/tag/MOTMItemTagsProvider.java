@@ -1,8 +1,8 @@
 package dev.screret.motm.common.data.provider.tag;
 
 import dev.screret.motm.MagicOfTheMind;
-import dev.screret.motm.data.item.MOTMItems;
 import dev.screret.motm.data.MOTMTags;
+import dev.screret.motm.data.item.MOTMItems;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

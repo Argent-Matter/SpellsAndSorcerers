@@ -10,6 +10,7 @@ import dev.screret.motm.common.util.MathUtil;
 
 import brachy.modularui.client.schemarenderer.BaseSchemaRenderer;
 import brachy.modularui.utils.fakelevel.SchemaLevel;
+
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;

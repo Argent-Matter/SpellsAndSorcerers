@@ -5,8 +5,8 @@ import dev.screret.motm.MagicOfTheMind;
 import dev.screret.motm.client.model.blockentity.PalantirModel;
 import dev.screret.motm.client.particle.EyeParticle;
 import dev.screret.motm.data.block.entity.MOTMBlockEntities;
-import dev.screret.motm.data.entity.MOTMEntityTypes;
 import dev.screret.motm.data.client.MOTMParticles;
+import dev.screret.motm.data.entity.MOTMEntityTypes;
 
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
